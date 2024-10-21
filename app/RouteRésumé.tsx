@@ -5,6 +5,7 @@ import ProfileChooser from './ProfileChooser'
 import ValhallaRésumé from './itinerary/ValhallaRésumé'
 import TransitLoader from './itinerary/transit/TransitLoader'
 import { nowStamp } from './itinerary/transit/utils'
+import ElevationGraph from '@/components/itinerary/ElevationGraph'
 
 export default function RouteRésumé({
 	mode,
@@ -19,6 +20,8 @@ export default function RouteRésumé({
 				text={
 					mode === 'cycling'
 						? "Calcul de l'itinéraire vélo"
+						: mode === 'car'
+						? "Calcul de l'itinéraire en voiture"
 						: "Calcul de l'itinéraire à pied"
 				}
 			/>
@@ -195,6 +198,7 @@ const BrouterModeContent = ({
 					latitude={feature.geometry.coordinates[0][1]}
 				/>
 			)}
+			<ElevationGraph feature={feature} />
 		</div>
 	)
 }

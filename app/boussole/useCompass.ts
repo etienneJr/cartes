@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 
-export default function useCompass() {
-	const [pointDegree, setPointDegree] = useState(0)
+export default function useCompass(where) {
 	const [compass, setCompass] = useState()
 	const [isIOS, setIsIOS] = useState(false)
 
@@ -12,14 +11,14 @@ export default function useCompass() {
 		)
 	}, [])
 
-	const locationHandler = (position) => {
-		const { latitude, longitude } = position.coords
-		setPointDegree(calcDegreeToPoint(latitude, longitude))
+	const possiblyNegativePointDegree = where
+		? calcDegreeToPoint(where.latitude, where.longitude)
+		: 0
 
-		if (pointDegree < 0) {
-			setPointDegree(pointDegree + 360)
-		}
-	}
+	const pointDegree =
+		possiblyNegativePointDegree < 0
+			? possiblyNegativePointDegree + 360
+			: possiblyNegativePointDegree
 
 	const handler = (e) => {
 		const compass = e.webkitCompassHeading || Math.abs(e.alpha - 360)
@@ -29,8 +28,6 @@ export default function useCompass() {
 	useEffect(() => {
 		const geolocationIsUndefined = navigator.geolocation == null
 		if (geolocationIsUndefined) return
-
-		navigator.geolocation.getCurrentPosition(locationHandler)
 
 		if (!isIOS) {
 			window.addEventListener('deviceorientationabsolute', handler, true)
@@ -44,15 +41,19 @@ export default function useCompass() {
 
 	const startCompass = () => {
 		if (isIOS) {
-			DeviceOrientationEvent.requestPermission()
-				.then((response) => {
-					if (response === 'granted') {
-						window.addEventListener('deviceorientation', handler, true)
-					} else {
-						alert('has to be allowed!')
-					}
-				})
-				.catch(() => alert('not supported'))
+			try {
+				DeviceOrientationEvent.requestPermission()
+					.then((response) => {
+						if (response === 'granted') {
+							window.addEventListener('deviceorientation', handler, true)
+						} else {
+							console.error('Device orientation was not allowed!')
+						}
+					})
+					.catch(() => console.error('Device orientation not supported'))
+			} catch (e) {
+				console.error('Device orientation not supported', e)
+			}
 		}
 	}
 

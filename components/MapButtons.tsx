@@ -76,32 +76,21 @@ export default function MapButtons({
 
 	return (
 		<MapButtonsWrapper>
-			<MapButton $active={searchParams.transports === 'oui'}>
-				<Link
-					title={'Voir la carte des transports en commun'}
-					href={setSearchParams(
-						{
-							...omit(['transports'], searchParams),
-							...(searchParams.transports
-								? {
-										transports: undefined,
-										agence: undefined,
-										routes: undefined,
-								  }
-								: { transports: 'oui' }),
-						},
-						true,
-						true
-					)}
-				>
-					<img
-						src={'/transports.svg'}
-						css={`
-							filter: none !important;
-						`}
-					/>
-				</Link>
-			</MapButton>
+			{false && ( // keeping this, not sure we won't introduce this button back. For now, it's in the style chooser
+				<MapButton $active={searchParams.transports === 'oui'}>
+					<Link
+						title={'Voir la carte des transports en commun'}
+						href={'#coderemoved'}
+					>
+						<img
+							src={'/transports.svg'}
+							css={`
+								filter: none !important;
+							`}
+						/>
+					</Link>
+				</MapButton>
+			)}
 			{false && (
 				<MapButton
 					$active={searchParams.style === 'elections'}

@@ -22,9 +22,10 @@ const generateAgencies = async () => {
 	try {
 		const request = await fetch(gtfsServerUrl + '/agencies')
 		const json = await request.json()
+		const entries = Object.entries(json)
 
-		return json.agencies.map(
-			({ agency_id }) => `/?transports=oui&agence=${agency_id}`
+		return entries.map(
+			([agency_id]) => `/?style=transports&agence=${agency_id}`
 		)
 	} catch (e) {
 		console.error('Error generating agency sitemap')

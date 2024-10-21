@@ -1,6 +1,29 @@
+import { filterMapEntries } from '@/components/utils/utils'
 import { useEffect, useMemo, useState } from 'react'
 import { gtfsServerUrl } from '../serverUrls'
 import { decodeTransportsData } from '../transport/decodeTransportsData'
+
+export function useFetchAgencyAreas(active) {
+	const [agencyAreas, setAgencyAreas] = useState()
+	useEffect(() => {
+		if (!active) return
+
+		const doFetch = async () => {
+			const url = `${gtfsServerUrl}/agencyAreas`
+
+			const request = await fetch(url)
+			const json = await request.json()
+
+			setAgencyAreas(json)
+		}
+		doFetch()
+	}, [active, setAgencyAreas])
+
+	return (
+		agencyAreas &&
+		filterMapEntries(agencyAreas, (id, v) => filterRejectPlaneAgency([id]))
+	)
+}
 
 export default function useFetchTransportMap(
 	active,
@@ -34,7 +57,7 @@ export default function useFetchTransportMap(
 		if (!active || !fetchAll) return
 
 		const doFetch = async () => {
-			const url = `${gtfsServerUrl}/agencyAreas`
+			const url = `${gtfsServerUrl}/agencies`
 
 			const request = await fetch(url)
 			const json = await request.json()
@@ -121,12 +144,15 @@ export default function useFetchTransportMap(
 
 	const agencyIdsHash =
 		data && Array.isArray(data[0]) && data.map(([a]) => a).join('<|>')
+
 	const transportsData = useMemo(() => {
-		return data
+		return agencyIdsHash && data.filter(filterRejectPlaneAgency)
 	}, [agencyIdsHash])
 
 	return active ? transportsData : null
 }
+
+const filterRejectPlaneAgency = ([id]) => id !== 'AEROPORT_NANTES:Operator:NTE'
 
 const rejectNationalAgencies = (data) =>
 	data.filter(

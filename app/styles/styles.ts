@@ -1,13 +1,12 @@
-import { description } from '../layout'
 import cyclOsm from './cyclOsmStyle'
 import elections from './elections'
 import franceStyle from './france'
 import natureStyle from './nature'
 import railStyle from './railStyle'
+import satellite from './satellite'
 import testStreetComplete from './test-street-complete'
 import transit from './transit'
 import voyageStyle from './voyage'
-import satellite from './satellite'
 
 const key = process.env.NEXT_PUBLIC_MAPTILER
 
@@ -18,9 +17,16 @@ export const styles = {
 	 * purposes (50 to 100 €/month in june !)
 	 */
 	france: {
-		url: franceStyle(key),
+		url: franceStyle(false),
 		name: 'France',
 		description: `Notre style maison, avec des bonus inédits : rail visible à haut niveau, arbres, et plein de futures nouveautés. Hébergé sur nos serveurs, contrairement aux autres il ne nous coûte rien. C'est le futur.`,
+		attribution:
+			'<a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>',
+	},
+	transports: {
+		url: franceStyle(true),
+		name: 'Transports',
+		description: `Un style de carte dédié au transport pour afficher les plans urbains des réseaux de bus/tram/métro, mais aussi des cars et des trains nationaux.`,
 		attribution:
 			'<a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>',
 	},
@@ -28,6 +34,7 @@ export const styles = {
 	base: {
 		url: voyageStyle(key),
 		name: 'Monde',
+		originalName: 'Voyage',
 		description: `C'est l'ancienne version du style principal, qui reste meilleur pour un certain nombre d'aspects : noms des lieux étrangers en français, moins de bugs sur les côtes.`,
 		emoji: '🗺️',
 	},
@@ -41,12 +48,14 @@ export const styles = {
 		url: maptilerUrl('hybrid'),
 		title: 'satellite avec superposition des noms de lieux et rues',
 		name: 'Hybride',
+		originalName: 'Satellite Hybrid',
 		emoji: '🛰️',
 	},
 	rando: {
 		url: maptilerUrl('outdoor-v2'),
 		name: 'Randonnée',
 		subtitle: '(marche & vélo)',
+		originalName: 'Outdoor',
 		emoji: '🚶',
 		hasTerrain: true,
 	},
@@ -59,6 +68,7 @@ export const styles = {
 	osm: {
 		url: maptilerUrl('openstreetmap'),
 		name: 'OSM',
+		originalName: 'OpenStreetMap',
 	},
 	nature: {
 		url: natureStyle(key),
@@ -72,15 +82,10 @@ export const styles = {
 		name: 'Rails',
 		emoji: '🛤️',
 	},
-	light: {
-		// Taken from MapTiler's dataviz style
-		url: transit(key),
-		name: 'Fond léger',
-		emoji: '⬜️',
-	},
 	winter: {
 		url: maptilerUrl('winter-v2'),
 		name: 'Hiver',
+		originalName: 'Winter',
 		emoji: '⛄️',
 		hasTerrain: true,
 	},

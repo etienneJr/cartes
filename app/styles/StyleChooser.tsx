@@ -18,6 +18,7 @@ export default function StyleChooser({
 	setZoom,
 }) {
 	const setSearchParams = useSetSearchParams()
+
 	return (
 		<section
 			css={`
@@ -98,13 +99,14 @@ export default function StyleChooser({
 					styleList={styleList.filter(([, el]) => el.secondary)}
 					setSearchParams={setSearchParams}
 					style={style}
+					searchParams={searchParams}
 				/>
 			</details>
 		</section>
 	)
 }
 
-const Styles = ({ style, styleList, setSearchParams }) => {
+const Styles = ({ style, styleList, setSearchParams, searchParams }) => {
 	const [localStorageStyleKey, setLocalStorageStyleKey] = useLocalStorage(
 		'style',
 		null
@@ -132,7 +134,11 @@ const Styles = ({ style, styleList, setSearchParams }) => {
 							`}
 						>
 							<Link
-								href={setSearchParams({ style: k }, true, false)}
+								href={setSearchParams(
+									{ style: k, 'choix du style': 'oui' },
+									true,
+									true
+								)}
 								onClick={() => setLocalStorageStyleKey(k)}
 								title={'Passer au style ' + (title || name)}
 								css={`

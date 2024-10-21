@@ -12,11 +12,11 @@ import { getFetchUrlBase, pmtilesServerUrl } from '../serverUrls'
 const highwayColor = '#cebcbc'
 const highwayOutlineColor = '#cebcbc'
 
-export default function franceStyle(key) {
+export default function franceStyle(transportMode) {
 	return {
 		version: 8,
-		id: 'france',
-		name: 'France',
+		id: transportMode ? 'transports' : 'france',
+		name: transportMode ? 'Transports' : 'France',
 		sources: {
 			openmaptiles: {
 				url: 'cartes://hybrid', // see the protocol CartesProtocol
@@ -39,11 +39,9 @@ export default function franceStyle(key) {
 				url: 'pmtiles://' + pmtilesServerUrl + '/trees.pmtiles',
 			},
 		},
-		layers,
+		layers: transportMode ? lightenLayers(layers) : layers,
 		glyphs: getFetchUrlBase() + '/fonts/glyphs/{fontstack}/{range}.pbf',
 		sprite: getFetchUrlBase() + '/sprite/sprite',
-		//glyphs: `https://api.maptiler.com/fonts/{fontstack}/{range}.pbf?key=${key}`,
-		//sprite: 'https://api.maptiler.com/maps/2f80a9c4-e0dd-437d-ae35-2b6c212f830b/sprite',
 		bearing: 0,
 		pitch: 0,
 		center: [0, 0],
@@ -51,15 +49,68 @@ export default function franceStyle(key) {
 	}
 }
 
+/* Old idea : lower the opacity of all style layers.
+		 * Replaced by setting the "transit" style taken from MapTiler's dataviz
+		 * clean style, but we're losing essential
+		 * things like POIs, might be interesting to consider this option, or
+		 * alternatively make the dataviz style better
+		 *
+		const layerIds = map.getLayersOrder()
+		layerIds.map((layerId) => {
+			if (layerId.startsWith('routes-stopId-')) return
+			const layer = map.getLayer(layerId)
+			const property =
+				layer.type === 'fill'
+					? ['fill-opacity']
+					: layer.type === 'background'
+					? ['background-opacity']
+					: layer.type === 'line'
+					? ['line-opacity']
+					: layer.type === 'symbol'
+					? ['text-opacity', 'icon-opacity']
+					: null
+			if (property) property.map((p) => map.setPaintProperty(layerId, p, 0.3))
+		})
+		*/
+// TODO this is overly complicated
+const lightenLayers = (layers) =>
+	layers.map((layer) => {
+		if (['Water', 'Background', ' labels'].find((el) => layer.id.endsWith(el)))
+			return layer
+		if (layer.id === 'Land')
+			return { ...layer, paint: { ...layer.paint, 'fill-color': 'white' } }
+
+		const property =
+			layer.type === 'fill'
+				? ['fill-opacity']
+				: layer.type === 'background'
+				? ['background-opacity']
+				: layer.type === 'line'
+				? ['line-opacity']
+				: layer.type === 'symbol'
+				? ['text-opacity', 'icon-opacity']
+				: null
+		if (!property) return layer
+		return {
+			...layer,
+			paint: {
+				...layer.paint,
+				...Object.fromEntries(property.map((p) => [p, 0.15])),
+			},
+		}
+	})
+
+// See laem/gtfs's process-openmaptiles.lua
 export const nameExpression = [
-	['get', 'name:latin'], // cartes.app est une application française
-	['get', 'name:en'], // we estimate that e.g. arab place names that don't have a french translation will be way more readable as english fro French people. See e.g. /?lieu=n1091272140#18.99/33.5130054/36.3066407
-	['get', 'name'],
+	['get', 'name:fr'], // cartes.app est une application française
+	['get', 'name:latin'], // keep compatibility with Panoramax's planet.pmtiles that cover other tiles than the 4 mega tiles surrounding the hexagone
+	['get', 'name:en'], // we estimate that e.g. arab place names that don't have a french translation will be way more readable as english for French people. See e.g. /?lieu=n1091272140#18.99/33.5130054/36.3066407
+	['get', 'name_int'],
 ]
 
-export const name = 'name:latin'
+export const name = 'name:fr'
 
-const oceanColor = '#71a0e9'
+export const oceanColor = '#71a0e9'
 //'#6688dd' past color, darker. Could be cool to vary in the day, dawn color ?
 
 const layers = [
@@ -366,6 +417,48 @@ const layers = [
 		filter: ['all', ['in', 'class', 'retail']],
 	},
 	{
+		id: 'School',
+		type: 'fill',
+		source: 'openmaptiles',
+		'source-layer': 'landuse',
+		minzoom: 9,
+		maxzoom: 22,
+		layout: { visibility: 'visible' },
+		paint: {
+			'fill-color': 'hsl(194,52%,94%)',
+			'fill-opacity': {
+				stops: [
+					[9, 0.25],
+					[16, 1],
+				],
+			},
+			'fill-antialias': true,
+		},
+		metadata: {},
+		filter: ['all', ['in', 'class', 'college', 'school', 'university']],
+	},
+	{
+		id: 'Hospital',
+		type: 'fill',
+		source: 'openmaptiles',
+		'source-layer': 'landuse',
+		minzoom: 9,
+		maxzoom: 22,
+		layout: { visibility: 'visible' },
+		paint: {
+			'fill-color': 'hsl(12,63%,94%)',
+			'fill-opacity': {
+				stops: [
+					[9, 0.25],
+					[16, 1],
+				],
+			},
+			'fill-antialias': true,
+		},
+		metadata: {},
+		filter: ['all', ['==', 'class', 'hospital']],
+	},
+	{
 		id: 'Grass',
 		type: 'fill',
 		source: 'openmaptiles',
@@ -475,27 +568,6 @@ const layers = [
 		},
 	},
 	{
-		id: 'Hospital',
-		type: 'fill',
-		source: 'openmaptiles',
-		'source-layer': 'landuse',
-		minzoom: 9,
-		maxzoom: 22,
-		layout: { visibility: 'visible' },
-		paint: {
-			'fill-color': 'hsl(12,63%,94%)',
-			'fill-opacity': {
-				stops: [
-					[9, 0.25],
-					[16, 1],
-				],
-			},
-			'fill-antialias': true,
-		},
-		metadata: {},
-		filter: ['all', ['==', 'class', 'hospital']],
-	},
-	{
 		id: 'Stadium',
 		type: 'fill',
 		source: 'openmaptiles',
@@ -515,27 +587,6 @@ const layers = [
 		},
 		metadata: {},
 		filter: ['all', ['in', 'class', 'pitch', 'stadium', 'playground']],
-	},
-	{
-		id: 'School',
-		type: 'fill',
-		source: 'openmaptiles',
-		'source-layer': 'landuse',
-		minzoom: 9,
-		maxzoom: 22,
-		layout: { visibility: 'visible' },
-		paint: {
-			'fill-color': 'hsl(194,52%,94%)',
-			'fill-opacity': {
-				stops: [
-					[9, 0.25],
-					[16, 1],
-				],
-			},
-			'fill-antialias': true,
-		},
-		metadata: {},
-		filter: ['all', ['in', 'class', 'college', 'school', 'university']],
 	},
 	{
 		id: 'River tunnel',
@@ -1955,11 +2006,7 @@ const layers = [
 			],
 			'line-dasharray': [1, 1],
 		},
-		filter: [
-			'all',
-			['in', 'admin_level', 3, 4, 5, 6, 7, 8, 9, 10],
-			['==', 'maritime', 0],
-		],
+		filter: ['all', ['in', 'admin_level', 3, 4, 5, 6, 7, 8, 9, 10]],
 	},
 	{
 		id: 'Disputed border',
@@ -1984,12 +2031,7 @@ const layers = [
 			},
 			'line-dasharray': [2, 2],
 		},
-		filter: [
-			'all',
-			['==', 'admin_level', 2],
-			['==', 'disputed', 1],
-			['==', 'maritime', 0],
-		],
+		filter: ['all', ['==', 'admin_level', 2], ['==', 'disputed', 1]],
 	},
 	{
 		id: 'Country border',
@@ -2014,12 +2056,7 @@ const layers = [
 				],
 			},
 		},
-		filter: [
-			'all',
-			['==', 'admin_level', 2],
-			['==', 'disputed', 0],
-			['==', 'maritime', 0],
-		],
+		filter: ['all', ['==', 'admin_level', 2], ['==', 'disputed', 0]],
 	},
 	{
 		id: 'River labels',
@@ -2704,6 +2741,65 @@ const layers = [
 		],
 	},
 	{
+		id: 'Protected area labels',
+		type: 'symbol',
+		source: 'openmaptiles',
+		'source-layer': 'park',
+		minzoom: 9,
+		maxzoom: 22,
+		layout: {
+			'text-font': ['Roboto Italic', 'Noto Sans Italic'],
+			'text-size': ['interpolate', ['linear'], ['zoom'], 9, 11, 14, 14],
+			'text-field': ['coalesce', ...nameExpression],
+			visibility: 'visible',
+			'text-padding': {
+				stops: [
+					[6, 39],
+					[14, 99],
+				],
+			},
+			'symbol-spacing': 750,
+			'symbol-sort-key': ['to-number', ['get', 'rank']],
+			'text-letter-spacing': 0.1,
+			'text-ignore-placement': false,
+		},
+		paint: {
+			'icon-color': 'hsl(120, 11%, 5%)',
+			'text-color': 'hsl(120, 11%, 5%)',
+			'text-opacity': [
+				'step',
+				['zoom'],
+				0,
+				9,
+				['case', ['==', ['get', 'rank'], 1], 1, 0],
+				10,
+				1,
+			],
+			'text-halo-blur': 2,
+			'text-halo-color': 'hsla(0, 0%, 100%, 0.6)',
+			'text-halo-width': 2,
+		},
+		filter: [
+			'!in',
+			'class',
+			'aire_d’adhésion_de_parc_national',
+			'parc_national',
+			'narodni_park',
+			'national_nature_park',
+			'national_park',
+			'nationalpark',
+			'natural_parc',
+			'národní_park',
+			'národný_park',
+			'ochranné_pásmo_národného_parku',
+			'parc_naturel_national',
+			'parc_național',
+			'parco_nazionale',
+			'parque_nacional',
+			'национальный_парк',
+		],
+	},
+	{
 		id: 'Place labels',
 		type: 'symbol',
 		source: 'openmaptiles',
@@ -3039,65 +3135,6 @@ const layers = [
 		},
 		metadata: {},
 		filter: ['all', ['in', 'class', 'state', 'province'], ['<=', 'rank', 6]],
-	},
-	{
-		id: 'Protected area labels',
-		type: 'symbol',
-		source: 'openmaptiles',
-		'source-layer': 'park',
-		minzoom: 9,
-		maxzoom: 16,
-		layout: {
-			'text-font': ['Roboto Italic', 'Noto Sans Italic'],
-			'text-size': ['interpolate', ['linear'], ['zoom'], 9, 11, 14, 14],
-			'text-field': ['coalesce', ...nameExpression],
-			visibility: 'visible',
-			'text-padding': {
-				stops: [
-					[6, 39],
-					[14, 99],
-				],
-			},
-			'symbol-spacing': 750,
-			'symbol-sort-key': ['to-number', ['get', 'rank']],
-			'text-letter-spacing': 0.1,
-			'text-ignore-placement': false,
-		},
-		paint: {
-			'icon-color': 'hsl(120, 11%, 5%)',
-			'text-color': 'hsl(120, 11%, 5%)',
-			'text-opacity': [
-				'step',
-				['zoom'],
-				0,
-				9,
-				['case', ['==', ['get', 'rank'], 1], 1, 0],
-				10,
-				1,
-			],
-			'text-halo-blur': 2,
-			'text-halo-color': 'hsla(0, 0%, 100%, 0.6)',
-			'text-halo-width': 2,
-		},
-		filter: [
-			'!in',
-			'class',
-			'aire_d’adhésion_de_parc_national',
-			'parc_national',
-			'narodni_park',
-			'national_nature_park',
-			'national_park',
-			'nationalpark',
-			'natural_parc',
-			'národní_park',
-			'národný_park',
-			'ochranné_pásmo_národného_parku',
-			'parc_naturel_national',
-			'parc_național',
-			'parco_nazionale',
-			'parque_nacional',
-			'национальный_парк',
-		],
 	},
 	{
 		id: 'Town labels',

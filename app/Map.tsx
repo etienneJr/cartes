@@ -5,7 +5,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { sortGares } from './gares'
 
 import MapButtons from '@/components/MapButtons'
-import { goodIconSize } from '@/components/mapUtils'
+import { goodIconSize, useComputeMapPadding } from '@/components/mapUtils'
 import useSetSearchParams from '@/components/useSetSearchParams'
 import useAddMap from './effects/useAddMap'
 import useDrawQuickSearchFeatures from './effects/useDrawQuickSearchFeatures'
@@ -13,15 +13,17 @@ import { getStyle } from './styles/styles'
 import useHoverOnMapFeatures from './useHoverOnMapFeatures'
 import useTerrainControl from './useTerrainControl'
 
-import { useDimensions } from '@/components/react-modal-sheet/hooks'
 import getBbox from '@turf/bbox'
-import { useLocalStorage, useMediaQuery } from 'usehooks-ts'
+import { useLocalStorage } from 'usehooks-ts'
 import CenteredCross from './CenteredCross'
 import MapComponents from './MapComponents'
-import { snapPoints } from './ModalSheet'
 import MapCompassArrow from './boussole/MapCompassArrow'
 import { defaultState } from './defaultState'
 import useDrawElectionClusterResults from './effects/useDrawElectionCluserResults'
+import useDrawPanoramaxPosition, {
+	useAddPanoramaxLayer,
+} from './effects/useDrawPanoramaxPosition'
+import useDrawRightClickMarker from './effects/useDrawRightClickMarker'
 import useDrawSearchResults from './effects/useDrawSearchResults'
 import useDrawTransport from './effects/useDrawTransport'
 import useImageSearch from './effects/useImageSearch'
@@ -29,10 +31,6 @@ import useMapClick from './effects/useMapClick'
 import useRightClick from './effects/useRightClick'
 import useSearchLocalTransit from './effects/useSearchLocalTransit'
 import useDrawItinerary from './itinerary/useDrawItinerary'
-import useDrawPanoramaxPosition, {
-	useAddPanoramaxLayer,
-} from './effects/useDrawPanoramaxPosition'
-import useDrawRightClickMarker from './effects/useDrawRightClickMarker'
 
 if (process.env.NEXT_PUBLIC_MAPTILER == null) {
 	throw new Error('You have to configure env NEXT_PUBLIC_MAPTILER, see README')
@@ -53,6 +51,7 @@ export default function Map({
 	isTransportsMode,
 	transportStopData,
 	transportsData,
+	agencyAreas,
 	clickedStopData,
 	itinerary,
 	bikeRouteProfile,
@@ -72,7 +71,6 @@ export default function Map({
 	setStyleChooser,
 	setZoom,
 	setGeolocation,
-	setTempStyle,
 	center,
 	setState,
 	setLatLngClicked,
@@ -80,8 +78,9 @@ export default function Map({
 	trackedSnap,
 	panoramaxPosition,
 	geocodedClickedPoint,
+	setMapLoaded,
+	wikidata,
 }) {
-	const isMobile = useMediaQuery('(max-width: 800px)')
 	const mapContainerRef = useRef(null)
 	const stepsLength = state.filter((step) => step?.key).length
 	const [autoPitchPreference, setAutoPitchPreference] = useLocalStorage(
@@ -98,7 +97,8 @@ export default function Map({
 		setZoom,
 		setBbox,
 		mapContainerRef,
-		setGeolocation
+		setGeolocation,
+		setMapLoaded
 	)
 	const setSearchParams = useSetSearchParams()
 
@@ -112,48 +112,33 @@ export default function Map({
 
 	const [distanceMode, setDistanceMode] = useState(false)
 
-	useEffect(() => {
-		if (!transportStopData.length) return
+	const padding = useComputeMapPadding(trackedSnap, searchParams)
 
-		setTempStyle('light')
-
-		return () => {
-			console.log('will unset')
-			setTempStyle(null)
-		}
-	}, [setTempStyle, transportStopData])
-
-	const { height } = useDimensions()
-
-	const sideSheetProbablySmall = !isMobile && !Object.keys(searchParams).length
 	useEffect(() => {
 		if (!map) return
 
-		if (isMobile) {
-			const snapValue = snapPoints[trackedSnap],
-				bottom =
-					snapValue < 0
-						? height + snapValue
-						: snapValue < 1
-						? height * snapValue
-						: snapValue
-			map.flyTo({ padding: { bottom } })
-		} else {
-			map.flyTo({
-				padding: {
-					left: sideSheetProbablySmall ? 0 : 400, //  rough estimate of the footprint in pixel of the left sheet on desktop; should be made dynamic if it ever gets resizable (a good idea)
-				},
-			})
+		map.flyTo({ padding })
+	}, [map, padding])
+
+	const wikidataPicture = wikidata?.pictureUrl
+
+	const wikidataPictureObject = wikidataPicture &&
+		osmFeature && {
+			thumbnailUrl: wikidataPicture,
+			title: wikidata.pictureName, //could be better
+			fromWikidata: true,
+			lat: osmFeature.lat,
+			lon: osmFeature.lon,
 		}
-	}, [map, isMobile, trackedSnap, sideSheetProbablySmall])
 
 	useImageSearch(
 		map,
 		setBboxImages,
 		zoom,
 		bbox,
-		searchParams.photos === 'oui',
-		focusImage
+		searchParams.photos,
+		focusImage,
+		wikidataPictureObject
 	)
 
 	// TODO reactivate
@@ -164,17 +149,18 @@ export default function Map({
 		const agencyData =
 			transportsData && transportsData.find((el) => el[0] === agencyId)
 		return agencyData && { id: agencyData[0], ...agencyData[1] }
-	}, [agencyId]) // including transportsData provokes a loop : maplibre bbox updated -> transportsData recreated -> etc
+	}, [agencyId, transportsData]) // including transportsData provokes a loop : maplibre bbox updated -> transportsData recreated -> etc
+
 	useEffect(() => {
 		if (!map || !agency) return
 
 		const bbox = agency.bbox
 
 		const mapLibreBBox = [
-			[bbox[2], bbox[1]],
-			[bbox[0], bbox[3]],
+			[bbox[0], bbox[1]],
+			[bbox[2], bbox[3]],
 		]
-		map.fitBounds(mapLibreBBox)
+		map.fitBounds(mapLibreBBox, { padding })
 	}, [map, agency])
 
 	useDrawElectionClusterResults(map, styleKey, searchParams.filtre)
@@ -234,15 +220,8 @@ export default function Map({
 		})
 	}, [zoom, setZoom, map, setBbox])
 
-	const prevStyleKeyRef = useRef()
-	useEffect(() => {
-		prevStyleKeyRef.current = styleKey
-	}, [styleKey])
-
-	const prevStyleKey = prevStyleKeyRef.current
 	useEffect(() => {
 		if (!map) return
-		if (styleKey === prevStyleKey) return
 
 		console.log('salut redraw')
 
@@ -251,14 +230,28 @@ export default function Map({
 		// hence this diff: false. We're not loosing much
 		// UPDATE 26 april 2024, maplibre 4.1.3, seems to be working now, hence
 		// diff: true :)
-		map.setStyle(styleUrl, { diff: false }) //setting styleKey!== 'base' doesn't work, probably because the error comes from switching from base to another ?
-		//TODO the Oneway style in voyage style gets corrupted after switching to
-		//transit or another style, hence this temporary disable diff
-		setTimeout(() => {
-			// Hack : I haven't found a way to know when this style change is done, hence this setTimeout, absolutely not a UI problem but could be too quick ?
+		const previousStyle = map.getStyle()
+		console.log('previous', previousStyle)
+		const shouldSetStyle =
+			previousStyle && previousStyle.name !== (style.originalName || style.name)
+
+		const onStyleLoad = () => {
 			setSafeStyleKey(styleKey)
-		}, 300)
-	}, [styleUrl, map, styleKey, prevStyleKey, setSafeStyleKey])
+		}
+		if (shouldSetStyle) {
+			map.on('style.load', onStyleLoad)
+			map.setSky() // Don't really know why, this saves use from having an ugly opaque layer on style change
+			map.setStyle(styleUrl, { diff: false }) //setting styleKey!== 'base' doesn't work, probably because the error comes from switching from base to another ?
+			//TODO the Oneway style in voyage style gets corrupted after switching to
+			//transit or another style, hence this temporary disable diff
+		} else {
+			setSafeStyleKey(styleKey)
+		}
+
+		return () => {
+			map.off('style.load', onStyleLoad)
+		}
+	}, [styleUrl, map, styleKey, setSafeStyleKey])
 
 	useRightClick(map)
 
@@ -307,6 +300,7 @@ export default function Map({
 			if (!autoPitchPreferenceIsNo)
 				setAutoPitchPreference(Math.round(new Date().getTime() / 1000))
 			const auto3d = !autoPitchPreferenceIsNo
+
 			map.flyTo({
 				center: [vers.longitude, vers.latitude],
 				zoom: tailoredZoom,
@@ -409,7 +403,7 @@ export default function Map({
 						map,
 						vers,
 						transportsData,
-						setTempStyle,
+						agencyAreas,
 						isTransportsMode,
 						safeStyleKey,
 						searchParams,

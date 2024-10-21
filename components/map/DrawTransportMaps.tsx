@@ -1,32 +1,30 @@
 import useDrawTransport from '@/app/effects/useDrawTransport'
 import { gtfsServerUrl } from '@/app/serverUrls'
+import {
+	defaultAgencyFilter,
+	getAgencyFilter,
+} from '@/app/transport/AgencyFilter'
 import { defaultTransitFilter } from '@/app/transport/TransitFilter'
 import { filterTransportFeatures } from '@/app/transport/filterTransportFeatures'
 import { sortBy } from '@/components/utils/utils'
-import { useEffect, useMemo, useState } from 'react'
+import { memo, useEffect, useMemo, useState } from 'react'
 import { useMediaQuery } from 'usehooks-ts'
 
 export default function DrawTransportMaps({
 	map,
 	transportsData,
-	setTempStyle,
+	agencyAreas,
 	safeStyleKey,
 	searchParams,
 	hasItinerary,
 }) {
-	useEffect(() => {
-		setTempStyle('light')
-		return () => {
-			setTempStyle(null)
-		}
-	}, [setTempStyle])
-
 	const {
 		routes: routesParam,
 		'type de train': trainType,
 		filtre: transitFilter = defaultTransitFilter,
 		arret: stop,
 		agence: selectedAgency,
+		gamme: agencyFilter = defaultAgencyFilter,
 	} = searchParams
 
 	const [selectedAgencyBbox, setSelectedAgencyBbox] = useState(null)
@@ -49,7 +47,10 @@ export default function DrawTransportMaps({
 		if (!selectedAgency) return
 
 		if (selectedAgencyBbox) return
-		if (transportsData?.find(([agencyId]) => agencyId === selectedAgency))
+		if (
+			transportsData &&
+			transportsData.find(([agencyId]) => agencyId === selectedAgency)
+		)
 			return
 
 		const doFetch = async () => {
@@ -66,24 +67,36 @@ export default function DrawTransportMaps({
 		doFetch()
 	}, [selectedAgency, transportsData, selectedAgencyBbox])
 
-	const agencyIdsHash = sortBy((id) => id)(
-		transportsData.map(([id]) => id)
-	).join('')
+	const agencyIdsHash =
+		transportsData &&
+		sortBy((id) => id)(transportsData.map(([id]) => id)).join('')
 
 	const dataToDraw = useMemo(() => {
 		console.log('memo transport dataToDraw', agencyIdsHash, transportsData)
-		return transportsData
-			.map(([agencyId, { features }]) => {
-				if (selectedAgency != null && agencyId !== selectedAgency) return false
-				const filteredFeatures = filterTransportFeatures(features, {
-					routesParam,
-					stop,
-					trainType,
-					transitFilter,
+		return (
+			transportsData &&
+			transportsData
+				.map(([agencyId, data]) => {
+					if (
+						!selectedAgency &&
+						agencyFilter &&
+						!getAgencyFilter((key) => key === agencyFilter).filter(data)
+					)
+						return false
+					const { bbox, features } = data
+					console.log('orange data', data)
+					if (selectedAgency != null && agencyId !== selectedAgency)
+						return false
+					const filteredFeatures = filterTransportFeatures(features, {
+						routesParam,
+						stop,
+						trainType,
+						transitFilter,
+					})
+					return [agencyId, filteredFeatures, bbox]
 				})
-				return [agencyId, filteredFeatures]
-			})
-			.filter(Boolean)
+				.filter(Boolean)
+		)
 	}, [
 		agencyIdsHash,
 		routesParam,
@@ -91,23 +104,34 @@ export default function DrawTransportMaps({
 		trainType,
 		transitFilter,
 		selectedAgency,
+		agencyFilter,
 	])
 
-	if (safeStyleKey !== 'light') return null
+	if (safeStyleKey !== 'transports') return null
 
-	return dataToDraw.map(([agencyId, features]) => (
-		<DrawTransportMap
+	if (!transportsData) return null
+	return dataToDraw.map(([agencyId, features, bbox]) => (
+		<DrawTransportMapMemo
 			key={agencyId}
 			agencyId={agencyId}
 			features={features}
 			map={map}
+			drawKey={'transitMap-agency-' + agencyId + (trainType || '')}
 			hasItinerary={hasItinerary}
+			bbox={bbox}
 		/>
 	))
 }
 
-const DrawTransportMap = ({ map, agencyId, features, hasItinerary }) => {
-	console.log('transportmap draw or redraw ', agencyId, features.length)
-	useDrawTransport(map, features, 'transitMap-agency-' + agencyId, hasItinerary)
+const DrawTransportMap = ({ map, features, hasItinerary, bbox, drawKey }) => {
+	console.log('orange draw or redraw ', drawKey, features.length)
+	useDrawTransport(map, features, drawKey, hasItinerary, bbox)
 	return null
 }
+
+const DrawTransportMapMemo = memo(
+	DrawTransportMap,
+	({ drawKey }, { drawKey: key2 }) => {
+		return drawKey === key2
+	}
+)

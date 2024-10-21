@@ -23,7 +23,7 @@
  * bbox
  **/
 
-import { useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import { getCategory } from '@/components/categories'
 import ModalSwitch from './ModalSwitch'
@@ -40,7 +40,9 @@ import FocusedImage from './FocusedImage'
 import { initialSnap } from './ModalSheet'
 import SafeMap from './SafeMap'
 import { defaultZoom } from './effects/useAddMap'
-import useFetchTransportMap from './effects/useFetchTransportMap'
+import useFetchTransportMap, {
+	useFetchAgencyAreas,
+} from './effects/useFetchTransportMap'
 import useGeocodeRightClick from './effects/useGeocodeRightClick'
 import useOsmRequest from './effects/useOsmRequest'
 import useOverpassRequest from './effects/useOverpassRequest'
@@ -49,6 +51,8 @@ import Meteo from './meteo/Meteo'
 import { getStyle } from './styles/styles'
 import useTransportStopData from './transport/useTransportStopData'
 import PanoramaxLoader from './PanoramaxLoader'
+import useWikidata from './useWikidata'
+
 // Map is forced as dynamic since it can't be rendered by nextjs server-side.
 // There is almost no interest to do that anyway, except image screenshots
 const Map = dynamic(() => import('./Map'), {
@@ -62,6 +66,7 @@ export default function Container({
 }) {
 	const setSearchParams = useSetSearchParams()
 	const [focusedImage, focusImage] = useState(null)
+	const [isMapLoaded, setMapLoaded] = useState(false)
 	const [bbox, setBbox] = useState(null)
 	const [zoom, setZoom] = useState(defaultZoom)
 	const [bboxImages, setBboxImages] = useState([])
@@ -78,10 +83,9 @@ export default function Container({
 	const [geolocation, setGeolocation] = useState(null)
 
 	const [safeStyleKey, setSafeStyleKey] = useState(null)
-	const [tempStyle, setTempStyle] = useState(null)
+	console.log('lightpink ssk', safeStyleKey)
 	const [localStorageStyleKey] = useLocalStorage('style', null)
-	const styleKey =
-		tempStyle || searchParams.style || localStorageStyleKey || 'france'
+	const styleKey = searchParams.style || localStorageStyleKey || 'france'
 	const style = getStyle(styleKey)
 
 	const styleChooser = searchParams['choix du style'] === 'oui',
@@ -143,6 +147,11 @@ export default function Container({
 
 	const osmFeature = vers?.osmFeature
 
+	const lonLat = osmFeature && [osmFeature.lon, osmFeature.lat]
+	const wikidata = useWikidata(osmFeature, state, lonLat)
+
+	console.log('wikidata3', wikidata, osmFeature)
+
 	const panoramaxOsmTag = osmFeature?.tags?.panoramax
 
 	const panoramaxId = searchParams.panoramax
@@ -151,12 +160,13 @@ export default function Container({
 		setLatLngClicked,
 		panoramaxOsmTag,
 		panoramaxId,
+		wikidata,
 	})
 
 	const transportStopData = useTransportStopData(osmFeature)
 	const clickedStopData = transportStopData[0] || []
 
-	const isTransportsMode = searchParams.transports === 'oui'
+	const isTransportsMode = styleKey === 'transports'
 
 	const fetchAll = searchParams.tout
 	const transportsData = useFetchTransportMap(
@@ -168,6 +178,7 @@ export default function Container({
 		fetchAll,
 		agencyEntry
 	)
+	const agencyAreas = useFetchAgencyAreas(isTransportsMode)
 
 	// TODO reintroduce gare display through the transport style option + the bike
 	// mode below
@@ -213,7 +224,7 @@ export default function Container({
 	const containerRef = useRef()
 	return (
 		<div ref={containerRef}>
-			<MapContainer>
+			<MapContainer $isMapLoaded={isMapLoaded}>
 				<ContentWrapper>
 					<ModalSwitch
 						{...{
@@ -233,6 +244,7 @@ export default function Container({
 							setZoom,
 							searchParams,
 							style,
+							styleKey,
 							styleChooser,
 							setStyleChooser,
 							itinerary,
@@ -240,6 +252,7 @@ export default function Container({
 							geocodedClickedPoint,
 							resetClickedPoint,
 							transportsData,
+							agencyAreas,
 							geolocation,
 							bboxImages,
 							bbox,
@@ -251,6 +264,7 @@ export default function Container({
 							trackedSnap,
 							setTrackedSnap,
 							geocodedClickedPoint,
+							wikidata,
 						}}
 					/>
 				</ContentWrapper>
@@ -274,6 +288,7 @@ export default function Container({
 						isTransportsMode,
 						transportStopData,
 						transportsData,
+						agencyAreas,
 						clickedStopData,
 						bikeRouteProfile,
 						showOpenOnly,
@@ -293,13 +308,14 @@ export default function Container({
 						geocodedClickedPoint,
 						setGeolocation,
 						setZoom,
-						setTempStyle,
 						center,
 						setState,
 						setLatLngClicked,
 						setSafeStyleKey,
 						quickSearchFeatures,
 						panoramaxPosition,
+						setMapLoaded,
+						wikidata,
 					}}
 				/>
 			</MapContainer>
