@@ -163,7 +163,6 @@ const Item = ({
 					}
 				`}
 			>
-				<StepIcon text={letterFromIndex(index)} />{' '}
 				<span
 					onClick={() => {
 						console.log('lightgreen allezpart', 'coucou')
@@ -176,7 +175,7 @@ const Item = ({
 						)
 					}}
 				>
-					<Icon text={letterFromIndex(index)} />{' '}
+					<StepIcon text={letterFromIndex(index)} />{' '}
 					<span
 						css={`
 							min-width: 6rem;
