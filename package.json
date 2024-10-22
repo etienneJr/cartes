@@ -79,7 +79,7 @@
 		"geovisio": "^3.0.2",
 		"gray-matter": "^4.0.3",
 		"jsdom": "^25.0.1",
-		"maplibre-gl": "^4.7.1",
+		"maplibre-gl": "5.0.0-pre.3",
 		"next": "^15.0.0",
 		"next-contentlayer2": "0.5.1",
 		"next-mdx-remote": "^5.0.0",
