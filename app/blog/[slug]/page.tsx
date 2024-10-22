@@ -2,7 +2,7 @@ import { allArticles } from '@/.contentlayer/generated'
 import Article from '@/components/Article'
 import BlueskyComments from '@/components/BlueskyComments'
 import css from '@/components/css/convertToJs'
-import { useMDXComponent } from 'next-contentlayer2/hooks'
+import { getMDXComponent } from 'next-contentlayer2/hooks'
 import Image from 'next/image'
 import Link from 'next/link'
 import Contribution from '../Contribution'
@@ -36,7 +36,7 @@ export default async function Post(props: Props) {
 		(post) => post._raw.flattenedPath === params.slug
 	)
 
-	const MDXContent = useMDXComponent(post.body.code)
+	const MDXContent = getMDXComponent(post.body.code)
 	const lastEdit = await getLastEdit(params.slug)
 
 	const sameEditDate =
