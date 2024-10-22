@@ -1,7 +1,7 @@
 import { ThemeColorsProvider } from '@/components/utils/colors'
 import { Metadata } from 'next'
 import '../globals.css'
-import { StyleSheetManager } from 'next-styled-components'
+import StyledComponentsRegistry from '../lib/registry'
 
 const title = `Cartes`
 export const description =
@@ -10,14 +10,11 @@ export const description =
 //old description to be rewritter when we really cover train+vélo
 //"Comment voyager sans voiture ? Comment gérer les derniers kilomètres après l'arrivée à la gare ? Comment se déplacer pendant le weekend ? Où louer une voiture ou un vélo ? On vous guide, pour que le voyage sans voiture personnelle soit un plaisir."
 
-export async function generateMetadata(
-	props: Props,
-	parent?: ResolvingMetadata
-): Promise<Metadata> {
-	const searchParams = await props.searchParams
-	const params = await props.params
-	const image = `/vignette.png`
-	return {
+export async function generateMetadata(props: Props, parent?: ResolvingMetadata): Promise<Metadata> {
+    const searchParams = await props.searchParams;
+    const params = await props.params;
+    const image = `/vignette.png`
+    return {
 		title,
 		description,
 		metadataBase: new URL('https://cartes.app'),
@@ -40,9 +37,9 @@ export default function ({ children }) {
 				/>
 			</head>
 			<body>
-				<StyleSheetManager>
+				<StyledComponentsRegistry>
 					<ThemeColorsProvider>{children}</ThemeColorsProvider>
-				</StyleSheetManager>
+				</StyledComponentsRegistry>
 			</body>
 		</html>
 	)
