@@ -1,4 +1,4 @@
-import sphericalMercator from '@mapbox/sphericalmercator'
+import { SphericalMercator } from '@mapbox/sphericalmercator'
 import { RequestParameters } from 'maplibre-gl'
 import { PMTiles } from 'pmtiles'
 
@@ -67,7 +67,7 @@ export class Protocol {
 		const x = result[3]
 		const y = result[4]
 
-		const bbox = new sphericalMercator().bbox(x, y, z)
+		const bbox = new SphericalMercator().bbox(x, y, z)
 
 		console.log('boup tile', x, y, z, params)
 
