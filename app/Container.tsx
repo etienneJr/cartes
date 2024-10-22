@@ -52,6 +52,8 @@ import { getStyle } from './styles/styles'
 import useTransportStopData from './transport/useTransportStopData'
 import useWikidata from './useWikidata'
 
+// We don't want to redraw <Content instantaneously on map zoom or drag
+const contentDebounceDelay = 500
 export default function Container({
 	searchParams,
 	state: givenState,
@@ -61,8 +63,9 @@ export default function Container({
 	const [focusedImage, focusImage] = useState(null)
 	const [isMapLoaded, setMapLoaded] = useState(false)
 	const [bbox, setBbox] = useState(null)
-	const debouncedBbox = useDebounce(bbox, 300)
+	const debouncedBbox = useDebounce(bbox, contentDebounceDelay)
 	const [zoom, setZoom] = useState(defaultZoom)
+	const debouncedZoom = useDebounce(zoom, contentDebounceDelay)
 	const [bboxImages, setBboxImages] = useState([])
 	const [latLngClicked, setLatLngClicked] = useState(null)
 	const resetClickedPoint = () => setSearchParams({ clic: undefined })
@@ -234,7 +237,7 @@ export default function Container({
 							zoneImages,
 							panoramaxImages,
 							resetZoneImages,
-							zoom,
+							zoom: debouncedZoom,
 							setZoom,
 							searchParams,
 							style,
