@@ -86,6 +86,7 @@ const nextConfig = {
 		config.resolve.alias = {
 			...config.resolve.alias,
 			//https://github.com/Turfjs/turf/issues/2200
+			'styled-components': 'next-styled-components',
 			rbush: path.resolve(__dirname, '/node_modules/rbush/rbush.js'),
 		}
 
