@@ -10,13 +10,13 @@ import OtherArticles from '../OtherArticles'
 import { mdxComponents } from '../mdxComponents'
 import { dateCool, getLastEdit } from '../utils'
 
-export const generateMetadata = async props => {
-    const params = await props.params;
-    const post = allArticles.find(
+export const generateMetadata = async (props) => {
+	const params = await props.params
+	const post = allArticles.find(
 		(post) => post._raw.flattenedPath === params.slug
 	)
-    const lastEdit = await getLastEdit(params.slug)
-    return {
+	const lastEdit = await getLastEdit(params.slug)
+	return {
 		title: post.titre.raw,
 		description: post.description,
 		openGraph: {
@@ -30,17 +30,18 @@ export const generateMetadata = async props => {
 }
 
 export default async function Post(props: Props) {
-    const params = await props.params;
-    const post = allArticles.find(
+	const params = await props.params
+	console.log('SLUG', params.slug)
+	const post = allArticles.find(
 		(post) => post._raw.flattenedPath === params.slug
 	)
 
-    const MDXContent = useMDXComponent(post.body.code)
-    const lastEdit = await getLastEdit(params.slug)
+	const MDXContent = useMDXComponent(post.body.code)
+	const lastEdit = await getLastEdit(params.slug)
 
-    const sameEditDate =
+	const sameEditDate =
 		!lastEdit || post.date.slice(0, 10) === lastEdit.slice(0, 10)
-    return (
+	return (
 		<div>
 			<Article>
 				{!post.tags?.includes('page') && (

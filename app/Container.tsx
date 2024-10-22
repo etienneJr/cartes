@@ -23,7 +23,7 @@
  * bbox
  **/
 
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 
 import { getCategory } from '@/components/categories'
 import ModalSwitch from './ModalSwitch'
@@ -34,10 +34,10 @@ import useSetItineraryModeFromUrl from './itinerary/useSetItineraryModeFromUrl'
 import { mapLibreBboxToOverpass } from '@/components/mapUtils'
 import useSetSearchParams from '@/components/useSetSearchParams'
 import { useDebounce } from '@/components/utils'
-import dynamic from 'next/dynamic'
 import { useLocalStorage } from 'usehooks-ts'
 import FocusedImage from './FocusedImage'
 import { initialSnap } from './ModalSheet'
+import PanoramaxLoader from './PanoramaxLoader'
 import SafeMap from './SafeMap'
 import { defaultZoom } from './effects/useAddMap'
 import useFetchTransportMap, {
@@ -50,14 +50,7 @@ import useFetchItinerary from './itinerary/useFetchItinerary'
 import Meteo from './meteo/Meteo'
 import { getStyle } from './styles/styles'
 import useTransportStopData from './transport/useTransportStopData'
-import PanoramaxLoader from './PanoramaxLoader'
 import useWikidata from './useWikidata'
-
-// Map is forced as dynamic since it can't be rendered by nextjs server-side.
-// There is almost no interest to do that anyway, except image screenshots
-const Map = dynamic(() => import('./Map'), {
-	ssr: false,
-})
 
 export default function Container({
 	searchParams,
@@ -68,6 +61,7 @@ export default function Container({
 	const [focusedImage, focusImage] = useState(null)
 	const [isMapLoaded, setMapLoaded] = useState(false)
 	const [bbox, setBbox] = useState(null)
+	const debouncedBbox = useDebounce(bbox, 300)
 	const [zoom, setZoom] = useState(defaultZoom)
 	const [bboxImages, setBboxImages] = useState([])
 	const [latLngClicked, setLatLngClicked] = useState(null)
@@ -209,9 +203,9 @@ export default function Container({
 	/* The bbox could be computed from the URL hash, for this to run on the
 	 * server but I'm not sure we want it, and I'm not sure Next can get the hash
 	 * server-side, it's a client-side html element */
-	const simpleArrayBbox = useDebounce(
-		bbox && mapLibreBboxToOverpass(bbox),
-		200 // TODO Ideally, just above https://maplibre.org/maplibre-gl-js/docs/API/type-aliases/FlyToOptions/
+	const simpleArrayBbox = useMemo(
+		() => debouncedBbox && mapLibreBboxToOverpass(debouncedBbox), // TODO Ideally, just above https://maplibre.org/maplibre-gl-js/docs/API/type-aliases/FlyToOptions/
+		[debouncedBbox]
 	)
 
 	const [quickSearchFeatures] = useOverpassRequest(simpleArrayBbox, category)
@@ -255,7 +249,7 @@ export default function Container({
 							agencyAreas,
 							geolocation,
 							bboxImages,
-							bbox,
+							bbox: debouncedBbox,
 							focusImage,
 							vers,
 							osmFeature,

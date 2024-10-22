@@ -81,7 +81,7 @@
 		"jsdom": "^22.1.0",
 		"maplibre-gl": "^5.0.0-pre.1",
 		"next": "^15.0.0",
-		"next-contentlayer2": "^0.4.6",
+		"next-contentlayer2": "0.5.1",
 		"next-mdx-remote": "^5.0.0",
 		"opening_hours": "^3.8.0",
 		"openmoji": "^15.0.0",
