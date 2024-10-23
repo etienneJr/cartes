@@ -1,5 +1,7 @@
+import { Loader } from '@/components/loader'
 import useSetSearchParams from '@/components/useSetSearchParams'
 import { getThumb } from '@/components/wikidata'
+import Link from 'next/link'
 import { useEffect } from 'react'
 import { useLocalStorage } from 'usehooks-ts'
 import BookmarkButton from './BookmarkButton'
@@ -22,13 +24,10 @@ import Itinerary from './itinerary/Itinerary'
 import { getHasStepBeingSearched } from './itinerary/Steps'
 import getUrl from './osm/getUrl'
 import StyleChooser from './styles/StyleChooser'
-import { defaultTransitFilter } from './transport/TransitFilter'
 import { defaultAgencyFilter } from './transport/AgencyFilter'
+import { defaultTransitFilter } from './transport/TransitFilter'
 import TransportMap from './transport/TransportMap'
 import useOgImageFetcher from './useOgImageFetcher'
-import Link from 'next/link'
-import { Loader } from '@/components/loader'
-import { useWhatChanged } from '@/components/utils/useWhatChanged'
 
 const getMinimumQuickSearchZoom = (mobile) => (mobile ? 10.5 : 12) // On a small screen, 70 %  of the tiles are not visible, hence this rule
 
@@ -73,7 +72,7 @@ export default function Content(props) {
 		wikidata,
 	} = props
 
-	useWhatChanged(props)
+	//useWhatChanged(props, 'Content')
 
 	const tags = osmFeature?.tags
 	const url = tags && getUrl(tags)

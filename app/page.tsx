@@ -10,11 +10,13 @@ import Container from './Container'
 import getName from './osm/getName'
 import getUrl from './osm/getUrl'
 import { stepOsmRequest } from './stepOsmRequest'
+import { Suspense } from 'react'
 
 export async function generateMetadata(
 	props: Props,
 	parent: ResolvingMetadata
 ): Promise<Metadata> {
+	console.log('Rendering server side app/page')
 	const searchParams = await props.searchParams
 
 	if (searchParams.style === 'elections')
@@ -87,11 +89,13 @@ const Page = async (props) => {
 				minHeight: '100vh',
 			}}
 		>
-			<Container
-				searchParams={searchParams}
-				state={state}
-				agencyEntry={agencyEntry}
-			/>
+			<Suspense>
+				<Container
+					searchParams={searchParams}
+					state={state}
+					agencyEntry={agencyEntry}
+				/>
+			</Suspense>
 		</main>
 	)
 }

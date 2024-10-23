@@ -1,6 +1,9 @@
 import { useEffect, useRef } from 'react'
 
-export function useWhatChanged(props: { [prop: string]: unknown }) {
+export function useWhatChanged(
+	props: { [prop: string]: unknown },
+	fromWhom: string = 'unknown'
+) {
 	// cache the last set of props
 	const prev = useRef(props)
 
@@ -21,7 +24,7 @@ export function useWhatChanged(props: { [prop: string]: unknown }) {
 		)
 
 		if (Object.keys(changed).length > 0) {
-			console.log('Props That Changed', changed)
+			console.log('Props That Changed from ' + fromWhom, changed)
 		}
 
 		prev.current = props

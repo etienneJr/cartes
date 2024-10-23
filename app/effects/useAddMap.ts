@@ -6,6 +6,7 @@ import { Protocol as ProtomapsProtocol } from 'pmtiles'
 import useGeolocation from './useGeolocation'
 import frenchMaplibreLocale from '@/components/map/frenchMaplibreLocale.ts'
 import { Protocol as CartesProtocol } from '@/components/map/CartesProtocol.ts'
+import useEffectDebugger from '@/components/useEffectDebugger'
 
 /*
  *
@@ -43,7 +44,7 @@ export const defaultProjection = {
 // should let the light follow the real sun, and enable the user to tweak it
 export const defaultLight = {
 	anchor: 'viewport',
-	color: 'orange',
+	color: 'red',
 	intensity: 0.1,
 	position: [1.55, 180, 180],
 }
@@ -122,7 +123,7 @@ export default function useAddMap(
 		}
 	}, [map, autoPitchPreference, setAutoPitchPreference])
 
-	useEffect(() => {
+	useEffectDebugger(() => {
 		if (!mapContainerRef.current) return undefined
 
 		const newMap = new maplibregl.Map({

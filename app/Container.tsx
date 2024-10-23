@@ -52,10 +52,14 @@ import { getStyle } from './styles/styles'
 import useTransportStopData from './transport/useTransportStopData'
 import useWikidata from './useWikidata'
 import { useSearchParams } from 'next/navigation'
+import { useWhatChanged } from '@/components/utils/useWhatChanged'
 
 // We don't want to redraw <Content instantaneously on map zoom or drag
 const contentDebounceDelay = 500
-export default function Container({ state: givenState, agencyEntry }) {
+
+export default function Container(props) {
+	const { state: givenState, agencyEntry } = props
+
 	const setSearchParams = useSetSearchParams()
 	const clientSearchParams = useSearchParams(),
 		searchParams = Object.fromEntries(clientSearchParams.entries())

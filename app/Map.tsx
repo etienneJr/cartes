@@ -30,6 +30,7 @@ import useMapClick from './effects/useMapClick'
 import useRightClick from './effects/useRightClick'
 import useSearchLocalTransit from './effects/useSearchLocalTransit'
 import useDrawItinerary from './itinerary/useDrawItinerary'
+import { useWhatChanged } from '@/components/utils/useWhatChanged'
 
 if (process.env.NEXT_PUBLIC_MAPTILER == null) {
 	throw new Error('You have to configure env NEXT_PUBLIC_MAPTILER, see README')
@@ -40,45 +41,47 @@ if (process.env.NEXT_PUBLIC_MAPTILER == null) {
  * interactions. Components that can be rendered server side to make beautiful and useful meta previews of URLs must be written in the Container component or above
  *******/
 
-export default function Map({
-	searchParams,
-	state,
-	vers,
-	target,
-	zoom,
-	osmFeature,
-	isTransportsMode,
-	transportStopData,
-	transportsData,
-	agencyAreas,
-	clickedStopData,
-	itinerary,
-	bikeRouteProfile,
-	showOpenOnly,
-	category,
-	bbox,
-	setBbox,
-	gares,
-	clickGare,
-	clickedGare,
-	setBboxImages,
-	focusImage,
-	styleKey,
-	safeStyleKey,
-	setSafeStyleKey,
-	styleChooser,
-	setStyleChooser,
-	setZoom,
-	setGeolocation,
-	center,
-	setState,
-	setLatLngClicked,
-	quickSearchFeatures,
-	trackedSnap,
-	panoramaxPosition,
-	setMapLoaded,
-	wikidata,
-}) {
+export default function Map(props) {
+	const {
+		searchParams,
+		state,
+		vers,
+		target,
+		zoom,
+		osmFeature,
+		isTransportsMode,
+		transportStopData,
+		transportsData,
+		agencyAreas,
+		clickedStopData,
+		itinerary,
+		bikeRouteProfile,
+		showOpenOnly,
+		category,
+		bbox,
+		setBbox,
+		gares,
+		clickGare,
+		clickedGare,
+		setBboxImages,
+		focusImage,
+		styleKey,
+		safeStyleKey,
+		setSafeStyleKey,
+		styleChooser,
+		setStyleChooser,
+		setZoom,
+		setGeolocation,
+		center,
+		setState,
+		setLatLngClicked,
+		quickSearchFeatures,
+		trackedSnap,
+		panoramaxPosition,
+		setMapLoaded,
+		wikidata,
+	} = props
+	useWhatChanged(props, 'Map')
 	const mapContainerRef = useRef(null)
 	const stepsLength = state.filter((step) => step?.key).length
 	const [autoPitchPreference, setAutoPitchPreference] = useLocalStorage(
