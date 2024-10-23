@@ -42,11 +42,18 @@ export const defaultProjection = {
 }
 // TODO I haven't yet understood how to handle this. With the globe mode, we
 // should let the light follow the real sun, and enable the user to tweak it
-export const defaultLight = {
+export const globeLight = {
 	anchor: 'viewport',
 	color: 'pink',
 	intensity: 0.1,
 	position: [1.55, 180, 180],
+}
+
+export const highZoomLight = {
+	anchor: 'viewport',
+	color: '#ffffff',
+	intensity: 0.5,
+	position: [1.15, 210, 30],
 }
 
 const defaultCenter =
@@ -175,7 +182,7 @@ export default function useAddMap(
 		newMap.on('style.load', () => {
 			newMap.setSky(defaultSky)
 			newMap.setProjection(defaultProjection)
-			newMap.setLight(defaultLight)
+			newMap.setLight(highZoomLight)
 		})
 
 		newMap.on('moveend', (e) => {
