@@ -7,7 +7,7 @@ import { sortGares } from './gares'
 import MapButtons from '@/components/MapButtons'
 import { goodIconSize, useComputeMapPadding } from '@/components/mapUtils'
 import useSetSearchParams from '@/components/useSetSearchParams'
-import useAddMap, { defaultSky } from './effects/useAddMap'
+import useAddMap, { defaultLight, defaultSky } from './effects/useAddMap'
 import useDrawQuickSearchFeatures from './effects/useDrawQuickSearchFeatures'
 import { getStyle } from './styles/styles'
 import useHoverOnMapFeatures from './useHoverOnMapFeatures'
@@ -212,6 +212,9 @@ export default function Map({
 		map.on('zoom', () => {
 			const approximativeZoom = Math.round(map.getZoom())
 			if (approximativeZoom !== zoom) setZoom(approximativeZoom)
+
+			if (approximativeZoom < 6) map.setLight(defaultLight)
+			if (approximativeZoom >= 6) map.setLight({})
 		})
 		map.on('moveend', () => {
 			setBbox(map.getBounds().toArray())

@@ -41,10 +41,10 @@ export const defaultProjection = {
 }
 // TODO I haven't yet understood how to handle this. With the globe mode, we
 // should let the light follow the real sun, and enable the user to tweak it
-const defaultLight = {
+export const defaultLight = {
 	anchor: 'viewport',
-	color: 'white',
-	intensity: 0.9,
+	color: 'orange',
+	intensity: 0.1,
 	position: [1.55, 180, 180],
 }
 
