@@ -51,15 +51,15 @@ import Meteo from './meteo/Meteo'
 import { getStyle } from './styles/styles'
 import useTransportStopData from './transport/useTransportStopData'
 import useWikidata from './useWikidata'
+import { useSearchParams } from 'next/navigation'
 
 // We don't want to redraw <Content instantaneously on map zoom or drag
 const contentDebounceDelay = 500
-export default function Container({
-	searchParams,
-	state: givenState,
-	agencyEntry,
-}) {
+export default function Container({ state: givenState, agencyEntry }) {
 	const setSearchParams = useSetSearchParams()
+	const clientSearchParams = useSearchParams(),
+		searchParams = Object.fromEntries(clientSearchParams.entries())
+
 	const [focusedImage, focusImage] = useState(null)
 	const [isMapLoaded, setMapLoaded] = useState(false)
 	const [bbox, setBbox] = useState(null)
