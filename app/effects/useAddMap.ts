@@ -44,7 +44,7 @@ export const defaultProjection = {
 // should let the light follow the real sun, and enable the user to tweak it
 export const defaultLight = {
 	anchor: 'viewport',
-	color: 'red',
+	color: 'pink',
 	intensity: 0.1,
 	position: [1.55, 180, 180],
 }
@@ -63,7 +63,11 @@ export default function useAddMap(
 	setBbox,
 	mapContainerRef,
 	setGeolocation,
-	setMapLoaded
+	setMapLoaded,
+	// This for hot reload, I don't why this hook gets called again losing the map
+	// state, very annoying
+	center,
+	zoom
 ) {
 	const [map, setMap] = useState(null)
 	const [geolocate, setGeolocate] = useState(null)
@@ -130,8 +134,8 @@ export default function useAddMap(
 			container: mapContainerRef.current,
 			style: styleUrl,
 			maxPitch: 85,
-			center: defaultCenter,
-			zoom: defaultZoom,
+			center: center || defaultCenter,
+			zoom: zoom || defaultZoom,
 			hash: true,
 			attributionControl: false,
 			locale: frenchMaplibreLocale,

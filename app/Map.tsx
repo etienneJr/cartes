@@ -99,7 +99,9 @@ export default function Map(props) {
 		setBbox,
 		mapContainerRef,
 		setGeolocation,
-		setMapLoaded
+		setMapLoaded,
+		center,
+		zoom
 	)
 	const setSearchParams = useSetSearchParams()
 
