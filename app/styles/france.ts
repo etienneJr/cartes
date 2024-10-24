@@ -1484,6 +1484,21 @@ const layers = [
 		},
 		paint: {
 			'line-color': 'hsl(0,0%,100%)',
+
+			/** take maxspeed to color the road
+			'line-color': [
+				'case',
+				['!', ['has', 'maxspeed']],
+				'#99a6c3',
+				['<=', ['to-number', ['get', 'maxspeed']], 20],
+				'hsl(0,0%,100%)',
+				['<=', ['to-number', ['get', 'maxspeed']], 30],
+				'hsl(0,0%,90%)',
+				['<=', ['to-number', ['get', 'maxspeed']], 50],
+				'hsl(0,0%,60%)',
+				'hsl(0,0%,30%)',
+			],
+			*/
 			'line-width': [
 				'interpolate',
 				['linear', 2],
