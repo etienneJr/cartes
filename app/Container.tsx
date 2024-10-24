@@ -53,6 +53,7 @@ import useTransportStopData from './transport/useTransportStopData'
 import useWikidata from './useWikidata'
 import { useSearchParams } from 'next/navigation'
 import { useWhatChanged } from '@/components/utils/useWhatChanged'
+import { computeCenterFromBbox } from './utils'
 
 // We don't want to redraw <Content instantaneously on map zoom or drag
 const contentDebounceDelay = 500
@@ -66,9 +67,13 @@ export default function Container(props) {
 
 	const [focusedImage, focusImage] = useState(null)
 	const [isMapLoaded, setMapLoaded] = useState(false)
+	const [lastGeolocation, setLastGeolocation] = useLocalStorage(
+		'lastGeolocation',
+		{ center: null, zoom: null }
+	)
 	const [bbox, setBbox] = useState(null)
 	const debouncedBbox = useDebounce(bbox, contentDebounceDelay)
-	const [zoom, setZoom] = useState(defaultZoom)
+	const [zoom, setZoom] = useState(lastGeolocation.zoom || defaultZoom)
 	const debouncedZoom = useDebounce(zoom, contentDebounceDelay)
 	const [bboxImages, setBboxImages] = useState([])
 	const [latLngClicked, setLatLngClicked] = useState(null)
@@ -94,9 +99,8 @@ export default function Container(props) {
 			setSearchParams({ 'choix du style': state ? 'oui' : undefined })
 
 	const center = useMemo(
-		() =>
-			bbox && [(bbox[0][0] + bbox[1][0]) / 2, (bbox[0][1] + bbox[1][1]) / 2],
-		[bbox]
+		() => (bbox ? computeCenterFromBbox(bbox) : lastGeolocation.center),
+		[bbox, lastGeolocation.center]
 	)
 	// In this query param is stored an array of points. If only one, it's just a
 	// place focused on.
@@ -316,6 +320,8 @@ export default function Container(props) {
 						panoramaxPosition,
 						setMapLoaded,
 						wikidata,
+						setLastGeolocation,
+						lastGeolocation,
 					}}
 				/>
 			</MapContainer>

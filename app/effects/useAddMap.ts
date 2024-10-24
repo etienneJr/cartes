@@ -79,6 +79,7 @@ export default function useAddMap(
 	const [map, setMap] = useState(null)
 	const [geolocate, setGeolocate] = useState(null)
 	const isMobile = useMediaQuery('(max-width: 800px)')
+
 	const geolocation = useGeolocation({
 		latitude: defaultCenter[1],
 		longitude: defaultCenter[0],

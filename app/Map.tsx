@@ -36,6 +36,7 @@ import useRightClick from './effects/useRightClick'
 import useSearchLocalTransit from './effects/useSearchLocalTransit'
 import useDrawItinerary from './itinerary/useDrawItinerary'
 import { useWhatChanged } from '@/components/utils/useWhatChanged'
+import { computeCenterFromBbox } from './utils'
 
 if (process.env.NEXT_PUBLIC_MAPTILER == null) {
 	throw new Error('You have to configure env NEXT_PUBLIC_MAPTILER, see README')
@@ -85,6 +86,8 @@ export default function Map(props) {
 		panoramaxPosition,
 		setMapLoaded,
 		wikidata,
+		setLastGeolocation,
+		lastGeolocation,
 	} = props
 	useWhatChanged(props, 'Map')
 	const mapContainerRef = useRef(null)
@@ -93,6 +96,7 @@ export default function Map(props) {
 		'autoPitchPreference',
 		null
 	)
+
 	const autoPitchPreferenceIsNo = autoPitchPreference === 'no'
 
 	const style = useMemo(() => getStyle(styleKey), [styleKey]),
@@ -224,6 +228,10 @@ export default function Map(props) {
 		map.on('zoom', () => {
 			const approximativeZoom = Math.round(map.getZoom())
 			if (approximativeZoom !== zoom) setZoom(approximativeZoom)
+			setLastGeolocation({
+				center: lastGeolocation.center,
+				zoom: approximativeZoom,
+			})
 
 			if (approximativeZoom < 6 && lightType === 'highZoom') {
 				setLightType('globeLight')
@@ -236,6 +244,10 @@ export default function Map(props) {
 		})
 		map.on('moveend', () => {
 			setBbox(map.getBounds().toArray())
+			setLastGeolocation({
+				center: computeCenterFromBbox(bbox),
+				zoom: lastGeolocation.zoom,
+			})
 		})
 	}, [zoom, setZoom, map, setBbox, setLightType, lightType])
 
