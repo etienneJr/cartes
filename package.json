@@ -80,7 +80,7 @@
 		"gray-matter": "^4.0.3",
 		"jsdom": "^25.0.1",
 		"maplibre-gl": "5.0.0-pre.3",
-		"next": "^15.0.0",
+		"next": "15.0.1",
 		"next-contentlayer2": "0.5.1",
 		"next-mdx-remote": "^5.0.0",
 		"opening_hours": "^3.8.0",
