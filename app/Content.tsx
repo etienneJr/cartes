@@ -28,6 +28,7 @@ import { defaultAgencyFilter } from './transport/AgencyFilter'
 import { defaultTransitFilter } from './transport/TransitFilter'
 import TransportMap from './transport/TransportMap'
 import useOgImageFetcher from './useOgImageFetcher'
+import { useWhatChanged } from '@/components/utils/useWhatChanged'
 
 const getMinimumQuickSearchZoom = (mobile) => (mobile ? 10.5 : 12) // On a small screen, 70 %  of the tiles are not visible, hence this rule
 
@@ -72,7 +73,7 @@ export default function Content(props) {
 		wikidata,
 	} = props
 
-	//useWhatChanged(props, 'Content')
+	useWhatChanged(props, 'Render component Content')
 
 	const tags = osmFeature?.tags
 	const url = tags && getUrl(tags)

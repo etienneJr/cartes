@@ -89,7 +89,7 @@ export default function Map(props) {
 		setLastGeolocation,
 		lastGeolocation,
 	} = props
-	useWhatChanged(props, 'Map')
+	useWhatChanged(props, 'Render component Map')
 	const mapContainerRef = useRef(null)
 	const stepsLength = state.filter((step) => step?.key).length
 	const [autoPitchPreference, setAutoPitchPreference] = useLocalStorage(
