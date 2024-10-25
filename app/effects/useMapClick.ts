@@ -80,7 +80,11 @@ export default function useMapClick(
 
 			if (circo) return setSearchParams({ ...circo })
 
-			console.log('clicked map features', rawFeatures)
+			console.log(
+				'clicked map features',
+				rawFeatures && rawFeatures[0].properties,
+				rawFeatures
+			)
 
 			if (!features.length || !features[0].id) {
 				console.log('clicked no features', features)

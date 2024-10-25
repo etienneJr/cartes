@@ -477,7 +477,7 @@ const layers = [
 		source: 'openmaptiles',
 		'source-layer': 'transportation',
 		layout: { visibility: 'visible' },
-		paint: { 'fill-color': 'hsl(259, 43%, 64%)', 'fill-opacity': 0.3 },
+		paint: { 'fill-color': '#feecdf', 'fill-opacity': 0.9 },
 		metadata: {},
 		filter: [
 			'all',
@@ -1483,9 +1483,8 @@ const layers = [
 			visibility: 'visible',
 		},
 		paint: {
-			'line-color': 'hsl(0,0%,100%)',
+			//'line-color': 'hsl(0,0%,100%)',
 
-			/** take maxspeed to color the road
 			'line-color': [
 				'case',
 				['!', ['has', 'maxspeed']],
@@ -1498,7 +1497,6 @@ const layers = [
 				'hsl(0,0%,60%)',
 				'hsl(0,0%,30%)',
 			],
-			*/
 			'line-width': [
 				'interpolate',
 				['linear', 2],
@@ -1699,6 +1697,7 @@ const layers = [
 			['==', 'class', 'motorway'],
 		],
 	},
+	/* Not sure we need a path outline, hence deactivated for now
 	{
 		id: 'Path outline',
 		type: 'line',
@@ -1729,7 +1728,7 @@ const layers = [
 			['in', 'class', 'path', 'pedestrian'],
 			['!=', 'brunnel', 'tunnel'],
 		],
-	},
+	},*/
 	{
 		id: 'Path',
 		type: 'line',
@@ -1742,7 +1741,7 @@ const layers = [
 			visibility: 'visible',
 		},
 		paint: {
-			'line-color': '#6F5D98',
+			'line-color': '#ecd0bc',
 			'line-width': {
 				base: 1.2,
 				stops: [
@@ -1754,8 +1753,8 @@ const layers = [
 			},
 			'line-dasharray': {
 				stops: [
-					[14, [1, 0.5]],
-					[18, [1, 0.25]],
+					[14, [1, 2]],
+					[18, [1, 1]],
 				],
 			},
 		},
@@ -2920,7 +2919,7 @@ const layers = [
 		type: 'symbol',
 		source: 'openmaptiles',
 		'source-layer': 'poi',
-		minzoom: 12,
+		minzoom: 10,
 		maxzoom: 22,
 		layout: {
 			'icon-size': {
@@ -2940,9 +2939,9 @@ const layers = [
 			'icon-image': [
 				'match',
 				['get', 'subclass'],
-				['station'],
+				['station', 'halt'],
 				'railway',
-				['subway', 'halt'],
+				['subway'],
 				'subway',
 				['tram_stop'],
 				'tramway',
