@@ -152,8 +152,7 @@ export default function Container(props) {
 
 	const osmFeature = vers?.osmFeature
 
-	const lonLat = osmFeature && [osmFeature.lon, osmFeature.lat]
-	const wikidata = useWikidata(osmFeature, state, lonLat)
+	const wikidata = useWikidata(osmFeature, state)
 
 	console.log('wikidata3', wikidata, osmFeature)
 
