@@ -2935,6 +2935,7 @@ const layers = [
 		layout: {
 			'icon-size': {
 				stops: [
+					[10, 0.7],
 					[13, 0.8],
 					[18, 1],
 				],
@@ -2942,6 +2943,7 @@ const layers = [
 			'text-font': ['Roboto Medium Regular', 'Noto Sans Regular'],
 			'text-size': {
 				stops: [
+					[10, 10],
 					[13, 11],
 					[16, 12],
 					[22, 16],
@@ -2973,7 +2975,7 @@ const layers = [
 				'step',
 				['zoom'],
 				0,
-				12,
+				10,
 				['match', ['get', 'subclass'], ['station'], 1, 0],
 				14,
 				['match', ['get', 'subclass'], ['station', 'subway'], 1, 0],
@@ -2994,7 +2996,7 @@ const layers = [
 				'step',
 				['zoom'],
 				0,
-				12,
+				10,
 				['match', ['get', 'subclass'], ['station'], 1, 0],
 				14,
 				['match', ['get', 'subclass'], ['station', 'subway'], 1, 0],
