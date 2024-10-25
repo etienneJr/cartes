@@ -1487,15 +1487,26 @@ const layers = [
 
 			'line-color': [
 				'case',
+				['==', ['get', 'subclass'], 'living_street'],
+				'hsl(0,0%,100%)',
+				[
+					'any',
+					['==', ['get', 'class'], 'service'],
+					['==', ['get', 'access'], 'private'],
+				],
+				'hsl(0,0%,97%)',
 				['!', ['has', 'maxspeed']],
-				'#99a6c3',
+				// we consider minor roads without maxspeed and that are not
+				// living_street or other tags that remain to be found, as
+				// "medium"-friendly to pedestrians, cyclists and buses
+				'hsl(215,20%,85%)',
 				['<=', ['to-number', ['get', 'maxspeed']], 20],
 				'hsl(0,0%,100%)',
 				['<=', ['to-number', ['get', 'maxspeed']], 30],
-				'hsl(0,0%,90%)',
+				'hsl(215,20%,95%)',
 				['<=', ['to-number', ['get', 'maxspeed']], 50],
-				'hsl(0,0%,60%)',
-				'hsl(0,0%,30%)',
+				'hsl(215,20%,80%)',
+				'hsl(215,20%,70%)',
 			],
 			'line-width': [
 				'interpolate',
