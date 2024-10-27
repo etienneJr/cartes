@@ -14,10 +14,10 @@ const highwayOutlineColor = '#cebcbc'
 
 export default function franceStyle(transportMode, noVariableTiles = false) {
 	const openmaptilesUrl = // see the protocol CartesProtocol
-			!noVariableTiles
-				? 'cartes://hybrid'
-				: 'pmtiles://' + pmtilesServerUrl + `/${noVariableTiles}.pmtiles`,
-		bounds = noVariableTiles && bbox35
+		!noVariableTiles
+			? 'cartes://hybrid'
+			: 'pmtiles://' + pmtilesServerUrl + `/${noVariableTiles}.pmtiles`
+	//bounds = noVariableTiles && bbox35
 	return {
 		version: 8,
 		id: transportMode ? 'transports' : 'france',
@@ -26,10 +26,10 @@ export default function franceStyle(transportMode, noVariableTiles = false) {
 			// We're not really using openmaptiles anymore, but a modified version of
 			// it, see cartesapp/gtfs/tiles.ts
 			openmaptiles: {
-				openmaptilesUrl,
+				url: openmaptilesUrl,
 				//url: 'pmtiles://https://panoramax.openstreetmap.fr/pmtiles/planet.pmtiles',
 				type: 'vector',
-				bounds,
+				//		bounds,
 			},
 			// https://osmdata.openstreetmap.de/data/land-polygons.html
 			land: {
