@@ -1760,7 +1760,7 @@ const layers = [
 			visibility: 'visible',
 		},
 		paint: {
-			'line-color': '#ecd0bc',
+			'line-color': 'rgba(199, 152, 128, 1)',
 			'line-width': {
 				base: 1.2,
 				stops: [
