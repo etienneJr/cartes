@@ -1,3 +1,4 @@
+import { bboxHexagonePlus } from '@/components/map/CartesProtocol'
 import { getFetchUrlBase, pmtilesServerUrl } from '../serverUrls'
 
 //Fonts used :
@@ -13,9 +14,10 @@ const highwayOutlineColor = '#cebcbc'
 
 export default function franceStyle(transportMode, noVariableTiles = false) {
 	const openmaptilesUrl = // see the protocol CartesProtocol
-		!noVariableTiles
-			? 'cartes://hybrid'
-			: 'pmtiles://' + pmtilesServerUrl + `/${noVariableTiles}.pmtiles`
+			!noVariableTiles
+				? 'cartes://hybrid'
+				: 'pmtiles://' + pmtilesServerUrl + `/${noVariableTiles}.pmtiles`,
+		bounds = noVariableTiles && bboxHexagonePlus
 	return {
 		version: 8,
 		id: transportMode ? 'transports' : 'france',
@@ -27,6 +29,7 @@ export default function franceStyle(transportMode, noVariableTiles = false) {
 				openmaptilesUrl,
 				//url: 'pmtiles://https://panoramax.openstreetmap.fr/pmtiles/planet.pmtiles',
 				type: 'vector',
+				bounds,
 			},
 			// https://osmdata.openstreetmap.de/data/land-polygons.html
 			land: {
