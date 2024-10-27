@@ -2194,7 +2194,6 @@ const layers = [
 			'text-field': ['coalesce', ...nameExpression],
 			visibility: 'visible',
 			'text-max-width': 5,
-			'symbol-placement': 'line',
 			'text-letter-spacing': 0.1,
 		},
 		paint: {
@@ -2203,7 +2202,7 @@ const layers = [
 			'text-halo-width': 1.5,
 		},
 		metadata: {},
-		filter: ['all', ['==', '$type', 'LineString'], ['==', 'class', 'lake']],
+		filter: ['all', ['==', '$type', 'Point'], ['==', 'class', 'lake']],
 	},
 	{
 		id: 'Housenumber',
