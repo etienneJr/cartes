@@ -1146,7 +1146,7 @@ const layers = [
 			visibility: 'visible',
 		},
 		paint: {
-			'line-color': 'hsl(36,5%,80%)',
+			'line-color': 'hsl(36,5%,50%)',
 			'line-width': [
 				'interpolate',
 				['linear', 2],
