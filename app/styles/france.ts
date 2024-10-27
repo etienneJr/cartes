@@ -11,15 +11,20 @@ import { getFetchUrlBase, pmtilesServerUrl } from '../serverUrls'
 const highwayColor = '#cebcbc'
 const highwayOutlineColor = '#cebcbc'
 
-export default function franceStyle(transportMode) {
+export default function franceStyle(transportMode, noVariableTiles = false) {
+	const openmaptilesUrl = // see the protocol CartesProtocol
+		!noVariableTiles
+			? 'cartes://hybrid'
+			: 'pmtiles://' + pmtilesServerUrl + `/${noVariableTiles}.pmtiles`
 	return {
 		version: 8,
 		id: transportMode ? 'transports' : 'france',
 		name: transportMode ? 'Transports' : 'France',
 		sources: {
+			// We're not really using openmaptiles anymore, but a modified version of
+			// it, see cartesapp/gtfs/tiles.ts
 			openmaptiles: {
-				url: 'cartes://hybrid', // see the protocol CartesProtocol
-				//url: 'pmtiles://' + gtfsServerUrl + '/hexagone-plus.pmtiles',
+				openmaptilesUrl,
 				//url: 'pmtiles://https://panoramax.openstreetmap.fr/pmtiles/planet.pmtiles',
 				type: 'vector',
 			},
