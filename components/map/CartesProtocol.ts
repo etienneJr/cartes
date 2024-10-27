@@ -15,7 +15,7 @@ const pmtilesUrl2 = pmtilesServerUrl + '/planet.pmtiles'
 
 //http://bboxfinder.com/#48.047792,-1.792145,48.200880,-1.513367
 export const bboxHexagonePlus = [-11.26, 40.5, 11.26, 60.33]
-const bbox35 = [-1.792145, 48.047792, -1.513367, 48.20088]
+export const bbox35 = [-1.792145, 48.047792, -1.513367, 48.20088]
 
 const hexagonePlusPolygon = bboxPolygon(bboxHexagonePlus)
 

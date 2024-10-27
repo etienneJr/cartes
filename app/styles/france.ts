@@ -1,4 +1,4 @@
-import { bboxHexagonePlus } from '@/components/map/CartesProtocol'
+import { bbox35, bboxHexagonePlus } from '@/components/map/CartesProtocol'
 import { getFetchUrlBase, pmtilesServerUrl } from '../serverUrls'
 
 //Fonts used :
@@ -17,7 +17,7 @@ export default function franceStyle(transportMode, noVariableTiles = false) {
 			!noVariableTiles
 				? 'cartes://hybrid'
 				: 'pmtiles://' + pmtilesServerUrl + `/${noVariableTiles}.pmtiles`,
-		bounds = noVariableTiles && bboxHexagonePlus
+		bounds = noVariableTiles && bbox35
 	return {
 		version: 8,
 		id: transportMode ? 'transports' : 'france',
