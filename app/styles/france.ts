@@ -120,23 +120,22 @@ export const name = 'name:fr'
 export const oceanColor = '#71a0e9'
 //'#6688dd' past color, darker. Could be cool to vary in the day, dawn color ?
 
+const landColor = '#dbedb7',
+	residentialColor = 'hsl(54, 45%, 91%)'
+
 const layers = [
 	{
 		id: 'Background',
 		type: 'background',
 		layout: { visibility: 'visible' },
 		paint: {
-			'background-color': oceanColor,
-		},
-	},
-	{
-		id: 'Land',
-		type: 'fill',
-		source: 'land',
-		'source-layer': 'land',
-		layout: { visibility: 'visible' },
-		paint: {
-			'fill-color': '#dbedb7',
+			'background-color': {
+				base: 1,
+				stops: [
+					[1, landColor],
+					[15, residentialColor],
+				],
+			},
 		},
 	},
 	//https://github.com/wipfli/h3-landcover/blob/main/style.json
@@ -224,7 +223,7 @@ const layers = [
 	},
 	/*
 	 *
-	 * Because of our choice to use our tiles for France, we have to ocean shapes
+	 * Because of our choice to use our tiles for France, we have no ocean shapes
 	 * in our tiles. Hence we set the base fill as blue, and the land as green
 	 * (because that's how it is in France, it's not white like many maps' bases !).
 	 * But then in some places built up land has no OSM shape so it's green. Hence
@@ -273,6 +272,25 @@ const layers = [
 		paint: { 'fill-color': 'hsl(0,0%,93%)', 'fill-opacity': 1 },
 		metadata: {},
 		filter: ['==', '$type', 'Polygon'],
+	},
+	{
+		id: 'Water',
+		type: 'fill',
+		source: 'openmaptiles',
+		'source-layer': 'water',
+		layout: { visibility: 'visible' },
+		paint: {
+			'fill-color': oceanColor,
+			'fill-opacity': ['match', ['get', 'intermittent'], 1, 0.85, 1],
+			'fill-antialias': true,
+		},
+		metadata: {},
+		filter: [
+			'any',
+			['!has', 'intermittent'],
+			['==', 'intermittent', 0],
+			//['==', 'class', 'ocean'],
+		],
 	},
 	{
 		id: 'Sand',
@@ -396,7 +414,7 @@ const layers = [
 				base: 1,
 				stops: [
 					[1, '#efede6'],
-					[16, 'hsl(54, 45%, 91%)'],
+					[16, residentialColor],
 				],
 			},
 		},
@@ -647,20 +665,6 @@ const layers = [
 		},
 		metadata: {},
 		filter: ['any', ['has', 'intermittent'], ['==', 'intermittent', 1]],
-	},
-	{
-		id: 'Water',
-		type: 'fill',
-		source: 'openmaptiles',
-		'source-layer': 'water',
-		layout: { visibility: 'visible' },
-		paint: {
-			'fill-color': oceanColor,
-			'fill-opacity': ['match', ['get', 'intermittent'], 1, 0.85, 1],
-			'fill-antialias': true,
-		},
-		metadata: {},
-		filter: ['any', ['!has', 'intermittent'], ['==', 'intermittent', 0]],
 	},
 	{
 		id: 'Aeroway',
