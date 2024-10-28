@@ -687,7 +687,7 @@
     - boules
     - lyonnaise
   query: '["leisure"="pitch"][sport=boules]'
-  icon: boules.svg
+  icon: boules
 
 - name: Rugby
   category: Sports
