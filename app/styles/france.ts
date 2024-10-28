@@ -1,4 +1,3 @@
-import { bbox35, bboxHexagonePlus } from '@/components/map/CartesProtocol'
 import { getFetchUrlBase, pmtilesServerUrl } from '../serverUrls'
 
 //Fonts used :
@@ -17,7 +16,8 @@ export default function franceStyle(transportMode, noVariableTiles = false) {
 		!noVariableTiles
 			? 'cartes://hybrid'
 			: 'pmtiles://' + pmtilesServerUrl + `/${noVariableTiles}.pmtiles`
-	//bounds = noVariableTiles && bbox35
+	//bounds = noVariableTiles && bbox35 // not necessary, works without it in
+	//editor.protomaps.com
 	return {
 		version: 8,
 		id: transportMode ? 'transports' : 'france',
@@ -1141,12 +1141,12 @@ const layers = [
 		'source-layer': 'transportation',
 		minzoom: 11,
 		layout: {
-			'line-cap': 'butt',
+			'line-cap': 'round',
 			'line-join': 'round',
 			visibility: 'visible',
 		},
 		paint: {
-			'line-color': 'hsl(36,5%,50%)',
+			'line-color': 'hsl(240,13%,70%)',
 			'line-width': [
 				'interpolate',
 				['linear', 2],
@@ -1186,7 +1186,7 @@ const layers = [
 					['tertiary'],
 					8,
 					['minor', 'service', 'track'],
-					4,
+					6,
 					4,
 				],
 				20,
@@ -1486,7 +1486,7 @@ const layers = [
 		'source-layer': 'transportation',
 		minzoom: 10,
 		layout: {
-			'line-cap': 'butt',
+			'line-cap': 'round',
 			'line-join': 'round',
 			visibility: 'visible',
 		},
