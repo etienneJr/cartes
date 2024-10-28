@@ -1603,7 +1603,18 @@ const layers = [
 			visibility: 'visible',
 		},
 		paint: {
-			'line-color': '#99a6c3',
+			'line-color': [
+				// simplified version of the "case" of Minor road
+				'case',
+				['!', ['has', 'maxspeed']],
+				// we consider minor roads without maxspeed and that are not
+				// living_street or other tags that remain to be found, as
+				// "medium"-friendly to pedestrians, cyclists and buses
+				'#99a6c3',
+				['<=', ['to-number', ['get', 'maxspeed']], 30],
+				'hsl(215,20%,95%)',
+				'#99a6c3',
+			],
 			'line-width': [
 				'interpolate',
 				['linear', 2],
@@ -2286,6 +2297,7 @@ const layers = [
 			'icon-rotation-alignment': 'map',
 		},
 		paint: {
+			// it looks like we can't control the color here
 			'icon-color': 'hsl(0, 0%, 65%)',
 			'icon-opacity': 0.5,
 		},
