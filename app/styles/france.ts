@@ -1839,8 +1839,8 @@ const layers = [
 		},
 		paint: {
 			'line-color': 'hsl(319, 82%, 33%)',
-			'line-width': ['interpolate', ['linear'], ['zoom'], 0, 0, 22, 3],
-			'line-opacity': 0.6,
+			'line-width': ['interpolate', ['linear'], ['zoom'], 0, 0, 22, 2],
+			'line-opacity': 0.2,
 			'line-gap-width': 0,
 		},
 		metadata: {},
