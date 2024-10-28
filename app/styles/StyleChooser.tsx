@@ -137,7 +137,7 @@ const Styles = ({ style, styleList, setSearchParams, searchParams }) => {
 								href={setSearchParams(
 									{ style: k, 'choix du style': 'oui' },
 									true,
-									true
+									false
 								)}
 								onClick={() => setLocalStorageStyleKey(k)}
 								title={'Passer au style ' + (title || name)}
