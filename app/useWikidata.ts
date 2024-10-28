@@ -7,7 +7,9 @@ import distance from '@turf/distance'
 // It's also used to guess a picture for a destination by it's name since Photon
 // probably does not retrieve the wikidata tag
 // TODO retrieve more data ! Wikidata is reach
-export default function useWikidata(osmFeature, state, lonLat) {
+export default function useWikidata(osmFeature, state) {
+	const lonLat = osmFeature && [osmFeature.lon, osmFeature.lat]
+
 	const [wikidata, setWikidata] = useState(null)
 	const vers = state.slice(-1)[0]
 
@@ -48,7 +50,7 @@ export default function useWikidata(osmFeature, state, lonLat) {
 
 			setWikidata({ pictureName, lonLat, pictureUrl })
 		})
-	}, [vers, osmFeature, setWikidata, lonLat])
+	}, [vers, osmFeature, setWikidata, lonLat && lonLat.join('|')])
 
 	useEffect(() => {
 		if (!osmFeature?.tags?.wikidata) return

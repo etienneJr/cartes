@@ -11,17 +11,25 @@ import { getFetchUrlBase, pmtilesServerUrl } from '../serverUrls'
 const highwayColor = '#cebcbc'
 const highwayOutlineColor = '#cebcbc'
 
-export default function franceStyle(transportMode) {
+export default function franceStyle(transportMode, noVariableTiles = false) {
+	const openmaptilesUrl = // see the protocol CartesProtocol
+		!noVariableTiles
+			? 'cartes://hybrid'
+			: 'pmtiles://' + pmtilesServerUrl + `/${noVariableTiles}.pmtiles`
+	//bounds = noVariableTiles && bbox35 // not necessary, works without it in
+	//editor.protomaps.com
 	return {
 		version: 8,
 		id: transportMode ? 'transports' : 'france',
 		name: transportMode ? 'Transports' : 'France',
 		sources: {
+			// We're not really using openmaptiles anymore, but a modified version of
+			// it, see cartesapp/gtfs/tiles.ts
 			openmaptiles: {
-				url: 'cartes://hybrid', // see the protocol CartesProtocol
-				//url: 'pmtiles://' + gtfsServerUrl + '/hexagone-plus.pmtiles',
+				url: openmaptilesUrl,
 				//url: 'pmtiles://https://panoramax.openstreetmap.fr/pmtiles/planet.pmtiles',
 				type: 'vector',
+				//		bounds,
 			},
 			// https://osmdata.openstreetmap.de/data/land-polygons.html
 			land: {
@@ -477,7 +485,7 @@ const layers = [
 		source: 'openmaptiles',
 		'source-layer': 'transportation',
 		layout: { visibility: 'visible' },
-		paint: { 'fill-color': 'hsl(259, 43%, 64%)', 'fill-opacity': 0.3 },
+		paint: { 'fill-color': '#feecdf', 'fill-opacity': 0.9 },
 		metadata: {},
 		filter: [
 			'all',
@@ -1133,12 +1141,12 @@ const layers = [
 		'source-layer': 'transportation',
 		minzoom: 11,
 		layout: {
-			'line-cap': 'butt',
+			'line-cap': 'round',
 			'line-join': 'round',
 			visibility: 'visible',
 		},
 		paint: {
-			'line-color': 'hsl(36,5%,80%)',
+			'line-color': 'hsl(240,13%,70%)',
 			'line-width': [
 				'interpolate',
 				['linear', 2],
@@ -1178,7 +1186,7 @@ const layers = [
 					['tertiary'],
 					8,
 					['minor', 'service', 'track'],
-					4,
+					6,
 					4,
 				],
 				20,
@@ -1229,7 +1237,7 @@ const layers = [
 		'source-layer': 'transportation',
 		minzoom: 7,
 		layout: {
-			'line-cap': 'butt',
+			'line-cap': 'round',
 			'line-join': 'round',
 			visibility: 'visible',
 		},
@@ -1250,20 +1258,9 @@ const layers = [
 				14,
 				['match', ['get', 'class'], ['trunk'], 4, ['primary'], 6, 3],
 				16,
-				['match', ['get', 'class'], ['trunk', 'primary'], 10, 4],
+				['match', ['get', 'class'], ['trunk', 'primary'], 12, 8],
 				20,
-				['match', ['get', 'class'], ['trunk', 'primary'], 26, 18],
-			],
-			'line-opacity': [
-				'interpolate',
-				['linear'],
-				['zoom'],
-				0,
-				0,
-				8,
-				0.1,
-				22,
-				1,
+				['match', ['get', 'class'], ['trunk', 'primary'], 55, 36],
 			],
 		},
 		metadata: {},
@@ -1478,12 +1475,36 @@ const layers = [
 		'source-layer': 'transportation',
 		minzoom: 10,
 		layout: {
-			'line-cap': 'butt',
+			'line-cap': 'round',
 			'line-join': 'round',
 			visibility: 'visible',
 		},
 		paint: {
-			'line-color': 'hsl(0,0%,100%)',
+			//'line-color': 'hsl(0,0%,100%)',
+
+			'line-color': [
+				'case',
+				['==', ['get', 'subclass'], 'living_street'],
+				'hsl(0,0%,100%)',
+				[
+					'any',
+					['==', ['get', 'class'], 'service'],
+					['==', ['get', 'access'], 'private'],
+				],
+				'hsl(0,0%,97%)',
+				['!', ['has', 'maxspeed']],
+				// we consider minor roads without maxspeed and that are not
+				// living_street or other tags that remain to be found, as
+				// "medium"-friendly to pedestrians, cyclists and buses
+				'hsl(215,20%,85%)',
+				['<=', ['to-number', ['get', 'maxspeed']], 20],
+				'hsl(0,0%,100%)',
+				['<=', ['to-number', ['get', 'maxspeed']], 30],
+				'hsl(215,20%,95%)',
+				['<=', ['to-number', ['get', 'maxspeed']], 50],
+				'hsl(215,20%,80%)',
+				'hsl(215,20%,70%)',
+			],
 			'line-width': [
 				'interpolate',
 				['linear', 2],
@@ -1577,12 +1598,23 @@ const layers = [
 		'source-layer': 'transportation',
 		minzoom: 7,
 		layout: {
-			'line-cap': 'butt',
+			'line-cap': 'round',
 			'line-join': 'round',
 			visibility: 'visible',
 		},
 		paint: {
-			'line-color': '#99a6c3',
+			'line-color': [
+				// simplified version of the "case" of Minor road
+				'case',
+				['!', ['has', 'maxspeed']],
+				// we consider minor roads without maxspeed and that are not
+				// living_street or other tags that remain to be found, as
+				// "medium"-friendly to pedestrians, cyclists and buses
+				'#99a6c3',
+				['<=', ['to-number', ['get', 'maxspeed']], 30],
+				'hsl(215,20%,95%)',
+				'#99a6c3',
+			],
 			'line-width': [
 				'interpolate',
 				['linear', 2],
@@ -1594,20 +1626,9 @@ const layers = [
 				14,
 				['match', ['get', 'class'], ['trunk'], 3, ['primary'], 5, 2],
 				16,
-				['match', ['get', 'class'], ['trunk', 'primary'], 8, 4],
+				['match', ['get', 'class'], ['trunk', 'primary'], 10, 6],
 				20,
-				['match', ['get', 'class'], ['trunk', 'primary'], 24, 16],
-			],
-			'line-opacity': [
-				'interpolate',
-				['linear'],
-				['zoom'],
-				0,
-				0,
-				8,
-				0.1,
-				22,
-				1,
+				['match', ['get', 'class'], ['trunk', 'primary'], 50, 30],
 			],
 		},
 		metadata: {},
@@ -1684,6 +1705,7 @@ const layers = [
 			['==', 'class', 'motorway'],
 		],
 	},
+	/* Not sure we need a path outline, hence deactivated for now
 	{
 		id: 'Path outline',
 		type: 'line',
@@ -1714,7 +1736,7 @@ const layers = [
 			['in', 'class', 'path', 'pedestrian'],
 			['!=', 'brunnel', 'tunnel'],
 		],
-	},
+	},*/
 	{
 		id: 'Path',
 		type: 'line',
@@ -1727,7 +1749,7 @@ const layers = [
 			visibility: 'visible',
 		},
 		paint: {
-			'line-color': '#6F5D98',
+			'line-color': 'rgba(199, 152, 128, 1)',
 			'line-width': {
 				base: 1.2,
 				stops: [
@@ -1739,8 +1761,8 @@ const layers = [
 			},
 			'line-dasharray': {
 				stops: [
-					[14, [1, 0.5]],
-					[18, [1, 0.25]],
+					[14, [1, 2]],
+					[18, [1, 1]],
 				],
 			},
 		},
@@ -1817,8 +1839,8 @@ const layers = [
 		},
 		paint: {
 			'line-color': 'hsl(319, 82%, 33%)',
-			'line-width': ['interpolate', ['linear'], ['zoom'], 0, 0, 22, 3],
-			'line-opacity': 0.6,
+			'line-width': ['interpolate', ['linear'], ['zoom'], 0, 0, 22, 2],
+			'line-opacity': 0.2,
 			'line-gap-width': 0,
 		},
 		metadata: {},
@@ -1882,7 +1904,7 @@ const layers = [
 				type: 'identity',
 				property: 'render_min_height',
 			},
-			'fill-extrusion-color': 'hsl(44,14%,79%)',
+			'fill-extrusion-color': ['string', ['get', 'colour'], 'hsl(44,84%,99%)'],
 			'fill-extrusion-height': {
 				type: 'identity',
 				property: 'render_height',
@@ -2161,7 +2183,6 @@ const layers = [
 			'text-field': ['coalesce', ...nameExpression],
 			visibility: 'visible',
 			'text-max-width': 5,
-			'symbol-placement': 'line',
 			'text-letter-spacing': 0.1,
 		},
 		paint: {
@@ -2170,7 +2191,7 @@ const layers = [
 			'text-halo-width': 1.5,
 		},
 		metadata: {},
-		filter: ['all', ['==', '$type', 'LineString'], ['==', 'class', 'lake']],
+		filter: ['all', ['==', '$type', 'Point'], ['==', 'class', 'lake']],
 	},
 	{
 		id: 'Housenumber',
@@ -2276,6 +2297,7 @@ const layers = [
 			'icon-rotation-alignment': 'map',
 		},
 		paint: {
+			// it looks like we can't control the color here
 			'icon-color': 'hsl(0, 0%, 65%)',
 			'icon-opacity': 0.5,
 		},
@@ -2905,11 +2927,12 @@ const layers = [
 		type: 'symbol',
 		source: 'openmaptiles',
 		'source-layer': 'poi',
-		minzoom: 12,
+		minzoom: 10,
 		maxzoom: 22,
 		layout: {
 			'icon-size': {
 				stops: [
+					[10, 0.7],
 					[13, 0.8],
 					[18, 1],
 				],
@@ -2917,6 +2940,7 @@ const layers = [
 			'text-font': ['Roboto Medium Regular', 'Noto Sans Regular'],
 			'text-size': {
 				stops: [
+					[10, 10],
 					[13, 11],
 					[16, 12],
 					[22, 16],
@@ -2925,9 +2949,9 @@ const layers = [
 			'icon-image': [
 				'match',
 				['get', 'subclass'],
-				['station'],
+				['station', 'halt'],
 				'railway',
-				['subway', 'halt'],
+				['subway'],
 				'subway',
 				['tram_stop'],
 				'tramway',
@@ -2948,7 +2972,7 @@ const layers = [
 				'step',
 				['zoom'],
 				0,
-				12,
+				10,
 				['match', ['get', 'subclass'], ['station'], 1, 0],
 				14,
 				['match', ['get', 'subclass'], ['station', 'subway'], 1, 0],
@@ -2969,7 +2993,7 @@ const layers = [
 				'step',
 				['zoom'],
 				0,
-				12,
+				10,
 				['match', ['get', 'subclass'], ['station'], 1, 0],
 				14,
 				['match', ['get', 'subclass'], ['station', 'subway'], 1, 0],

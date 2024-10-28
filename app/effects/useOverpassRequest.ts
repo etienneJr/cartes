@@ -60,6 +60,7 @@ export default function useOverpassRequest(bbox, category) {
 			setFeatures(nodeElements)
 		}
 		fetchCategories()
-	}, [category, bbox])
+	}, [category, bbox && bbox.join('|')])
+
 	return [features]
 }
