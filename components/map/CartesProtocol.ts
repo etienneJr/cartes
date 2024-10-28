@@ -8,7 +8,8 @@ import { booleanContains } from '@turf/boolean-contains'
 
 //hexagone-plus.august was our first attempt, too heavy
 // hexagone-plus.2 is a lighter set of tiles with combined linestrings
-const pmtilesUrl0 = pmtilesServerUrl + '/35.pmtiles'
+const pmtilesUrl3 = pmtilesServerUrl + '/35.pmtiles'
+const pmtilesUrl4 = pmtilesServerUrl + '/29.pmtiles'
 const pmtilesUrl1 = pmtilesServerUrl + '/hexagone-plus.pmtiles'
 const pmtilesUrl2 = pmtilesServerUrl + '/planet.pmtiles'
 // https://panoramax.openstreetmap.fr/pmtiles/planet.pmtiles
@@ -16,10 +17,12 @@ const pmtilesUrl2 = pmtilesServerUrl + '/planet.pmtiles'
 //http://bboxfinder.com/#48.047792,-1.792145,48.200880,-1.513367
 export const bboxHexagonePlus = [-11.26, 40.5, 11.26, 60.33]
 export const bbox35 = [-1.792145, 48.047792, -1.513367, 48.20088]
+const bbox29 = [-4.927368, 48.034019, -4.141846, 48.741701]
 
 const hexagonePlusPolygon = bboxPolygon(bboxHexagonePlus)
 
 const polygon35 = bboxPolygon(bbox35)
+const polygon29 = bboxPolygon(bbox29)
 
 export class Protocol {
 	tiles: Map<string, PMTiles>
@@ -79,10 +82,13 @@ export class Protocol {
 		const tilePolygon = bboxPolygon(bbox)
 		const isInHexagon = booleanContains(hexagonePlusPolygon, tilePolygon)
 		const isIn35 = booleanContains(polygon35, tilePolygon)
+		const isIn29 = booleanContains(polygon29, tilePolygon)
 		//		console.log('boupmoi is in', isInHexagon, hexagonePlusPolygon, tilePolygon)
 
 		const pmtilesUrl = isIn35
-			? pmtilesUrl0
+			? pmtilesUrl3
+			: isIn29
+			? pmtilesUrl4
 			: isInHexagon
 			? pmtilesUrl1
 			: pmtilesUrl2

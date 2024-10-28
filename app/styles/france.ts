@@ -2123,7 +2123,7 @@ const layers = [
 		minzoom: 0,
 		maxzoom: 14,
 		layout: {
-			'text-font': ['Roboto Italic'],
+			'text-font': ['Roboto Italic', 'Noto Sans Italic'],
 			'text-size': [
 				'interpolate',
 				['linear', 1],
@@ -2140,7 +2140,6 @@ const layers = [
 			'text-field': ['coalesce', ...nameExpression],
 			visibility: 'visible',
 			'text-max-width': 5,
-			'symbol-placement': 'point',
 		},
 		paint: {
 			'text-color': 'white',
@@ -2161,7 +2160,6 @@ const layers = [
 		filter: [
 			'all',
 			['==', '$type', 'Point'],
-			['has', name],
 			['!=', 'class', 'lake'],
 		],
 	},
