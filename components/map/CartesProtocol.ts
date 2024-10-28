@@ -85,13 +85,16 @@ export class Protocol {
 		const isIn29 = booleanContains(polygon29, tilePolygon)
 		//		console.log('boupmoi is in', isInHexagon, hexagonePlusPolygon, tilePolygon)
 
-		const pmtilesUrl = isIn35
-			? pmtilesUrl3
-			: isIn29
-			? pmtilesUrl4
-			: isInHexagon
-			? pmtilesUrl1
-			: pmtilesUrl2
+		const serverDevMode = process.env.NEXT_PUBLIC_LOCAL_GTFS_SERVER === 'true'
+
+		const pmtilesUrl =
+			serverDevMode && isIn35
+				? pmtilesUrl3
+				: serverDevMode && isIn29
+				? pmtilesUrl4
+				: isInHexagon
+				? pmtilesUrl1
+				: pmtilesUrl2
 
 		let instance = this.tiles.get(pmtilesUrl)
 		if (!instance) {

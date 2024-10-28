@@ -2157,11 +2157,7 @@ const layers = [
 			'text-halo-width': 1,
 		},
 		metadata: {},
-		filter: [
-			'all',
-			['==', '$type', 'Point'],
-			['!=', 'class', 'lake'],
-		],
+		filter: ['all', ['==', '$type', 'Point'], ['!=', 'class', 'lake']],
 	},
 	{
 		id: 'Lake labels',
