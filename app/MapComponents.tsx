@@ -17,7 +17,7 @@ function MapComponents({
 	hasItinerary,
 }) {
 	useDrawBookmarks(map)
-	useDrawOsmFeaturePolygon(map, vers?.osmFeature)
+	useDrawOsmFeaturePolygon(map, vers?.osmFeature, safeStyleKey)
 	return (
 		<>
 			{isTransportsMode && (

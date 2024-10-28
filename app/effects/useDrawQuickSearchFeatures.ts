@@ -15,7 +15,8 @@ export default function useDrawQuickSearchFeatures(
 	category,
 	setOsmFeature = () => null,
 	backgroundColor,
-	invert = false
+	invert = false,
+	safeStyleKey
 ) {
 	const setSearchParams = useSetSearchParams()
 	useEffect(() => {
@@ -230,5 +231,5 @@ export default function useDrawQuickSearchFeatures(
 				[baseId + 'points', baseId + 'ways']
 			)
 		}
-	}, [features, map, showOpenOnly, category])
+	}, [features, map, showOpenOnly, category, safeStyleKey])
 }

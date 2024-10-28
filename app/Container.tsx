@@ -62,8 +62,12 @@ export default function Container(props) {
 	const { state: givenState, agencyEntry } = props
 
 	const setSearchParams = useSetSearchParams()
-	const clientSearchParams = useSearchParams(),
-		searchParams = Object.fromEntries(clientSearchParams.entries())
+	const clientSearchParams = useSearchParams()
+
+	const searchParams = useMemo(
+		() => Object.fromEntries(clientSearchParams.entries()),
+		[clientSearchParams.toString()]
+	)
 
 	const [focusedImage, focusImage] = useState(null)
 	const [isMapLoaded, setMapLoaded] = useState(false)

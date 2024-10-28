@@ -17,6 +17,10 @@ export default function StyleChooser({
 	zoom,
 	setZoom,
 }) {
+	const [localStorageStyleKey, setLocalStorageStyleKey] = useLocalStorage(
+		'style',
+		null
+	)
 	const setSearchParams = useSetSearchParams()
 
 	return (
@@ -83,6 +87,7 @@ export default function StyleChooser({
 			<Styles
 				styleList={styleList.filter(([, el]) => !el.secondary)}
 				setSearchParams={setSearchParams}
+				searchParams={searchParams}
 				style={style}
 			/>
 			<details>
@@ -100,17 +105,20 @@ export default function StyleChooser({
 					setSearchParams={setSearchParams}
 					style={style}
 					searchParams={searchParams}
+					setLocalStorageStyleKey={setLocalStorageStyleKey}
 				/>
 			</details>
 		</section>
 	)
 }
 
-const Styles = ({ style, styleList, setSearchParams, searchParams }) => {
-	const [localStorageStyleKey, setLocalStorageStyleKey] = useLocalStorage(
-		'style',
-		null
-	)
+const Styles = ({
+	style,
+	styleList,
+	setSearchParams,
+	searchParams,
+	setLocalStorageStyleKey,
+}) => {
 	return (
 		<ul
 			style={css`
@@ -126,6 +134,16 @@ const Styles = ({ style, styleList, setSearchParams, searchParams }) => {
 				([k, { name, imageAlt, title, image: imageProp, description }]) => {
 					const image = (imageProp || k) + '.png'
 
+					const setStyleUrl = () =>
+						setSearchParams(
+							{
+								style: k,
+								'choix du style': 'oui',
+								allez: searchParams.allez || undefined,
+							},
+							false,
+							true
+						)
 					return (
 						<li
 							key={k}
@@ -133,15 +151,16 @@ const Styles = ({ style, styleList, setSearchParams, searchParams }) => {
 								margin: 0.6rem 0.25rem;
 							`}
 						>
-							<Link
-								href={setSearchParams(
-									{ style: k, 'choix du style': 'oui' },
-									true,
-									false
-								)}
-								onClick={() => setLocalStorageStyleKey(k)}
+							{/* Was previously a Link but for some reason probably after the
+						client useSetSearchParams change, the link reloads the page. Maybe solve this with an object href ? */}
+							<button
+								onClick={() => {
+									setStyleUrl()
+									setLocalStorageStyleKey(k)
+								}}
 								title={'Passer au style ' + (title || name)}
 								css={`
+									padding: 0;
 									display: flex;
 									flex-direction: column;
 									justify-content: center;
@@ -200,7 +219,7 @@ const Styles = ({ style, styleList, setSearchParams, searchParams }) => {
 										</aside>
 									)}
 								</div>
-							</Link>
+							</button>
 						</li>
 					)
 				}
