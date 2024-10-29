@@ -61,10 +61,10 @@ export default function useOverpassRequest(bbox, category) {
 		}
 		fetchCategories()
 	}, [category, bbox && bbox.join('|')])
-  
+
 	useEffect(() => {
 		setFeatures(null)
-	}, [category.name, setFeatures])
+	}, [category?.name, setFeatures])
 
 	return [features]
 }

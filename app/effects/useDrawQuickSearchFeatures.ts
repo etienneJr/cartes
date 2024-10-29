@@ -91,41 +91,42 @@ export default function useDrawQuickSearchFeatures(
 					features: shownFeatures
 						.filter((f) => f.polygon)
 						.map((f) => {
-						const tags = f.tags || {}
-								const feature = {
-									type: 'Feature',
-									geometry: !invert
-										? f.polygon.geometry
-										: // thanks ! https://stackoverflow.com/questions/43561504/mapbox-how-to-get-a-semi-transparent-mask-everywhere-but-on-a-specific-area
-										  {
-												type: 'Polygon',
-												coordinates: [
-													[
-														[-180, -90],
-														[-180, 90],
-														[180, 90],
-														[180, -90],
-														[-180, -90],
-													],
-													f.polygon.geometry.coordinates[0],
+							const tags = f.tags || {}
+							const feature = {
+								type: 'Feature',
+								geometry: !invert
+									? f.polygon.geometry
+									: // thanks ! https://stackoverflow.com/questions/43561504/mapbox-how-to-get-a-semi-transparent-mask-everywhere-but-on-a-specific-area
+									  {
+											type: 'Polygon',
+											coordinates: [
+												[
+													[-180, -90],
+													[-180, 90],
+													[180, 90],
+													[180, -90],
+													[-180, -90],
 												],
-										  },
-									properties: {
-										id: f.id,
-										tags,
-										name: tags.name,
-									},
-								}
-								console.log('ocean', feature)
-								return feature
-							
+												f.polygon.geometry.coordinates[0],
+											],
+									  },
+								properties: {
+									id: f.id,
+									tags,
+									name: tags.name,
+								},
+							}
+							console.log('ocean', feature)
+							return feature
 						}),
 				}
 				if (waysSource) {
+					// this removes data or updates or ... ?
 					waysSource.setData(waysData)
 					pointsSource.setData(pointsData)
 					return
 				}
+				alert('goes being update sources')
 				map.addSource(baseId + 'points', {
 					type: 'geojson',
 					data: pointsData,
