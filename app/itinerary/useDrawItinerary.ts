@@ -28,14 +28,14 @@ export default function useDrawItinerary(
 	const mode = modeKeyFromQuery(searchParams.mode)
 	const desktop = useMediaQuery('(min-width: 800px)')
 
+	//TODO check if this fails with the new step.stepBeingSearched
 	useEffect(() => {
 		if (!map) return
 		if (state.length === 2 && state[0] == null && state[1] !== null) {
-			console.log('zoom', zoom)
 			map.flyTo({ zoom: zoom - 2, padding: { bottom: desktop ? 0 : 400 } })
 		}
-	}, [state, map, desktop])
-	//TODO
+	}, [searchParams.allez, map, desktop])
+
 	const selectedConnection = searchParams.choix
 
 	//const [motisTrips, setMotisTrips] = useState(null)
@@ -92,15 +92,16 @@ export default function useDrawItinerary(
 	useDrawRoute(isItineraryMode, map, distanceGeojson, 'distance')
 
 	const cyclingReady =
-		(!mode || mode === 'cycling') && routes && routes.cycling !== 'loading'
+		(!mode || mode === 'cycling') &&
+		routes &&
+		routes.cycling &&
+		routes.cycling !== 'loading'
 
-	const cyclingSegmentsGeojson = useMemo(() => {
-		return (
-			cyclingReady && routes.cycling && brouterResultToSegments(routes.cycling)
-		)
-	}, [routes?.cycling, cyclingReady])
-
-	useDrawCyclingSegments(isItineraryMode, map, cyclingSegmentsGeojson)
+	useDrawCyclingSegments(
+		isItineraryMode,
+		map,
+		cyclingReady && routes.cycling.safe?.cyclingSegmentsGeojson
+	)
 	useDrawRoute(isItineraryMode, map, cyclingReady && routes.cycling, 'cycling')
 
 	useDrawRoute(
@@ -126,8 +127,16 @@ export default function useDrawItinerary(
 	useEffect(() => {
 		if (!map || !isItineraryMode) return
 
-		const awaitingNewStep =
-			state.length < 2 || state.some((step) => step == null)
+		const beingSearchedIndex = state.findIndex(
+			(step) => step?.stepBeingSearched
+		)
+		const stepIndexToEdit =
+				beingSearchedIndex > -1
+					? beingSearchedIndex
+					: state.length === 0
+					? 0
+					: state.findIndex((step) => step == null || !step.key),
+			awaitingNewStep = stepIndexToEdit != null
 		const onClick = (e) => {
 			const features =
 				points &&
@@ -147,10 +156,20 @@ export default function useDrawItinerary(
 					e.lngLat.lng,
 					e.lngLat.lat
 				)
-				const allez = oldAllez?.startsWith('->')
-					? allezPart + oldAllez
-					: points.map((point) => point.properties.key + '->').join('') +
-					  allezPart
+				const allez = oldAllez
+					? oldAllez
+							.split('->')
+							.map((part, index) =>
+								index === stepIndexToEdit ? allezPart : part
+							)
+							.join('->')
+					: allezPart + '->'
+				console.log('lightgreen new allez', allez, {
+					state,
+					beingSearchedIndex,
+					stepIndexToEdit,
+					awaitingNewStep,
+				})
 
 				setSearchParams({
 					allez,
@@ -180,7 +199,15 @@ export default function useDrawItinerary(
 			map.off('mousemove', onMouseMove)
 			map.getCanvas().style.cursor = ''
 		}
-	}, [map, serializedPoints, setSearchParams, isItineraryMode, oldAllez, mode])
+	}, [
+		map,
+		serializedPoints,
+		setSearchParams,
+		isItineraryMode,
+		oldAllez,
+		mode,
+		state,
+	])
 
 	// GeoJSON object to hold our measurement features
 
@@ -223,22 +250,29 @@ export const useMemoPointsFromState = (state) => {
 }
 	 */
 	const serializedPoints = geoSerializeSteps(state)
-	const points = useMemo(() => {
+	const stepBeingSearchedIndex = state.findIndex(
+		(step) => step && step.stepBeingSearched
+	)
+	const result = useMemo(() => {
 		const points = state
 			.map((step, index) => {
-				if (step == null) return
-				const { longitude, latitude, key } = step
+				if (step == null || !(step.latitude && step.longitude)) return
+				const { longitude, latitude, key, stepBeingSearched } = step
 				return {
 					type: 'Feature',
 					geometry: {
 						type: 'Point',
 						coordinates: [+longitude, +latitude],
 					},
-					properties: { key, letter: letterFromIndex(index) },
+					properties: {
+						key,
+						letter: letterFromIndex(index),
+						stepBeingSearched,
+					},
 				}
 			})
 			.filter(Boolean)
-		return points
-	}, [serializedPoints])
-	return [serializedPoints, points]
+		return [serializedPoints, points]
+	}, [serializedPoints, stepBeingSearchedIndex])
+	return result
 }

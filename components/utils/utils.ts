@@ -4,6 +4,9 @@ export function isIterable<T>(obj: unknown): obj is Iterable<T> {
 export function capitalise0(name?: string) {
 	return name && name[0].toUpperCase() + name.slice(1)
 }
+export function uncapitalise0(name?: string) {
+	return name && name[0].toLowerCase() + name.slice(1)
+}
 
 export const debounce = <F extends (...args: any[]) => void>(
 	waitFor: number,
@@ -107,6 +110,7 @@ export const difference = (arr1, arr2) => arr1.filter((x) => !arr2.includes(x))
 
 export const objectMap = (obj, fn) =>
 	Object.fromEntries(Object.entries(obj).map(([k, v], i) => [k, fn(v, k, i)]))
+
 export const objectMapKeys = (obj, fn) =>
 	Object.fromEntries(Object.entries(obj).map(([k, v], i) => [fn(k, v, i), v]))
 
@@ -114,6 +118,11 @@ export const objectMapEntries = (obj, fn, filterBoolean) => {
 	const entries = Object.entries(obj).map(([k, v], i) => fn(k, v, i))
 	const filteredEntries = filterBoolean ? entries.filter(Boolean) : entries
 	return Object.fromEntries(filteredEntries)
+}
+
+export const filterMapEntries = (obj, fn) => {
+	const entries = Object.entries(obj).filter(([k, v], i) => fn(k, v, i))
+	return Object.fromEntries(entries)
 }
 
 const getRealIndex = (array, index) =>

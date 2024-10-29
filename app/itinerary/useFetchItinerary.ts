@@ -6,6 +6,8 @@ import { useMemoPointsFromState } from './useDrawItinerary'
 import { modeKeyFromQuery } from './Itinerary'
 import useSetSearchParams from '@/components/useSetSearchParams'
 import fetchValhalla from './fetchValhalla'
+import computeSafeRatio from '@/components/cycling/computeSafeRatio'
+import brouterResultToSegments from '@/components/cycling/brouterResultToSegments'
 
 export default function useFetchItinerary(
 	searchParams,
@@ -24,6 +26,7 @@ export default function useFetchItinerary(
 
 	/* Routing requests are made here */
 	useEffect(() => {
+		console.log('lightgreen useeffect', serializedPoints, points)
 		if (points.length < 2) {
 			setRoutes(null)
 			return
@@ -47,9 +50,24 @@ export default function useFetchItinerary(
 				.join('|')
 			const url = `https://brouter.osc-fr1.scalingo.io/brouter?lonlats=${lonLats}&profile=${profile}&alternativeidx=0&format=geojson`
 			const res = await fetch(url)
-			const json = await res.json()
-			if (!json.features) return
-			return json
+			const clone = res.clone()
+			try {
+				const json = await res.json()
+				if (!json.features) return
+				if (mode === 'cycling') {
+					const cyclingSegmentsGeojson = brouterResultToSegments(json)
+
+					const safeRatio = computeSafeRatio(cyclingSegmentsGeojson)
+					console.log('lightgreen safe', cyclingSegmentsGeojson, safeRatio)
+					return { ...json, safe: { cyclingSegmentsGeojson, safeRatio } }
+				}
+
+				return json
+			} catch (e) {
+				const text = await clone.text()
+
+				return { state: 'error', reason: text }
+			}
 		}
 
 		//TODO fails is 3rd point is closer to 1st than 2nd, use reduce that sums
@@ -65,17 +83,20 @@ export default function useFetchItinerary(
 			)
 			updateRoute('cycling', cycling)
 
-			updateRoute('car', 'loading')
-			const car = await fetchValhalla(
-				points,
-				itineraryDistance,
-				null,
+			if (mode === 'car') {
+				updateRoute('car', 'loading')
+				const car = await fetchValhalla(
+					points,
+					itineraryDistance,
+					null,
 
-				1 //to be tweaked. We don't want to recommand this heavily polluting means of transport on the default itinerary result
-			)
-			updateRoute('car', car)
-
-			console.log('purple car', car)
+					1 //to be tweaked. We don't want to recommand this heavily polluting means of transport on the default itinerary result
+				)
+				updateRoute('car', car)
+				console.log('purple car', car)
+			} else {
+				updateRoute('car', null)
+			}
 
 			updateRoute('walking', 'loading')
 			const walking = await fetchBrouterRoute(
@@ -95,7 +116,7 @@ export default function useFetchItinerary(
 			return
 		}
 
-		async function fetchTrainRoute(multiplePoints, itineraryDistance, date) {
+		async function fetchTransitRoute(multiplePoints, itineraryDistance, date) {
 			const minTransitDistance = 0.5 // please walk or bike
 			if (itineraryDistance < minTransitDistance) return null
 			const points =
@@ -110,11 +131,29 @@ export default function useFetchItinerary(
 				}) => ({ lat, lng })
 			)
 
+			console.log(
+				'Will request motis intermodal',
+				lonLats,
+				date,
+				multiplePoints
+			)
 			const json = await computeMotisTrip(lonLats[0], lonLats[1], date)
+
+			console.log('lightgreen motis', json)
 
 			if (json.state === 'error') return json
 
 			if (!json?.content) return null
+			const notTransitType = ['Walk', 'Cycle']
+			const { connections } = json.content
+			if (
+				connections.every((connection) =>
+					connection.transports.every((transport) =>
+						notTransitType.includes(transport.move_type)
+					)
+				)
+			)
+				return null
 			/*
 			return sections.map((el) => ({
 				type: 'Feature',
@@ -128,7 +167,7 @@ export default function useFetchItinerary(
 		const itineraryDistance = distance(points[0], points.slice(-1)[0])
 
 		updateRoute('transit', { state: 'loading' })
-		fetchTrainRoute(points, itineraryDistance, date).then((transit) =>
+		fetchTransitRoute(points, itineraryDistance, date).then((transit) =>
 			setRoutes((routes) => ({ ...routes, transit }))
 		)
 	}, [points, setRoutes, date])

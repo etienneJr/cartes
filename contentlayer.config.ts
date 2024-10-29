@@ -12,6 +12,8 @@ export const Article = defineDocumentType(() => ({
 		date: { type: 'date', required: true },
 		description: { type: 'string', required: true },
 		image: { type: 'string', required: false },
+		tags: { type: 'list', of: { type: 'string' }, required: false },
+		bluesky: { type: 'string', required: false },
 	},
 	computedFields: {
 		url: {

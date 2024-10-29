@@ -1,21 +1,23 @@
 import GeoInputOptions from '@/components/GeoInputOptions'
-import { getArrayIndex, replaceArrayIndex } from '@/components/utils/utils'
 import fetchPhoton from '@/components/fetchPhoton'
+import { buildAddress } from '@/components/osm/buildAddress'
+import ItineraryProposition from '@/components/placeSearch/ItineraryProposition'
+import detectSmartItinerary from '@/components/placeSearch/detectSmartItinerary'
+import { getArrayIndex, replaceArrayIndex } from '@/components/utils/utils'
 import { isIOS } from '@react-aria/utils'
 import { useEffect, useState } from 'react'
 import { useLocalStorage } from 'usehooks-ts'
 import { buildAllezPart, setAllezPart } from '../SetDestination'
 import { encodePlace } from '../utils'
+import { FromHereLink } from './_components/FromHereLink'
+import { Geolocate } from './_components/Geolocate'
 import LogoCarteApp from './_components/LogoCarteApp'
 import SearchBar from './_components/SearchBar'
+import SearchHereButton from './_components/SearchResults/SearchHereButton'
 import SearchHistory from './_components/SearchResults/SearchHistory'
 import SearchLoader from './_components/SearchResults/SearchLoader'
 import SearchNoResults from './_components/SearchResults/SearchNoResults'
-import SearchHereButton from './_components/SearchResults/SearchHereButton'
 import SearchResultsContainer from './_components/SearchResults/SearchResultsContainer'
-import { Geolocate } from './_components/Geolocate'
-import { FromHereLink } from './_components/FromHereLink'
-import { buildAddress } from '@/components/osm/buildAddress'
 
 /* I'm  not sure of the interest to attache `results` to each state step.
  * It could be cached across the app. No need to re-query photon for identical
@@ -33,9 +35,15 @@ export default function PlaceSearch({
 	geolocation,
 	placeholder,
 }) {
+	console.log('lightgreen stepIndex', stepIndex, state)
+	console.log('lightgreen autofocus', autoFocus)
+	// This component stores its state in the... state array, hence needs an
+	// index to store its current state in the right array index
 	if (stepIndex == null) throw new Error('Step index necessary')
-	const [localSearch, setLocalSearch] = useState(true)
+
+	const [isLocalSearch, setIsLocalSearch] = useState(true)
 	const [searchHistory, setSearchHistory] = useLocalStorage('searchHistory', [])
+	const [itineraryProposition, setItineraryProposition] = useState()
 
 	const urlSearchQuery = searchParams.q
 
@@ -64,15 +72,34 @@ export default function PlaceSearch({
 		setTimeout(() => instantaneousSetIsMyInputFocused(value), 300)
 	}
 
+	const [hash, setHash] = useState(null)
+
+	useEffect(() => {
+		setHash(window.location.hash)
+	}, [searchParams])
+
+	const local = hash && hash.split('/').slice(1, 3),
+		localSearch = isLocalSearch && local
+
+	// Should this function be coded as a useCallback ? I get an infinite loop
 	const onInputChange =
-		(stepIndex = -1, localSearch = false) =>
+		(stepIndex = -1) =>
 		(searchValue) => {
+			setItineraryProposition(null)
+			detectSmartItinerary(searchValue, localSearch, zoom, (result) => {
+				if (result == null) return
+				const [from, to] = result
+				setItineraryProposition([from, to])
+			})
+
 			const oldStateEntry = state[stepIndex]
 			const stateEntry = {
 				...(oldStateEntry?.results?.length && searchValue == null
 					? { results: null }
 					: {}),
 				...(searchValue === '' ? {} : { inputValue: searchValue }),
+				stepBeingSearched: oldStateEntry?.stepBeingSearched,
+				key: oldStateEntry?.key,
 			}
 			const safeStateEntry =
 				Object.keys(stateEntry).length > 0 ? stateEntry : null
@@ -84,22 +111,27 @@ export default function PlaceSearch({
 				safeStateEntry
 				//validated: false, // TODO was important or not ? could be stored in each state array entries and calculated ?
 			)
+
 			setState(newState)
 			if (searchValue?.length > 2) {
-				const hash = window.location.hash,
-					local = hash && hash.split('/').slice(1, 3)
-
 				fetchPhoton(
 					searchValue,
 					setState,
 					stepIndex,
-					localSearch && local,
-					zoom
+					localSearch,
+					zoom,
+					setSearchParams
 				)
 			}
 		}
 
-	const onDestinationChange = onInputChange(stepIndex, localSearch)
+	const safeLocal = local ? local.join('') : false
+	useEffect(() => {
+		if (value == undefined) return
+		onInputChange(stepIndex)(value)
+	}, [isLocalSearch, stepIndex, value, zoom, safeLocal])
+
+	const onDestinationChange = onInputChange(stepIndex)
 
 	useEffect(() => {
 		if (!urlSearchQuery || value) return
@@ -171,6 +203,14 @@ export default function PlaceSearch({
 					sideSheet={sideSheet}
 				/>
 			)}
+
+			{itineraryProposition && (
+				<ItineraryProposition
+					data={itineraryProposition}
+					setSearchParams={setSearchParams}
+				/>
+			)}
+
 			{shouldShowResults && (
 				<div>
 					{step.results && (
@@ -220,9 +260,8 @@ export default function PlaceSearch({
 								<SearchNoResults value={value} />
 							)}
 							<SearchHereButton
-								setLocalSearch={setLocalSearch}
-								localSearch={localSearch}
-								onInputChange={onInputChange}
+								setIsLocalSearch={setIsLocalSearch}
+								isLocalSearch={isLocalSearch}
 								state={state}
 								stepIndex={stepIndex}
 							/>

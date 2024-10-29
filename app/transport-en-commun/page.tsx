@@ -6,6 +6,8 @@ const regions = sortBy((r) => r.nom)(regionsRaw)
 import regionsAoms from './regionsAoms.yaml'
 import { Ul } from './UI'
 import { sortBy } from '@/components/utils/utils'
+import { gtfsServerUrl } from '../serverUrls'
+import StaticPageHeader from '@/components/StaticPageHeader'
 
 const title = 'Transports en commun'
 const description = `
@@ -20,10 +22,11 @@ export const metadata: Metadata = {
 	description,
 }
 export default async function () {
-	const onlineAgenciesRequest = await fetch(
-		'https://motis.cartes.app/gtfs/agencies'
-	)
-	const { agencies } = await onlineAgenciesRequest.json()
+	const onlineAgenciesRequest = await fetch(gtfsServerUrl + '/agencies', {
+		cache: 'no-store',
+	})
+	const json = await onlineAgenciesRequest.json()
+	const agencies = Object.values(json).map((el) => el.agency)
 
 	const panRequest = await fetch('https://transport.data.gouv.fr/api/datasets/')
 	const datasets = await panRequest.json()
@@ -80,6 +83,7 @@ export default async function () {
 
 	return (
 		<PresentationWrapper>
+			<StaticPageHeader small={true} />
 			<header>
 				<h1>{title}</h1>
 				<p>{description}</p>
@@ -183,7 +187,7 @@ const DatasetItem = ({ dataset, agencies }) => {
 				<Ul>
 					{dataset.agencyIds.map((id) => (
 						<li key={id}>
-							<Link prefetch={false} href={`/?transports=oui&agence=${id}`}>
+							<Link prefetch={false} href={`/?style=transports&agence=${id}`}>
 								{agencies.find((agency) => agency.agency_id === id).agency_name}
 							</Link>
 						</li>

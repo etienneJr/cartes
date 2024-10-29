@@ -22,13 +22,11 @@ export default function useDrawRoute(isItineraryMode, map, geojson, id) {
 			return undefined
 		console.log('will draw useDrawRoute inside ' + id, id, geojson)
 
-		const source = map.getSource(id)
-		if (!source)
-			map.addSource(id, {
-				type: 'geojson',
-				data: geojson,
-				lineMetrics: true,
-			})
+		map.addSource(id, {
+			type: 'geojson',
+			data: geojson,
+			lineMetrics: true,
+		})
 
 		console.log('useDrawRoute did add source')
 
@@ -42,8 +40,8 @@ export default function useDrawRoute(isItineraryMode, map, geojson, id) {
 			},
 			layout: {
 				'text-field': ['get', 'letter'],
-				//				'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
 				'text-size': 16,
+				'text-font': ['Roboto Regular', 'Noto Sans Regular'],
 			},
 		})
 		console.log('will add layer poinst', id + 'Points')
@@ -55,7 +53,12 @@ export default function useDrawRoute(isItineraryMode, map, geojson, id) {
 				paint: {
 					'circle-radius': 12,
 					'circle-color': '#2988e6',
-					'circle-stroke-color': '#ffffff',
+					'circle-stroke-color': [
+						'case',
+						['==', ['get', 'stepBeingSearched'], true],
+						'yellow',
+						'#ffffff',
+					],
 					'circle-stroke-width': 3,
 				},
 				filter: ['in', '$type', 'Point'],
@@ -76,14 +79,16 @@ export default function useDrawRoute(isItineraryMode, map, geojson, id) {
 				paint: {
 					walking: {
 						'line-color': '#8f53c1',
-						'line-width': 5,
+						'line-width': 4,
 						// I'm bricoling something here but I don't understand yet how it
 						// works precisely
+						// TODO I don't get why setting the walking's style from
+						// useDrawTransit does not produce the same result here...
 						'line-dasharray': {
 							stops: [
-								[0, [10, 2]],
-								[10, [3, 2]],
-								[16, [0.6, 2]],
+								[0, [1, 2]],
+								[10, [1, 3]],
+								[16, [0.6, 4]],
 							],
 						},
 					},
@@ -125,8 +130,8 @@ export default function useDrawRoute(isItineraryMode, map, geojson, id) {
 				},
 				paint: {
 					walking: {
-						'line-color': '#5B099F',
-						'line-width': 0, // I wasn't able to make a dasharray contour
+						'line-color': '#d3b2ee',
+						'line-width': 4, // I wasn't able to make a dasharray contour
 					},
 					distance: {
 						'line-width': 2,

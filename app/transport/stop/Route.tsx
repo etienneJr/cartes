@@ -3,12 +3,14 @@ import { findContrastedTextColor } from '@/components/utils/colors'
 import { omit } from '@/components/utils/utils'
 import Image from 'next/image'
 import { useState } from 'react'
+import { handleColor } from '../../itinerary/transit/motisRequest'
+import { transportTypeIcon } from '../../itinerary/transit/transportIcon'
 import DayView from '../DayView'
 import Calendar from './Calendar'
-import { handleColor } from '../../itinerary/transit/motisRequest'
-import transportIcon, {
-	transportTypeIcon,
-} from '../../itinerary/transit/transportIcon'
+
+export function addMinutes(date, minutes) {
+	return new Date(date.getTime() + minutes * 60000)
+}
 
 export const nowAsYYMMDD = (delimiter = '') => {
 	var d = new Date(),
@@ -31,6 +33,19 @@ const toDate = ({ year, month, day }, time) => {
 	return new Date(+year, +month - 1, +day, ...time)
 }
 
+export const dateFromHHMMSS = (hhmmss) => {
+	var d = new Date(),
+		month = '' + (d.getMonth() + 1),
+		day = '' + d.getDate(),
+		year = d.getFullYear()
+
+	if (month.length < 2) month = '0' + month
+	if (day.length < 2) day = '0' + day
+
+	const date = toDate({ year, month, day }, timeFromHHMMSS(hhmmss))
+	return date
+}
+
 export default function Route({ route, stops = [] }) {
 	const [calendarOpen, setCalendarOpen] = useState(false)
 	const now = new Date()
@@ -43,7 +58,6 @@ export default function Route({ route, stops = [] }) {
 			// in Bretagne unified GTFS, all the GTFS were normalized with a technique where each trip has one calendar date entry only
 			const dates = stop.trip.calendarDates
 				.map((calendarDateObject) => {
-					if (!i) console.log('cdo', calendarDateObject)
 					if (calendarDateObject.exception_type === 2) return false
 					const { date: calendarDate } = calendarDateObject
 
@@ -68,8 +82,6 @@ export default function Route({ route, stops = [] }) {
 		.flat()
 		.sort((a, b) => a.arrivalDate - b.arrivalDate)
 
-	console.log('indigo', { augmentedStops })
-
 	/*
 	const byArrivalDate = new Map(
 		augmentedStops.map((el) => {
@@ -80,7 +92,6 @@ export default function Route({ route, stops = [] }) {
 
 	const today = nowAsYYMMDD('-')
 	const stopsToday = augmentedStops.filter((el) => el.day === today)
-	console.log('stopsToday', stopsToday)
 
 	const stopSelection = stopsToday.filter((el) => el.isFuture).slice(0, 4)
 
@@ -88,9 +99,9 @@ export default function Route({ route, stops = [] }) {
 	const otherDirection = directions[0] === 0 ? 1 : 0
 	const index = directions.findIndex((i) => i === otherDirection)
 	const hasMultipleTripDirections = index > -1
-	console.log('olive multiple', index, directions)
 	const direction = directions[0],
-		rawName = route.route_long_name,
+		rawName =
+			route.route_long_name || route.route_short_name || 'ligne sans nom',
 		// Here we're deriving the directed name from the raw name. They don't help
 		// us here :D haven't found a better way to display the correct trip name...
 		//
@@ -106,7 +117,6 @@ export default function Route({ route, stops = [] }) {
 			? (direction === 1 ? nameParts.reverse() : nameParts).join(' → ')
 			: rawName
 
-	console.log('olive route stop selection', route, stopSelection, stops)
 	return (
 		<li
 			css={`

@@ -1,16 +1,18 @@
 'use client'
 
-import closeIcon from '@/public/close.svg'
+import closeIcon from '@/public/close-circle-stroke.svg'
 import Image from 'next/image'
 import styled from 'styled-components'
+import { oceanColor } from './styles/france'
 
 export const MapContainer = styled.div`
+	${(p) =>
+		!p.$isMapLoaded ? `background: ${oceanColor}` : 'background: black'};
 	position: absolute;
 	top: 0;
 	left: 0;
 	width: 100%;
 	height: 100%;
-	background: #faf5e4;
 	> div:last-child {
 		position: absolute;
 		width: 100%;
@@ -32,7 +34,6 @@ export const ContentWrapper = styled.div`
 	z-index: 10;
 `
 
-const size = 1.3
 export const ModalCloseButton = (props) => (
 	<ModalCloseButtonButton {...props}>
 		<Image src={closeIcon} alt="Fermer" />
@@ -40,16 +41,9 @@ export const ModalCloseButton = (props) => (
 )
 export const ModalCloseButtonButton = styled.button`
 	position: absolute;
-	top: 0rem;
+	top: 0.4rem;
 	right: 0rem;
 	margin: 0;
-	background: var(--darkerColor);
-	color: var(--lightestColor);
-	border-radius: 2rem;
-	font-size: 150%;
-	width: ${size}rem;
-	height: ${size}rem;
-	line-height: ${size}rem;
 
 	text-align: center;
 	cursor: pointer;
@@ -58,8 +52,11 @@ export const ModalCloseButtonButton = styled.button`
 	align-items: center;
 	justify-content: center;
 	> img {
-		width: 1;
+		width: 1.4rem;
+		height: auto;
 		margin: 0;
+		opacity: 0.6;
+		border-radius: 1.4rem;
 	}
 `
 

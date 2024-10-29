@@ -1,8 +1,11 @@
+import DownloadGPXWrapper from '@/components/DownloadGPXWrapper'
 import css from '@/components/css/convertToJs'
 import LightsWarning from './LightsWarning'
 import ProfileChooser from './ProfileChooser'
-import { nowStamp } from './itinerary/transit/motisRequest'
 import ValhallaRésumé from './itinerary/ValhallaRésumé'
+import TransitLoader from './itinerary/transit/TransitLoader'
+import { nowStamp } from './itinerary/transit/motisRequest'
+import ElevationGraph from '@/components/itinerary/ElevationGraph'
 
 export default function RouteRésumé({
 	mode,
@@ -10,40 +13,77 @@ export default function RouteRésumé({
 	bikeRouteProfile,
 	setBikeRouteProfile,
 }) {
+	if (!data) return
 	if (data === 'loading')
-		return <div>La roue tourne est en train de tourner</div>
-	return (
-		<div
-			css={`
-				position: relative;
-				display: flex;
-				align-items: center;
-				background: var(--lightestColor);
-				padding: 0.6rem;
-				color: var(--darkestColor);
-				line-height: 1.4rem;
-				border: ${mode === 'cycling'
-					? '4px solid var(--lightColor)'
-					: '4px dotted #8f53c1'};
-				margin-top: 1.4rem;
-				border-radius: 0.5rem;
-				@media (min-width: 1200px) {
+		return (
+			<TransitLoader
+				text={
+					mode === 'cycling'
+						? "Calcul de l'itinéraire vélo"
+						: mode === 'car'
+						? "Calcul de l'itinéraire en voiture"
+						: "Calcul de l'itinéraire à pied"
 				}
-			`}
-		>
-			{mode === 'car' ? (
-				<ValhallaRésumé data={data} />
-			) : (
-				<BrouterModeContent
-					{...{
-						bikeRouteProfile,
-						setBikeRouteProfile,
-						mode,
-						data,
-					}}
-				/>
+			/>
+		)
+
+	if (data.state === 'error') {
+		console.log('lightgreen', data.reason)
+		if (data.reason.includes('to-position not mapped in existing datafile'))
+			return (
+				<p>
+					Notre calculateur vélo et marche ne couvre pas votre point d'arrivée
+					:/
+				</p>
+			)
+		if (data.reason.includes('from-position not mapped in existing datafile'))
+			return (
+				<p>
+					Notre calculateur vélo et marche ne couvre pas votre point de départ
+					:/
+				</p>
+			)
+		if (data.reason) return <p>{data.reason}</p>
+		else return <p>Erreur inconnue</p>
+	}
+
+	return (
+		<section>
+			<div
+				css={`
+					position: relative;
+					display: flex;
+					align-items: center;
+					background: var(--lightestColor);
+					padding: 0.6rem;
+					color: var(--darkestColor);
+					line-height: 1.4rem;
+					border: ${mode === 'cycling'
+						? '4px solid #8f53c1'
+						: '4px dotted #8f53c1'};
+					margin-top: 1.4rem;
+					border-radius: 0.5rem;
+					@media (min-width: 1200px) {
+					}
+				`}
+			>
+				{mode === 'car' ? (
+					<ValhallaRésumé data={data} />
+				) : (
+					<BrouterModeContent
+						{...{
+							bikeRouteProfile,
+							setBikeRouteProfile,
+							mode,
+							data,
+						}}
+					/>
+				)}
+			</div>
+			{['cycling', 'walking'].includes(mode) && data?.features && (
+				<DownloadGPXWrapper feature={data.features[0]} />
 			)}
-		</div>
+		</section>
 	)
 }
 
@@ -135,12 +175,30 @@ const BrouterModeContent = ({
 					}}
 				/>
 			)}
+			{mode === 'cycling' && data.safe && (
+				<p css="text-align: right">
+					<small>
+						{data.safe.safeRatio < 0.3
+							? '❗️'
+							: data.safe.safeRatio < 0.5
+							? '⚠️ '
+							: ''}{' '}
+						Trajet{' '}
+						<span css="text-decoration: underline; text-decoration-color: LightSeaGreen; text-decoration-thickness: 2px">
+							sécurisé
+						</span>{' '}
+						à {Math.round(data.safe.safeRatio * 100)}%{' '}
+						{data.safe.safeRatio < 0.5 ? 'seulement' : ''}
+					</small>
+				</p>
+			)}
 			{mode === 'cycling' && feature.geometry.coordinates[0] && (
 				<LightsWarning
 					longitude={feature.geometry.coordinates[0][0]}
 					latitude={feature.geometry.coordinates[0][1]}
 				/>
 			)}
+			<ElevationGraph feature={feature} />
 		</div>
 	)
 }

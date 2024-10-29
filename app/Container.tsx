@@ -10,6 +10,10 @@
  * - let requests be done by the user browser and start loading the map more
  * quickly
  *
+ * Due to Googlebot's problem indexing our pages (the live test captures showed
+ * just the map and an empty sheet), we've started to generate some pages on the
+ * server, see page.ts. It's the current tradeof.
+ *
  * Note : some requests will be made on the server to generate metadata, doing
  * them again client side is a bit of a waste (not totally, because data has to
  * be transmitted to the user anyway ; it's data vs code)
@@ -27,35 +31,59 @@ import { ContentWrapper, MapContainer } from './UI'
 import { useZoneImages } from './ZoneImages'
 import useSetItineraryModeFromUrl from './itinerary/useSetItineraryModeFromUrl'
 
+import { mapLibreBboxToOverpass } from '@/components/mapUtils'
 import useSetSearchParams from '@/components/useSetSearchParams'
-import dynamic from 'next/dynamic'
+import { useDebounce } from '@/components/utils'
+import { useLocalStorage } from 'usehooks-ts'
 import FocusedImage from './FocusedImage'
+import { initialSnap } from './ModalSheet'
+import PanoramaxLoader from './PanoramaxLoader'
+import SafeMap from './SafeMap'
 import { defaultZoom } from './effects/useAddMap'
-import useFetchTransportMap from './effects/useFetchTransportMap'
+import useFetchTransportMap, {
+	useFetchAgencyAreas,
+} from './effects/useFetchTransportMap'
+import useGeocodeRightClick from './effects/useGeocodeRightClick'
 import useOsmRequest from './effects/useOsmRequest'
+import useOverpassRequest from './effects/useOverpassRequest'
 import useFetchItinerary from './itinerary/useFetchItinerary'
 import Meteo from './meteo/Meteo'
 import { getStyle } from './styles/styles'
 import useTransportStopData from './transport/useTransportStopData'
-import useGeocodeRightClick from './effects/useGeocodeRightClick'
-import useOverpassRequest from './effects/useOverpassRequest'
-import { initialSnap } from './ModalSheet'
-import { mapLibreBboxToOverpass } from '@/components/mapUtils'
-import { useDebounce } from '@/components/utils'
-// Map is forced as dynamic since it can't be rendered by nextjs server-side.
-// There is almost no interest to do that anyway, except image screenshots
-const Map = dynamic(() => import('./Map'), {
-	ssr: false,
-})
+import useWikidata from './useWikidata'
+import { useSearchParams } from 'next/navigation'
+import { useWhatChanged } from '@/components/utils/useWhatChanged'
+import { computeCenterFromBbox } from './utils'
 
-export default function Container({ searchParams, state: givenState }) {
+// We don't want to redraw <Content instantaneously on map zoom or drag
+const contentDebounceDelay = 500
+
+export default function Container(props) {
+	const { state: givenState, agencyEntry } = props
+
 	const setSearchParams = useSetSearchParams()
+	const clientSearchParams = useSearchParams()
+
+	const searchParams = useMemo(
+		() => Object.fromEntries(clientSearchParams.entries()),
+		[clientSearchParams.toString()]
+	)
+
 	const [focusedImage, focusImage] = useState(null)
+	const [isMapLoaded, setMapLoaded] = useState(false)
+	const [lastGeolocation, setLastGeolocation] = useLocalStorage(
+		'lastGeolocation',
+		{ center: null, zoom: null }
+	)
 	const [bbox, setBbox] = useState(null)
-	const [zoom, setZoom] = useState(defaultZoom)
+	const debouncedBbox = useDebounce(bbox, contentDebounceDelay)
+	const [zoom, setZoom] = useState(lastGeolocation.zoom || defaultZoom)
+	const debouncedZoom = useDebounce(zoom, contentDebounceDelay)
 	const [bboxImages, setBboxImages] = useState([])
 	const [latLngClicked, setLatLngClicked] = useState(null)
 	const resetClickedPoint = () => setSearchParams({ clic: undefined })
+	const [panoramaxPosition, setPanoramaxPosition] = useState(null)
+	console.log('purple panoramaxPosition', panoramaxPosition)
 
 	// For the mobile sheet, we need it in Map, hence the definition here
 	const [trackedSnap, setTrackedSnap] = useState(initialSnap)
@@ -65,8 +93,9 @@ export default function Container({ searchParams, state: givenState }) {
 	const [geolocation, setGeolocation] = useState(null)
 
 	const [safeStyleKey, setSafeStyleKey] = useState(null)
-	const [tempStyle, setTempStyle] = useState(null)
-	const styleKey = tempStyle || searchParams.style || 'base'
+	console.log('lightpink ssk', safeStyleKey)
+	const [localStorageStyleKey] = useLocalStorage('style', null)
+	const styleKey = searchParams.style || localStorageStyleKey || 'france'
 	const style = getStyle(styleKey)
 
 	const styleChooser = searchParams['choix du style'] === 'oui',
@@ -74,13 +103,13 @@ export default function Container({ searchParams, state: givenState }) {
 			setSearchParams({ 'choix du style': state ? 'oui' : undefined })
 
 	const center = useMemo(
-		() =>
-			bbox && [(bbox[0][0] + bbox[1][0]) / 2, (bbox[0][1] + bbox[1][1]) / 2],
-		[bbox]
+		() => (bbox ? computeCenterFromBbox(bbox) : lastGeolocation.center),
+		[bbox, lastGeolocation.center]
 	)
 	// In this query param is stored an array of points. If only one, it's just a
 	// place focused on.
 	const [state, setState] = useState(givenState)
+	console.log('lightgreen state', state)
 
 	const allez = useMemo(() => {
 		return searchParams.allez ? searchParams.allez.split('->') : []
@@ -116,11 +145,6 @@ export default function Container({ searchParams, state: givenState }) {
 
 	const showOpenOnly = searchParams.o
 
-	const [zoneImages, panoramaxImages, resetZoneImages] = useZoneImages({
-		latLngClicked,
-		setLatLngClicked,
-	})
-
 	const vers = useMemo(() => state?.slice(-1)[0], [state])
 	const choice = vers && vers.choice
 	const target = useMemo(
@@ -132,10 +156,25 @@ export default function Container({ searchParams, state: givenState }) {
 
 	const osmFeature = vers?.osmFeature
 
+	const wikidata = useWikidata(osmFeature, state)
+
+	console.log('wikidata3', wikidata, osmFeature)
+
+	const panoramaxOsmTag = osmFeature?.tags?.panoramax
+
+	const panoramaxId = searchParams.panoramax
+	const [zoneImages, panoramaxImages, resetZoneImages] = useZoneImages({
+		latLngClicked,
+		setLatLngClicked,
+		panoramaxOsmTag,
+		panoramaxId,
+		wikidata,
+	})
+
 	const transportStopData = useTransportStopData(osmFeature)
 	const clickedStopData = transportStopData[0] || []
 
-	const isTransportsMode = searchParams.transports === 'oui'
+	const isTransportsMode = styleKey === 'transports'
 
 	const fetchAll = searchParams.tout
 	const transportsData = useFetchTransportMap(
@@ -144,8 +183,10 @@ export default function Container({ searchParams, state: givenState }) {
 		bbox,
 		searchParams.agence,
 		searchParams.noCache,
-		fetchAll
+		fetchAll,
+		agencyEntry
 	)
+	const agencyAreas = useFetchAgencyAreas(isTransportsMode)
 
 	// TODO reintroduce gare display through the transport style option + the bike
 	// mode below
@@ -176,9 +217,9 @@ export default function Container({ searchParams, state: givenState }) {
 	/* The bbox could be computed from the URL hash, for this to run on the
 	 * server but I'm not sure we want it, and I'm not sure Next can get the hash
 	 * server-side, it's a client-side html element */
-	const simpleArrayBbox = useDebounce(
-		bbox && mapLibreBboxToOverpass(bbox),
-		200 // TODO Ideally, just above https://maplibre.org/maplibre-gl-js/docs/API/type-aliases/FlyToOptions/
+	const simpleArrayBbox = useMemo(
+		() => debouncedBbox && mapLibreBboxToOverpass(debouncedBbox), // TODO Ideally, just above https://maplibre.org/maplibre-gl-js/docs/API/type-aliases/FlyToOptions/
+		[debouncedBbox]
 	)
 
 	const [quickSearchFeatures] = useOverpassRequest(simpleArrayBbox, category)
@@ -191,7 +232,7 @@ export default function Container({ searchParams, state: givenState }) {
 	const containerRef = useRef()
 	return (
 		<div ref={containerRef}>
-			<MapContainer>
+			<MapContainer $isMapLoaded={isMapLoaded}>
 				<ContentWrapper>
 					<ModalSwitch
 						{...{
@@ -207,9 +248,11 @@ export default function Container({ searchParams, state: givenState }) {
 							zoneImages,
 							panoramaxImages,
 							resetZoneImages,
-							zoom,
+							zoom: debouncedZoom,
+							setZoom,
 							searchParams,
 							style,
+							styleKey,
 							styleChooser,
 							setStyleChooser,
 							itinerary,
@@ -217,9 +260,10 @@ export default function Container({ searchParams, state: givenState }) {
 							geocodedClickedPoint,
 							resetClickedPoint,
 							transportsData,
+							agencyAreas,
 							geolocation,
 							bboxImages,
-							bbox,
+							bbox: debouncedBbox,
 							focusImage,
 							vers,
 							osmFeature,
@@ -227,12 +271,19 @@ export default function Container({ searchParams, state: givenState }) {
 							containerRef,
 							trackedSnap,
 							setTrackedSnap,
+							wikidata,
 						}}
 					/>
 				</ContentWrapper>
 				<Meteo coordinates={center} />
 				{focusedImage && <FocusedImage {...{ focusedImage, focusImage }} />}
-				<Map
+				{searchParams.panoramax && (
+					<PanoramaxLoader
+						id={searchParams.panoramax}
+						onMove={(func) => setPanoramaxPosition(func)}
+					/>
+				)}
+				<SafeMap
 					{...{
 						trackedSnap,
 						searchParams,
@@ -244,6 +295,7 @@ export default function Container({ searchParams, state: givenState }) {
 						isTransportsMode,
 						transportStopData,
 						transportsData,
+						agencyAreas,
 						clickedStopData,
 						bikeRouteProfile,
 						showOpenOnly,
@@ -263,12 +315,16 @@ export default function Container({ searchParams, state: givenState }) {
 						geocodedClickedPoint,
 						setGeolocation,
 						setZoom,
-						setTempStyle,
 						center,
 						setState,
 						setLatLngClicked,
 						setSafeStyleKey,
 						quickSearchFeatures,
+						panoramaxPosition,
+						setMapLoaded,
+						wikidata,
+						setLastGeolocation,
+						lastGeolocation,
 					}}
 				/>
 			</MapContainer>

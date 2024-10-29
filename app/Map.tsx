@@ -5,22 +5,29 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { sortGares } from './gares'
 
 import MapButtons from '@/components/MapButtons'
-import { goodIconSize } from '@/components/mapUtils'
+import { goodIconSize, useComputeMapPadding } from '@/components/mapUtils'
 import useSetSearchParams from '@/components/useSetSearchParams'
-import useAddMap from './effects/useAddMap'
+import useAddMap, {
+	defaultLight,
+	defaultSky,
+	globeLight,
+	highZoomLight,
+} from './effects/useAddMap'
 import useDrawQuickSearchFeatures from './effects/useDrawQuickSearchFeatures'
 import { getStyle } from './styles/styles'
 import useHoverOnMapFeatures from './useHoverOnMapFeatures'
 import useTerrainControl from './useTerrainControl'
 
-import { useDimensions } from '@/components/react-modal-sheet/hooks'
 import getBbox from '@turf/bbox'
-import { useLocalStorage, useMediaQuery } from 'usehooks-ts'
+import { useLocalStorage } from 'usehooks-ts'
 import CenteredCross from './CenteredCross'
 import MapComponents from './MapComponents'
-import { snapPoints } from './ModalSheet'
+import MapCompassArrow from './boussole/MapCompassArrow'
 import { defaultState } from './defaultState'
 import useDrawElectionClusterResults from './effects/useDrawElectionCluserResults'
+import useDrawPanoramaxPosition, {
+	useAddPanoramaxLayer,
+} from './effects/useDrawPanoramaxPosition'
 import useDrawSearchResults from './effects/useDrawSearchResults'
 import useDrawTransport from './effects/useDrawTransport'
 import useImageSearch from './effects/useImageSearch'
@@ -28,7 +35,8 @@ import useMapClick from './effects/useMapClick'
 import useRightClick from './effects/useRightClick'
 import useSearchLocalTransit from './effects/useSearchLocalTransit'
 import useDrawItinerary from './itinerary/useDrawItinerary'
-import MapCompassArrow from './boussole/MapCompassArrow'
+import { useWhatChanged } from '@/components/utils/useWhatChanged'
+import { computeCenterFromBbox } from './utils'
 
 if (process.env.NEXT_PUBLIC_MAPTILER == null) {
 	throw new Error('You have to configure env NEXT_PUBLIC_MAPTILER, see README')
@@ -39,49 +47,56 @@ if (process.env.NEXT_PUBLIC_MAPTILER == null) {
  * interactions. Components that can be rendered server side to make beautiful and useful meta previews of URLs must be written in the Container component or above
  *******/
 
-export default function Map({
-	searchParams,
-	state,
-	vers,
-	target,
-	zoom,
-	osmFeature,
-	isTransportsMode,
-	transportStopData,
-	transportsData,
-	clickedStopData,
-	itinerary,
-	bikeRouteProfile,
-	showOpenOnly,
-	category,
-	bbox,
-	setBbox,
-	gares,
-	clickGare,
-	clickedGare,
-	setBboxImages,
-	focusImage,
-	styleKey,
-	safeStyleKey,
-	setSafeStyleKey,
-	styleChooser,
-	setStyleChooser,
-	setZoom,
-	setGeolocation,
-	setTempStyle,
-	center,
-	setState,
-	setLatLngClicked,
-	quickSearchFeatures,
-	trackedSnap,
-}) {
-	const isMobile = useMediaQuery('(max-width: 800px)')
+export default function Map(props) {
+	const {
+		searchParams,
+		state,
+		vers,
+		target,
+		zoom,
+		osmFeature,
+		isTransportsMode,
+		transportStopData,
+		transportsData,
+		agencyAreas,
+		clickedStopData,
+		itinerary,
+		bikeRouteProfile,
+		showOpenOnly,
+		category,
+		bbox,
+		setBbox,
+		gares,
+		clickGare,
+		clickedGare,
+		setBboxImages,
+		focusImage,
+		styleKey,
+		safeStyleKey,
+		setSafeStyleKey,
+		styleChooser,
+		setStyleChooser,
+		setZoom,
+		setGeolocation,
+		center,
+		setState,
+		setLatLngClicked,
+		quickSearchFeatures,
+		trackedSnap,
+		panoramaxPosition,
+		setMapLoaded,
+		wikidata,
+		setLastGeolocation,
+		lastGeolocation,
+	} = props
+	useWhatChanged(props, 'Render component Map')
 	const mapContainerRef = useRef(null)
 	const stepsLength = state.filter((step) => step?.key).length
 	const [autoPitchPreference, setAutoPitchPreference] = useLocalStorage(
 		'autoPitchPreference',
 		null
 	)
+
 	const autoPitchPreferenceIsNo = autoPitchPreference === 'no'
 
 	const style = useMemo(() => getStyle(styleKey), [styleKey]),
@@ -92,7 +107,10 @@ export default function Map({
 		setZoom,
 		setBbox,
 		mapContainerRef,
-		setGeolocation
+		setGeolocation,
+		setMapLoaded,
+		center,
+		zoom
 	)
 	const setSearchParams = useSetSearchParams()
 
@@ -106,48 +124,33 @@ export default function Map({
 
 	const [distanceMode, setDistanceMode] = useState(false)
 
-	useEffect(() => {
-		if (!transportStopData.length) return
+	const padding = useComputeMapPadding(trackedSnap, searchParams)
 
-		setTempStyle('light')
-
-		return () => {
-			console.log('will unset')
-			setTempStyle(null)
-		}
-	}, [setTempStyle, transportStopData])
-
-	const { height } = useDimensions()
-
-	const sideSheetProbablySmall = !isMobile && !Object.keys(searchParams).length
 	useEffect(() => {
 		if (!map) return
 
-		if (isMobile) {
-			const snapValue = snapPoints[trackedSnap],
-				bottom =
-					snapValue < 0
-						? height + snapValue
-						: snapValue < 1
-						? height * snapValue
-						: snapValue
-			map.flyTo({ padding: { bottom } })
-		} else {
-			map.flyTo({
-				padding: {
-					left: sideSheetProbablySmall ? 0 : 400, //  rough estimate of the footprint in pixel of the left sheet on desktop; should be made dynamic if it ever gets resizable (a good idea)
-				},
-			})
+		map.flyTo({ padding })
+	}, [map, padding])
+
+	const wikidataPicture = wikidata?.pictureUrl
+
+	const wikidataPictureObject = wikidataPicture &&
+		osmFeature && {
+			thumbnailUrl: wikidataPicture,
+			title: wikidata.pictureName, //could be better
+			fromWikidata: true,
+			lat: osmFeature.lat,
+			lon: osmFeature.lon,
 		}
-	}, [map, isMobile, trackedSnap, sideSheetProbablySmall])
 
 	useImageSearch(
 		map,
 		setBboxImages,
 		zoom,
 		bbox,
-		searchParams.photos === 'oui',
-		focusImage
+		searchParams.photos,
+		focusImage,
+		wikidataPictureObject
 	)
 
 	// TODO reactivate
@@ -158,20 +161,20 @@ export default function Map({
 		const agencyData =
 			transportsData && transportsData.find((el) => el[0] === agencyId)
 		return agencyData && { id: agencyData[0], ...agencyData[1] }
-	}, [agencyId]) // including transportsData provokes a loop : maplibre bbox updated -> transportsData recreated -> etc
+	}, [agencyId, transportsData]) // including transportsData provokes a loop : maplibre bbox updated -> transportsData recreated -> etc
+
 	useEffect(() => {
 		if (!map || !agency) return
 
 		const bbox = agency.bbox
 
 		const mapLibreBBox = [
-			[bbox[2], bbox[1]],
-			[bbox[0], bbox[3]],
+			[bbox[0], bbox[1]],
+			[bbox[2], bbox[3]],
 		]
-		map.fitBounds(mapLibreBBox)
+		map.fitBounds(mapLibreBBox, { padding })
 	}, [map, agency])
 
-	console.log('ploup', styleKey, safeStyleKey)
 	useDrawElectionClusterResults(map, styleKey, searchParams.filtre)
 
 	const hasItinerary = stepsLength > 1
@@ -215,24 +218,41 @@ export default function Map({
 
 	useEffect(() => {
 		if (!map) return
+		if (Math.round(map.getZoom()) === zoom) return
+		map.flyTo({ zoom })
+	}, [zoom, map])
+
+	const [lightType, setLightType] = useState('highZoom')
+	useEffect(() => {
+		if (!map) return
 		map.on('zoom', () => {
 			const approximativeZoom = Math.round(map.getZoom())
 			if (approximativeZoom !== zoom) setZoom(approximativeZoom)
+			setLastGeolocation({
+				center: lastGeolocation.center,
+				zoom: approximativeZoom,
+			})
+
+			if (approximativeZoom < 6 && lightType === 'highZoom') {
+				setLightType('globeLight')
+				map.setLight(globeLight)
+			}
+			if (approximativeZoom >= 6 && lightType === 'globeLight') {
+				setLightType('highZoom')
+				map.setLight(highZoomLight)
+			}
 		})
 		map.on('moveend', () => {
 			setBbox(map.getBounds().toArray())
+			setLastGeolocation({
+				center: computeCenterFromBbox(bbox),
+				zoom: lastGeolocation.zoom,
+			})
 		})
-	}, [zoom, setZoom, map, setBbox])
+	}, [zoom, setZoom, map, setBbox, setLightType, lightType])
 
-	const prevStyleKeyRef = useRef()
-	useEffect(() => {
-		prevStyleKeyRef.current = styleKey
-	}, [styleKey])
-
-	const prevStyleKey = prevStyleKeyRef.current
 	useEffect(() => {
 		if (!map) return
-		if (styleKey === prevStyleKey) return
 
 		console.log('salut redraw')
 
@@ -241,14 +261,28 @@ export default function Map({
 		// hence this diff: false. We're not loosing much
 		// UPDATE 26 april 2024, maplibre 4.1.3, seems to be working now, hence
 		// diff: true :)
-		map.setStyle(styleUrl, { diff: false }) //setting styleKey!== 'base' doesn't work, probably because the error comes from switching from base to another ?
-		//TODO the Oneway style in voyage style gets corrupted after switching to
-		//transit or another style, hence this temporary disable diff
-		setTimeout(() => {
-			// Hack : I haven't found a way to know when this style change is done, hence this setTimeout, absolutely not a UI problem but could be too quick ?
+		const previousStyle = map.getStyle()
+		console.log('previous', previousStyle)
+		const shouldSetStyle =
+			previousStyle && previousStyle.name !== (style.originalName || style.name)
+
+		const onStyleLoad = () => {
 			setSafeStyleKey(styleKey)
-		}, 300)
-	}, [styleUrl, map, styleKey, prevStyleKey, setSafeStyleKey])
+		}
+		if (shouldSetStyle) {
+			map.on('style.load', onStyleLoad)
+			map.setSky() // Don't really know why, this saves use from having an ugly opaque layer on style change
+			map.setStyle(styleUrl, { diff: false }) //setting styleKey!== 'base' doesn't work, probably because the error comes from switching from base to another ?
+			//TODO the Oneway style in voyage style gets corrupted after switching to
+			//transit or another style, hence this temporary disable diff
+		} else {
+			setSafeStyleKey(styleKey)
+		}
+
+		return () => {
+			map.off('style.load', onStyleLoad)
+		}
+	}, [styleUrl, map, styleKey, setSafeStyleKey])
 
 	useRightClick(map)
 
@@ -259,10 +293,11 @@ export default function Map({
 		itinerary,
 		isTransportsMode,
 		setLatLngClicked,
-		setState,
 		gares,
 		clickGare,
-		setSearchParams
+		setSearchParams,
+		styleKey,
+		searchParams['choix du style'] === 'oui'
 	)
 
 	useHoverOnMapFeatures(map)
@@ -296,6 +331,7 @@ export default function Map({
 			if (!autoPitchPreferenceIsNo)
 				setAutoPitchPreference(Math.round(new Date().getTime() / 1000))
 			const auto3d = !autoPitchPreferenceIsNo
+
 			map.flyTo({
 				center: [vers.longitude, vers.latitude],
 				zoom: tailoredZoom,
@@ -368,6 +404,13 @@ export default function Map({
 		}
 	}, [lesGaresProches, map, zoom, clickGare, clickedGare?.uic])
 
+	useDrawPanoramaxPosition(map, panoramaxPosition)
+	useAddPanoramaxLayer(
+		map,
+		searchParams.panoramax != null || searchParams.rue === 'oui',
+		safeStyleKey
+	)
+
 	return (
 		<>
 			<MapButtons
@@ -390,7 +433,7 @@ export default function Map({
 						map,
 						vers,
 						transportsData,
-						setTempStyle,
+						agencyAreas,
 						isTransportsMode,
 						safeStyleKey,
 						searchParams,
@@ -405,6 +448,20 @@ export default function Map({
 						button.maplibregl-ctrl-compass
 						.maplibregl-ctrl-icon {
 						background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='29' height='29' fill='crimson' viewBox='0 0 29 29'%3E%3Cpath d='m10.5 14 4-8 4 8z'/%3E%3Cpath fill='%23ccc' d='m10.5 16 4 8 4-8z'/%3E%3C/svg%3E");
+					}
+
+					@media (max-width: 800px) {
+						.maplibregl-ctrl-bottom-left .maplibregl-ctrl-scale {
+							margin-left: 3.6rem;
+							border-right: none;
+							border-left: none;
+							line-height: 1rem;
+							background: none;
+							border-bottom-color: var(--darkColor);
+							color: var(--darkColor);
+							font-weight: 600;
+							filter: drop-shadow(0px 0px 2px #ffffffa6);
+						}
 					}
 				`}
 			/>

@@ -6,9 +6,22 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
 import { removeStatePart, setAllezPart } from '../SetDestination'
+import { replaceArrayIndex } from '@/components/utils/utils'
 
-export default function Steps({ state, setDisableDrag = () => null }) {
-	const steps = state
+export default function Steps({
+	setState,
+	state,
+	setDisableDrag = () => null,
+}) {
+	console.log('lightgreen state', state)
+
+	// We're displaying the steps selector with minimum 2 steps
+	const steps =
+		!state || state.length === 0
+			? [null, null]
+			: state.length === 1
+			? [...state, null]
+			: state
 
 	const setSearchParams = useSetSearchParams()
 
@@ -19,7 +32,7 @@ export default function Steps({ state, setDisableDrag = () => null }) {
 	return (
 		<section
 			css={`
-				margin: 0.6rem 0 2.6rem 0;
+				margin: 0 0 1rem 0;
 			`}
 		>
 			<AddStepButton
@@ -38,6 +51,9 @@ export default function Steps({ state, setDisableDrag = () => null }) {
 					border-radius: 0.4rem;
 					padding: 0.2rem 0.3rem;
 					list-style-type: none;
+					position: relative;
+					z-index: 8;
+					border: 1px solid var(--lighterColor);
 					li {
 						padding: 0.3rem 0.4rem;
 						border-bottom: 1px solid var(--lighterColor);
@@ -53,14 +69,18 @@ export default function Steps({ state, setDisableDrag = () => null }) {
 			>
 				{steps.map((step, index) => (
 					<Item
-						key={step?.key}
+						key={
+							console.log('step key', step?.key || index) || step?.key || index
+						}
 						{...{
 							index,
 							step,
 							setSearchParams,
-							beingSearched: isStepBeingSearched(steps, index),
+							beingSearched: step?.stepBeingSearched,
 							state,
+							setState,
 							setDisableDrag,
+							allez,
 						}}
 					/>
 				))}
@@ -72,13 +92,15 @@ export default function Steps({ state, setDisableDrag = () => null }) {
 		</section>
 	)
 }
-const AddStepButton = ({ url, title }) => (
+const AddStepButton = ({ url, title, style }) => (
 	<div
 		css={`
+			z-index: 7;
 			display: flex;
 			align-items: center;
 			justify-content: end;
-			height: 1.8rem;
+			height: 0.55rem;
+			margin-right: 1.8rem;
 		`}
 	>
 		<Link
@@ -88,7 +110,7 @@ const AddStepButton = ({ url, title }) => (
 				text-decoration: none;
 				margin: 0rem 0.7rem;
 				display: inline-block;
-				opacity: 0.7;
+				${style}
 			`}
 		>
 			<Image
@@ -98,6 +120,7 @@ const AddStepButton = ({ url, title }) => (
 					width: 1.2rem;
 					height: auto;
 					vertical-align: sub;
+					opacity: 0.4;
 				`}
 			/>
 		</Link>
@@ -110,11 +133,19 @@ const Item = ({
 	setSearchParams,
 	beingSearched,
 	state,
+	setState,
 	setDisableDrag,
+	allez,
 }) => {
 	const controls = useDragControls()
 	const [undoValue, setUndoValue] = useState(null)
 	const key = step?.key
+	const stepDefaultName =
+		index == 0
+			? 'une origine'
+			: state.length === 0 || index === state.length - 1
+			? 'une destination'
+			: 'cette étape'
 	return (
 		<Reorder.Item
 			key={key}
@@ -138,28 +169,39 @@ const Item = ({
 					}
 				`}
 			>
-				<Icon text={letterFromIndex(index)} />{' '}
 				<span
 					onClick={() => {
-						step && setUndoValue(step.key)
-						setSearchParams({
-							allez: setAllezPart(step.key, state, ''),
-						})
+						console.log('lightgreen allezpart', 'coucou')
+						step && setUndoValue(step)
+						setState(
+							state.map((step, mapIndex) => ({
+								...(step || {}),
+								stepBeingSearched: mapIndex === index ? true : false,
+							}))
+						)
 					}}
-					css="min-width: 6rem; cursor: text"
 				>
-					{beingSearched
-						? `Choisissez une ${index == 0 ? 'origine' : 'destination'}`
-						: step?.name || '...'}
+					<Icon text={letterFromIndex(index)} />{' '}
+					<span
+						css={`
+							min-width: 6rem;
+							cursor: text;
+							${!step || !step.name
+								? `font-weight: 300; color: var(--darkColor); font-style: italic`
+								: ''}
+						`}
+					>
+						{beingSearched
+							? `Choisissez ${stepDefaultName}`
+							: step?.name || `Cliquez pour choisir ${stepDefaultName}`}
+					</span>
 				</span>
 				{undoValue != null && beingSearched && (
 					<span>
 						{' '}
 						<button
 							onClick={() =>
-								setSearchParams({
-									allez: setAllezPart(step.key, state, undoValue),
-								})
+								setState(replaceArrayIndex(state, index, undoValue))
 							}
 						>
 							<Image
@@ -179,53 +221,79 @@ const Item = ({
 			</div>
 			<div
 				css={`
+					position: relative;
 					&,
 					a {
 						display: flex;
 						align-items: center;
 					}
 					> a {
-						margin-left: 0.4rem;
+						margin-right: 0.4rem;
 					}
 				`}
 			>
-				<div
-					onPointerDown={(e) => {
-						setDisableDrag(true)
-						controls.start(e)
-					}}
-					onPointerUp={(e) => {
-						setDisableDrag(false)
-					}}
-					className="reorder-handle"
-				>
-					<Dots />
-				</div>
-				<RemoveStepLink {...{ setSearchParams, stepKey: key, state }} />
+				{index < state.length - 1 && (
+					<AddStepButton
+						url={setSearchParams({ allez: allez.replace('->', '->->') }, true)}
+						title={'Ajouter un point intermédiaire'}
+						style={`
+					top: 1rem;
+  position: absolute;
+  right: 1.1rem;
+  background: var(--lightestColor);
+  border-radius: 1.8rem;
+						`}
+					/>
+				)}
+				{key ? (
+					<div
+						onPointerDown={(e) => {
+							setDisableDrag(true)
+							controls.start(e)
+						}}
+						onPointerUp={(e) => {
+							setDisableDrag(false)
+						}}
+						className="reorder-handle"
+					>
+						<Dots />
+					</div>
+				) : (
+					<div
+						css={`
+							width: 1.6rem;
+						`}
+					></div>
+				)}
+				{index !== 0 && index !== state.length - 1 && (
+					<RemoveStepLink {...{ setSearchParams, stepKey: key, state }} />
+				)}
 			</div>
 		</Reorder.Item>
 	)
 }
 
 const RemoveStepLink = ({ setSearchParams, stepKey, state }) => {
-	if (!stepKey)
-		return (
-			<div
-				css={`
-					width: 1.6rem;
-				`}
-			></div>
-		)
+	if (!stepKey) return null
+
 	return (
 		<Link
 			href={setSearchParams({ allez: removeStatePart(stepKey, state) }, true)}
+			css={`
+				position: absolute;
+				right: -1.6rem;
+				top: 0.15rem;
+				background: var(--lightestColor);
+				border-radius: 1rem;
+			`}
 		>
 			<Image
 				src={closeIcon}
 				alt="Supprimer cette étape"
 				css={`
-					width: 1.2rem;
+					width: 1rem;
 					height: auto;
+					opacity: 0.6;
 				`}
 			/>
 		</Link>
@@ -256,7 +324,7 @@ const Dots = () => (
 			cursor: pointer;
 			display: inline-flex;
 			width: 1.4rem;
-			height: 1.4rem;
+			height: 1.2rem;
 			display: flex;
 			align-items: center;
 			flex-wrap: wrap;
@@ -268,6 +336,7 @@ const Dots = () => (
 				height: 5px;
 				margin: 1px;
 			}
+			opacity: 0.8;
 		`}
 	>
 		{[...new Array(9)].map((_, index) => (
@@ -278,15 +347,6 @@ const Dots = () => (
 
 export const letterFromIndex = (index) => String.fromCharCode(65 + (index % 26))
 
-const isStepBeingSearched = (steps, index) => {
-	const foundSearched = steps.findIndex(
-		(step) => step && !step.key && step.inputValue
-	)
-	if (foundSearched > -1) return foundSearched === index
-
-	return steps.findIndex((step) => step === null) === index
-}
-
-export const hasStepBeingSearched = (steps) => {
-	return steps.some((step) => step === null || (!step.key && step.inputValue))
+export const getHasStepBeingSearched = (state) => {
+	return state.some((step) => step && step.stepBeingSearched)
 }

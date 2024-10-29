@@ -29,8 +29,10 @@ import {
 export default function Transit({ itinerary, searchParams }) {
 	const data = itinerary.routes.transit,
 		date = itinerary.date
+	if (!data) return
 	if (data.state === 'loading') return <TransitLoader />
-	if (data.state === 'error') return <NoTransit />
+	if (data.state === 'error') return <NoTransit reason={data.reason} />
+
 	if (!data?.connections || !data.connections.length)
 		return <TransitScopeLimit />
 
@@ -185,6 +187,7 @@ export const Line = ({
 	connectionRange: [from, to],
 	transports,
 }) => {
+	console.log('lightgreen line', transports)
 	const { from: absoluteFrom, to: absoluteTo } = connectionsTimeRange
 	const length = absoluteTo - absoluteFrom
 
@@ -217,8 +220,8 @@ export const Line = ({
 				ref={animatedScrollRef}
 				css={`
 					position: absolute;
-					left: calc(1rem + ${left}%);
-					width: ${barWidth}%;
+					left: calc(0.6rem + ${left}%);
+					width: calc(${barWidth}% - 1rem);
 					top: 50%;
 					transform: translateY(-50%);
 				`}
@@ -254,15 +257,13 @@ export const Line = ({
 					`}
 				>
 					<small>{formatMotis(from)}</small>
-					{barWidth > 30 && (
-						<small
-							css={`
-								color: #555;
-							`}
-						>
-							{humanDuration(connection.seconds).single}
-						</small>
-					)}
+					<small
+						css={`
+							color: #555;
+						`}
+					>
+						{barWidth > 30 ? humanDuration(connection.seconds).single : ' - '}
+					</small>
 					<small>{formatMotis(to)}</small>
 				</div>
 			</div>
@@ -270,7 +271,11 @@ export const Line = ({
 	)
 }
 
+// The code in this component is a mess. We're handling Motis's transport types
+// + our own through brouter and valhalla. A refactoring should be done at some
+// point
 export const TimelineTransportBlock = ({ transport }) => {
+	console.log('lightgreen TimelineTransportBlock', transport)
 	const [constraint, setConstraint] = useState('none')
 	const background = transport.route_color,
 		color = transport.route_text_color
@@ -298,15 +303,13 @@ export const TimelineTransportBlock = ({ transport }) => {
 		<span
 			ref={ref}
 			css={`
-			${
-				constraint == 'smallest' &&
+				${constraint == 'smallest' &&
 				`
 		  strong {
 			  border: 2px solid white;
 				z-index: 1
 		  }
-			`
-			}
+			`}
 				display: inline-block;
 				width: 100%;
 				background: ${background};
@@ -314,20 +317,22 @@ export const TimelineTransportBlock = ({ transport }) => {
 				display: flex;
 				justify-content: center;
 				padding: 0.2rem 0;
+				border-radius: 0.2rem;
 				img {
 					display: ${displayImage ? 'block' : 'none'};
 					height: 0.8rem;
 					width: auto;
 					margin-right: 0.2rem;
-
-
+				}
+				${transport.move_type === 'Walk' && `border-bottom: 4px dotted #5c0ba0`}
 			`}
 			title={`${humanDuration(transport.seconds).single} de ${
 				transport.frenchTrainType ||
 				transport.move?.name ||
 				(transport.move?.mumo_type === 'car'
 					? 'voiture'
-					: transport.move?.mumo_type === 'bike'
+					: transport.move_type === 'Cycle' ||
+					  transport.move?.mumo_type === 'bike'
 					? 'vélo'
 					: 'marche')
 			} ${transport.route_long_name || ''}`}
@@ -347,7 +352,21 @@ export const TimelineTransportBlock = ({ transport }) => {
 						margin: 0 !important;
 					`}
 				/>
-			) : transport.move_type === 'Walk' &&
+			) : transport.move_type === 'Cycle' ||
+			  (transport.move_type === 'Walk' &&
+					transport.move?.mumo_type === 'bike') ? (
+				<Image
+					src={'/cycling.svg'}
+					alt="Icône d'un vélo"
+					width="100"
+					height="100"
+					css={`
+						height: 1.6rem !important;
+						margin: -0.1rem 0 0 0 !important;
+						filter: invert(1);
+					`}
+				/>
+			) : transport.move_type === 'Walk' ||
 			  transport.move?.mumo_type === 'foot' ? (
 				<Image
 					src={'/walking.svg'}
@@ -356,20 +375,7 @@ export const TimelineTransportBlock = ({ transport }) => {
 					height="100"
 					css={`
 						height: 1.4rem !important;
-
-						margin: 0 !important;
-					`}
-				/>
-			) : transport.move_type === 'Walk' &&
-			  transport.move?.mumo_type === 'bike' ? (
-				<Image
-					src={'/cycling.svg'}
-					alt="Icône d'un vélo"
-					width="100"
-					height="100"
-					css={`
-						height: 1.4rem !important;
-						margin: 0 !important;
+						margin: -0.1rem 0 0 0 !important;
 					`}
 				/>
 			) : (

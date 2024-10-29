@@ -2,9 +2,11 @@ import maplibregl, { ScaleControl } from 'maplibre-gl'
 import { useEffect, useMemo, useState } from 'react'
 import { useLocalStorage, useMediaQuery } from 'usehooks-ts'
 import { styles } from '../styles/styles'
-import { Protocol } from 'pmtiles'
+import { Protocol as ProtomapsProtocol } from 'pmtiles'
 import useGeolocation from './useGeolocation'
 import frenchMaplibreLocale from '@/components/map/frenchMaplibreLocale.ts'
+import { Protocol as CartesProtocol } from '@/components/map/CartesProtocol.ts'
+import useEffectDebugger from '@/components/useEffectDebugger'
 
 /*
  *
@@ -12,10 +14,46 @@ import frenchMaplibreLocale from '@/components/map/frenchMaplibreLocale.ts'
  *
  * */
 
-const defaultSky = {
-	'sky-color': '#76508B',
-	'horizon-color': '#FCB4AB',
-	'fog-color': '#FD8E35',
+const morningDate = new Date('March 13, 08 07:20'),
+	dayDate = new Date('March 13, 08 14:20'),
+	eveningDate = new Date('March 13, 08 20:23')
+const date = new Date()
+
+const hoursOfDay = date.getHours()
+export const defaultSky =
+	hoursOfDay < 8 || hoursOfDay > 18 //TODO see RouteRésumé, it has time of sunset. Make an aurora light too, different from the sunset, and handle the light below
+		? {
+				'sky-color': '#76508B',
+				'horizon-color': '#FCB4AB',
+				'fog-color': '#FD8E35',
+		  }
+		: {
+				'sky-color': '#199EF3',
+				'sky-horizon-blend': 0.5,
+				'horizon-color': '#ffffff',
+				'horizon-fog-blend': 0.5,
+				'fog-color': '#0000ff',
+				'fog-ground-blend': 0.5,
+				'atmosphere-blend': ['interpolate', ['linear'], ['zoom'], 0, 0.5, 7, 0],
+		  }
+
+export const defaultProjection = {
+	type: 'globe',
+}
+// TODO I haven't yet understood how to handle this. With the globe mode, we
+// should let the light follow the real sun, and enable the user to tweak it
+export const globeLight = {
+	anchor: 'viewport',
+	color: 'pink',
+	intensity: 0.1,
+	position: [1.55, 180, 180],
+}
+
+export const highZoomLight = {
+	anchor: 'viewport',
+	color: '#ffffff',
+	intensity: 0.5,
+	position: [1.15, 210, 30],
 }
 
 const defaultCenter =
@@ -31,37 +69,44 @@ export default function useAddMap(
 	setZoom,
 	setBbox,
 	mapContainerRef,
-	setGeolocation
+	setGeolocation,
+	setMapLoaded,
+	// This for hot reload, I don't why this hook gets called again losing the map
+	// state, very annoying
+	center,
+	zoom
 ) {
 	const [map, setMap] = useState(null)
 	const [geolocate, setGeolocate] = useState(null)
 	const isMobile = useMediaQuery('(max-width: 800px)')
-	// This could probably be done with a Next Middleware, to avoid a second
-	// request, but I could not make it work in 5 minutes
+
 	const geolocation = useGeolocation({
 		latitude: defaultCenter[1],
 		longitude: defaultCenter[0],
 	})
-	//	console.log('geolocation', geolocation)
 	const { latitude, longitude } = geolocation
 
-	const ipGeolocationCenter = [longitude, latitude]
+	const ipGeolocationCenter = useMemo(
+		() => [longitude, latitude],
+		[longitude, latitude]
+	)
 
 	useEffect(() => {
 		if (!map) return
 
-		//TODO see https://github.com/laem/cartes/pull/370
-		return
 		map.flyTo({
 			center: ipGeolocationCenter,
 		})
 	}, [ipGeolocationCenter, map])
 
 	useEffect(() => {
-		let protocol = new Protocol()
-		maplibregl.addProtocol('pmtiles', protocol.tile)
+		let protomapsProtocol = new ProtomapsProtocol()
+		let cartesProtocol = new CartesProtocol()
+		maplibregl.addProtocol('pmtiles', protomapsProtocol.tile)
+		maplibregl.addProtocol('cartes', cartesProtocol.tile)
 		return () => {
 			maplibregl.removeProtocol('pmtiles')
+			maplibregl.removeProtocol('cartes')
 		}
 	}, [])
 
@@ -90,18 +135,19 @@ export default function useAddMap(
 		}
 	}, [map, autoPitchPreference, setAutoPitchPreference])
 
-	useEffect(() => {
+	useEffectDebugger(() => {
 		if (!mapContainerRef.current) return undefined
 
 		const newMap = new maplibregl.Map({
 			container: mapContainerRef.current,
 			style: styleUrl,
 			maxPitch: 85,
-			center: defaultCenter,
-			zoom: defaultZoom,
+			center: center || defaultCenter,
+			zoom: zoom || defaultZoom,
 			hash: true,
 			attributionControl: false,
 			locale: frenchMaplibreLocale,
+			antialias: true,
 		})
 
 		const navigationControl = new maplibregl.NavigationControl({
@@ -109,9 +155,6 @@ export default function useAddMap(
 			showZoom: true,
 			showCompass: true,
 		})
-		/*
-		const navigationControlElement = navigationControl.onAdd(newMap)
-		*/
 		newMap.addControl(navigationControl, 'top-right')
 
 		const geolocate = new maplibregl.GeolocateControl({
@@ -126,17 +169,21 @@ export default function useAddMap(
 		newMap.addControl(geolocate)
 
 		geolocate.on('geolocate', function (e) {
-			console.log('bleu ', e.coords)
 			setGeolocation(e.coords)
 		})
 
 		newMap.on('load', () => {
-			console.log('maplibre instance loaded with id ', newMap._mapId)
+			setMapLoaded(true)
 			setMap(newMap)
-			newMap.setSky(defaultSky)
 
 			setZoom(Math.round(newMap.getZoom()))
 			setBbox(newMap.getBounds().toArray())
+		})
+
+		newMap.on('style.load', () => {
+			newMap.setSky(defaultSky)
+			newMap.setProjection(defaultProjection)
+			newMap.setLight(highZoomLight)
 		})
 
 		newMap.on('moveend', (e) => {
@@ -147,16 +194,8 @@ export default function useAddMap(
 			setMap(null)
 			newMap?.remove()
 		}
-	}, [setMap, setZoom, setBbox, mapContainerRef, setGeolocate]) // styleUrl not listed on purpose
+	}, [setMap, setMapLoaded, setZoom, setBbox, mapContainerRef, setGeolocate]) // styleUrl not listed on purpose
 
-	useEffect(() => {
-		if (!map) return
-		setTimeout(() => {
-			//TODO, I thought re-setting the sky would solve the problem of the sky
-			//going away when changing style but no
-			map.setSky(defaultSky)
-		}, 1000)
-	}, [map, styleUrl])
 	const triggerGeolocation = useMemo(
 		() => (geolocate ? () => geolocate.trigger() : () => 'Not ready'),
 		[geolocate]
@@ -174,8 +213,6 @@ export default function useAddMap(
 			if (!map || !scale) return
 			try {
 				map.removeControl(scale)
-				// I don't understand why I get the "this._map is undefined" error on
-				// hot reload
 			} catch (e) {
 				console.log('Error removing scale')
 			}

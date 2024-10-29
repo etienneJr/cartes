@@ -1,14 +1,12 @@
 import { buildAllezPart } from '@/app/SetDestination'
 import { clickableClasses } from '@/app/clickableLayers'
-import {
-	createPolygon,
-	createSearchBBox,
-} from '@/app/createSearchPolygon'
+import { createPolygon, createSearchBBox } from '@/app/createSearchPolygon'
 import { disambiguateWayRelation } from '@/app/osmRequest'
 import { encodePlace } from '@/app/utils'
 import { replaceArrayIndex } from '@/components/utils/utils'
 import { useEffect } from 'react'
 import handleCirconscriptionsLegislativesClick from './handleCirconscriptionsLegislativesClick'
+import { name, nameExpression } from '../styles/france'
 
 export default function useMapClick(
 	map,
@@ -17,10 +15,11 @@ export default function useMapClick(
 	itinerary,
 	isTransportsMode,
 	setLatLngClicked,
-	setState,
 	gares,
 	clickGare,
-	setSearchParams
+	setSearchParams,
+	styleKey,
+	styleChooserOpen
 ) {
 	// This hook lets the user click on the map to find OSM entities
 	// It also draws a polygon to show the search area for pictures
@@ -30,6 +29,12 @@ export default function useMapClick(
 
 		const onClick = async (e) => {
 			console.log('click event', e)
+			// interesting and tricky : without this timeout, it looks like another
+			// setSearchParams overrides this call
+
+			if (styleChooserOpen)
+				setTimeout(() => setSearchParams({ 'choix du style': undefined }), 100)
+
 			setLatLngClicked(e.lngLat)
 
 			const source = map.getSource('searchPolygon')
@@ -52,6 +57,7 @@ export default function useMapClick(
 					},
 				})
 			}
+
 			setTimeout(() => {
 				map && map.setPaintProperty('searchPolygon', 'fill-opacity', 0)
 			}, 1000)
@@ -65,14 +71,20 @@ export default function useMapClick(
 			// Thanks OSMAPP https://github.com/openmaptiles/openmaptiles/issues/792
 			const rawFeatures = map.queryRenderedFeatures(e.point),
 				features = rawFeatures.filter(
-					(f) => f.source === 'maptiler_planet' && allowedLayerProps(f)
+					(f) =>
+						(f.source === 'openmaptiles' || f.source === 'maptiler_planet') && // maintain compatibility with two of our styles : the new protomaps style and the old maptiler styles
+						allowedLayerProps(f)
 				)
 
 			const circo = handleCirconscriptionsLegislativesClick(rawFeatures)
 
 			if (circo) return setSearchParams({ ...circo })
 
-			console.log('clicked map features', rawFeatures)
+			console.log(
+				'clicked map features',
+				rawFeatures && rawFeatures[0].properties,
+				rawFeatures
+			)
 
 			if (!features.length || !features[0].id) {
 				console.log('clicked no features', features)
@@ -82,30 +94,50 @@ export default function useMapClick(
 			const feature = features[0]
 			const openMapTilesId = '' + feature.id
 
+			const hasNwr = styleKey === 'france'
 			// e.g. For "Vitré", a town, I'm getting id 18426612010. The final 0 means
 			// "node", it needs to be stripped. For a waterway like La Vilaine in
 			// Vitré https://www.openstreetmap.org/way/308377384, the OpenMapTiles id
 			// is the good one.
-			const id = ['waterway'].includes(feature.sourceLayer)
+			const id = hasNwr
+					? feature.id
+					: ['waterway'].includes(feature.sourceLayer)
 					? openMapTilesId
 					: openMapTilesId.slice(null, -1),
-				featureType =
-					feature.sourceLayer === 'waterway'
-						? 'way' // bold assumption here
-						: feature.sourceLayer === 'place'
-						? 'node'
-						: { '1': 'way', '0': 'node', '4': 'relation' }[ //this is broken. We're getting the "4" suffix for relations AND ways. See https://github.com/openmaptiles/openmaptiles/issues/1587. See below for hack
-								openMapTilesId.slice(-1)
-						  ]
+				featureType = hasNwr
+					? { w: 'way', n: 'node', r: 'relation' }[
+							feature.properties?.nwr || 'r'
+					  ]
+					: feature.sourceLayer === 'waterway'
+					? 'way' // bold assumption here
+					: feature.sourceLayer === 'place'
+					? 'node'
+					: { '1': 'way', '0': 'node', '4': 'relation' }[ //this is broken. We're getting the "4" suffix for relations AND ways. See https://github.com/openmaptiles/openmaptiles/issues/1587. See below for hack
+							openMapTilesId.slice(-1)
+					  ]
+			console.log('clicked ', id, featureType, feature)
 			if (!featureType) {
 				console.log('clicked Unknown OSM feature type from OpenMapTiles ID')
 				return setSearchParams({ allez: undefined })
 			}
 
+			const nameFound =
+					feature.properties &&
+					[...nameExpression, ['get', 'name']].find(
+						([_, k]) => feature.properties[k]
+					),
+				name = nameFound && feature.properties[nameFound[1]]
+
+			console.log('clicked name ', name)
+
+			setSearchParams({ chargement: name })
+
+			const noDisambiguation = hasNwr
 			const [element, realFeatureType] = await disambiguateWayRelation(
 				featureType,
 				id,
-				e.lngLat
+				e.lngLat,
+				noDisambiguation
 			)
 
 			console.log('clicked on element', element)
@@ -135,6 +167,7 @@ export default function useMapClick(
 						longitude,
 						latitude
 					),
+					chargement: undefined,
 				})
 				console.log('sill set OSMFeature', element)
 				// wait for the searchParam update to proceed
@@ -150,7 +183,6 @@ export default function useMapClick(
 		}
 	}, [
 		map,
-		setState,
 		distanceMode,
 		itinerary.isItineraryMode,
 		gares,
@@ -158,5 +190,7 @@ export default function useMapClick(
 		isTransportsMode,
 		setSearchParams,
 		setLatLngClicked,
+		styleKey,
+		styleChooserOpen,
 	])
 }

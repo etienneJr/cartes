@@ -18,9 +18,11 @@ const nextConfig = {
 	compiler: {
 		styledComponents: true,
 	},
+	/*
 	compilerOptions: {
 		baseUrl: '.',
 	},
+	*/
 	eslint: {
 		// Warning: This allows production builds to successfully complete even if
 		// your project has ESLint errors.
@@ -32,6 +34,9 @@ const nextConfig = {
 		// your project has type errors.
 		// !! WARN !!
 		ignoreBuildErrors: true,
+	},
+	async rewrites() {
+		return [{ source: '/feed.xml', destination: '/_next/static/feed.xml' }]
 	},
 	async redirects() {
 		return [

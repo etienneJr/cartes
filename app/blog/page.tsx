@@ -7,6 +7,11 @@ import Logo from '@/public/logo.svg'
 import Image from 'next/image'
 import css from '@/components/css/convertToJs'
 
+export const blogArticles = allArticles.filter(
+	(article) =>
+		!article.tags?.includes('page') && !article.tags?.includes('brouillon')
+)
+
 const title = `Le blog - Cartes`
 const description =
 	"Découvrez l'histoire, les nouveautés et le futur de Cartes.app"
@@ -17,7 +22,7 @@ export const metadata: metadata = {
 }
 
 const Page = () => {
-	const articles = allArticles.sort((a, b) =>
+	const articles = blogArticles.sort((a, b) =>
 		compareDesc(new Date(a.date), new Date(b.date))
 	)
 	return (
@@ -60,7 +65,7 @@ const Page = () => {
 								dangerouslySetInnerHTML={{ __html: titre.html }}
 							/>
 						</div>
-						<small>publié {dateCool(date)}</small>
+						<small>publié le {dateCool(date)}</small>
 					</li>
 				))}
 			</List>

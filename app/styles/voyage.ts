@@ -1,10 +1,12 @@
+// WARNING : this style is not supposed to be actively maintained. See
+// france.ts.
 export const maptilerNameExpression = [
 	['get', 'name:fr'], // cartes.app est une application française
 	['get', 'name:en'], // we estimate that e.g. arab place names that don't have a french translation will be way more readable as english fro French people. See e.g. /?lieu=n1091272140#18.99/33.5130054/36.3066407
 	['get', 'name'],
 ]
 
-const defaultName = 'name'
+export const defaultName = 'name'
 
 export default function voyageStyle(
 	key,
@@ -153,12 +155,47 @@ export default function voyageStyle(
 				'source-layer': 'landcover',
 				layout: { visibility: 'visible' },
 				paint: {
-					'fill-color': 'hsl(52,93%,89%)',
-					'fill-opacity': 0.85,
+					'fill-color': '#fbf4ab',
+					'fill-opacity': 0.25,
 					'fill-antialias': false,
 				},
 				metadata: {},
 				filter: ['==', 'class', 'sand'],
+			},
+			{
+				id: 'Beach',
+				type: 'fill',
+				source: 'maptiler_planet',
+				'source-layer': 'landcover',
+				layout: { visibility: 'visible' },
+				paint: {
+					'fill-color': '#fbf4ab',
+					'fill-opacity': 0.85,
+					'fill-antialias': false,
+				},
+				metadata: {},
+				filter: ['all', ['==', 'class', 'sand'], ['==', 'subclass', 'beach']],
+			},
+			{
+				id: 'Wetland (medium scale)',
+				type: 'fill',
+				source: 'maptiler_planet',
+				'source-layer': 'landcover',
+				layout: {
+					visibility: 'visible',
+				},
+				paint: {
+					'fill-color': '#61b6cb40',
+					'fill-opacity': {
+						stops: [
+							[7, 0.5],
+							[10, 1],
+						],
+					},
+					'fill-antialias': false,
+				},
+				metadata: {},
+				filter: ['all', ['in', 'subclass', 'swamp', 'wetland']],
 			},
 			{
 				id: 'Wood',
@@ -228,7 +265,7 @@ export default function voyageStyle(
 					'fill-color': {
 						base: 1,
 						stops: [
-							[4, 'hsl(44,34%,87%)'],
+							[1, '#efede6'],
 							[16, 'hsl(54, 45%, 91%)'],
 						],
 					},
@@ -1912,9 +1949,9 @@ export default function voyageStyle(
 					'text-rotation-alignment': 'map',
 				},
 				paint: {
-					'text-color': '#DFEDF6',
+					'text-halo-color': '#DFEDF6',
 					'text-halo-blur': 1,
-					'text-halo-color': '#182772',
+					'text-color': '#182772',
 					'text-halo-width': {
 						stops: [
 							[10, 1],
@@ -2444,15 +2481,10 @@ export default function voyageStyle(
 					'text-color': [
 						'match',
 						['get', 'class'],
-						[
-							'aerialway',
-							'bus',
-							'bicycle_rental',
-							'entrance',
-							'ferry_terminal',
-							'harbor',
-						],
+						['aerialway', 'bus', 'bicycle_rental', 'entrance'],
 						'hsl(215,83%,53%)',
+						['ferry_terminal', 'harbor'],
+						'#06066f',
 						['hospital'],
 						'hsl(6,94%,35%)',
 						'hsl(17,17%,38%)',
@@ -2925,6 +2957,65 @@ export default function voyageStyle(
 					'all',
 					['in', 'class', 'state', 'province'],
 					['<=', 'rank', 6],
+				],
+			},
+			{
+				id: 'Protected area labels',
+				type: 'symbol',
+				source: 'maptiler_planet',
+				'source-layer': 'park',
+				minzoom: 9,
+				maxzoom: 16,
+				layout: {
+					'text-font': ['Roboto Italic', 'Noto Sans Italic'],
+					'text-size': ['interpolate', ['linear'], ['zoom'], 9, 11, 14, 14],
+					'text-field': ['coalesce', ...nameExpression],
+					visibility: 'visible',
+					'text-padding': {
+						stops: [
+							[6, 39],
+							[14, 99],
+						],
+					},
+					'symbol-spacing': 750,
+					'symbol-sort-key': ['to-number', ['get', 'rank']],
+					'text-letter-spacing': 0.1,
+					'text-ignore-placement': false,
+				},
+				paint: {
+					'icon-color': 'hsl(120, 11%, 5%)',
+					'text-color': 'hsl(120, 11%, 5%)',
+					'text-opacity': [
+						'step',
+						['zoom'],
+						0,
+						9,
+						['case', ['==', ['get', 'rank'], 1], 1, 0],
+						10,
+						1,
+					],
+					'text-halo-blur': 2,
+					'text-halo-color': 'hsla(0, 0%, 100%, 0.6)',
+					'text-halo-width': 2,
+				},
+				filter: [
+					'!in',
+					'class',
+					'aire_d’adhésion_de_parc_national',
+					'parc_national',
+					'narodni_park',
+					'national_nature_park',
+					'national_park',
+					'nationalpark',
+					'natural_parc',
+					'národní_park',
+					'národný_park',
+					'ochranné_pásmo_národného_parku',
+					'parc_naturel_national',
+					'parc_național',
+					'parco_nazionale',
+					'parque_nacional',
+					'национальный_парк',
 				],
 			},
 			{

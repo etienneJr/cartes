@@ -7,8 +7,18 @@ import {
 	getWikimediaGeosearchUrl,
 	handleWikimediaGeosearchImages,
 } from './effects/useImageSearch'
+import useSetSearchParams from '@/components/useSetSearchParams'
+import Link from 'next/link'
+import panoramaxIcon from '@/public/panoramax.svg'
 
-export function useZoneImages({ latLngClicked, setLatLngClicked }) {
+export function useZoneImages({
+	latLngClicked,
+	setLatLngClicked,
+	panoramaxOsmTag,
+	panoramaxId,
+	wikidata,
+}) {
+	const setSearchParams = useSetSearchParams()
 	const [wikimedia, setWikimedia] = useState(null)
 	const [panoramax, setPanoramax] = useState(null)
 
@@ -37,24 +47,54 @@ export function useZoneImages({ latLngClicked, setLatLngClicked }) {
 	}, [latLngClicked, setLatLngClicked])
 
 	useEffect(() => {
-		if (!latLngClicked) return
+		console.log('panoramax url', panoramaxOsmTag)
+		if (!latLngClicked && !panoramaxOsmTag) return
 		const makeRequest = async () => {
-			const { lat1, lng1, lat2, lng2 } = createSearchBBox(latLngClicked)
+			if (panoramaxOsmTag) {
+				const pictureUrl = `https://api.panoramax.xyz/api/pictures/${panoramaxOsmTag}/thumb.jpg`
+				console.log('panoramax picture', pictureUrl)
+				if (panoramaxId) setSearchParams({ panoramax: panoramaxOsmTag })
+				setPanoramax([
+					{
+						thumb: pictureUrl,
+						id: panoramaxOsmTag,
+						link: `https://api.panoramax.xyz/#focus=pic&pic=${panoramaxOsmTag}`,
+					},
+				])
+				return
+			}
 
+			const { lat1, lng1, lat2, lng2 } = createSearchBBox(latLngClicked)
 			const url = `https://api.panoramax.xyz/api/search?limit=1&bbox=${lng2},${lat1},${lng1},${lat2}`
 			setPanoramax([])
 			const request = await fetch(url)
 
 			const json = await request.json()
 			const images = json.features
-			if (images.length) setPanoramax(images)
-			if (!images.length) {
+			if (images.length && images[0]?.assets?.thumb) {
+				const id = images[0].id
+				if (panoramaxId) setSearchParams({ panoramax: id })
+				setPanoramax([
+					{
+						thumb: images[0].assets.thumb.href,
+						id,
+						link: `https://api.panoramax.xyz/#focus=pic&pic=${images[0].id}`,
+					},
+				])
+			} else {
 				setPanoramax(null)
 				setLatLngClicked(null)
 			}
 		}
 		makeRequest()
-	}, [latLngClicked, setLatLngClicked])
+	}, [
+		latLngClicked,
+		setLatLngClicked,
+		panoramaxOsmTag,
+		panoramaxId,
+		setSearchParams,
+	])
+
 	return [
 		wikimedia,
 		panoramax,
@@ -65,25 +105,29 @@ export function useZoneImages({ latLngClicked, setLatLngClicked }) {
 	]
 }
 
-export function ZoneImages({ zoneImages, panoramaxImages, focusImage }) {
-	console.log('panoramax', panoramaxImages)
-
-	const panoramaxImage = panoramaxImages && panoramaxImages[0],
-		panoramaxThumb = panoramaxImage?.assets?.thumb
-
+export function ZoneImages({
+	zoneImages,
+	panoramaxImages,
+	focusImage,
+	allPhotos,
+}) {
+	const setSearchParams = useSetSearchParams()
 	const images =
 		zoneImages &&
 		zoneImages.map((json) => {
 			const title = json.title,
-				url = getThumb(title, 400)
+				url = json.thumbnailUrl || getThumb(title, 400)
 			return {
 				...json,
 				url,
 			}
 		})
+	//TODO handle multiple images ?
+	const panoramaxImage = panoramaxImages && panoramaxImages[0]
 	return (
 		<div
 			css={`
+				margin-top: 1rem;
 				overflow: scroll;
 				white-space: nowrap;
 				&::-webkit-scrollbar {
@@ -91,7 +135,7 @@ export function ZoneImages({ zoneImages, panoramaxImages, focusImage }) {
 				}
 			`}
 		>
-			{(panoramaxThumb || images?.length > 0) && (
+			{(panoramaxImages || images?.length > 0) && (
 				<ul
 					css={`
 						margin: 0 0 0.4rem 0;
@@ -106,12 +150,9 @@ export function ZoneImages({ zoneImages, panoramaxImages, focusImage }) {
 						}
 					`}
 				>
-					{panoramaxThumb && (
-						<a
-							href={`https://api.panoramax.xyz/#focus=pic&map=${window.location.hash.slice(
-								1
-							)}&pic=${panoramaxImage.id}`}
-							target="_blank"
+					{panoramaxImage && (
+						<Link
+							href={setSearchParams({ panoramax: panoramaxImage.id }, true)}
 						>
 							<div
 								css={`
@@ -129,20 +170,15 @@ export function ZoneImages({ zoneImages, panoramaxImages, focusImage }) {
 								`}
 								title="Cette zone est visualisable depuis la rue grâce au projet Panoramax"
 							>
-								<Image
-									src={`/panoramax.svg`}
-									width="10"
-									height="10"
-									alt="Logo du projet Panoramax"
-								/>
+								<Image src={panoramaxIcon} alt="Logo du projet Panoramax" />
 								<FeatureImage
-									src={panoramaxThumb.href}
+									src={panoramaxImage.thumb}
 									alt="Image de terrain issue de Panoramax"
 									width="150"
 									height="150"
 								/>
 							</div>
-						</a>
+						</Link>
 					)}
 					{images &&
 						images.length > 0 &&
@@ -168,6 +204,32 @@ export function ZoneImages({ zoneImages, panoramaxImages, focusImage }) {
 							)
 						})}
 				</ul>
+			)}
+			{zoneImages?.length > 0 && (
+				<div>
+					<small
+						css={`
+							color: #88aed4;
+							margin-bottom: 0.6rem;
+						`}
+					>
+						{!allPhotos ? (
+							<span>
+								Photos des articles Wikipedia du coin.{' '}
+								<Link href={setSearchParams({ photos: 'toutes' }, true)}>
+									Afficher toutes les photos
+								</Link>
+							</span>
+						) : (
+							<span>
+								Photos Wikimedia Commons du coin.{' '}
+								<Link href={setSearchParams({ photos: 'oui' }, true)}>
+									Afficher moins
+								</Link>
+							</span>
+						)}
+					</small>
+				</div>
 			)}
 		</div>
 	)

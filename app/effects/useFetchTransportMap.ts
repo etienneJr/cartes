@@ -1,6 +1,29 @@
+import { filterMapEntries } from '@/components/utils/utils'
 import { useEffect, useMemo, useState } from 'react'
 import { gtfsServerUrl } from '../serverUrls'
 import { decodeTransportsData } from '../transport/decodeTransportsData'
+
+export function useFetchAgencyAreas(active) {
+	const [agencyAreas, setAgencyAreas] = useState()
+	useEffect(() => {
+		if (!active) return
+
+		const doFetch = async () => {
+			const url = `${gtfsServerUrl}/agencyAreas`
+
+			const request = await fetch(url)
+			const json = await request.json()
+
+			setAgencyAreas(json)
+		}
+		doFetch()
+	}, [active, setAgencyAreas])
+
+	return (
+		agencyAreas &&
+		filterMapEntries(agencyAreas, (id, v) => filterRejectPlaneAgency([id]))
+	)
+}
 
 export default function useFetchTransportMap(
 	active,
@@ -8,9 +31,11 @@ export default function useFetchTransportMap(
 	bbox,
 	agence,
 	noCache,
-	tout
+	fetchAll,
+	givenAgencyEntry
 ) {
-	const [data, setData] = useState([])
+	const [data, setData] = useState(givenAgencyEntry ? [givenAgencyEntry] : [])
+
 	useEffect(() => {
 		if (!active || agence == null) return
 		if (data.find(([agencyId]) => agencyId === agence)) return
@@ -23,16 +48,16 @@ export default function useFetchTransportMap(
 
 			const newAgencies = [[agence, json]].map(decodeTransportsData)
 
-			console.log('newa', newAgencies)
 			setData((data) => [...data, ...newAgencies])
 		}
 		doFetch()
 	}, [agence, data, active, setData])
+
 	useEffect(() => {
-		if (!active || !tout) return
+		if (!active || !fetchAll) return
 
 		const doFetch = async () => {
-			const url = `${gtfsServerUrl}/agencyAreas`
+			const url = `${gtfsServerUrl}/agencies`
 
 			const request = await fetch(url)
 			const json = await request.json()
@@ -44,9 +69,9 @@ export default function useFetchTransportMap(
 			setData(filtered)
 		}
 		doFetch()
-	}, [active, tout, setData])
+	}, [active, fetchAll, setData])
 	useEffect(() => {
-		if (!active || !bbox || tout) return
+		if (!active || !bbox || fetchAll) return
 		if (agence != null) return
 
 		const abortController = new AbortController()
@@ -99,12 +124,6 @@ export default function useFetchTransportMap(
 						),
 						...newAgencies,
 					]
-					console.log(
-						'transportmap new data',
-						newData,
-						relevantAgencyIds,
-						newAgencyIds
-					)
 					setData(newData)
 				}
 			} catch (e) {
@@ -121,15 +140,19 @@ export default function useFetchTransportMap(
 		return () => {
 			abortController.abort()
 		}
-	}, [setData, bbox, active, day, agence, noCache, tout])
+	}, [setData, bbox, active, day, agence, noCache, fetchAll])
 
-	const agencyIdsHash = data?.map(([a]) => a).join('<|>')
+	const agencyIdsHash =
+		data && Array.isArray(data[0]) && data.map(([a]) => a).join('<|>')
+
 	const transportsData = useMemo(() => {
-		return data
+		return agencyIdsHash && data.filter(filterRejectPlaneAgency)
 	}, [agencyIdsHash])
 
 	return active ? transportsData : null
 }
+
+const filterRejectPlaneAgency = ([id]) => id !== 'AEROPORT_NANTES:Operator:NTE'
 
 const rejectNationalAgencies = (data) =>
 	data.filter(

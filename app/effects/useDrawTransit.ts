@@ -113,7 +113,7 @@ export default function useDrawTransit(map, transit, selectedConnection, date) {
 			source: id,
 			layout: {
 				'symbol-placement': 'line',
-				'text-font': ['Open Sans Bold'],
+				'text-font': ['Roboto Regular', 'Noto Sans Regular'],
 				'text-field': '{name}', // part 2 of this is how to do it
 				'text-transform': 'uppercase',
 				'text-size': 16,
@@ -125,6 +125,23 @@ export default function useDrawTransit(map, transit, selectedConnection, date) {
 				'text-halo-width': 1,
 			},
 		})
+		map.addLayer(
+			{
+				source: id,
+				type: 'line',
+				id: id + '-lines-walking-background',
+				filter: ['==', ['get', 'move_type'], 'Walk'],
+				layout: {
+					'line-join': 'round',
+					'line-cap': 'round',
+				},
+				paint: {
+					'line-color': '#d3b2ee',
+					'line-width': 4,
+				},
+			},
+			'distancePoints'
+		)
 		map.addLayer(
 			{
 				source: id,
@@ -183,6 +200,7 @@ export default function useDrawTransit(map, transit, selectedConnection, date) {
 					id + '-lines',
 					id + '-lines-symbols',
 					id + '-lines-walking',
+					id + '-lines-walking-background',
 					id + '-lines-contour',
 					id + '-points',
 				],

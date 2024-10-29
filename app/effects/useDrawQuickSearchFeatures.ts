@@ -14,7 +14,9 @@ export default function useDrawQuickSearchFeatures(
 	showOpenOnly,
 	category,
 	setOsmFeature = () => null,
-	backgroundColor
+	backgroundColor,
+	invert = false,
+	safeStyleKey
 ) {
 	const setSearchParams = useSetSearchParams()
 	useEffect(() => {
@@ -46,11 +48,12 @@ export default function useDrawQuickSearchFeatures(
 			imageUrl,
 			(img) => {
 				console.log('useDrawQuickSearchFeatures build svg image', shownFeatures)
-				const imageName = category.name + '-futureco'
+				const imageName = category.name + '-cartes' // avoid collisions
 				const mapImage = map.getImage(imageName)
 				if (!mapImage) map.addImage(imageName, img)
 
 				console.log('useDrawQuickSearchFeatures add source ', baseId + 'points')
+
 				// Looks like buildSvgImage triggers multiple img.onload calls thus
 				// multiple map.addSource, hence an error
 				const pointsSource = map.getSource(baseId + 'points')
@@ -88,16 +91,34 @@ export default function useDrawQuickSearchFeatures(
 					features: shownFeatures
 						.filter((f) => f.polygon)
 						.map((f) => {
-							const tags = f.tags || {}
-							return {
-								type: 'Feature',
-								geometry: f.polygon.geometry,
-								properties: {
-									id: f.id,
-									tags,
-									name: tags.name,
-								},
-							}
+						const tags = f.tags || {}
+								const feature = {
+									type: 'Feature',
+									geometry: !invert
+										? f.polygon.geometry
+										: // thanks ! https://stackoverflow.com/questions/43561504/mapbox-how-to-get-a-semi-transparent-mask-everywhere-but-on-a-specific-area
+										  {
+												type: 'Polygon',
+												coordinates: [
+													[
+														[-180, -90],
+														[-180, 90],
+														[180, 90],
+														[180, -90],
+														[-180, -90],
+													],
+													f.polygon.geometry.coordinates[0],
+												],
+										  },
+									properties: {
+										id: f.id,
+										tags,
+										name: tags.name,
+									},
+								}
+								console.log('ocean', feature)
+								return feature
+							
 						}),
 				}
 				if (waysSource) {
@@ -141,11 +162,12 @@ export default function useDrawQuickSearchFeatures(
 					type: 'symbol',
 					source: baseId + 'points',
 					layout: {
-						'icon-image': category.name + '-futureco',
+						'icon-image': category.name + '-cartes',
 						'icon-size': 0.6,
 						'text-field': ['get', 'name'],
 						'text-offset': [0, 1.25],
 						'text-anchor': 'top',
+						'text-font': ['Roboto Regular', 'Noto Sans Regular'],
 					},
 					paint: {
 						'text-color': '#503f38',
@@ -216,5 +238,5 @@ export default function useDrawQuickSearchFeatures(
 					[baseId + 'points', baseId + 'ways']
 				)
 		}
-	}, [features, map, showOpenOnly, category])
+	}, [features, map, showOpenOnly, category, safeStyleKey])
 }

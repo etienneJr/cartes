@@ -4,6 +4,7 @@ import osmToGeojson from 'osmtogeojson'
 
 const apiUrlBase = `https://api.openstreetmap.org/api/0.6`
 export const osmRequest = async (featureType, id, full) => {
+	console.log('lightgreen will make OSM request', featureType, id, full)
 	const request = await fetch(
 		`${apiUrlBase}/${featureType}/${id}${full ? '/full' : ''}.json`
 	)
@@ -39,8 +40,13 @@ export const osmRequest = async (featureType, id, full) => {
 export const disambiguateWayRelation = async (
 	presumedFeatureType,
 	id,
-	referenceLatLng
+	referenceLatLng,
+	noDisambiguation
 ) => {
+	if (noDisambiguation) {
+		const result = await osmRequest(presumedFeatureType, id, false)
+		return [result.length ? result[0] : null, presumedFeatureType]
+	}
 	if (presumedFeatureType === 'node') {
 		const result = await osmRequest('node', id, false)
 		return [result.length ? result[0] : null, 'node']

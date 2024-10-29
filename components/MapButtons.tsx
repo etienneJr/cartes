@@ -1,14 +1,13 @@
 'use client'
 
 import useMeasureDistance from '@/app/useMeasureDistance'
-import Link from 'next/link'
-import styled from 'styled-components'
+import Emoji from '@/components/Emoji'
 import css from '@/components/css/convertToJs'
 import useSetSearchParams from '@/components/useSetSearchParams'
 import { omit } from '@/components/utils/utils'
+import Link from 'next/link'
+import styled from 'styled-components'
 import ItineraryButton, { ResetIcon } from './itinerary/ItineraryButton'
-import Emoji from '@/components/Emoji'
-import { useEffect, useState } from 'react'
 
 export const MapButtonsWrapper = styled.div`
 	position: fixed;
@@ -32,7 +31,7 @@ export const MapButton = styled.div`
 		height: auto;
 		vertical-align: bottom;
 	}
-	background: #ffffff85;
+	background: #ffffff;
 	border: 0px solid lightgrey;
 	cursor: pointer;
 	${(p) =>
@@ -77,32 +76,21 @@ export default function MapButtons({
 
 	return (
 		<MapButtonsWrapper>
-			<MapButton $active={searchParams.transports === 'oui'}>
-				<Link
-					title={'Voir la carte des transports en commun'}
-					href={setSearchParams(
-						{
-							...omit(['transports'], searchParams),
-							...(searchParams.transports
-								? {
-										transports: undefined,
-										agence: undefined,
-										routes: undefined,
-								  }
-								: { transports: 'oui' }),
-						},
-						true,
-						true
-					)}
-				>
-					<img
-						src={'/transports.svg'}
-						css={`
-							filter: none !important;
-						`}
-					/>
-				</Link>
-			</MapButton>
+			{false && ( // keeping this, not sure we won't introduce this button back. For now, it's in the style chooser
+				<MapButton $active={searchParams.transports === 'oui'}>
+					<Link
+						title={'Voir la carte des transports en commun'}
+						href={'#coderemoved'}
+					>
+						<img
+							src={'/transports.svg'}
+							css={`
+								filter: none !important;
+							`}
+						/>
+					</Link>
+				</MapButton>
+			)}
 			{false && (
 				<MapButton
 					$active={searchParams.style === 'elections'}

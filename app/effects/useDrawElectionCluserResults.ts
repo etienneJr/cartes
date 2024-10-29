@@ -54,9 +54,9 @@ export default function useDrawElectionClusterResults(
 	rawFilter
 ) {
 	const filter = rawFilter || 'elus'
-	console.log('lg plopi', styleKey, map)
 	const [rawData, setData] = useState(null)
 	useEffect(() => {
+		if (styleKey !== 'elections') return
 		const download = async () => {
 			const dataUrl = gtfsServerUrl + '/resultats-legislatives-2024.geojson'
 			const request = await fetch(dataUrl)
@@ -160,7 +160,7 @@ export default function useDrawElectionClusterResults(
 					['get', 'cat'],
 					{ 'min-fraction-digits': 1, 'max-fraction-digits': 1 },
 				],
-				'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
+				'text-font': ['Roboto Regular', 'Noto Sans Regular'],
 				'text-size': 10,
 			},
 			paint: {
