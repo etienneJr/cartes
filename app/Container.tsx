@@ -25,7 +25,7 @@
 
 import { useMemo, useRef, useState } from 'react'
 
-import { getCategory } from '@/components/categories'
+import { getCategories } from '@/components/categories'
 import ModalSwitch from './ModalSwitch'
 import { ContentWrapper, MapContainer } from './UI'
 import { useZoneImages } from './ZoneImages'
@@ -141,9 +141,7 @@ export default function Container(props) {
 
 	useSetItineraryModeFromUrl(allez, setIsItineraryMode)
 
-	const category = getCategory(searchParams)
-
-	const showOpenOnly = searchParams.o
+	const [categoryNames, categoryObjects] = getCategories(searchParams)
 
 	const vers = useMemo(() => state?.slice(-1)[0], [state])
 	const choice = vers && vers.choice
@@ -222,12 +220,10 @@ export default function Container(props) {
 		[debouncedBbox]
 	)
 
-	const [quickSearchFeatures] = useOverpassRequest(simpleArrayBbox, category)
-	const quickSearchFeaturesLoaded =
-		quickSearchFeatures &&
-		category &&
-		(quickSearchFeatures.length === 0 ||
-			quickSearchFeatures[0]?.categoryName === category.name)
+	const [quickSearchFeaturesMap] = useOverpassRequest(
+		simpleArrayBbox,
+		categoryObjects
+	)
 
 	const containerRef = useRef()
 	return (
@@ -267,7 +263,7 @@ export default function Container(props) {
 							focusImage,
 							vers,
 							osmFeature,
-							quickSearchFeaturesLoaded,
+							quickSearchFeaturesMap,
 							containerRef,
 							trackedSnap,
 							setTrackedSnap,
@@ -298,8 +294,6 @@ export default function Container(props) {
 						agencyAreas,
 						clickedStopData,
 						bikeRouteProfile,
-						showOpenOnly,
-						category,
 						bbox,
 						setBbox,
 						setBboxImages,
@@ -319,7 +313,7 @@ export default function Container(props) {
 						setState,
 						setLatLngClicked,
 						setSafeStyleKey,
-						quickSearchFeatures,
+						quickSearchFeaturesMap,
 						panoramaxPosition,
 						setMapLoaded,
 						wikidata,

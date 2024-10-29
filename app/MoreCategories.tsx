@@ -5,7 +5,7 @@ import { goldCladding } from './QuickFeatureSearchUI'
 
 export default function MoreCategories({
 	getNewSearchParamsLink,
-	categorySet,
+	categoriesSet,
 	filteredMoreCategories,
 }) {
 	const groups = filteredMoreCategories.reduce((memo, next) => {
@@ -69,7 +69,7 @@ export default function MoreCategories({
 									<li
 										key={category.name}
 										css={`
-											${categorySet?.name === category.name &&
+											${categoriesSet.includes(category.name) &&
 											`
 background: var(--lighterColor) !important;
 border-color: var(--darkColor) !important;
