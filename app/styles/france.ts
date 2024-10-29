@@ -507,7 +507,7 @@ const layers = [
 		metadata: {},
 		filter: [
 			'all',
-			['==', '$type', 'Polygon'],
+			['any', ['==', '$type', 'Polygon'], ['==', '$type', 'LineString']],
 			['!has', 'brunnel'],
 			[
 				'any',
