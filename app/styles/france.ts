@@ -293,20 +293,6 @@ const layers = [
 		],
 	},
 	{
-		id: 'Sand',
-		type: 'fill',
-		source: 'openmaptiles',
-		'source-layer': 'landcover',
-		layout: { visibility: 'visible' },
-		paint: {
-			'fill-color': '#fbf4ab',
-			'fill-opacity': 0.4,
-			'fill-antialias': false,
-		},
-		metadata: {},
-		filter: ['all', ['==', 'class', 'sand'], ['!=', 'subclass', 'beach']],
-	},
-	{
 		id: 'Rock',
 		type: 'fill',
 		source: 'openmaptiles',
@@ -483,20 +469,12 @@ const layers = [
 		metadata: {},
 		filter: ['all', ['==', 'class', 'hospital']],
 	},
-	{
-		id: 'Grass',
-		type: 'fill',
-		source: 'openmaptiles',
-		'source-layer': 'landcover',
-		layout: { visibility: 'visible' },
-		paint: {
-			'fill-color': '#c6ddaa',
-			'fill-opacity': 0.6,
-			'fill-antialias': false,
-		},
-		metadata: {},
-		filter: ['==', 'class', 'grass'],
-	},
+	/*
+Une zone piétonne est assez bas niveau. En général elle englobe plus
+large que le sable qui est dessus, et l'herbe
+
+On n'est pas à l'abri d'effets secondaires ici.
+*/
 	{
 		id: 'Pedestrian',
 		type: 'fill',
@@ -547,6 +525,34 @@ const layers = [
 			],
 			['in', 'subclass', 'pedestrian', 'platform'],
 		],
+	},
+	{
+		id: 'Sand',
+		type: 'fill',
+		source: 'openmaptiles',
+		'source-layer': 'landcover',
+		layout: { visibility: 'visible' },
+		paint: {
+			'fill-color': '#fbf4ab',
+			'fill-opacity': 0.4,
+			'fill-antialias': false,
+		},
+		metadata: {},
+		filter: ['all', ['==', 'class', 'sand'], ['!=', 'subclass', 'beach']],
+	},
+	{
+		id: 'Grass',
+		type: 'fill',
+		source: 'openmaptiles',
+		'source-layer': 'landcover',
+		layout: { visibility: 'visible' },
+		paint: {
+			'fill-color': '#c6ddaa',
+			'fill-opacity': 0.6,
+			'fill-antialias': false,
+		},
+		metadata: {},
+		filter: ['==', 'class', 'grass'],
 	},
 	{
 		id: 'Cemetery',
