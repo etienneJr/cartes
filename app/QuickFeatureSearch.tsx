@@ -34,7 +34,7 @@ export function initializeFuse(categories) {
 
 const fuse = initializeFuse(categories)
 const fuseMore = initializeFuse(moreCategories)
-export const threshold = 0.1
+export const threshold = 0.05
 export const exactThreshold = 0.01
 
 export default function QuickFeatureSearch({
@@ -77,6 +77,7 @@ export default function QuickFeatureSearch({
 
 		[searchInput, hasLieu]
 	)
+	console.log('elel', filteredCategories, filteredMoreCategories)
 
 	const getNewSearchParamsLink = buildGetNewSearchParams(
 		searchParams,

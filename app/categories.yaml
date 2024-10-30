@@ -24,6 +24,9 @@
 - name: cafe
   title: Café, bar et pub
   dictionary:
+    - bar
+    - café
+    - pub
     - bière
     - vin
     - boisson
