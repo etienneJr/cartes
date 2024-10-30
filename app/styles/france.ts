@@ -2768,6 +2768,8 @@ On n'est pas à l'abri d'effets secondaires ici.
 			['!in', 'class', 'hospital', 'parking', 'railway', 'park'],
 		],
 	},
+	// TODO this should be done way better. Should be areas with boundaries.
+	// Should include large areas like Parc naturel régional d'armorique
 	{
 		id: 'Protected area labels',
 		type: 'symbol',
