@@ -117,14 +117,18 @@ export default function useDrawQuickSearchFeatures(
 					const tags =
 						typeof tagsRaw === 'string' ? JSON.parse(tagsRaw) : tagsRaw
 
-					setSearchParams({
-						allez: buildAllezPart(
-							tags?.name || 'sans nom',
-							encodePlace(properties.featureType, properties.id),
-							longitude,
-							latitude
-						),
-					})
+					setTimeout(
+						() =>
+							setSearchParams({
+								allez: buildAllezPart(
+									tags?.name || 'sans nom',
+									encodePlace(properties.featureType, properties.id),
+									longitude,
+									latitude
+								),
+							}),
+						200
+					)
 
 					const osmFeature = { ...properties, tags }
 					console.log(

@@ -164,7 +164,7 @@ export default function QuickFeatureSearch({
 									)}
 									<Link
 										href={getNewSearchParamsLink(category)}
-										replace={true}
+										replace={false}
 										prefetch={false}
 									>
 										<img src={categoryIconUrl(category)} />

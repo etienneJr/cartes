@@ -65,7 +65,10 @@ export default function useOverpassRequest(bbox, categories) {
 			}))
 		}
 		categories.map((category) => fetchCategory(category))
-	}, [categories.join((category) => category.name), bbox && bbox.join('|')])
+	}, [
+		categories && categories.join((category) => category.name),
+		bbox && bbox.join('|'),
+	])
 
 	useEffect(() => {})
 
