@@ -68,7 +68,7 @@ export default function Content(props) {
 		focusImage,
 		vers,
 		osmFeature,
-		quickSearchFeaturesLoaded,
+		quickSearchFeaturesMap,
 		setDisableDrag,
 		wikidata,
 	} = props
@@ -224,7 +224,7 @@ export default function Content(props) {
 								searchInput: vers?.inputValue,
 								setSnap,
 								snap,
-								loaded: quickSearchFeaturesLoaded,
+								quickSearchFeaturesMap,
 							}}
 						/>
 					)}

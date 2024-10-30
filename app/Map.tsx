@@ -7,17 +7,12 @@ import { sortGares } from './gares'
 import MapButtons from '@/components/MapButtons'
 import { goodIconSize, useComputeMapPadding } from '@/components/mapUtils'
 import useSetSearchParams from '@/components/useSetSearchParams'
-import useAddMap, {
-	defaultLight,
-	defaultSky,
-	globeLight,
-	highZoomLight,
-} from './effects/useAddMap'
-import useDrawQuickSearchFeatures from './effects/useDrawQuickSearchFeatures'
+import useAddMap, { globeLight, highZoomLight } from './effects/useAddMap'
 import { getStyle } from './styles/styles'
 import useHoverOnMapFeatures from './useHoverOnMapFeatures'
 import useTerrainControl from './useTerrainControl'
 
+import { useWhatChanged } from '@/components/utils/useWhatChanged'
 import getBbox from '@turf/bbox'
 import { useLocalStorage } from 'usehooks-ts'
 import CenteredCross from './CenteredCross'
@@ -35,7 +30,6 @@ import useMapClick from './effects/useMapClick'
 import useRightClick from './effects/useRightClick'
 import useSearchLocalTransit from './effects/useSearchLocalTransit'
 import useDrawItinerary from './itinerary/useDrawItinerary'
-import { useWhatChanged } from '@/components/utils/useWhatChanged'
 import { computeCenterFromBbox } from './utils'
 
 if (process.env.NEXT_PUBLIC_MAPTILER == null) {
@@ -62,8 +56,6 @@ export default function Map(props) {
 		clickedStopData,
 		itinerary,
 		bikeRouteProfile,
-		showOpenOnly,
-		category,
 		bbox,
 		setBbox,
 		gares,
@@ -81,7 +73,7 @@ export default function Map(props) {
 		center,
 		setState,
 		setLatLngClicked,
-		quickSearchFeatures,
+		quickSearchFeaturesMap,
 		trackedSnap,
 		panoramaxPosition,
 		setMapLoaded,
@@ -205,13 +197,6 @@ export default function Map(props) {
 	// the clicked feature, and an icon
 	// Edit : we draw contours now, for the search results clicked feature
 
-	useDrawQuickSearchFeatures(
-		map,
-		quickSearchFeatures,
-		showOpenOnly,
-		category,
-		onSearchResultClick
-	)
 	useDrawSearchResults(map, state, onSearchResultClick)
 
 	useTerrainControl(map, style)
@@ -438,6 +423,8 @@ export default function Map(props) {
 						safeStyleKey,
 						searchParams,
 						hasItinerary,
+						quickSearchFeaturesMap,
+						onSearchResultClick,
 					}}
 				/>
 			)}

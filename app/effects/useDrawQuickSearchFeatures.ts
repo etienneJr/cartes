@@ -1,6 +1,6 @@
 import parseOpeningHours from 'opening_hours'
 import { categoryIconUrl } from '../QuickFeatureSearch'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import buildSvgImage from './buildSvgImage'
 import useSetSearchParams from '@/components/useSetSearchParams'
 import { encodePlace } from '../utils'
@@ -14,117 +14,44 @@ export default function useDrawQuickSearchFeatures(
 	showOpenOnly,
 	category,
 	setOsmFeature = () => null,
-	backgroundColor,
+	backgroundColor = colors['color'],
 	invert = false,
 	safeStyleKey
 ) {
 	const setSearchParams = useSetSearchParams()
+	const baseId = `features-${category.name}-`
+
+	const [sources, setSources] = useState(null)
+
 	useEffect(() => {
-		if (!map || !features || features.length < 1 || !category) return
-		console.log('orange', features)
-
-		const featuresWithOpen = features.map((f) => {
-			if (!f.tags || !f.tags.opening_hours) {
-				return { ...f, isOpen: null }
-			}
-			try {
-				const oh = new parseOpeningHours(f.tags.opening_hours, {
-					address: { country_code: 'fr' },
-				})
-				return { ...f, isOpen: oh.getState() }
-			} catch (e) {
-				return { ...f, isOpen: null }
-			}
-		})
-
-		const shownFeatures = showOpenOnly
-			? featuresWithOpen.filter((f) => f.isOpen)
-			: featuresWithOpen
-
-		const isOpenByDefault = category['open by default']
+		if (!map) return
 		const imageUrl = categoryIconUrl(category)
+
 		buildSvgImage(
 			imageUrl,
 			(img) => {
-				console.log('useDrawQuickSearchFeatures build svg image', shownFeatures)
 				const imageName = category.name + '-cartes' // avoid collisions
 				const mapImage = map.getImage(imageName)
 				if (!mapImage) map.addImage(imageName, img)
 
-				const baseId = `features-${category.name}-`
-				console.log('useDrawQuickSearchFeatures add source ')
-				console.log(baseId + 'points')
+				console.log('useDrawQuickSearchFeatures add source ', baseId + 'points')
+
 				// Looks like buildSvgImage triggers multiple img.onload calls thus
 				// multiple map.addSource, hence an error
-				const source = map.getSource(baseId + 'points')
-				if (source) return
+				const geojsonPlaceholder = { type: 'FeatureCollection', features: [] }
 				map.addSource(baseId + 'points', {
 					type: 'geojson',
-					data: {
-						type: 'FeatureCollection',
-						features: shownFeatures.map((f) => {
-							const geometry = {
-								type: 'Point',
-								coordinates: [f.lon, f.lat],
-							}
-
-							const tags = f.tags || {}
-							const isOpenColor = {
-								true: '#4ce0a5ff',
-								false: '#e95748ff',
-								null: isOpenByDefault ? false : 'beige',
-							}[f.isOpen]
-
-							return {
-								type: 'Feature',
-								geometry,
-								properties: {
-									id: f.id,
-									tags,
-									name: tags.name,
-									featureType: f.type,
-									isOpenColor: isOpenColor,
-								},
-							}
-						}),
-					},
+					data: geojsonPlaceholder,
 				})
+
 				map.addSource(baseId + 'ways', {
 					type: 'geojson',
-					data: {
-						type: 'FeatureCollection',
-						features: shownFeatures
-							.filter((f) => f.polygon)
-							.map((f) => {
-								const tags = f.tags || {}
-								const feature = {
-									type: 'Feature',
-									geometry: !invert
-										? f.polygon.geometry
-										: // thanks ! https://stackoverflow.com/questions/43561504/mapbox-how-to-get-a-semi-transparent-mask-everywhere-but-on-a-specific-area
-										  {
-												type: 'Polygon',
-												coordinates: [
-													[
-														[-180, -90],
-														[-180, 90],
-														[180, 90],
-														[180, -90],
-														[-180, -90],
-													],
-													f.polygon.geometry.coordinates[0],
-												],
-										  },
-									properties: {
-										id: f.id,
-										tags,
-										name: tags.name,
-									},
-								}
-								console.log('ocean', feature)
-								return feature
-							}),
-					},
+					data: geojsonPlaceholder,
+				})
+
+				setSources({
+					points: map.getSource(baseId + 'points'),
+					ways: map.getSource(baseId + 'ways'),
 				})
 
 				// Add a symbol layer
@@ -190,14 +117,18 @@ export default function useDrawQuickSearchFeatures(
 					const tags =
 						typeof tagsRaw === 'string' ? JSON.parse(tagsRaw) : tagsRaw
 
-					setSearchParams({
-						allez: buildAllezPart(
-							tags?.name || 'sans nom',
-							encodePlace(properties.featureType, properties.id),
-							longitude,
-							latitude
-						),
-					})
+					setTimeout(
+						() =>
+							setSearchParams({
+								allez: buildAllezPart(
+									tags?.name || 'sans nom',
+									encodePlace(properties.featureType, properties.id),
+									longitude,
+									latitude
+								),
+							}),
+						200
+					)
 
 					const osmFeature = { ...properties, tags }
 					console.log(
@@ -217,10 +148,7 @@ export default function useDrawQuickSearchFeatures(
 			backgroundColor
 		)
 
-		return () => {
-			// TODO for whatever reason to be found, features are not removed until
-			// the request is finished
-			const baseId = `features-${category.name}-`
+		const cleanup = () => {
 			safeRemove(map)(
 				[
 					baseId + 'points',
@@ -231,5 +159,94 @@ export default function useDrawQuickSearchFeatures(
 				[baseId + 'points', baseId + 'ways']
 			)
 		}
-	}, [features, map, showOpenOnly, category, safeStyleKey])
+
+		return cleanup
+	}, [map, category, baseId, setSources])
+
+	useEffect(() => {
+		if (!map) return
+		if (!sources) return
+
+		const isOpenByDefault = category['open by default']
+		const featuresWithOpen = (features || []).map((f) => {
+			if (!f.tags || !f.tags.opening_hours) {
+				return { ...f, isOpen: null }
+			}
+			try {
+				const oh = new parseOpeningHours(f.tags.opening_hours, {
+					address: { country_code: 'fr' },
+				})
+				return { ...f, isOpen: oh.getState() }
+			} catch (e) {
+				return { ...f, isOpen: null }
+			}
+		})
+
+		const shownFeatures = showOpenOnly
+			? featuresWithOpen.filter((f) => f.isOpen)
+			: featuresWithOpen
+		const pointsData = {
+			type: 'FeatureCollection',
+			features: shownFeatures.map((f) => {
+				const geometry = {
+					type: 'Point',
+					coordinates: [f.lon, f.lat],
+				}
+
+				const tags = f.tags || {}
+				const isOpenColor = {
+					true: '#4ce0a5ff',
+					false: '#e95748ff',
+					null: isOpenByDefault ? false : 'beige',
+				}[f.isOpen]
+
+				return {
+					type: 'Feature',
+					geometry,
+					properties: {
+						id: f.id,
+						tags,
+						name: tags.name,
+						featureType: f.type,
+						isOpenColor: isOpenColor,
+					},
+				}
+			}),
+		}
+		const waysData = {
+			type: 'FeatureCollection',
+			features: shownFeatures
+				.filter((f) => f.polygon)
+				.map((f) => {
+					const tags = f.tags || {}
+					const feature = {
+						type: 'Feature',
+						geometry: !invert
+							? f.polygon.geometry
+							: // thanks ! https://stackoverflow.com/questions/43561504/mapbox-how-to-get-a-semi-transparent-mask-everywhere-but-on-a-specific-area
+							  {
+									type: 'Polygon',
+									coordinates: [
+										[
+											[-180, -90],
+											[-180, 90],
+											[180, 90],
+											[180, -90],
+											[-180, -90],
+										],
+										f.polygon.geometry.coordinates[0],
+									],
+							  },
+						properties: {
+							id: f.id,
+							tags,
+							name: tags.name,
+						},
+					}
+					return feature
+				}),
+		}
+		sources.ways.setData(waysData)
+		sources.points.setData(pointsData)
+	}, [category, features, showOpenOnly, safeStyleKey, sources])
 }
