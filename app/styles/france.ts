@@ -2555,7 +2555,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 		},
 		paint: {
 			'icon-color': 'hsl(82,83%,25%)',
-			'text-color': 'hsl(82,83%,25%)',
+			'text-color': 'hsl(82,43%,25%)',
 			'icon-opacity': 1,
 			'text-opacity': 1,
 			'text-halo-blur': 0.5,
@@ -2739,7 +2739,6 @@ On n'est pas à l'abri d'effets secondaires ici.
 						'ferry_terminal',
 						'hospital',
 						'stadium',
-						'park',
 						'place_of_worship',
 						'zoo',
 						'museum',
@@ -2762,7 +2761,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 		filter: [
 			'all',
 			['has', name],
-			['!in', 'class', 'hospital', 'parking', 'railway'],
+			['!in', 'class', 'hospital', 'parking', 'railway', 'park'],
 		],
 	},
 	{
