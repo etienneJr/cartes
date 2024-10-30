@@ -1,4 +1,5 @@
 import useDrawQuickSearchFeatures from '@/app/effects/useDrawQuickSearchFeatures'
+import categoryColors from '@/app/categoryColors.yaml'
 
 export default function ({
 	categories,
@@ -40,7 +41,7 @@ function DrawCategory({
 		showOpenOnly,
 		category,
 		onSearchResultClick,
-		category.color,
+		categoryColors[category.category],
 		false,
 		safeStyleKey
 	)

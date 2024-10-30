@@ -1,6 +1,13 @@
 import baseCategories from '@/app/categories.yaml'
 import moreCategories from '@/app/moreCategories.yaml'
+
 const categories = [...baseCategories, ...moreCategories]
+
+// use this to complete categoryColors.yaml
+console.log(
+	'yocategories',
+	[...new Set(categories.map((cat) => cat.category))].join('\n')
+)
 
 export const getCategories = (searchParams) => {
 	const { cat } = searchParams

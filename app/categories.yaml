@@ -7,7 +7,7 @@
   #emoji: 🥖
   query: '[shop=bakery]'
   icon: https://cdn.jsdelivr.net/gh/mapbox/maki/icons/bakery.svg
-  color: orange
+  category: Manger et boire
 - name: restaurant
   dictionary:
     - resto
@@ -16,11 +16,11 @@
     - diner
     - déjeuner
     - pizza
-  color: brown
   query:
     - '[amenity=restaurant]'
     - '[vending=pizza]'
   icon: https://cdn.jsdelivr.net/gh/mapbox/maki/icons/restaurant.svg
+  category: Manger et boire
 - name: cafe
   title: Café, bar et pub
   dictionary:
@@ -31,12 +31,12 @@
     - vin
     - boisson
     - terrasse
-  color: purple
   query:
     - '["amenity"="bar"]'
     - '["amenity"="cafe"]'
     - '["amenity"="pub"]'
   icon: https://cdn.jsdelivr.net/gh/mapbox/maki/icons/cafe.svg
+  category: Manger et boire
 - name: épicerie
   dictionary:
     - supermarché
@@ -48,6 +48,7 @@
     - '["shop"~"convenience|supermarket"]'
     - '[amenity=marketplace]'
   icon: https://cdn.jsdelivr.net/gh/mapbox/maki/icons/convenience.svg
+  category: Commerces
 - name: eau
   dictionary:
     - boire
@@ -59,6 +60,7 @@
     - '[drinking_water=yes]'
   icon: https://cdn.jsdelivr.net/gh/mapbox/maki/icons/water.svg
   open by default: true
+  category: Divers
 - name: toilettes
   dictionary:
     - WC
@@ -67,6 +69,7 @@
     - '[amenity=toilets]'
   icon: toilets
   open by default: true
+  category: Divers
 - name: parc
   dictionary:
     - verdure
@@ -77,11 +80,13 @@
     - '[boundary=national_park]'
   icon: tree
   open by default: true
+  category: Nature
 - name: bus
   title: Arrêt de bus ou tram
   query: '[public_transport=platform]'
   icon: bus
   open by default: true
+  category: Déplacements
 - name: billets
   dictionary:
     - banque
@@ -95,6 +100,7 @@
     - '[atm=yes]'
   open by default: true
   icon: https://cdn.jsdelivr.net/gh/mapbox/maki/icons/bank.svg
+  category: Divers
 - name: Hôtel
   dictionary:
     - chambre d'hôte
@@ -105,6 +111,7 @@
   query: '["tourism"~"hotel|chalet|guest_house|apartment"]'
   open by default: true
   icon: https://cdn.jsdelivr.net/gh/mapbox/maki/icons/lodging.svg
+  category: Tourisme
 - name: vue
   title: Point de vue
   dictionary:
@@ -112,9 +119,11 @@
   query: '[tourism=viewpoint]'
   open by default: true
   icon: https://cdn.jsdelivr.net/gh/mapbox/maki/icons/viewpoint.svg
+  category: Tourisme
 - name: Cinéma
   dictionary:
     - ciné
     - film
   query: '[amenity=cinema]'
   icon: https://cdn.jsdelivr.net/gh/mapbox/maki/icons/cinema.svg
+  category: Culture
