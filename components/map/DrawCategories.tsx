@@ -40,7 +40,7 @@ function DrawCategory({
 		showOpenOnly,
 		category,
 		onSearchResultClick,
-		undefined,
+		category.color,
 		false,
 		safeStyleKey
 	)

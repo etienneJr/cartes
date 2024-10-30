@@ -7,6 +7,7 @@
   #emoji: 🥖
   query: '[shop=bakery]'
   icon: https://cdn.jsdelivr.net/gh/mapbox/maki/icons/bakery.svg
+  color: orange
 - name: restaurant
   dictionary:
     - resto
@@ -15,6 +16,7 @@
     - diner
     - déjeuner
     - pizza
+  color: brown
   query:
     - '[amenity=restaurant]'
     - '[vending=pizza]'
@@ -26,10 +28,11 @@
     - vin
     - boisson
     - terrasse
-  query: 
-  - '["amenity"="bar"]'
-  - '["amenity"="cafe"]'
-  - '["amenity"="pub"]'
+  color: purple
+  query:
+    - '["amenity"="bar"]'
+    - '["amenity"="cafe"]'
+    - '["amenity"="pub"]'
   icon: https://cdn.jsdelivr.net/gh/mapbox/maki/icons/cafe.svg
 - name: épicerie
   dictionary:
@@ -38,7 +41,7 @@
     - hypermarché
     - superette
     - marché
-  query: 
+  query:
     - '["shop"~"convenience|supermarket"]'
     - '[amenity=marketplace]'
   icon: https://cdn.jsdelivr.net/gh/mapbox/maki/icons/convenience.svg
