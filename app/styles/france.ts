@@ -114,6 +114,10 @@ export const nameExpression = [
 	['get', 'name:en'], // we estimate that e.g. arab place names that don't have a french translation will be way more readable as english for French people. See e.g. /?lieu=n1091272140#18.99/33.5130054/36.3066407
 	['get', 'name_int'],
 ]
+const hasNameExpression = [
+	'any',
+	...nameExpression.map(([_, nameKey]) => ['has', nameKey]),
+]
 
 export const name = 'name:fr'
 
@@ -2563,7 +2567,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 			'text-halo-width': 1,
 		},
 		metadata: {},
-		filter: ['all', ['in', 'class', 'golf', 'park'], ['has', name]],
+		filter: ['all', ['in', 'class', 'golf', 'park'], hasNameExpression],
 	},
 	{
 		id: 'Healthcare',
@@ -2760,7 +2764,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 		metadata: {},
 		filter: [
 			'all',
-			['has', name],
+			hasNameExpression,
 			['!in', 'class', 'hospital', 'parking', 'railway', 'park'],
 		],
 	},
@@ -3018,7 +3022,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 			'text-halo-width': 1,
 		},
 		metadata: {},
-		filter: ['all', ['==', 'class', 'railway'], ['has', name]],
+		filter: ['all', ['==', 'class', 'railway'], hasNameExpression],
 	},
 	{
 		id: 'Airport',
