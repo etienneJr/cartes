@@ -69,7 +69,7 @@ export default function Meteo({ coordinates }) {
 			const json = await request.json()
 			setData((data) => ({ ...data, [key]: json }))
 		})
-	}, [setData, coordinates.join('-')])
+	}, [setData, coordinates?.join('-')])
 
 	//console.log('meteo', data)
 	if (!data?.weather) return
