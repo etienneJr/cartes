@@ -46,21 +46,6 @@ export default function franceStyle(transportMode, noVariableTiles = false) {
 				type: 'vector',
 				url: 'pmtiles://' + pmtilesServerUrl + '/trees.pmtiles',
 			},
-			/*
-			'gel-raster-dem': {
-				tiles: [
-					'pmtiles://https://data.source.coop/smartmaps/gel/gel.pmtiles/{z}/{x}/{y}.webp',
-				],
-				type: 'raster-dem',
-				tileSize: 512,
-				minzoom: 2,
-				maxzoom: 12,
-			},
-			*/
-			contours: {
-				type: 'vector',
-				url: 'pmtiles://' + pmtilesServerUrl + '/contour-lines.pmtiles',
-			},
 		},
 		layers: transportMode ? lightenLayers(layers) : layers,
 		//		Voir nos villes juste avec les arbres
@@ -3495,5 +3480,5 @@ On n'est pas à l'abri d'effets secondaires ici.
 		],
 	},
 	//...hillshadeLayers,
-	...contourLayers,
+	//	...contourLayers,
 ]

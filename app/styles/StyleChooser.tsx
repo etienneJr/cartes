@@ -6,8 +6,10 @@ import { useLocalStorage } from 'usehooks-ts'
 import { ModalCloseButton } from '../UI'
 import { styles } from './styles'
 import PanoramaxChooser from './PanoramaxChooser'
+import TerrainChooser from './TerrainChooser'
 
 const styleList = Object.entries(styles)
+
 export default function StyleChooser({
 	style,
 	setStyleChooser,
@@ -42,7 +44,25 @@ export default function StyleChooser({
 				}}
 			/>
 			<h1>Fond de carte</h1>
-			<PanoramaxChooser {...{ searchParams, setSearchParams, setZoom, zoom }} />
+			<section
+				css={`
+					display: flex;
+					padding: 0 2rem;
+				`}
+			>
+				<PanoramaxChooser
+					{...{ searchParams, setSearchParams, setZoom, zoom }}
+				/>
+				<TerrainChooser
+					{...{
+						searchParams,
+						setSearchParams,
+						setZoom,
+						zoom,
+						styleKey: style.key,
+					}}
+				/>
+			</section>
 			<Styles
 				styleList={styleList.filter(([, el]) => !el.secondary)}
 				setSearchParams={setSearchParams}

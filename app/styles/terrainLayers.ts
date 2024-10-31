@@ -162,3 +162,6 @@ export const hillshadeLayers = [
 		},
 	},
 ]
+
+const terrainLayers = [...hillshadeLayers, ...contourLayers]
+export default terrainLayers

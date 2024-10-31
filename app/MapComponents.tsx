@@ -6,6 +6,7 @@ import useDrawTransportAreas from './effects/useDrawTransportAreas'
 import { defaultAgencyFilter } from './transport/AgencyFilter'
 import { getCategories } from '@/components/categories'
 import DrawCategories from '@/components/map/DrawCategories'
+import { AddTerrain } from './styles/TerrainChooser'
 
 // These hooks won't need to handle an undefined "map" object
 function MapComponents({
@@ -53,6 +54,9 @@ function MapComponents({
 						}}
 					/>
 				</>
+			)}
+			{safeStyleKey === 'france' && (
+				<AddTerrain {...{ map, active: searchParams.relief }} />
 			)}
 		</>
 	)

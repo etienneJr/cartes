@@ -1,32 +1,13 @@
 import Image from 'next/image'
 import panoramaxIcon from '@/public/panoramax-simple.svg'
 import panoramaxIconChecked from '@/public/panoramax-simple-choisi.svg'
+import styled from 'styled-components'
 
 export default function ({ searchParams, setSearchParams, setZoom, zoom }) {
 	const checked = searchParams.panoramax != null || searchParams.rue === 'oui'
 
 	return (
-		<section
-			css={`
-				padding: 0 1rem;
-				label {
-					display: flex;
-					align-items: center;
-					input {
-						margin-right: 0.4rem;
-						display: none;
-					}
-					cursor: pointer;
-					img {
-						width: 1.3rem;
-						margin-bottom: 0.15rem;
-						height: auto;
-						margin-right: 0.2rem;
-						vertical-align: middle;
-					}
-				}
-			`}
-		>
+		<StyleElementChooserWrapper>
 			<label title="Afficher sur la carte les photos de rue Panoramax disponibles">
 				<input
 					type="checkbox"
@@ -47,6 +28,26 @@ export default function ({ searchParams, setSearchParams, setZoom, zoom }) {
 					Photos de rue
 				</span>
 			</label>
-		</section>
+		</StyleElementChooserWrapper>
 	)
 }
+
+export const StyleElementChooserWrapper = styled.section`
+	padding: 0 1rem;
+	label {
+		display: flex;
+		align-items: center;
+		input {
+			margin-right: 0.4rem;
+			display: none;
+		}
+		cursor: pointer;
+		img {
+			width: 1.3rem;
+			margin-bottom: 0.15rem;
+			height: auto;
+			margin-right: 0.2rem;
+			vertical-align: middle;
+		}
+	}
+`
