@@ -278,6 +278,26 @@ const layers = [
 		filter: ['==', '$type', 'Polygon'],
 	},
 	{
+		id: 'Residential',
+		type: 'fill',
+		source: 'openmaptiles',
+		'source-layer': 'landuse',
+		minzoom: 5,
+		maxzoom: 22,
+		layout: { visibility: 'visible' },
+		paint: {
+			'fill-color': {
+				base: 1,
+				stops: [
+					[1, '#efede6'],
+					[16, residentialColor],
+				],
+			},
+		},
+		metadata: {},
+		filter: ['all', ['in', 'class', 'residential', 'suburbs', 'neighbourhood']],
+	},
+	{
 		id: 'Water',
 		type: 'fill',
 		source: 'openmaptiles',
@@ -390,26 +410,6 @@ const layers = [
 		},
 		metadata: {},
 		filter: ['all', ['in', 'class', 'industrial', 'quarry']],
-	},
-	{
-		id: 'Residential',
-		type: 'fill',
-		source: 'openmaptiles',
-		'source-layer': 'landuse',
-		minzoom: 5,
-		maxzoom: 22,
-		layout: { visibility: 'visible' },
-		paint: {
-			'fill-color': {
-				base: 1,
-				stops: [
-					[1, '#efede6'],
-					[16, residentialColor],
-				],
-			},
-		},
-		metadata: {},
-		filter: ['all', ['in', 'class', 'residential', 'suburbs', 'neighbourhood']],
 	},
 	{
 		id: 'Retail',
