@@ -56,7 +56,7 @@ export const highZoomLight = {
 	position: [1.15, 210, 30],
 }
 
-const defaultCenter =
+export const defaultCenter =
 	// Saint Malo
 	// [-1.9890417068124002, 48.66284934737089]
 	// Rennes [-1.678, 48.11]

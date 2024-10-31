@@ -209,12 +209,11 @@ export default function Map(props) {
 	useEffect(() => {
 		if (!map) return
 		map.on('zoom', () => {
+			console.log('map event zoom')
+		})
+		map.on('moveend', () => {
 			const approximativeZoom = Math.round(map.getZoom())
 			if (approximativeZoom !== zoom) setZoom(approximativeZoom)
-			setLastGeolocation({
-				center: lastGeolocation.center,
-				zoom: approximativeZoom,
-			})
 
 			if (approximativeZoom < 6 && lightType === 'highZoom') {
 				setLightType('globeLight')
@@ -224,12 +223,13 @@ export default function Map(props) {
 				setLightType('highZoom')
 				map.setLight(highZoomLight)
 			}
-		})
-		map.on('moveend', () => {
-			setBbox(map.getBounds().toArray())
+
+			console.log('map event moveend')
+			const newBbox = map.getBounds().toArray()
+			setBbox(newBbox)
 			setLastGeolocation({
-				center: computeCenterFromBbox(bbox),
-				zoom: lastGeolocation.zoom,
+				center: computeCenterFromBbox(newBbox),
+				zoom: approximativeZoom,
 			})
 		})
 	}, [zoom, setZoom, map, setBbox, setLightType, lightType])

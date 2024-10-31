@@ -29,7 +29,6 @@ import { getCategories } from '@/components/categories'
 import ModalSwitch from './ModalSwitch'
 import { ContentWrapper, MapContainer } from './UI'
 import { useZoneImages } from './ZoneImages'
-import useSetItineraryModeFromUrl from './itinerary/useSetItineraryModeFromUrl'
 
 import { mapLibreBboxToOverpass } from '@/components/mapUtils'
 import useSetSearchParams from '@/components/useSetSearchParams'
@@ -40,7 +39,7 @@ import FocusedImage from './FocusedImage'
 import { initialSnap } from './ModalSheet'
 import PanoramaxLoader from './PanoramaxLoader'
 import SafeMap from './SafeMap'
-import { defaultZoom } from './effects/useAddMap'
+import { defaultCenter, defaultZoom } from './effects/useAddMap'
 import useFetchTransportMap, {
 	useFetchAgencyAreas,
 } from './effects/useFetchTransportMap'
@@ -72,8 +71,10 @@ export default function Container(props) {
 	const [isMapLoaded, setMapLoaded] = useState(false)
 	const [lastGeolocation, setLastGeolocation] = useLocalStorage(
 		'lastGeolocation',
-		{ center: null, zoom: null }
+		{ center: defaultCenter, zoom: defaultZoom }
 	)
+
+	console.log('LAST', lastGeolocation.center, lastGeolocation.zoom)
 	const debouncedLastGeolocation = useDebounce(
 		lastGeolocation,
 		contentDebounceDelay
@@ -81,7 +82,7 @@ export default function Container(props) {
 
 	const [bbox, setBbox] = useState(null)
 	const debouncedBbox = useDebounce(bbox, contentDebounceDelay)
-	const [zoom, setZoom] = useState(lastGeolocation.zoom || defaultZoom)
+	const [zoom, setZoom] = useState(lastGeolocation.zoom)
 	const debouncedZoom = useDebounce(zoom, contentDebounceDelay)
 	const [bboxImages, setBboxImages] = useState([])
 	const [latLngClicked, setLatLngClicked] = useState(null)
@@ -94,8 +95,6 @@ export default function Container(props) {
 	// ideally, we would debounce here instead of in Panoramax.tsx, but it makes
 	// this whole component rerender
 	const [panoramaxPosition, setPanoramaxPosition] = useState(null)
-
-	console.log('purple panoramaxPosition', panoramaxPosition)
 
 	// For the mobile sheet, we need it in Map, hence the definition here
 	const [trackedSnap, setTrackedSnap] = useState(initialSnap)
