@@ -9,14 +9,13 @@ import fetchValhalla from './fetchValhalla'
 import computeSafeRatio from '@/components/cycling/computeSafeRatio'
 import brouterResultToSegments from '@/components/cycling/brouterResultToSegments'
 
-export default function useFetchItinerary(
-	searchParams,
-	state,
-	bikeRouteProfile
-) {
+export default function useFetchItinerary(searchParams, state) {
 	const setSearchParams = useSetSearchParams()
 	const [routes, setRoutes] = useState(null)
 	const date = decodeDate(searchParams.date) || initialDate()
+	const bikeRouteProfile = searchParams['profil-velo'] || 'safety'
+	const setBikeRouteProfile = (profile) =>
+		setSearchParams({ 'profil-velo': profile })
 	const mode = modeKeyFromQuery(searchParams.mode)
 
 	const updateRoute = (key, value) =>
@@ -174,5 +173,5 @@ export default function useFetchItinerary(
 
 	const resetItinerary = () =>
 		setSearchParams({ allez: undefined, mode: undefined, choix: undefined })
-	return [resetItinerary, routes, date]
+	return [resetItinerary, routes, date, bikeRouteProfile, setBikeRouteProfile]
 }

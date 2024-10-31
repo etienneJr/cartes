@@ -118,20 +118,13 @@ export default function Container(props) {
 		return searchParams.allez ? searchParams.allez.split('->') : []
 	}, [searchParams.allez])
 
-	const [bikeRouteProfile, setBikeRouteProfile] = useState('safety')
-
 	// TODO This could be a simple derived variable but we seem to be using it in a
 	// button down below, not sure if it's relevant, why not wait for the url to
 	// change ?
 	const [isItineraryMode, setIsItineraryMode] = useState(false)
 
-	// TODO this hook must be split between useFetchItineraryData and
-	// useDrawItinerary like useTransportMap was
-	const [resetItinerary, routes, date] = useFetchItinerary(
-		searchParams,
-		state,
-		bikeRouteProfile
-	)
+	const [resetItinerary, routes, date, bikeRouteProfile, setBikeRouteProfile] =
+		useFetchItinerary(searchParams, state)
 
 	const itinerary = {
 		bikeRouteProfile,
