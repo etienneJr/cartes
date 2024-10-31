@@ -87,6 +87,7 @@ export default function QuickFeatureSearch({
 		<div
 			css={`
 				margin-top: 0.8rem;
+				margin-bottom: 50vh;
 			`}
 		>
 			<div
