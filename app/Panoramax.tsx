@@ -33,7 +33,7 @@ export default function Panoramax({ id, onMove }) {
 		console.log('panoramax event', panoramax)
 		panoramax['sequence-stopped'] = (e) => console.log('panoramax event', e)
 		panoramax.addEventListener('psv:view-rotated', (e) => {
-			console.log('panoramax event', e)
+			console.log('panoramax event rotated', e)
 			onMove((position) => ({
 				...position,
 				angle: e.detail.x - panoramax.psv.getPictureOriginalHeading(),

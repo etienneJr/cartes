@@ -82,7 +82,10 @@ export default function Container(props) {
 	const [bboxImages, setBboxImages] = useState([])
 	const [latLngClicked, setLatLngClicked] = useState(null)
 	const resetClickedPoint = () => setSearchParams({ clic: undefined })
-	const [panoramaxPosition, setPanoramaxPosition] = useState(null)
+
+	const [instantaneousPanoramaxPosition, setPanoramaxPosition] = useState(null)
+	const panoramaxPosition = useDebounce(instantaneousPanoramaxPosition, 100)
+
 	console.log('purple panoramaxPosition', panoramaxPosition)
 
 	// For the mobile sheet, we need it in Map, hence the definition here
