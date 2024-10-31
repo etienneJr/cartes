@@ -23,7 +23,7 @@
  * bbox
  **/
 
-import { useMemo, useRef, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 
 import { getCategories } from '@/components/categories'
 import ModalSwitch from './ModalSwitch'
@@ -80,7 +80,11 @@ export default function Container(props) {
 	const debouncedZoom = useDebounce(zoom, contentDebounceDelay)
 	const [bboxImages, setBboxImages] = useState([])
 	const [latLngClicked, setLatLngClicked] = useState(null)
-	const resetClickedPoint = () => setSearchParams({ clic: undefined })
+
+	const resetClickedPoint = useCallback(
+		() => setSearchParams({ clic: undefined }),
+		[setSearchParams]
+	)
 
 	// ideally, we would debounce here instead of in Panoramax.tsx, but it makes
 	// this whole component rerender
@@ -182,14 +186,13 @@ export default function Container(props) {
 	)
 	const agencyAreas = useFetchAgencyAreas(isTransportsMode)
 
-	// TODO reintroduce gare display through the transport style option + the bike
+	/* TODO reintroduce this very cool mode
+	// reintroduce gare display through the transport style option + the bike
 	// mode below
 	const gares = []
 
 	const clickedGare = null
-	const clickGare = (uic) => null // TODO train station + itinerary to be implemented again // setSearchParams({ gare: uic })
-
-	/* TODO reintroduce this very cool mode
+	const clickGare = useCallback((uic) => null, []) // TODO train station + itinerary to be implemented again // setSearchParams({ gare: uic })
 	const [bikeRoute, setBikeRoute] = useState(null)
 	useEffect(() => {
 		if (!target || !clickedGare) return
@@ -230,11 +233,7 @@ export default function Container(props) {
 						{...{
 							setState,
 							state,
-							clickedGare,
-							clickGare,
-							//bikeRoute,
 							latLngClicked,
-							setLatLngClicked,
 							setBikeRouteProfile,
 							bikeRouteProfile,
 							zoneImages,
@@ -285,17 +284,12 @@ export default function Container(props) {
 						osmFeature,
 						zoom,
 						isTransportsMode,
-						transportStopData,
 						transportsData,
 						agencyAreas,
 						clickedStopData,
-						bikeRouteProfile,
 						bbox,
 						setBbox,
 						setBboxImages,
-						gares,
-						clickGare,
-						clickedGare,
 						focusImage,
 						styleKey,
 						safeStyleKey,

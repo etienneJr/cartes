@@ -34,13 +34,9 @@ const getMinimumQuickSearchZoom = (mobile) => (mobile ? 10.5 : 12) // On a small
 
 export default function Content(props) {
 	const {
-		latLngClicked,
 		setLatLngClicked,
-		clickedGare,
-		bikeRoute,
 		setBikeRouteProfile,
 		bikeRouteProfile,
-		clickGare,
 		zoneImages,
 		bboxImages,
 		bbox,
