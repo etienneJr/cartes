@@ -125,24 +125,7 @@ export default function Container(props) {
 		return searchParams.allez ? searchParams.allez.split('->') : []
 	}, [searchParams.allez])
 
-	// TODO This could be a simple derived variable but we seem to be using it in a
-	// button down below, not sure if it's relevant, why not wait for the url to
-	// change ?
-	const [isItineraryMode, setIsItineraryMode] = useState(false)
-
-	const [resetItinerary, routes, date, bikeRouteProfile, setBikeRouteProfile] =
-		useFetchItinerary(searchParams, state)
-
-	const itinerary = {
-		bikeRouteProfile,
-		isItineraryMode,
-		setIsItineraryMode,
-		reset: resetItinerary,
-		routes,
-		date,
-	}
-
-	useSetItineraryModeFromUrl(allez, setIsItineraryMode)
+	const itinerary = useFetchItinerary(searchParams, state, allez)
 
 	const [categoryNames, categoryObjects] = getCategories(searchParams)
 
@@ -237,8 +220,6 @@ export default function Container(props) {
 							setState,
 							state,
 							latLngClicked,
-							setBikeRouteProfile,
-							bikeRouteProfile,
 							zoneImages,
 							panoramaxImages,
 							resetZoneImages,

@@ -35,8 +35,6 @@ const getMinimumQuickSearchZoom = (mobile) => (mobile ? 10.5 : 12) // On a small
 export default function Content(props) {
 	const {
 		setLatLngClicked,
-		setBikeRouteProfile,
-		bikeRouteProfile,
 		zoneImages,
 		bboxImages,
 		bbox,
@@ -398,8 +396,6 @@ export default function Content(props) {
 			<Itinerary
 				{...{
 					itinerary,
-					bikeRouteProfile,
-					setBikeRouteProfile,
 					searchParams,
 					setSnap,
 					close: () => {
