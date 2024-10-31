@@ -23,7 +23,7 @@
  * bbox
  **/
 
-import { useMemo, useRef, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 
 import { getCategories } from '@/components/categories'
 import ModalSwitch from './ModalSwitch'
@@ -74,13 +74,22 @@ export default function Container(props) {
 		'lastGeolocation',
 		{ center: null, zoom: null }
 	)
+	const debouncedLastGeolocation = useDebounce(
+		lastGeolocation,
+		contentDebounceDelay
+	)
+
 	const [bbox, setBbox] = useState(null)
 	const debouncedBbox = useDebounce(bbox, contentDebounceDelay)
 	const [zoom, setZoom] = useState(lastGeolocation.zoom || defaultZoom)
 	const debouncedZoom = useDebounce(zoom, contentDebounceDelay)
 	const [bboxImages, setBboxImages] = useState([])
 	const [latLngClicked, setLatLngClicked] = useState(null)
-	const resetClickedPoint = () => setSearchParams({ clic: undefined })
+
+	const resetClickedPoint = useCallback(
+		() => setSearchParams({ clic: undefined }),
+		[setSearchParams]
+	)
 
 	// ideally, we would debounce here instead of in Panoramax.tsx, but it makes
 	// this whole component rerender
@@ -99,16 +108,26 @@ export default function Container(props) {
 	console.log('lightpink ssk', safeStyleKey)
 	const [localStorageStyleKey] = useLocalStorage('style', null)
 	const styleKey = searchParams.style || localStorageStyleKey || 'france'
-	const style = getStyle(styleKey)
+	const style = useMemo(() => getStyle(styleKey), [styleKey])
 
 	const styleChooser = searchParams['choix du style'] === 'oui',
-		setStyleChooser = (state) =>
-			setSearchParams({ 'choix du style': state ? 'oui' : undefined })
+		setStyleChooser = useCallback(
+			(state) =>
+				setSearchParams({ 'choix du style': state ? 'oui' : undefined }),
+			[setSearchParams]
+		)
 
 	const center = useMemo(
 		() => (bbox ? computeCenterFromBbox(bbox) : lastGeolocation.center),
 		[bbox, lastGeolocation.center]
 	)
+	const debouncedCenter = useDebounce(center, contentDebounceDelay)
+
+	const debouncedApproximateCenter = useMemo(
+		() => center && center.map((coordinate) => coordinate.toFixed(2)),
+		[debouncedCenter?.join('-')]
+	)
+
 	// In this query param is stored an array of points. If only one, it's just a
 	// place focused on.
 	const [state, setState] = useState(givenState)
@@ -118,31 +137,7 @@ export default function Container(props) {
 		return searchParams.allez ? searchParams.allez.split('->') : []
 	}, [searchParams.allez])
 
-	const [bikeRouteProfile, setBikeRouteProfile] = useState('safety')
-
-	// TODO This could be a simple derived variable but we seem to be using it in a
-	// button down below, not sure if it's relevant, why not wait for the url to
-	// change ?
-	const [isItineraryMode, setIsItineraryMode] = useState(false)
-
-	// TODO this hook must be split between useFetchItineraryData and
-	// useDrawItinerary like useTransportMap was
-	const [resetItinerary, routes, date] = useFetchItinerary(
-		searchParams,
-		state,
-		bikeRouteProfile
-	)
-
-	const itinerary = {
-		bikeRouteProfile,
-		isItineraryMode,
-		setIsItineraryMode,
-		reset: resetItinerary,
-		routes,
-		date,
-	}
-
-	useSetItineraryModeFromUrl(allez, setIsItineraryMode)
+	const itinerary = useFetchItinerary(searchParams, state, allez)
 
 	const [categoryNames, categoryObjects] = getCategories(searchParams)
 
@@ -173,7 +168,10 @@ export default function Container(props) {
 	})
 
 	const transportStopData = useTransportStopData(osmFeature)
-	const clickedStopData = transportStopData[0] || []
+	const clickedStopData = useMemo(
+		() => transportStopData[0] || [],
+		[transportStopData]
+	)
 
 	const isTransportsMode = styleKey === 'transports'
 
@@ -189,14 +187,13 @@ export default function Container(props) {
 	)
 	const agencyAreas = useFetchAgencyAreas(isTransportsMode)
 
-	// TODO reintroduce gare display through the transport style option + the bike
+	/* TODO reintroduce this very cool mode
+	// reintroduce gare display through the transport style option + the bike
 	// mode below
 	const gares = []
 
 	const clickedGare = null
-	const clickGare = (uic) => null // TODO train station + itinerary to be implemented again // setSearchParams({ gare: uic })
-
-	/* TODO reintroduce this very cool mode
+	const clickGare = useCallback((uic) => null, []) // TODO train station + itinerary to be implemented again // setSearchParams({ gare: uic })
 	const [bikeRoute, setBikeRoute] = useState(null)
 	useEffect(() => {
 		if (!target || !clickedGare) return
@@ -237,13 +234,7 @@ export default function Container(props) {
 						{...{
 							setState,
 							state,
-							clickedGare,
-							clickGare,
-							//bikeRoute,
 							latLngClicked,
-							setLatLngClicked,
-							setBikeRouteProfile,
-							bikeRouteProfile,
 							zoneImages,
 							panoramaxImages,
 							resetZoneImages,
@@ -274,7 +265,7 @@ export default function Container(props) {
 						}}
 					/>
 				</ContentWrapper>
-				<Meteo coordinates={center} />
+				<Meteo coordinates={debouncedApproximateCenter} />
 				{focusedImage && <FocusedImage {...{ focusedImage, focusImage }} />}
 				{searchParams.panoramax && (
 					<PanoramaxLoader
@@ -292,17 +283,12 @@ export default function Container(props) {
 						osmFeature,
 						zoom,
 						isTransportsMode,
-						transportStopData,
 						transportsData,
 						agencyAreas,
 						clickedStopData,
-						bikeRouteProfile,
 						bbox,
 						setBbox,
 						setBboxImages,
-						gares,
-						clickGare,
-						clickedGare,
 						focusImage,
 						styleKey,
 						safeStyleKey,
@@ -312,7 +298,7 @@ export default function Container(props) {
 						geocodedClickedPoint,
 						setGeolocation,
 						setZoom,
-						center,
+						debouncedCenter,
 						setState,
 						setLatLngClicked,
 						setSafeStyleKey,
@@ -321,7 +307,7 @@ export default function Container(props) {
 						setMapLoaded,
 						wikidata,
 						setLastGeolocation,
-						lastGeolocation,
+						lastGeolocation: debouncedLastGeolocation,
 					}}
 				/>
 			</MapContainer>

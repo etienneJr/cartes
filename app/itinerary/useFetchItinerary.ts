@@ -1,6 +1,6 @@
 import { computeMotisTrip } from '@/app/itinerary/transit/motisRequest'
 import distance from '@turf/distance'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { decodeDate, initialDate } from './DateSelector'
 import { useMemoPointsFromState } from './useDrawItinerary'
 import { modeKeyFromQuery } from './Itinerary'
@@ -8,19 +8,30 @@ import useSetSearchParams from '@/components/useSetSearchParams'
 import fetchValhalla from './fetchValhalla'
 import computeSafeRatio from '@/components/cycling/computeSafeRatio'
 import brouterResultToSegments from '@/components/cycling/brouterResultToSegments'
+import useSetItineraryModeFromUrl from './useSetItineraryModeFromUrl'
 
-export default function useFetchItinerary(
-	searchParams,
-	state,
-	bikeRouteProfile
-) {
+export default function useFetchItinerary(searchParams, state, allez) {
 	const setSearchParams = useSetSearchParams()
 	const [routes, setRoutes] = useState(null)
 	const date = decodeDate(searchParams.date) || initialDate()
+	const bikeRouteProfile = searchParams['profil-velo'] || 'safety'
+	const setBikeRouteProfile = useCallback(
+		(profile) => setSearchParams({ 'profil-velo': profile }),
+		[setSearchParams]
+	)
 	const mode = modeKeyFromQuery(searchParams.mode)
+	// TODO This could be a simple derived variable but we seem to be using it in a
+	// button down below, not sure if it's relevant, why not wait for the url to
+	// change ?
+	const [isItineraryMode, setIsItineraryMode] = useState(false)
 
-	const updateRoute = (key, value) =>
-		setRoutes((routes) => ({ ...(routes || {}), [key]: value }))
+	useSetItineraryModeFromUrl(allez, setIsItineraryMode)
+
+	const updateRoute = useCallback(
+		(key, value) =>
+			setRoutes((routes) => ({ ...(routes || {}), [key]: value })),
+		[routes, setRoutes]
+	)
 
 	const [serializedPoints, points] = useMemoPointsFromState(state)
 
@@ -172,7 +183,20 @@ export default function useFetchItinerary(
 		)
 	}, [points, setRoutes, date])
 
-	const resetItinerary = () =>
-		setSearchParams({ allez: undefined, mode: undefined, choix: undefined })
-	return [resetItinerary, routes, date]
+	const resetItinerary = useCallback(
+		() =>
+			setSearchParams({ allez: undefined, mode: undefined, choix: undefined }),
+		[setSearchParams]
+	)
+
+	const itinerary = {
+		bikeRouteProfile,
+		setBikeRouteProfile,
+		isItineraryMode,
+		setIsItineraryMode,
+		reset: resetItinerary,
+		routes,
+		date,
+	}
+	return itinerary
 }
