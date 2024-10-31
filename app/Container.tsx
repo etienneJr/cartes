@@ -116,6 +116,12 @@ export default function Container(props) {
 		() => (bbox ? computeCenterFromBbox(bbox) : lastGeolocation.center),
 		[bbox, lastGeolocation.center]
 	)
+
+	const approximateCenter = useMemo(
+		() => center && center.map((coordinate) => coordinate.toFixed(4)),
+		[center.join('-')]
+	)
+
 	// In this query param is stored an array of points. If only one, it's just a
 	// place focused on.
 	const [state, setState] = useState(givenState)
@@ -250,7 +256,7 @@ export default function Container(props) {
 						}}
 					/>
 				</ContentWrapper>
-				<Meteo coordinates={center} />
+				<Meteo coordinates={approximateCenter} />
 				{focusedImage && <FocusedImage {...{ focusedImage, focusImage }} />}
 				{searchParams.panoramax && (
 					<PanoramaxLoader
