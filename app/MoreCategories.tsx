@@ -19,6 +19,9 @@ export default function MoreCategories({
 		<div
 			css={`
 				margin-bottom: 0.6rem;
+				@media (max-width: 800px) {
+					margin-bottom: 50vh;
+				}
 				ol,
 				ul {
 					list-style-type: none;
