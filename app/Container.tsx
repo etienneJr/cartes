@@ -118,9 +118,10 @@ export default function Container(props) {
 	)
 
 	const approximateCenter = useMemo(
-		() => center && center.map((coordinate) => coordinate.toFixed(4)),
+		() => center && center.map((coordinate) => coordinate.toFixed(2)),
 		[center.join('-')]
 	)
+	const debouncedApproximateCenter = useDebounce(approximateCenter, 1000)
 
 	// In this query param is stored an array of points. If only one, it's just a
 	// place focused on.
@@ -256,7 +257,7 @@ export default function Container(props) {
 						}}
 					/>
 				</ContentWrapper>
-				<Meteo coordinates={approximateCenter} />
+				<Meteo coordinates={debouncedApproximateCenter} />
 				{focusedImage && <FocusedImage {...{ focusedImage, focusImage }} />}
 				{searchParams.panoramax && (
 					<PanoramaxLoader
