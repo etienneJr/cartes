@@ -50,7 +50,7 @@ export function AddTerrain({ map, active }) {
 	useEffect(() => {
 		if (!active) return
 
-		map.addSource('gel-raster-dem', {
+		map.addSource('terrain-rgb', {
 			tiles: [
 				'pmtiles://https://data.source.coop/smartmaps/gel/gel.pmtiles/{z}/{x}/{y}.webp',
 			],

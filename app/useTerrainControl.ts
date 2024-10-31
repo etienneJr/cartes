@@ -2,10 +2,10 @@ import maplibregl from 'maplibre-gl'
 import { useEffect } from 'react'
 import { defaultProjection } from './effects/useAddMap'
 
-export default function useTerrainControl(map, style) {
+export default function useTerrainControl(map, style, relief) {
 	useEffect(() => {
 		if (!map) return
-		if (!style.hasTerrain) return
+		if (!style.hasTerrain && !(style.key === 'france' && relief)) return
 
 		const control = new maplibregl.TerrainControl({
 			source: 'terrain-rgb',

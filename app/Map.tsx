@@ -197,7 +197,7 @@ export default function Map(props) {
 
 	useDrawSearchResults(map, state, onSearchResultClick)
 
-	useTerrainControl(map, style)
+	useTerrainControl(map, style, searchParams.relief)
 
 	useEffect(() => {
 		if (!map) return

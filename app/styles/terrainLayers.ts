@@ -151,7 +151,7 @@ export const hillshadeLayers = [
 	{
 		id: 'Hillshade',
 		type: 'hillshade',
-		source: 'gel-raster-dem',
+		source: 'terrain-rgb',
 		layout: {
 			visibility: 'visible',
 		},
