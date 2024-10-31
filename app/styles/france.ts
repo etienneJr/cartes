@@ -46,6 +46,7 @@ export default function franceStyle(transportMode, noVariableTiles = false) {
 				type: 'vector',
 				url: 'pmtiles://' + pmtilesServerUrl + '/trees.pmtiles',
 			},
+			/*
 			'gel-raster-dem': {
 				tiles: [
 					'pmtiles://https://data.source.coop/smartmaps/gel/gel.pmtiles/{z}/{x}/{y}.webp',
@@ -55,6 +56,7 @@ export default function franceStyle(transportMode, noVariableTiles = false) {
 				minzoom: 2,
 				maxzoom: 12,
 			},
+			*/
 			contours: {
 				type: 'vector',
 				url: 'pmtiles://' + pmtilesServerUrl + '/contour-lines.pmtiles',
@@ -3492,6 +3494,6 @@ On n'est pas à l'abri d'effets secondaires ici.
 			['==', ['geometry-type'], 'LineString'],
 		],
 	},
-	...hillshadeLayers,
+	//...hillshadeLayers,
 	...contourLayers,
 ]
