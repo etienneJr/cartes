@@ -74,6 +74,11 @@ export default function Container(props) {
 		'lastGeolocation',
 		{ center: null, zoom: null }
 	)
+	const debouncedLastGeolocation = useDebounce(
+		lastGeolocation,
+		contentDebounceDelay
+	)
+
 	const [bbox, setBbox] = useState(null)
 	const debouncedBbox = useDebounce(bbox, contentDebounceDelay)
 	const [zoom, setZoom] = useState(lastGeolocation.zoom || defaultZoom)
@@ -116,12 +121,12 @@ export default function Container(props) {
 		() => (bbox ? computeCenterFromBbox(bbox) : lastGeolocation.center),
 		[bbox, lastGeolocation.center]
 	)
+	const debouncedCenter = useDebounce(center, contentDebounceDelay)
 
-	const approximateCenter = useMemo(
+	const debouncedApproximateCenter = useMemo(
 		() => center && center.map((coordinate) => coordinate.toFixed(2)),
-		[center.join('-')]
+		[debouncedCenter?.join('-')]
 	)
-	const debouncedApproximateCenter = useDebounce(approximateCenter, 1000)
 
 	// In this query param is stored an array of points. If only one, it's just a
 	// place focused on.
@@ -163,7 +168,10 @@ export default function Container(props) {
 	})
 
 	const transportStopData = useTransportStopData(osmFeature)
-	const clickedStopData = transportStopData[0] || []
+	const clickedStopData = useMemo(
+		() => transportStopData[0] || [],
+		[transportStopData]
+	)
 
 	const isTransportsMode = styleKey === 'transports'
 
@@ -290,7 +298,7 @@ export default function Container(props) {
 						geocodedClickedPoint,
 						setGeolocation,
 						setZoom,
-						center,
+						debouncedCenter,
 						setState,
 						setLatLngClicked,
 						setSafeStyleKey,
@@ -299,7 +307,7 @@ export default function Container(props) {
 						setMapLoaded,
 						wikidata,
 						setLastGeolocation,
-						lastGeolocation,
+						lastGeolocation: debouncedLastGeolocation,
 					}}
 				/>
 			</MapContainer>
