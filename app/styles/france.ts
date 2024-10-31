@@ -47,6 +47,8 @@ export default function franceStyle(transportMode, noVariableTiles = false) {
 			},
 		},
 		layers: transportMode ? lightenLayers(layers) : layers,
+		//		Voir nos villes juste avec les arbres
+		//layers: layers.filter(({ id }) => id === 'Background' || id === 'Trees'),
 		glyphs: getFetchUrlBase() + '/fonts/glyphs/{fontstack}/{range}.pbf',
 		sprite: getFetchUrlBase() + '/sprite/sprite',
 		bearing: 0,
