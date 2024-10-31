@@ -103,11 +103,14 @@ export default function Container(props) {
 	console.log('lightpink ssk', safeStyleKey)
 	const [localStorageStyleKey] = useLocalStorage('style', null)
 	const styleKey = searchParams.style || localStorageStyleKey || 'france'
-	const style = getStyle(styleKey)
+	const style = useMemo(() => getStyle(styleKey), [styleKey])
 
 	const styleChooser = searchParams['choix du style'] === 'oui',
-		setStyleChooser = (state) =>
-			setSearchParams({ 'choix du style': state ? 'oui' : undefined })
+		setStyleChooser = useCallback(
+			(state) =>
+				setSearchParams({ 'choix du style': state ? 'oui' : undefined }),
+			[setSearchParams]
+		)
 
 	const center = useMemo(
 		() => (bbox ? computeCenterFromBbox(bbox) : lastGeolocation.center),
