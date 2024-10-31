@@ -3,6 +3,8 @@ import panoramaxIcon from '@/public/panoramax-simple.svg'
 import panoramaxIconChecked from '@/public/panoramax-simple-choisi.svg'
 
 export default function ({ searchParams, setSearchParams, setZoom, zoom }) {
+	const checked = searchParams.panoramax != null || searchParams.rue === 'oui'
+
 	return (
 		<section
 			css={`
@@ -12,6 +14,7 @@ export default function ({ searchParams, setSearchParams, setZoom, zoom }) {
 					align-items: center;
 					input {
 						margin-right: 0.4rem;
+						display: none;
 					}
 					cursor: pointer;
 					img {
@@ -27,7 +30,7 @@ export default function ({ searchParams, setSearchParams, setZoom, zoom }) {
 			<label title="Afficher sur la carte les photos de rue Panoramax disponibles">
 				<input
 					type="checkbox"
-					checked={searchParams.panoramax != null || searchParams.rue === 'oui'}
+					checked={checked}
 					onChange={() => {
 						if (searchParams.rue === 'oui') setSearchParams({ rue: undefined })
 						else {
@@ -37,7 +40,10 @@ export default function ({ searchParams, setSearchParams, setZoom, zoom }) {
 					}}
 				/>
 				<span>
-					<Image src={panoramaxIconChecked} alt="Logo du projet Panoramax" />
+					<Image
+						src={checked ? panoramaxIconChecked : panoramaxIcon}
+						alt="Logo du projet Panoramax"
+					/>
 					Photos de rue
 				</span>
 			</label>
