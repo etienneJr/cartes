@@ -1,4 +1,5 @@
 import { getFetchUrlBase, pmtilesServerUrl } from '../serverUrls'
+import { contourLayers, hillshadeLayers } from './terrainLayers'
 
 //Fonts used :
 //https://maplibre.org/font-maker
@@ -3478,4 +3479,6 @@ On n'est pas à l'abri d'effets secondaires ici.
 			['==', ['geometry-type'], 'LineString'],
 		],
 	},
+	//...hillshadeLayers,
+	//	...contourLayers,
 ]

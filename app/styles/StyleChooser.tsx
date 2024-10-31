@@ -1,14 +1,15 @@
 import css from '@/components/css/convertToJs'
 import useSetSearchParams from '@/components/useSetSearchParams'
 import informationIcon from '@/public/information.svg'
-import panoramaxIcon from '@/public/panoramax-simple.svg'
 import Image from 'next/image'
-import Link from 'next/link'
 import { useLocalStorage } from 'usehooks-ts'
 import { ModalCloseButton } from '../UI'
 import { styles } from './styles'
+import PanoramaxChooser from './PanoramaxChooser'
+import TerrainChooser from './TerrainChooser'
 
 const styleList = Object.entries(styles)
+
 export default function StyleChooser({
 	style,
 	setStyleChooser,
@@ -45,44 +46,22 @@ export default function StyleChooser({
 			<h1>Fond de carte</h1>
 			<section
 				css={`
-					padding: 0 1rem;
-					label {
-						display: flex;
-						align-items: center;
-						input {
-							margin-right: 0.4rem;
-						}
-						cursor: pointer;
-						img {
-							width: 1.3rem;
-							margin-bottom: 0.15rem;
-							height: auto;
-							margin-right: 0.2rem;
-							vertical-align: middle;
-						}
-					}
+					display: flex;
+					padding: 0 2rem;
 				`}
 			>
-				<label title="Afficher sur la carte les photos de rue Panoramax disponibles">
-					<input
-						type="checkbox"
-						checked={
-							searchParams.panoramax != null || searchParams.rue === 'oui'
-						}
-						onChange={() => {
-							if (searchParams.rue === 'oui')
-								setSearchParams({ rue: undefined })
-							else {
-								if (zoom < 7) setZoom(7)
-								setSearchParams({ rue: 'oui' })
-							}
-						}}
-					/>
-					<span>
-						<Image src={panoramaxIcon} alt="Logo du projet Panoramax" />
-						Photos de rue
-					</span>
-				</label>
+				<PanoramaxChooser
+					{...{ searchParams, setSearchParams, setZoom, zoom }}
+				/>
+				<TerrainChooser
+					{...{
+						searchParams,
+						setSearchParams,
+						setZoom,
+						zoom,
+						styleKey: style.key,
+					}}
+				/>
 			</section>
 			<Styles
 				styleList={styleList.filter(([, el]) => !el.secondary)}
