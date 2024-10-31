@@ -34,6 +34,7 @@ import useSetItineraryModeFromUrl from './itinerary/useSetItineraryModeFromUrl'
 import { mapLibreBboxToOverpass } from '@/components/mapUtils'
 import useSetSearchParams from '@/components/useSetSearchParams'
 import { useDebounce } from '@/components/utils'
+import { useSearchParams } from 'next/navigation'
 import { useLocalStorage } from 'usehooks-ts'
 import FocusedImage from './FocusedImage'
 import { initialSnap } from './ModalSheet'
@@ -51,8 +52,6 @@ import Meteo from './meteo/Meteo'
 import { getStyle } from './styles/styles'
 import useTransportStopData from './transport/useTransportStopData'
 import useWikidata from './useWikidata'
-import { useSearchParams } from 'next/navigation'
-import { useWhatChanged } from '@/components/utils/useWhatChanged'
 import { computeCenterFromBbox } from './utils'
 
 // We don't want to redraw <Content instantaneously on map zoom or drag
@@ -83,8 +82,9 @@ export default function Container(props) {
 	const [latLngClicked, setLatLngClicked] = useState(null)
 	const resetClickedPoint = () => setSearchParams({ clic: undefined })
 
-	const [instantaneousPanoramaxPosition, setPanoramaxPosition] = useState(null)
-	const panoramaxPosition = useDebounce(instantaneousPanoramaxPosition, 100)
+	// ideally, we would debounce here instead of in Panoramax.tsx, but it makes
+	// this whole component rerender
+	const [panoramaxPosition, setPanoramaxPosition] = useState(null)
 
 	console.log('purple panoramaxPosition', panoramaxPosition)
 
