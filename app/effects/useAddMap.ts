@@ -62,6 +62,7 @@ export const defaultCenter =
 	// [-1.9890417068124002, 48.66284934737089]
 	// Rennes [-1.678, 48.11]
 	[2.025, 46.857]
+
 export const defaultZoom = 5.52
 const defaultHash = `#${defaultZoom}/${defaultCenter[1]}/${defaultCenter[0]}`
 
@@ -71,11 +72,9 @@ export default function useAddMap(
 	setBbox,
 	mapContainerRef,
 	setGeolocation,
-	setMapLoaded,
+	setMapLoaded
 	// This for hot reload, I don't why this hook gets called again losing the map
 	// state, very annoying
-	center,
-	zoom
 ) {
 	const [map, setMap] = useState(null)
 	const [geolocate, setGeolocate] = useState(null)

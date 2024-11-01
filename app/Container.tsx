@@ -310,7 +310,6 @@ export default function Container(props) {
 						setMapLoaded,
 						wikidata,
 						setLastGeolocation,
-						lastGeolocation: debouncedLastGeolocation,
 					}}
 				/>
 			</MapContainer>

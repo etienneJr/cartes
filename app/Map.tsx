@@ -77,7 +77,6 @@ export default function Map(props) {
 		setMapLoaded,
 		wikidata,
 		setLastGeolocation,
-		lastGeolocation,
 	} = props
 	useWhatChanged(props, 'Render component Map')
 	const mapContainerRef = useRef(null)
@@ -98,9 +97,7 @@ export default function Map(props) {
 		setBbox,
 		mapContainerRef,
 		setGeolocation,
-		setMapLoaded,
-		center,
-		zoom
+		setMapLoaded
 	)
 	const setSearchParams = useSetSearchParams()
 
