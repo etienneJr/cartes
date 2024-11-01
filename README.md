@@ -32,6 +32,7 @@ To set it up on your local computer, just run :
 
 ```
 bun install # We're using bun because npm can't handle the experimental react 19 version, it breaks the install
+bun dev # launch the web dev server
 ```
 
 You'll have to create your free MapTiler key and put it in a `.env.local` file at the root of the cartes folder:
