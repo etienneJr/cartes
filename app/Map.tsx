@@ -31,6 +31,7 @@ import useRightClick from './effects/useRightClick'
 import useSearchLocalTransit from './effects/useSearchLocalTransit'
 import useDrawItinerary from './itinerary/useDrawItinerary'
 import { computeCenterFromBbox } from './utils'
+import useGeolocationAutofocus from './effects/useGeolocationAutofocus'
 
 if (process.env.NEXT_PUBLIC_MAPTILER == null) {
 	throw new Error('You have to configure env NEXT_PUBLIC_MAPTILER, see README')
@@ -77,6 +78,7 @@ export default function Map(props) {
 		setMapLoaded,
 		wikidata,
 		setLastGeolocation,
+		geolocation,
 	} = props
 	useWhatChanged(props, 'Render component Map')
 	const mapContainerRef = useRef(null)
@@ -112,6 +114,7 @@ export default function Map(props) {
 	const [distanceMode, setDistanceMode] = useState(false)
 
 	const padding = useComputeMapPadding(trackedSnap, searchParams)
+	useGeolocationAutofocus(map, itinerary?.isItineraryMode, geolocation, padding)
 
 	useEffect(() => {
 		if (!map) return
