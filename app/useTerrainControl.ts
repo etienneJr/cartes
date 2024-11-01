@@ -23,11 +23,12 @@ export default function useTerrainControl(map, style, relief) {
 		map.addControl(control, 'top-right')
 		return () => {
 			try {
+				map.setTerrain(null)
 				control && map.removeControl(control)
 				map.off(onTerrain)
 			} catch (e) {
 				console.log('Trying to remove terrain 3D control failed', e)
 			}
 		}
-	}, [map, style])
+	}, [map, style, relief])
 }
