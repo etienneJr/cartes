@@ -64,6 +64,7 @@ export const defaultCenter =
 	[2.025, 46.857]
 
 export const defaultZoom = 5.52
+const defaultGeolocation = { center: defaultCenter, zoom: defaultZoom }
 const defaultHash = `#${defaultZoom}/${defaultCenter[1]}/${defaultCenter[0]}`
 
 export default function useAddMap(
@@ -143,13 +144,12 @@ export default function useAddMap(
 	useEffectDebugger(() => {
 		if (!mapContainerRef.current) return
 
-		const lastGeolocation = isLocalStorageAvailable()
-			? JSON.parse(localStorage.getItem('lastGeolocation'))
-			: { center: defaultCenter, zoom: defaultZoom }
+		const lastGeolocation =
+			isLocalStorageAvailable() &&
+			JSON.parse(localStorage.getItem('lastGeolocation'))
 
+		const { center, zoom } = lastGeolocation || defaultGeolocation
 		console.log('darkgreen', lastGeolocation)
-
-		const { center, zoom } = lastGeolocation
 
 		const newMap = new maplibregl.Map({
 			container: mapContainerRef.current,
