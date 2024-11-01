@@ -7,6 +7,7 @@ import useGeolocation from './useGeolocation'
 import frenchMaplibreLocale from '@/components/map/frenchMaplibreLocale.ts'
 import { Protocol as CartesProtocol } from '@/components/map/CartesProtocol.ts'
 import useEffectDebugger from '@/components/useEffectDebugger'
+import { isLocalStorageAvailable } from '@/components/utils/utils'
 
 /*
  *
@@ -61,6 +62,7 @@ export const defaultCenter =
 	// [-1.9890417068124002, 48.66284934737089]
 	// Rennes [-1.678, 48.11]
 	[2.025, 46.857]
+
 export const defaultZoom = 5.52
 const defaultHash = `#${defaultZoom}/${defaultCenter[1]}/${defaultCenter[0]}`
 
@@ -70,11 +72,9 @@ export default function useAddMap(
 	setBbox,
 	mapContainerRef,
 	setGeolocation,
-	setMapLoaded,
+	setMapLoaded
 	// This for hot reload, I don't why this hook gets called again losing the map
 	// state, very annoying
-	center,
-	zoom
 ) {
 	const [map, setMap] = useState(null)
 	const [geolocate, setGeolocate] = useState(null)
@@ -135,15 +135,28 @@ export default function useAddMap(
 		}
 	}, [map, autoPitchPreference, setAutoPitchPreference])
 
+	const [lastGeolocation] = useLocalStorage('lastGeolocation', {
+		center: defaultCenter,
+		zoom: defaultZoom,
+	})
+
 	useEffectDebugger(() => {
-		if (!mapContainerRef.current) return undefined
+		if (!mapContainerRef.current) return
+
+		const lastGeolocation = isLocalStorageAvailable()
+			? JSON.parse(localStorage.getItem('lastGeolocation'))
+			: { center: defaultCenter, zoom: defaultZoom }
+
+		console.log('darkgreen', lastGeolocation)
+
+		const { center, zoom } = lastGeolocation
 
 		const newMap = new maplibregl.Map({
 			container: mapContainerRef.current,
 			style: styleUrl,
 			maxPitch: 85,
-			center: center || defaultCenter,
-			zoom: zoom || defaultZoom,
+			center,
+			zoom,
 			hash: true,
 			attributionControl: false,
 			locale: frenchMaplibreLocale,

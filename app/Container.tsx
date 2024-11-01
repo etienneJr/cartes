@@ -82,6 +82,21 @@ export default function Container(props) {
 
 	const [bbox, setBbox] = useState(null)
 	const debouncedBbox = useDebounce(bbox, contentDebounceDelay)
+
+	const center = useMemo(() => {
+		const bboxCenter = bbox && computeCenterFromBbox(bbox)
+
+		const lastCenter = lastGeolocation.center
+		return bboxCenter || lastCenter
+	}, [bbox, lastGeolocation.center])
+
+	const debouncedCenter = useDebounce(center, contentDebounceDelay)
+
+	const debouncedApproximateCenter = useMemo(
+		() => center && center.map((coordinate) => coordinate.toFixed(2)),
+		[debouncedCenter?.join('-')]
+	)
+
 	const [zoom, setZoom] = useState(lastGeolocation.zoom)
 	const debouncedZoom = useDebounce(zoom, contentDebounceDelay)
 	const [bboxImages, setBboxImages] = useState([])
@@ -115,17 +130,6 @@ export default function Container(props) {
 				setSearchParams({ 'choix du style': state ? 'oui' : undefined }),
 			[setSearchParams]
 		)
-
-	const center = useMemo(
-		() => (bbox ? computeCenterFromBbox(bbox) : lastGeolocation.center),
-		[bbox, lastGeolocation.center]
-	)
-	const debouncedCenter = useDebounce(center, contentDebounceDelay)
-
-	const debouncedApproximateCenter = useMemo(
-		() => center && center.map((coordinate) => coordinate.toFixed(2)),
-		[debouncedCenter?.join('-')]
-	)
 
 	// In this query param is stored an array of points. If only one, it's just a
 	// place focused on.
@@ -297,7 +301,7 @@ export default function Container(props) {
 						geocodedClickedPoint,
 						setGeolocation,
 						setZoom,
-						debouncedCenter,
+						center: debouncedCenter,
 						setState,
 						setLatLngClicked,
 						setSafeStyleKey,
@@ -306,7 +310,6 @@ export default function Container(props) {
 						setMapLoaded,
 						wikidata,
 						setLastGeolocation,
-						lastGeolocation: debouncedLastGeolocation,
 					}}
 				/>
 			</MapContainer>
