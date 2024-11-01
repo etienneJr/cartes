@@ -7,6 +7,7 @@ import useGeolocation from './useGeolocation'
 import frenchMaplibreLocale from '@/components/map/frenchMaplibreLocale.ts'
 import { Protocol as CartesProtocol } from '@/components/map/CartesProtocol.ts'
 import useEffectDebugger from '@/components/useEffectDebugger'
+import { isLocalStorageAvailable } from '@/components/utils/utils'
 
 /*
  *
@@ -135,15 +136,28 @@ export default function useAddMap(
 		}
 	}, [map, autoPitchPreference, setAutoPitchPreference])
 
+	const [lastGeolocation] = useLocalStorage('lastGeolocation', {
+		center: defaultCenter,
+		zoom: defaultZoom,
+	})
+
 	useEffectDebugger(() => {
-		if (!mapContainerRef.current) return undefined
+		if (!mapContainerRef.current) return
+
+		const lastGeolocation = isLocalStorageAvailable()
+			? JSON.parse(localStorage.getItem('lastGeolocation'))
+			: { center: defaultCenter, zoom: defaultZoom }
+
+		console.log('darkgreen', lastGeolocation)
+
+		const { center, zoom } = lastGeolocation
 
 		const newMap = new maplibregl.Map({
 			container: mapContainerRef.current,
 			style: styleUrl,
 			maxPitch: 85,
-			center: center || defaultCenter,
-			zoom: zoom || defaultZoom,
+			center,
+			zoom,
 			hash: true,
 			attributionControl: false,
 			locale: frenchMaplibreLocale,

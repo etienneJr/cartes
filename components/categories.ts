@@ -16,8 +16,6 @@ export const getCategories = (searchParams) => {
 			categories.find((c2) => c2.name === c)
 		)
 
-	console.log('orange', categories, { categoryNames, categoriesObjects })
-
 	return [categoryNames, categoriesObjects]
 }
 

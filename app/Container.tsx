@@ -83,10 +83,13 @@ export default function Container(props) {
 	const [bbox, setBbox] = useState(null)
 	const debouncedBbox = useDebounce(bbox, contentDebounceDelay)
 
-	const center = useMemo(
-		() => (bbox ? computeCenterFromBbox(bbox) : lastGeolocation.center),
-		[bbox, lastGeolocation.center]
-	)
+	const center = useMemo(() => {
+		const bboxCenter = bbox && computeCenterFromBbox(bbox)
+
+		const lastCenter = lastGeolocation.center
+		return bboxCenter || lastCenter
+	}, [bbox, lastGeolocation.center])
+
 	const debouncedCenter = useDebounce(center, contentDebounceDelay)
 
 	const debouncedApproximateCenter = useMemo(
@@ -298,7 +301,7 @@ export default function Container(props) {
 						geocodedClickedPoint,
 						setGeolocation,
 						setZoom,
-						debouncedCenter,
+						center: debouncedCenter,
 						setState,
 						setLatLngClicked,
 						setSafeStyleKey,
