@@ -70,7 +70,7 @@ export function AddTerrain({ map, active }) {
 		return () => {
 			safeRemove(map)(
 				terrainLayers.map((layer) => layer.id),
-				['contours', 'gel-raster-dem']
+				['contours', 'terrain-rgb']
 			)
 		}
 	}, [map, active])
