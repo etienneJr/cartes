@@ -1,12 +1,12 @@
-import DrawTransportMaps from '@/components/map/DrawTransportMaps'
-import useDrawBookmarks from './effects/useDrawBookmarks'
-import useDrawOsmFeaturePolygon from './effects/useDrawOsmFeaturePolygon'
-import { memo } from 'react'
-import useDrawTransportAreas from './effects/useDrawTransportAreas'
-import { defaultAgencyFilter } from './transport/AgencyFilter'
 import { getCategories } from '@/components/categories'
 import DrawCategories from '@/components/map/DrawCategories'
+import DrawTransportMaps from '@/components/map/DrawTransportMaps'
+import useDrawCycleHighways from '@/components/transport/useDrawCycleHighways'
+import useDrawBookmarks from './effects/useDrawBookmarks'
+import useDrawOsmFeaturePolygon from './effects/useDrawOsmFeaturePolygon'
+import useDrawTransportAreas from './effects/useDrawTransportAreas'
 import { AddTerrain } from './styles/TerrainChooser'
+import { defaultAgencyFilter } from './transport/AgencyFilter'
 
 // These hooks won't need to handle an undefined "map" object
 function MapComponents({
@@ -21,6 +21,7 @@ function MapComponents({
 	quickSearchFeaturesMap,
 	onSearchResultClick,
 }) {
+	useDrawCycleHighways(map)
 	useDrawBookmarks(map)
 	useDrawOsmFeaturePolygon(map, vers?.osmFeature, safeStyleKey)
 	return (
