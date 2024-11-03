@@ -62,7 +62,7 @@ export default function useDrawQuickSearchFeatures(
 					layout: {},
 					paint: {
 						'fill-color': colors['lightestColor'],
-						'fill-opacity': 0.6,
+						'fill-opacity': 0.3,
 					},
 				})
 				map.addLayer({
