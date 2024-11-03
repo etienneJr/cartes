@@ -4,7 +4,7 @@ export default ({ setIsLocalSearch, isLocalSearch, state, stepIndex }) => (
 			text-align: right;
 			margin: 0 0 auto auto;
 			display: block;
-			width: 9rem;
+			width: 8rem;
 			margin-top: 0.2rem;
 			background: var(--darkerColor);
 			color: white;
@@ -22,6 +22,6 @@ export default ({ setIsLocalSearch, isLocalSearch, state, stepIndex }) => (
 				setIsLocalSearch((value) => !value)
 			}}
 		/>
-		<span>Rechercher ici</span>
+		<span>Chercher ici</span>
 	</label>
 )

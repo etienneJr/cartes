@@ -13,13 +13,29 @@ export default function ElevationGraph({ feature }) {
 		properties: {},
 	}
 	const lowest = Math.min(...coordinates.map((el) => el[2]))
-	const data = feature.geometry.coordinates.map(([lon, lat, elevation]) => ({
-		x: computeDistance(start, {
-			type: 'Feature',
-			geometry: { type: 'Point', coordinates: [lon, lat] },
-		}),
-		y: elevation - lowest,
-	}))
+	const data = feature.geometry.coordinates.reduce(
+		(memo, [lon, lat, elevation], index) => {
+			const last = index && memo[memo.length - 1]
+
+			const newPoint = {
+				type: 'Feature',
+				geometry: { type: 'Point', coordinates: [lon, lat] },
+			}
+			const newDistance =
+				(last?.cumulatedDistance ?? 0) +
+				computeDistance(last ? last.point : start, newPoint)
+			return [
+				...memo,
+				{
+					x: newDistance,
+					y: elevation - lowest,
+					cumulatedDistance: newDistance,
+					point: newPoint,
+				},
+			]
+		},
+		[]
+	)
 	console.log('purple data for chart', data)
 
 	return (

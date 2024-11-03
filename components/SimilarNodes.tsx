@@ -61,7 +61,12 @@ export default function SimilarNodes({ node }) {
 		lon + lonDiff / 2,
 	]
 
-	const [features] = useOverpassRequest(bbox, category)
+	const [quickSearchFeaturesMap] = useOverpassRequest(
+		bbox,
+		category ? [category] : []
+	)
+	const features = category && quickSearchFeaturesMap[category.name]
+
 	if (!category || !features?.length) return
 
 	const reference = [lon, lat]

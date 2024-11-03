@@ -6,6 +6,8 @@ import { Protocol as ProtomapsProtocol } from 'pmtiles'
 import useGeolocation from './useGeolocation'
 import frenchMaplibreLocale from '@/components/map/frenchMaplibreLocale.ts'
 import { Protocol as CartesProtocol } from '@/components/map/CartesProtocol.ts'
+import useEffectDebugger from '@/components/useEffectDebugger'
+import { isLocalStorageAvailable } from '@/components/utils/utils'
 
 /*
  *
@@ -41,19 +43,28 @@ export const defaultProjection = {
 }
 // TODO I haven't yet understood how to handle this. With the globe mode, we
 // should let the light follow the real sun, and enable the user to tweak it
-const defaultLight = {
+export const globeLight = {
 	anchor: 'viewport',
-	color: 'white',
-	intensity: 0.9,
+	color: 'pink',
+	intensity: 0.1,
 	position: [1.55, 180, 180],
 }
 
-const defaultCenter =
+export const highZoomLight = {
+	anchor: 'viewport',
+	color: '#ffffff',
+	intensity: 0.5,
+	position: [1.15, 210, 30],
+}
+
+export const defaultCenter =
 	// Saint Malo
 	// [-1.9890417068124002, 48.66284934737089]
 	// Rennes [-1.678, 48.11]
 	[2.025, 46.857]
+
 export const defaultZoom = 5.52
+const defaultGeolocation = { center: defaultCenter, zoom: defaultZoom }
 const defaultHash = `#${defaultZoom}/${defaultCenter[1]}/${defaultCenter[0]}`
 
 export default function useAddMap(
@@ -63,10 +74,13 @@ export default function useAddMap(
 	mapContainerRef,
 	setGeolocation,
 	setMapLoaded
+	// This for hot reload, I don't why this hook gets called again losing the map
+	// state, very annoying
 ) {
 	const [map, setMap] = useState(null)
 	const [geolocate, setGeolocate] = useState(null)
 	const isMobile = useMediaQuery('(max-width: 800px)')
+
 	const geolocation = useGeolocation({
 		latitude: defaultCenter[1],
 		longitude: defaultCenter[0],
@@ -122,15 +136,27 @@ export default function useAddMap(
 		}
 	}, [map, autoPitchPreference, setAutoPitchPreference])
 
-	useEffect(() => {
-		if (!mapContainerRef.current) return undefined
+	const [lastGeolocation] = useLocalStorage('lastGeolocation', {
+		center: defaultCenter,
+		zoom: defaultZoom,
+	})
+
+	useEffectDebugger(() => {
+		if (!mapContainerRef.current) return
+
+		const lastGeolocation =
+			isLocalStorageAvailable() &&
+			JSON.parse(localStorage.getItem('lastGeolocation'))
+
+		const { center, zoom } = lastGeolocation || defaultGeolocation
+		console.log('darkgreen', lastGeolocation)
 
 		const newMap = new maplibregl.Map({
 			container: mapContainerRef.current,
 			style: styleUrl,
 			maxPitch: 85,
-			center: defaultCenter,
-			zoom: defaultZoom,
+			center,
+			zoom,
 			hash: true,
 			attributionControl: false,
 			locale: frenchMaplibreLocale,
@@ -170,7 +196,7 @@ export default function useAddMap(
 		newMap.on('style.load', () => {
 			newMap.setSky(defaultSky)
 			newMap.setProjection(defaultProjection)
-			newMap.setLight(defaultLight)
+			newMap.setLight(highZoomLight)
 		})
 
 		newMap.on('moveend', (e) => {

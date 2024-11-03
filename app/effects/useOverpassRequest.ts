@@ -13,12 +13,14 @@ out skel qt;
 
 `
 
-export default function useOverpassRequest(bbox, category) {
-	const [features, setFeatures] = useState()
-	useEffect(() => {
-		if (!bbox || !category) return
+export default function useOverpassRequest(bbox, categories) {
+	const [features, setFeatures] = useState({})
+	console.log('purple data', features)
 
-		const fetchCategories = async () => {
+	useEffect(() => {
+		if (!bbox || !categories) return
+
+		const fetchCategory = async (category) => {
 			const queries =
 				typeof category.query === 'string' ? [category.query] : category.query
 
@@ -57,9 +59,18 @@ export default function useOverpassRequest(bbox, category) {
 				})
 				.map((element) => ({ ...element, categoryName: category.name }))
 
-			setFeatures(nodeElements)
+			setFeatures((features) => ({
+				...features,
+				[category.name]: nodeElements,
+			}))
 		}
-		fetchCategories()
-	}, [category, bbox])
+		categories.map((category) => fetchCategory(category))
+	}, [
+		categories && categories.join((category) => category.name),
+		bbox && bbox.join('|'),
+	])
+
+	useEffect(() => {})
+
 	return [features]
 }

@@ -1,10 +1,11 @@
 import useSetSearchParams from '@/components/useSetSearchParams'
-import { Viewer } from 'geovisio'
-import 'geovisio/build/index.css'
+import { Viewer } from '@panoramax/web-viewer'
+import '@panoramax/web-viewer/build/index.css'
 import panoramaxIcon from '@/public/panoramax.svg'
 import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
 import { ModalCloseButton } from './UI'
+import { debounce } from '@/components/utils/utils'
 
 const servers = {
 	meta: 'https://api.panoramax.xyz/api',
@@ -17,6 +18,15 @@ export default function Panoramax({ id, onMove }) {
 	const [viewer, setViewer] = useState(null)
 
 	const setSearchParams = useSetSearchParams()
+
+	const onRotate = (e) => {
+		console.log('panoramax event rotated', e)
+		onMove((position) => ({
+			...position,
+			angle: e.detail.x,
+		}))
+	}
+	const debouncedOnRotate = debounce(100, onRotate)
 
 	useEffect(() => {
 		if (!ref || !ref.current || viewer || !id) return
@@ -32,13 +42,7 @@ export default function Panoramax({ id, onMove }) {
 		setViewer(panoramax)
 		console.log('panoramax event', panoramax)
 		panoramax['sequence-stopped'] = (e) => console.log('panoramax event', e)
-		panoramax.addEventListener('psv:view-rotated', (e) => {
-			console.log('panoramax event', e)
-			onMove((position) => ({
-				...position,
-				angle: e.detail.x - panoramax.psv.getPictureOriginalHeading(),
-			}))
-		})
+		panoramax.addEventListener('psv:view-rotated', debouncedOnRotate)
 		panoramax.addEventListener('psv:picture-loading', (e) => {
 			console.log('panoramax event loading', e)
 			const { lat, lon } = e.detail
@@ -46,14 +50,14 @@ export default function Panoramax({ id, onMove }) {
 				...position,
 				longitude: lon,
 				latitude: lat,
-				angle: e.detail.x - panoramax.psv.getPictureOriginalHeading(),
+				angle: e.detail.x,
 			}))
 		})
 
 		return () => {
 			if (viewer) viewer.destroy()
 		}
-	}, [ref, viewer, setViewer, id])
+	}, [ref, viewer, setViewer, id, debouncedOnRotate])
 
 	console.log('panoramax id', id)
 	useEffect(() => {

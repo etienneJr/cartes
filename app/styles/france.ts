@@ -1,4 +1,5 @@
 import { getFetchUrlBase, pmtilesServerUrl } from '../serverUrls'
+import { contourLayers, hillshadeLayers } from './terrainLayers'
 
 //Fonts used :
 //https://maplibre.org/font-maker
@@ -12,17 +13,25 @@ import { getFetchUrlBase, pmtilesServerUrl } from '../serverUrls'
 const highwayColor = '#cebcbc'
 const highwayOutlineColor = '#cebcbc'
 
-export default function franceStyle(transportMode) {
+export default function franceStyle(transportMode, noVariableTiles = false) {
+	const openmaptilesUrl = // see the protocol CartesProtocol
+		!noVariableTiles
+			? 'cartes://hybrid'
+			: 'pmtiles://' + pmtilesServerUrl + `/${noVariableTiles}.pmtiles`
+	//bounds = noVariableTiles && bbox35 // not necessary, works without it in
+	//editor.protomaps.com
 	return {
 		version: 8,
 		id: transportMode ? 'transports' : 'france',
 		name: transportMode ? 'Transports' : 'France',
 		sources: {
+			// We're not really using openmaptiles anymore, but a modified version of
+			// it, see cartesapp/gtfs/tiles.ts
 			openmaptiles: {
-				url: 'cartes://hybrid', // see the protocol CartesProtocol
-				//url: 'pmtiles://' + gtfsServerUrl + '/hexagone-plus.pmtiles',
+				url: openmaptilesUrl,
 				//url: 'pmtiles://https://panoramax.openstreetmap.fr/pmtiles/planet.pmtiles',
 				type: 'vector',
+				//		bounds,
 			},
 			// https://osmdata.openstreetmap.de/data/land-polygons.html
 			land: {
@@ -40,6 +49,8 @@ export default function franceStyle(transportMode) {
 			},
 		},
 		layers: transportMode ? lightenLayers(layers) : layers,
+		//		Voir nos villes juste avec les arbres
+		//layers: layers.filter(({ id }) => id === 'Background' || id === 'Trees'),
 		glyphs: getFetchUrlBase() + '/fonts/glyphs/{fontstack}/{range}.pbf',
 		sprite: getFetchUrlBase() + '/sprite/sprite',
 		bearing: 0,
@@ -107,11 +118,18 @@ export const nameExpression = [
 	['get', 'name:en'], // we estimate that e.g. arab place names that don't have a french translation will be way more readable as english for French people. See e.g. /?lieu=n1091272140#18.99/33.5130054/36.3066407
 	['get', 'name_int'],
 ]
+const hasNameExpression = [
+	'any',
+	...nameExpression.map(([_, nameKey]) => ['has', nameKey]),
+]
 
 export const name = 'name:fr'
 
 export const oceanColor = '#71a0e9'
 //'#6688dd' past color, darker. Could be cool to vary in the day, dawn color ?
+
+const landColor = '#dbedb7',
+	residentialColor = 'hsl(54, 45%, 91%)'
 
 const layers = [
 	{
@@ -119,17 +137,13 @@ const layers = [
 		type: 'background',
 		layout: { visibility: 'visible' },
 		paint: {
-			'background-color': oceanColor,
-		},
-	},
-	{
-		id: 'Land',
-		type: 'fill',
-		source: 'land',
-		'source-layer': 'land',
-		layout: { visibility: 'visible' },
-		paint: {
-			'fill-color': '#dbedb7',
+			'background-color': {
+				base: 1,
+				stops: [
+					[1, landColor],
+					[15, residentialColor],
+				],
+			},
 		},
 	},
 	//https://github.com/wipfli/h3-landcover/blob/main/style.json
@@ -217,7 +231,7 @@ const layers = [
 	},
 	/*
 	 *
-	 * Because of our choice to use our tiles for France, we have to ocean shapes
+	 * Because of our choice to use our tiles for France, we have no ocean shapes
 	 * in our tiles. Hence we set the base fill as blue, and the land as green
 	 * (because that's how it is in France, it's not white like many maps' bases !).
 	 * But then in some places built up land has no OSM shape so it's green. Hence
@@ -268,18 +282,43 @@ const layers = [
 		filter: ['==', '$type', 'Polygon'],
 	},
 	{
-		id: 'Sand',
+		id: 'Residential',
 		type: 'fill',
 		source: 'openmaptiles',
-		'source-layer': 'landcover',
+		'source-layer': 'landuse',
+		minzoom: 5,
+		maxzoom: 22,
 		layout: { visibility: 'visible' },
 		paint: {
-			'fill-color': '#fbf4ab',
-			'fill-opacity': 0.4,
-			'fill-antialias': false,
+			'fill-color': {
+				base: 1,
+				stops: [
+					[1, '#efede6'],
+					[16, residentialColor],
+				],
+			},
 		},
 		metadata: {},
-		filter: ['all', ['==', 'class', 'sand'], ['!=', 'subclass', 'beach']],
+		filter: ['all', ['in', 'class', 'residential', 'suburbs', 'neighbourhood']],
+	},
+	{
+		id: 'Water',
+		type: 'fill',
+		source: 'openmaptiles',
+		'source-layer': 'water',
+		layout: { visibility: 'visible' },
+		paint: {
+			'fill-color': oceanColor,
+			'fill-opacity': ['match', ['get', 'intermittent'], 1, 0.85, 1],
+			'fill-antialias': true,
+		},
+		metadata: {},
+		filter: [
+			'any',
+			['!has', 'intermittent'],
+			['==', 'intermittent', 0],
+			//['==', 'class', 'ocean'],
+		],
 	},
 	{
 		id: 'Rock',
@@ -377,26 +416,6 @@ const layers = [
 		filter: ['all', ['in', 'class', 'industrial', 'quarry']],
 	},
 	{
-		id: 'Residential',
-		type: 'fill',
-		source: 'openmaptiles',
-		'source-layer': 'landuse',
-		minzoom: 5,
-		maxzoom: 22,
-		layout: { visibility: 'visible' },
-		paint: {
-			'fill-color': {
-				base: 1,
-				stops: [
-					[1, '#efede6'],
-					[16, 'hsl(54, 45%, 91%)'],
-				],
-			},
-		},
-		metadata: {},
-		filter: ['all', ['in', 'class', 'residential', 'suburbs', 'neighbourhood']],
-	},
-	{
 		id: 'Retail',
 		type: 'fill',
 		source: 'openmaptiles',
@@ -458,31 +477,23 @@ const layers = [
 		metadata: {},
 		filter: ['all', ['==', 'class', 'hospital']],
 	},
-	{
-		id: 'Grass',
-		type: 'fill',
-		source: 'openmaptiles',
-		'source-layer': 'landcover',
-		layout: { visibility: 'visible' },
-		paint: {
-			'fill-color': '#c6ddaa',
-			'fill-opacity': 0.6,
-			'fill-antialias': false,
-		},
-		metadata: {},
-		filter: ['==', 'class', 'grass'],
-	},
+	/*
+Une zone piétonne est assez bas niveau. En général elle englobe plus
+large que le sable qui est dessus, et l'herbe
+
+On n'est pas à l'abri d'effets secondaires ici.
+*/
 	{
 		id: 'Pedestrian',
 		type: 'fill',
 		source: 'openmaptiles',
 		'source-layer': 'transportation',
 		layout: { visibility: 'visible' },
-		paint: { 'fill-color': 'hsl(259, 43%, 64%)', 'fill-opacity': 0.3 },
+		paint: { 'fill-color': '#feecdf', 'fill-opacity': 0.9 },
 		metadata: {},
 		filter: [
 			'all',
-			['==', '$type', 'Polygon'],
+			['any', ['==', '$type', 'Polygon'], ['==', '$type', 'LineString']],
 			['!has', 'brunnel'],
 			[
 				'any',
@@ -522,6 +533,34 @@ const layers = [
 			],
 			['in', 'subclass', 'pedestrian', 'platform'],
 		],
+	},
+	{
+		id: 'Sand',
+		type: 'fill',
+		source: 'openmaptiles',
+		'source-layer': 'landcover',
+		layout: { visibility: 'visible' },
+		paint: {
+			'fill-color': '#fbf4ab',
+			'fill-opacity': 0.4,
+			'fill-antialias': false,
+		},
+		metadata: {},
+		filter: ['all', ['==', 'class', 'sand'], ['!=', 'subclass', 'beach']],
+	},
+	{
+		id: 'Grass',
+		type: 'fill',
+		source: 'openmaptiles',
+		'source-layer': 'landcover',
+		layout: { visibility: 'visible' },
+		paint: {
+			'fill-color': '#c6ddaa',
+			'fill-opacity': 0.6,
+			'fill-antialias': false,
+		},
+		metadata: {},
+		filter: ['==', 'class', 'grass'],
 	},
 	{
 		id: 'Cemetery',
@@ -640,20 +679,6 @@ const layers = [
 		},
 		metadata: {},
 		filter: ['any', ['has', 'intermittent'], ['==', 'intermittent', 1]],
-	},
-	{
-		id: 'Water',
-		type: 'fill',
-		source: 'openmaptiles',
-		'source-layer': 'water',
-		layout: { visibility: 'visible' },
-		paint: {
-			'fill-color': oceanColor,
-			'fill-opacity': ['match', ['get', 'intermittent'], 1, 0.85, 1],
-			'fill-antialias': true,
-		},
-		metadata: {},
-		filter: ['any', ['!has', 'intermittent'], ['==', 'intermittent', 0]],
 	},
 	{
 		id: 'Aeroway',
@@ -1134,12 +1159,12 @@ const layers = [
 		'source-layer': 'transportation',
 		minzoom: 11,
 		layout: {
-			'line-cap': 'butt',
+			'line-cap': 'round',
 			'line-join': 'round',
 			visibility: 'visible',
 		},
 		paint: {
-			'line-color': 'hsl(36,5%,80%)',
+			'line-color': 'hsl(240,13%,70%)',
 			'line-width': [
 				'interpolate',
 				['linear', 2],
@@ -1179,7 +1204,7 @@ const layers = [
 					['tertiary'],
 					8,
 					['minor', 'service', 'track'],
-					4,
+					6,
 					4,
 				],
 				20,
@@ -1228,9 +1253,9 @@ const layers = [
 		type: 'line',
 		source: 'openmaptiles',
 		'source-layer': 'transportation',
-		minzoom: 7,
+		minzoom: 8,
 		layout: {
-			'line-cap': 'butt',
+			'line-cap': 'round',
 			'line-join': 'round',
 			visibility: 'visible',
 		},
@@ -1251,20 +1276,9 @@ const layers = [
 				14,
 				['match', ['get', 'class'], ['trunk'], 4, ['primary'], 6, 3],
 				16,
-				['match', ['get', 'class'], ['trunk', 'primary'], 10, 4],
+				['match', ['get', 'class'], ['trunk', 'primary'], 12, 8],
 				20,
-				['match', ['get', 'class'], ['trunk', 'primary'], 26, 18],
-			],
-			'line-opacity': [
-				'interpolate',
-				['linear'],
-				['zoom'],
-				0,
-				0,
-				8,
-				0.1,
-				22,
-				1,
+				['match', ['get', 'class'], ['trunk', 'primary'], 55, 36],
 			],
 		},
 		metadata: {},
@@ -1479,12 +1493,36 @@ const layers = [
 		'source-layer': 'transportation',
 		minzoom: 10,
 		layout: {
-			'line-cap': 'butt',
+			'line-cap': 'round',
 			'line-join': 'round',
 			visibility: 'visible',
 		},
 		paint: {
-			'line-color': 'hsl(0,0%,100%)',
+			//'line-color': 'hsl(0,0%,100%)',
+
+			'line-color': [
+				'case',
+				['==', ['get', 'subclass'], 'living_street'],
+				'hsl(0,0%,100%)',
+				[
+					'any',
+					['==', ['get', 'class'], 'service'],
+					['==', ['get', 'access'], 'private'],
+				],
+				'hsl(0,0%,97%)',
+				['!', ['has', 'maxspeed']],
+				// we consider minor roads without maxspeed and that are not
+				// living_street or other tags that remain to be found, as
+				// "medium"-friendly to pedestrians, cyclists and buses
+				'hsl(215,20%,85%)',
+				['<=', ['to-number', ['get', 'maxspeed']], 20],
+				'hsl(0,0%,100%)',
+				['<=', ['to-number', ['get', 'maxspeed']], 30],
+				'hsl(215,20%,95%)',
+				['<=', ['to-number', ['get', 'maxspeed']], 50],
+				'hsl(215,20%,80%)',
+				'hsl(215,20%,70%)',
+			],
 			'line-width': [
 				'interpolate',
 				['linear', 2],
@@ -1576,14 +1614,25 @@ const layers = [
 		type: 'line',
 		source: 'openmaptiles',
 		'source-layer': 'transportation',
-		minzoom: 7,
+		minzoom: 8,
 		layout: {
-			'line-cap': 'butt',
+			'line-cap': 'round',
 			'line-join': 'round',
 			visibility: 'visible',
 		},
 		paint: {
-			'line-color': '#99a6c3',
+			'line-color': [
+				// simplified version of the "case" of Minor road
+				'case',
+				['!', ['has', 'maxspeed']],
+				// we consider minor roads without maxspeed and that are not
+				// living_street or other tags that remain to be found, as
+				// "medium"-friendly to pedestrians, cyclists and buses
+				'#99a6c3',
+				['<=', ['to-number', ['get', 'maxspeed']], 30],
+				'hsl(215,20%,95%)',
+				'#99a6c3',
+			],
 			'line-width': [
 				'interpolate',
 				['linear', 2],
@@ -1595,20 +1644,9 @@ const layers = [
 				14,
 				['match', ['get', 'class'], ['trunk'], 3, ['primary'], 5, 2],
 				16,
-				['match', ['get', 'class'], ['trunk', 'primary'], 8, 4],
+				['match', ['get', 'class'], ['trunk', 'primary'], 10, 6],
 				20,
-				['match', ['get', 'class'], ['trunk', 'primary'], 24, 16],
-			],
-			'line-opacity': [
-				'interpolate',
-				['linear'],
-				['zoom'],
-				0,
-				0,
-				8,
-				0.1,
-				22,
-				1,
+				['match', ['get', 'class'], ['trunk', 'primary'], 50, 30],
 			],
 		},
 		metadata: {},
@@ -1685,6 +1723,7 @@ const layers = [
 			['==', 'class', 'motorway'],
 		],
 	},
+	/* Not sure we need a path outline, hence deactivated for now
 	{
 		id: 'Path outline',
 		type: 'line',
@@ -1715,7 +1754,7 @@ const layers = [
 			['in', 'class', 'path', 'pedestrian'],
 			['!=', 'brunnel', 'tunnel'],
 		],
-	},
+	},*/
 	{
 		id: 'Path',
 		type: 'line',
@@ -1728,7 +1767,7 @@ const layers = [
 			visibility: 'visible',
 		},
 		paint: {
-			'line-color': '#6F5D98',
+			'line-color': 'rgba(199, 152, 128, 1)',
 			'line-width': {
 				base: 1.2,
 				stops: [
@@ -1740,8 +1779,8 @@ const layers = [
 			},
 			'line-dasharray': {
 				stops: [
-					[14, [1, 0.5]],
-					[18, [1, 0.25]],
+					[14, [1, 2]],
+					[18, [1, 1]],
 				],
 			},
 		},
@@ -1818,8 +1857,8 @@ const layers = [
 		},
 		paint: {
 			'line-color': 'hsl(319, 82%, 33%)',
-			'line-width': ['interpolate', ['linear'], ['zoom'], 0, 0, 22, 3],
-			'line-opacity': 0.6,
+			'line-width': ['interpolate', ['linear'], ['zoom'], 0, 0, 22, 2],
+			'line-opacity': 0.2,
 			'line-gap-width': 0,
 		},
 		metadata: {},
@@ -1883,7 +1922,7 @@ const layers = [
 				type: 'identity',
 				property: 'render_min_height',
 			},
-			'fill-extrusion-color': 'hsl(44,14%,79%)',
+			'fill-extrusion-color': ['string', ['get', 'colour'], 'hsl(44,84%,99%)'],
 			'fill-extrusion-height': {
 				type: 'identity',
 				property: 'render_height',
@@ -2102,24 +2141,23 @@ const layers = [
 		minzoom: 0,
 		maxzoom: 14,
 		layout: {
-			'text-font': ['Roboto Italic'],
+			'text-font': ['Roboto Italic', 'Noto Sans Italic'],
 			'text-size': [
 				'interpolate',
 				['linear', 1],
 				['zoom'],
 				1,
-				['match', ['get', 'class'], ['ocean'], 14, 10],
+				['match', ['get', 'class'], ['ocean'], 14, 8],
 				3,
-				['match', ['get', 'class'], ['ocean'], 18, 14],
+				['match', ['get', 'class'], ['ocean'], 18, 12],
 				9,
-				['match', ['get', 'class'], ['ocean'], 22, 18],
+				['match', ['get', 'class'], ['ocean'], 22, 14],
 				14,
-				['match', ['get', 'class'], ['lake'], 14, ['sea'], 20, 26],
+				['match', ['get', 'class'], ['lake'], 12, ['sea'], 18, 26],
 			],
 			'text-field': ['coalesce', ...nameExpression],
 			visibility: 'visible',
 			'text-max-width': 5,
-			'symbol-placement': 'point',
 		},
 		paint: {
 			'text-color': 'white',
@@ -2137,12 +2175,7 @@ const layers = [
 			'text-halo-width': 1,
 		},
 		metadata: {},
-		filter: [
-			'all',
-			['==', '$type', 'Point'],
-			['has', name],
-			['!=', 'class', 'lake'],
-		],
+		filter: ['all', ['==', '$type', 'Point'], ['!=', 'class', 'lake']],
 	},
 	{
 		id: 'Lake labels',
@@ -2162,7 +2195,6 @@ const layers = [
 			'text-field': ['coalesce', ...nameExpression],
 			visibility: 'visible',
 			'text-max-width': 5,
-			'symbol-placement': 'line',
 			'text-letter-spacing': 0.1,
 		},
 		paint: {
@@ -2171,7 +2203,7 @@ const layers = [
 			'text-halo-width': 1.5,
 		},
 		metadata: {},
-		filter: ['all', ['==', '$type', 'LineString'], ['==', 'class', 'lake']],
+		filter: ['all', ['==', '$type', 'Point'], ['==', 'class', 'lake']],
 	},
 	{
 		id: 'Housenumber',
@@ -2277,6 +2309,7 @@ const layers = [
 			'icon-rotation-alignment': 'map',
 		},
 		paint: {
+			// it looks like we can't control the color here
 			'icon-color': 'hsl(0, 0%, 65%)',
 			'icon-opacity': 0.5,
 		},
@@ -2530,7 +2563,7 @@ const layers = [
 		},
 		paint: {
 			'icon-color': 'hsl(82,83%,25%)',
-			'text-color': 'hsl(82,83%,25%)',
+			'text-color': 'hsl(82,43%,25%)',
 			'icon-opacity': 1,
 			'text-opacity': 1,
 			'text-halo-blur': 0.5,
@@ -2538,7 +2571,7 @@ const layers = [
 			'text-halo-width': 1,
 		},
 		metadata: {},
-		filter: ['all', ['in', 'class', 'golf', 'park'], ['has', name]],
+		filter: ['all', ['in', 'class', 'golf', 'park'], hasNameExpression],
 	},
 	{
 		id: 'Healthcare',
@@ -2714,7 +2747,6 @@ const layers = [
 						'ferry_terminal',
 						'hospital',
 						'stadium',
-						'park',
 						'place_of_worship',
 						'zoo',
 						'museum',
@@ -2736,10 +2768,12 @@ const layers = [
 		metadata: {},
 		filter: [
 			'all',
-			['has', name],
-			['!in', 'class', 'hospital', 'parking', 'railway'],
+			hasNameExpression,
+			['!in', 'class', 'hospital', 'parking', 'railway', 'park'],
 		],
 	},
+	// TODO this should be done way better. Should be areas with boundaries.
+	// Should include large areas like Parc naturel régional d'armorique
 	{
 		id: 'Protected area labels',
 		type: 'symbol',
@@ -2906,11 +2940,12 @@ const layers = [
 		type: 'symbol',
 		source: 'openmaptiles',
 		'source-layer': 'poi',
-		minzoom: 12,
+		minzoom: 10,
 		maxzoom: 22,
 		layout: {
 			'icon-size': {
 				stops: [
+					[10, 0.7],
 					[13, 0.8],
 					[18, 1],
 				],
@@ -2918,6 +2953,7 @@ const layers = [
 			'text-font': ['Roboto Medium Regular', 'Noto Sans Regular'],
 			'text-size': {
 				stops: [
+					[10, 10],
 					[13, 11],
 					[16, 12],
 					[22, 16],
@@ -2926,9 +2962,9 @@ const layers = [
 			'icon-image': [
 				'match',
 				['get', 'subclass'],
-				['station'],
+				['station', 'halt'],
 				'railway',
-				['subway', 'halt'],
+				['subway'],
 				'subway',
 				['tram_stop'],
 				'tramway',
@@ -2949,7 +2985,7 @@ const layers = [
 				'step',
 				['zoom'],
 				0,
-				12,
+				10,
 				['match', ['get', 'subclass'], ['station'], 1, 0],
 				14,
 				['match', ['get', 'subclass'], ['station', 'subway'], 1, 0],
@@ -2970,7 +3006,7 @@ const layers = [
 				'step',
 				['zoom'],
 				0,
-				12,
+				10,
 				['match', ['get', 'subclass'], ['station'], 1, 0],
 				14,
 				['match', ['get', 'subclass'], ['station', 'subway'], 1, 0],
@@ -2992,7 +3028,7 @@ const layers = [
 			'text-halo-width': 1,
 		},
 		metadata: {},
-		filter: ['all', ['==', 'class', 'railway'], ['has', name]],
+		filter: ['all', ['==', 'class', 'railway'], hasNameExpression],
 	},
 	{
 		id: 'Airport',
@@ -3444,4 +3480,6 @@ const layers = [
 			['==', ['geometry-type'], 'LineString'],
 		],
 	},
+	//...hillshadeLayers,
+	//	...contourLayers,
 ]

@@ -22,8 +22,6 @@ export const modeKeyFromQuery = (myQuery) =>
 
 export default function Itinerary({
 	itinerary,
-	bikeRouteProfile,
-	setBikeRouteProfile,
 	searchParams,
 	close,
 	state,
@@ -31,6 +29,7 @@ export default function Itinerary({
 	setSnap,
 	setDisableDrag,
 }) {
+	const { bikeRouteProfile, setBikeRouteProfile } = itinerary
 	const setSearchParams = useSetSearchParams()
 
 	const mode = modeKeyFromQuery(searchParams.mode)

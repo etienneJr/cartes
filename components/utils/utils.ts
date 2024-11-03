@@ -174,3 +174,14 @@ export function isIOS() {
 export const unique = (myList) => {
 	return [...new Set(myList)]
 }
+
+export function isLocalStorageAvailable() {
+	var test = 'test'
+	try {
+		localStorage.setItem(test, test)
+		localStorage.removeItem(test)
+		return true
+	} catch (e) {
+		return false
+	}
+}

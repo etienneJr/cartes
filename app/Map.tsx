@@ -7,12 +7,13 @@ import { sortGares } from './gares'
 import MapButtons from '@/components/MapButtons'
 import { goodIconSize, useComputeMapPadding } from '@/components/mapUtils'
 import useSetSearchParams from '@/components/useSetSearchParams'
-import useAddMap from './effects/useAddMap'
 import useDrawQuickSearchFeatures from './effects/useDrawQuickSearchFeatures'
+import useAddMap, { globeLight, highZoomLight } from './effects/useAddMap'
 import { getStyle } from './styles/styles'
 import useHoverOnMapFeatures from './useHoverOnMapFeatures'
 import useTerrainControl from './useTerrainControl'
 
+import { useWhatChanged } from '@/components/utils/useWhatChanged'
 import getBbox from '@turf/bbox'
 import { useLocalStorage } from 'usehooks-ts'
 import CenteredCross from './CenteredCross'
@@ -31,6 +32,8 @@ import useMapClick from './effects/useMapClick'
 import useRightClick from './effects/useRightClick'
 import useSearchLocalTransit from './effects/useSearchLocalTransit'
 import useDrawItinerary from './itinerary/useDrawItinerary'
+import { computeCenterFromBbox } from './utils'
+import useGeolocationAutofocus from './effects/useGeolocationAutofocus'
 
 if (process.env.NEXT_PUBLIC_MAPTILER == null) {
 	throw new Error('You have to configure env NEXT_PUBLIC_MAPTILER, see README')
@@ -41,52 +44,54 @@ if (process.env.NEXT_PUBLIC_MAPTILER == null) {
  * interactions. Components that can be rendered server side to make beautiful and useful meta previews of URLs must be written in the Container component or above
  *******/
 
-export default function Map({
-	searchParams,
-	state,
-	vers,
-	target,
-	zoom,
-	osmFeature,
-	isTransportsMode,
-	transportStopData,
-	transportsData,
-	agencyAreas,
-	clickedStopData,
-	itinerary,
-	bikeRouteProfile,
-	showOpenOnly,
-	category,
-	bbox,
-	setBbox,
-	gares,
-	clickGare,
-	clickedGare,
-	setBboxImages,
-	focusImage,
-	styleKey,
-	safeStyleKey,
-	setSafeStyleKey,
-	styleChooser,
-	setStyleChooser,
-	setZoom,
-	setGeolocation,
-	center,
-	setState,
-	setLatLngClicked,
-	quickSearchFeatures,
-	trackedSnap,
-	panoramaxPosition,
-	geocodedClickedPoint,
-	setMapLoaded,
-	wikidata,
-}) {
+export default function Map(props) {
+	const {
+		searchParams,
+		state,
+		vers,
+		target,
+		zoom,
+		osmFeature,
+		isTransportsMode,
+		transportsData,
+		agencyAreas,
+		clickedStopData,
+		itinerary,
+		bbox,
+		setBbox,
+		clickGare = () => null,
+		clickedGare = null,
+		gares = [],
+		setBboxImages,
+		focusImage,
+		styleKey,
+		safeStyleKey,
+		setSafeStyleKey,
+		styleChooser,
+		setStyleChooser,
+		setZoom,
+		setGeolocation,
+		center,
+		setState,
+		setLatLngClicked,
+		quickSearchFeaturesMap,
+		trackedSnap,
+		panoramaxPosition,
+		geocodedClickedPoint,
+		setMapLoaded,
+		wikidata,
+		setLastGeolocation,
+		geolocation,
+	} = props
+	useWhatChanged(props, 'Render component Map')
+
 	const mapContainerRef = useRef(null)
 	const stepsLength = state.filter((step) => step?.key).length
 	const [autoPitchPreference, setAutoPitchPreference] = useLocalStorage(
 		'autoPitchPreference',
 		null
 	)
+
 	const autoPitchPreferenceIsNo = autoPitchPreference === 'no'
 
 	const style = useMemo(() => getStyle(styleKey), [styleKey]),
@@ -113,6 +118,7 @@ export default function Map({
 	const [distanceMode, setDistanceMode] = useState(false)
 
 	const padding = useComputeMapPadding(trackedSnap, searchParams)
+	useGeolocationAutofocus(map, itinerary?.isItineraryMode, geolocation, padding)
 
 	useEffect(() => {
 		if (!map) return
@@ -193,32 +199,44 @@ export default function Map({
 	// the clicked feature, and an icon
 	// Edit : we draw contours now, for the search results clicked feature
 
-	useDrawQuickSearchFeatures(
-		map,
-		quickSearchFeatures,
-		showOpenOnly,
-		category,
-		onSearchResultClick
-	)
 	useDrawSearchResults(map, state, onSearchResultClick)
 
-	useTerrainControl(map, style)
+	useTerrainControl(map, style, searchParams.relief)
 
 	useEffect(() => {
 		if (!map) return
 		if (Math.round(map.getZoom()) === zoom) return
 		map.flyTo({ zoom })
 	}, [zoom, map])
+
+	const [lightType, setLightType] = useState('highZoom')
 	useEffect(() => {
 		if (!map) return
 		map.on('zoom', () => {
-			const approximativeZoom = Math.round(map.getZoom())
-			if (approximativeZoom !== zoom) setZoom(approximativeZoom)
+			console.log('map event zoom')
 		})
 		map.on('moveend', () => {
-			setBbox(map.getBounds().toArray())
+			const approximativeZoom = Math.round(map.getZoom())
+			if (approximativeZoom !== zoom) setZoom(approximativeZoom)
+
+			if (approximativeZoom < 6 && lightType === 'highZoom') {
+				setLightType('globeLight')
+				map.setLight(globeLight)
+			}
+			if (approximativeZoom >= 6 && lightType === 'globeLight') {
+				setLightType('highZoom')
+				map.setLight(highZoomLight)
+			}
+
+			console.log('map event moveend')
+			const newBbox = map.getBounds().toArray()
+			setBbox(newBbox)
+			setLastGeolocation({
+				center: computeCenterFromBbox(newBbox),
+				zoom: approximativeZoom,
+			})
 		})
-	}, [zoom, setZoom, map, setBbox])
+	}, [zoom, setZoom, map, setBbox, setLightType, lightType])
 
 	useEffect(() => {
 		if (!map) return
@@ -408,6 +426,8 @@ export default function Map({
 						safeStyleKey,
 						searchParams,
 						hasItinerary,
+						quickSearchFeaturesMap,
+						onSearchResultClick,
 					}}
 				/>
 			)}

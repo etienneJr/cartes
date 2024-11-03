@@ -1,18 +1,18 @@
+import { categorySeparator, getCategories } from '@/components/categories'
 import useSetSearchParams from '@/components/useSetSearchParams'
 import { omit } from '@/components/utils/utils'
-import { getCategory } from '@/components/categories'
 import Fuse from 'fuse.js/basic'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useMemo, useState } from 'react'
-import categories from './categories.yaml'
 import MoreCategories from './MoreCategories'
-import moreCategories from './moreCategories.yaml'
 import {
 	SpinningDiscBorder,
 	goldCladding,
 	quickSearchButtonStyle,
 } from './QuickFeatureSearchUI'
+import categories from './categories.yaml'
+import moreCategories from './moreCategories.yaml'
 
 export const categoryIconUrl = (category) => {
 	if (!category.icon)
@@ -34,7 +34,7 @@ export function initializeFuse(categories) {
 
 const fuse = initializeFuse(categories)
 const fuseMore = initializeFuse(moreCategories)
-export const threshold = 0.1
+export const threshold = 0.05
 export const exactThreshold = 0.01
 
 export default function QuickFeatureSearch({
@@ -42,9 +42,9 @@ export default function QuickFeatureSearch({
 	searchInput,
 	setSnap,
 	snap,
-	loaded,
+	quickSearchFeaturesMap,
 }) {
-	const categorySet = getCategory(searchParams)
+	const [categoriesSet] = getCategories(searchParams)
 	const [showMore, setShowMore] = useState(false)
 	const hasLieu = searchParams.allez
 	const setSearchParams = useSetSearchParams()
@@ -77,11 +77,11 @@ export default function QuickFeatureSearch({
 
 		[searchInput, hasLieu]
 	)
+	console.log('elel', filteredCategories, filteredMoreCategories)
 
 	const getNewSearchParamsLink = buildGetNewSearchParams(
 		searchParams,
-		setSearchParams,
-		categorySet
+		setSearchParams
 	)
 	return (
 		<div
@@ -150,20 +150,22 @@ export default function QuickFeatureSearch({
 							</>
 						)}
 						{filteredCategories.map((category) => {
-							const theOne = categorySet?.name === category.name
+							const active = categoriesSet.includes(category.name)
 							return (
 								<li
 									key={category.name}
 									css={`
-										${quickSearchButtonStyle(theOne)};
+										${quickSearchButtonStyle(active)};
 										${category.score < exactThreshold && goldCladding}
 									`}
 									title={category.title || category.name}
 								>
-									{theOne && !loaded && <SpinningDiscBorder />}
+									{active && !quickSearchFeaturesMap[category.name] && (
+										<SpinningDiscBorder />
+									)}
 									<Link
 										href={getNewSearchParamsLink(category)}
-										replace={true}
+										replace={false}
 										prefetch={false}
 									>
 										<img src={categoryIconUrl(category)} />
@@ -200,7 +202,7 @@ export default function QuickFeatureSearch({
 			{(showMore || (doFilter && filteredMoreCategories.length > 0)) && (
 				<MoreCategories
 					getNewSearchParamsLink={getNewSearchParamsLink}
-					categorySet={categorySet}
+					categoriesSet={categoriesSet}
 					filteredMoreCategories={filteredMoreCategories}
 				/>
 			)}
@@ -209,12 +211,16 @@ export default function QuickFeatureSearch({
 }
 
 const buildGetNewSearchParams =
-	(searchParams, setSearchParams, categorySet) => (category) => {
+	(searchParams, setSearchParams) => (category) => {
+		const [categories] = getCategories(searchParams)
+		const nextCategories = categories.includes(category.name)
+			? categories.filter((c) => c !== category.name)
+			: [...categories, category.name]
+
 		const newSearchParams = {
-			...omit(['cat'], searchParams),
-			...(!categorySet || categorySet.name !== category.name
-				? { cat: category.name }
-				: {}),
+			cat: nextCategories.length
+				? nextCategories.join(categorySeparator)
+				: undefined,
 		}
 		return setSearchParams(newSearchParams, true, true)
 	}
