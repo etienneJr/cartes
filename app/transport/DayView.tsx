@@ -1,6 +1,5 @@
-import Image from 'next/image'
 import triangle from '@/public/triangle.svg'
-import { nowStamp } from '../itinerary/motisRequest'
+import Image from 'next/image'
 import { nowAsYYMMDD } from './stop/Route'
 
 export default function DayView({ data }) {

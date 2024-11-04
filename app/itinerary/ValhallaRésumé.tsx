@@ -2,7 +2,7 @@ import {
 	computeHumanDistance,
 	daysHoursMinutesFromSeconds,
 } from '../RouteRésumé'
-import { nowStamp } from './transit/motisRequest'
+import { nowStamp } from './transit/utils'
 
 export default function ({ data }) {
 	console.log('purple valhalla', data)
