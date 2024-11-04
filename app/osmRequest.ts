@@ -101,7 +101,7 @@ const buildWayPolygon = (way, elements) => {
 			type: 'Feature',
 			geometry: {
 				type: 'Polygon',
-				coordinates: [nodes.map(({ lat, lon }) => [lon, lat])],
+				coordinates: [[...nodes, nodes[0]].map(({ lat, lon }) => [lon, lat])],
 			},
 		}
 	return polygon

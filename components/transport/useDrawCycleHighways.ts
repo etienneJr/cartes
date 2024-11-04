@@ -2,6 +2,8 @@ import { overpassResultsToGeojson } from '@/app/effects/useOverpassRequest'
 import { safeRemove } from '@/app/effects/utils'
 import { useEffect, useState } from 'react'
 import { colors } from '../utils/colors'
+import jsonExample from './cycleHighwaysOverpassExample.json'
+import osmToGeojson from 'osmtogeojson'
 
 const overpassRequest = `
 [out:json];
@@ -11,6 +13,8 @@ area["name"="France"]->.boundaryarea;
 nwr
 ["cycle_network"~"FR:REV|Les Voies Lyonnaises"](area.boundaryarea);
 nwr["network:type"="REV Rennes Métropole"](area.boundaryarea);
+nwr[network=lcn][name~"Chronovélo"](area.boundaryarea);
+
 nwr[cycle_highway](area.boundaryarea);
 );
 (._;>;);
@@ -23,6 +27,7 @@ export default function (map) {
 	useEffect(() => {
 		const doFetch = async () => {
 			console.log('overpass', overpassRequest)
+			/*
 			const request = await fetch('https://overpass-api.de/api/interpreter', {
 				method: 'POST',
 				// The body contains the query
@@ -31,28 +36,23 @@ export default function (map) {
 				body: 'data=' + encodeURIComponent(overpassRequest),
 			})
 			const json = await request.json()
+			*/
 
-			const geojson = overpassResultsToGeojson(json)
+			const json = jsonExample
 
-			const waysData = {
+			console.log('crimson overpass', json)
+
+			const relations = osmToGeojson(json).features.filter((feature) =>
+				feature.id.startsWith('relation')
+			)
+			const featureCollection = {
 				type: 'FeatureCollection',
-				features: geojson
-					.filter((f) => f.polygon)
-					.map((f) => {
-						const tags = f.tags || {}
-						const feature = {
-							type: 'Feature',
-							geometry: f.polygon.geometry,
-							properties: {
-								id: f.id,
-								tags,
-								name: tags.name,
-							},
-						}
-						return feature
-					}),
+				features: relations,
 			}
-			setData(waysData)
+
+			console.log('crimson geojson', featureCollection)
+
+			setData(featureCollection)
 		}
 		doFetch()
 	}, [])
