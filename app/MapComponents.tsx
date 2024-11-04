@@ -1,7 +1,6 @@
 import { getCategories } from '@/components/categories'
 import DrawCategories from '@/components/map/DrawCategories'
 import DrawTransportMaps from '@/components/map/DrawTransportMaps'
-import useDrawCycleHighways from '@/components/transport/useDrawCycleHighways'
 import useDrawBookmarks from './effects/useDrawBookmarks'
 import useDrawOsmFeaturePolygon from './effects/useDrawOsmFeaturePolygon'
 import useDrawTransportAreas from './effects/useDrawTransportAreas'
@@ -21,7 +20,7 @@ function MapComponents({
 	quickSearchFeaturesMap,
 	onSearchResultClick,
 }) {
-	useDrawCycleHighways(map)
+	//useDrawCycleHighways(map) now from pmtiles in france.ts
 	useDrawBookmarks(map)
 	useDrawOsmFeaturePolygon(map, vers?.osmFeature, safeStyleKey)
 	return (
