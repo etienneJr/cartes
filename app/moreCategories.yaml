@@ -357,6 +357,19 @@
     - '["service:bicycle:repair"=yes]'
   icon: bicycle_repair_station
 
+- name: parking-velo-sécurisé
+  title: Parking vélo sécurisé
+  category: Déplacements
+  dictionary:
+    - rack sécurisé
+    - box vélo
+    - parking sécurisé
+    - stationnement sécurisé
+  query:
+    - '[amenity=bicycle_parking][locked=yes]'
+    - '[bicycle_parking=lockers]'
+  icon: bicycle-parking
+
 - name: Essence
   category: Déplacements
   dictionary:
