@@ -1,9 +1,17 @@
 import GeoInputOptions from '@/components/GeoInputOptions'
+import computeDistance from '@turf/distance'
 import fetchPhoton from '@/components/fetchPhoton'
 import { buildAddress } from '@/components/osm/buildAddress'
-import ItineraryProposition from '@/components/placeSearch/ItineraryProposition'
+import ItineraryProposition, {
+	AnimatedSearchProposition,
+} from '@/components/placeSearch/ItineraryProposition'
+import detectCodePostal from '@/components/placeSearch/detectCodePostal'
 import detectSmartItinerary from '@/components/placeSearch/detectSmartItinerary'
-import { getArrayIndex, replaceArrayIndex } from '@/components/utils/utils'
+import {
+	getArrayIndex,
+	replaceArrayIndex,
+	sortBy,
+} from '@/components/utils/utils'
 import { isIOS } from '@react-aria/utils'
 import { useEffect, useState } from 'react'
 import { useLocalStorage } from 'usehooks-ts'
@@ -44,6 +52,7 @@ export default function PlaceSearch({
 	const [isLocalSearch, setIsLocalSearch] = useState(true)
 	const [searchHistory, setSearchHistory] = useLocalStorage('searchHistory', [])
 	const [itineraryProposition, setItineraryProposition] = useState()
+	const [postalCodeState, setPostalCodeState] = useState()
 
 	const urlSearchQuery = searchParams.q
 
@@ -91,6 +100,40 @@ export default function PlaceSearch({
 				const [from, to] = result
 				setItineraryProposition([from, to])
 			})
+
+			detectCodePostal(
+				searchValue,
+				localSearch,
+				zoom,
+				(results) => {
+					if (!results?.length) return
+					console.log('indigo res', results)
+
+					const osmFeature = sortBy(
+						({ lon, lat }) => -computeDistance([local[1], local[0]], [lon, lat])
+					)(results.filter((element) => element.type === 'relation'))[0]
+
+					const centerId = osmFeature.members.find(
+						(element) => element.role === 'admin_centre'
+					).ref
+
+					const center = results.find((result) => result.id === centerId)
+
+					console.log('indigo res', osmFeature, center)
+
+					const allez = buildAllezPart(
+						osmFeature.tags?.name,
+						encodePlace(osmFeature.type, osmFeature.id),
+						center.lon,
+						center.lat
+					)
+
+					setSearchParams({ allez })
+					setPostalCodeState(null)
+					console.log('indigo', allez)
+				},
+				setPostalCodeState
+			)
 
 			const oldStateEntry = state[stepIndex]
 			const stateEntry = {
@@ -209,6 +252,10 @@ export default function PlaceSearch({
 					data={itineraryProposition}
 					setSearchParams={setSearchParams}
 				/>
+			)}
+
+			{postalCodeState && (
+				<AnimatedSearchProposition>{postalCodeState}</AnimatedSearchProposition>
 			)}
 
 			{shouldShowResults && (
