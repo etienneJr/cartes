@@ -332,7 +332,7 @@ const layers = [
 		id: 'water-depth',
 		type: 'fill',
 		source: 'bathymetry',
-		'source-layer': 'zcta',
+		'source-layer': 'bathymetry',
 		layout: {},
 		paint: {
 			// cubic bezier is a four point curve for smooth and precise styling
@@ -340,9 +340,9 @@ const layers = [
 			'fill-color': [
 				'interpolate',
 				['cubic-bezier', 0, 0.5, 1, 0.5],
-				['get', 'DEPTH'],
+				['get', 'amin'],
 				-9000,
-				'#15659f',
+				'#260167',
 				0,
 				oceanColor,
 			],
