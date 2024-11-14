@@ -51,6 +51,10 @@ export default function franceStyle(transportMode, noVariableTiles = false) {
 				type: 'vector',
 				url: 'pmtiles://' + pmtilesServerUrl + '/cycleHighways.pmtiles',
 			},
+			bathymetry: {
+				type: 'vector',
+				url: 'pmtiles://' + pmtilesServerUrl + '/bathymetry.pmtiles',
+			},
 		},
 		layers: transportMode ? lightenLayers(layers) : layers,
 		//		Voir nos villes juste avec les arbres
@@ -324,6 +328,27 @@ const layers = [
 			//['==', 'class', 'ocean'],
 		],
 	},
+	{
+		id: 'water-depth',
+		type: 'fill',
+		source: 'bathymetry',
+		'source-layer': 'zcta',
+		layout: {},
+		paint: {
+			// cubic bezier is a four point curve for smooth and precise styling
+			// adjust the points to change the rate and intensity of interpolation
+			'fill-color': [
+				'interpolate',
+				['cubic-bezier', 0, 0.5, 1, 0.5],
+				['get', 'DEPTH'],
+				-9000,
+				'#15659f',
+				0,
+				oceanColor,
+			],
+		},
+	},
+
 	{
 		id: 'Rock',
 		type: 'fill',
