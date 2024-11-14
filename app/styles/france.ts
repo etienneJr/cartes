@@ -3,10 +3,10 @@ import { cycleHighwayLayers, cycleHighwayMaxZoom } from './cycleHighwayLayers'
 
 //Fonts used :
 //https://maplibre.org/font-maker
-//['Roboto Regular', 'Noto Sans Regular'],
-//['Roboto Italic', 'Noto Sans Italic'],
-//['Roboto Medium Regular', 'Noto Sans Regular'],
-//['Roboto Bold', 'Noto Sans Bold']
+//['RobotoRegular-NotoSansRegular'],
+//['RobotoItalic-NotoSansItalic'],
+//['RobotoMediumRegular-NotoSansRegular'],
+//['RobotoBold-NotoSansBold']
 //
 //
 
@@ -2200,7 +2200,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 		'source-layer': 'waterway',
 		minzoom: 13,
 		layout: {
-			'text-font': ['Roboto Italic', 'Noto Sans Italic'],
+			'text-font': ['RobotoItalic-NotoSansItalic'],
 			'text-size': {
 				stops: [
 					[12, 8],
@@ -2237,7 +2237,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 		minzoom: 0,
 		maxzoom: 14,
 		layout: {
-			'text-font': ['Roboto Italic', 'Noto Sans Italic'],
+			'text-font': ['RobotoItalic-NotoSansItalic'],
 			'text-size': [
 				'interpolate',
 				['linear', 1],
@@ -2280,7 +2280,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 		'source-layer': 'water_name',
 		minzoom: 0,
 		layout: {
-			'text-font': ['Roboto Italic', 'Noto Sans Italic'],
+			'text-font': ['RobotoItalic-NotoSansItalic'],
 			'text-size': {
 				stops: [
 					[10, 13],
@@ -2308,7 +2308,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 		'source-layer': 'housenumber',
 		minzoom: 18,
 		layout: {
-			'text-font': ['Roboto Regular', 'Noto Sans Regular'],
+			'text-font': ['RobotoRegular-NotoSansRegular'],
 			'text-size': 10,
 			'text-field': '{housenumber}',
 			visibility: 'visible',
@@ -2327,7 +2327,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 		'source-layer': 'transportation_name',
 		minzoom: 13,
 		layout: {
-			'text-font': ['Roboto Italic', 'Noto Sans Italic'],
+			'text-font': ['RobotoItalic-NotoSansItalic'],
 			'text-size': {
 				base: 1,
 				stops: [
@@ -2359,7 +2359,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 		'source-layer': 'transportation_name',
 		minzoom: 12,
 		layout: {
-			'text-font': ['Roboto Italic', 'Noto Sans Italic'],
+			'text-font': ['RobotoItalic-NotoSansItalic'],
 			'text-size': {
 				base: 1,
 				stops: [
@@ -2393,7 +2393,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 					[19, 1],
 				],
 			},
-			'text-font': ['Roboto Regular', 'Noto Sans Regular'],
+			'text-font': ['RobotoRegular-NotoSansRegular'],
 			'icon-image': 'oneway',
 			visibility: 'visible',
 			'icon-rotate': ['match', ['get', 'oneway'], 1, 90, -90],
@@ -2433,7 +2433,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 		minzoom: 6,
 		maxzoom: 22,
 		layout: {
-			'text-font': ['Roboto Regular', 'Noto Sans Regular'],
+			'text-font': ['RobotoRegular-NotoSansRegular'],
 			'text-size': {
 				stops: [
 					[13, 10],
@@ -2478,7 +2478,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 		maxzoom: 22,
 		layout: {
 			'icon-size': 1,
-			'text-font': ['Roboto Regular', 'Noto Sans Regular'],
+			'text-font': ['RobotoRegular-NotoSansRegular'],
 			'text-size': 9,
 			'icon-image': 'exit_{ref_length}',
 			'text-field': '{ref}',
@@ -2559,7 +2559,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 				['get', 'class'],
 				'motorway',
 				['literal', ['Roboto Bold', 'Noto Sans Bold']],
-				['literal', ['Roboto Regular', 'Noto Sans Regular']],
+				['literal', ['RobotoRegular-NotoSansRegular']],
 			],
 			'text-size': 9,
 			'icon-image': '{network}_{ref_length}',
@@ -2603,7 +2603,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 		minzoom: 17,
 		layout: {
 			'icon-size': 0.7,
-			'text-font': ['Roboto Regular', 'Noto Sans Regular'],
+			'text-font': ['RobotoRegular-NotoSansRegular'],
 			'text-size': {
 				stops: [
 					[12, 10],
@@ -2640,7 +2640,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 		minzoom: 13,
 		layout: {
 			'icon-size': 1,
-			'text-font': ['Roboto Regular', 'Noto Sans Regular'],
+			'text-font': ['RobotoRegular-NotoSansRegular'],
 			'text-size': {
 				stops: [
 					[12, 10],
@@ -2677,7 +2677,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 		minzoom: 13,
 		layout: {
 			'icon-size': 1,
-			'text-font': ['Roboto Regular', 'Noto Sans Regular'],
+			'text-font': ['RobotoRegular-NotoSansRegular'],
 			'text-size': {
 				stops: [
 					[12, 10],
@@ -2718,7 +2718,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 		minzoom: 13,
 		layout: {
 			'icon-size': 1,
-			'text-font': ['Roboto Regular', 'Noto Sans Regular'],
+			'text-font': ['RobotoRegular-NotoSansRegular'],
 			'text-size': {
 				stops: [
 					[12, 10],
@@ -2878,7 +2878,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 		minzoom: 9,
 		maxzoom: 22,
 		layout: {
-			'text-font': ['Roboto Italic', 'Noto Sans Italic'],
+			'text-font': ['RobotoItalic-NotoSansItalic'],
 			'text-size': ['interpolate', ['linear'], ['zoom'], 9, 11, 14, 14],
 			'text-field': ['coalesce', ...nameExpression],
 			visibility: 'visible',
@@ -2943,7 +2943,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 					[9, 0],
 				],
 			},
-			'text-font': ['Roboto Regular', 'Noto Sans Regular'],
+			'text-font': ['RobotoRegular-NotoSansRegular'],
 			'text-size': [
 				'interpolate',
 				['linear', 1],
@@ -3046,7 +3046,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 					[18, 1],
 				],
 			},
-			'text-font': ['Roboto Medium Regular', 'Noto Sans Regular'],
+			'text-font': ['RobotoMediumRegular-NotoSansRegular'],
 			'text-size': {
 				stops: [
 					[10, 10],
@@ -3144,7 +3144,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 				16,
 				['match', ['get', 'class'], 'international', 1, 0.8],
 			],
-			'text-font': ['Roboto Medium Regular', 'Noto Sans Regular'],
+			'text-font': ['RobotoMediumRegular-NotoSansRegular'],
 			'text-size': [
 				'interpolate',
 				['linear'],
@@ -3210,7 +3210,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 		'source-layer': 'aeroway',
 		minzoom: 15,
 		layout: {
-			'text-font': ['Roboto Medium Regular', 'Noto Sans Regular'],
+			'text-font': ['RobotoMediumRegular-NotoSansRegular'],
 			'text-size': {
 				stops: [
 					[15, 10],
@@ -3236,7 +3236,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 		minzoom: 3,
 		maxzoom: 9,
 		layout: {
-			'text-font': ['Roboto Medium Regular', 'Noto Sans Regular'],
+			'text-font': ['RobotoMediumRegular-NotoSansRegular'],
 			'text-size': {
 				stops: [
 					[3, 8],
@@ -3282,7 +3282,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 					[14, 0.8],
 				],
 			},
-			'text-font': ['Roboto Regular', 'Noto Sans Regular'],
+			'text-font': ['RobotoRegular-NotoSansRegular'],
 			'text-size': [
 				'interpolate',
 				['linear', 1],
@@ -3346,7 +3346,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 				13,
 				0,
 			],
-			'text-font': ['Roboto Medium Regular', 'Noto Sans Regular'],
+			'text-font': ['RobotoMediumRegular-NotoSansRegular'],
 			'text-size': [
 				'interpolate',
 				['linear', 1],
@@ -3397,7 +3397,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 				13,
 				0,
 			],
-			'text-font': ['Roboto Medium Regular', 'Noto Sans Regular'],
+			'text-font': ['RobotoMediumRegular-NotoSansRegular'],
 			'text-size': [
 				'interpolate',
 				['linear', 1],
@@ -3435,7 +3435,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 		minzoom: 1,
 		maxzoom: 12,
 		layout: {
-			'text-font': ['Roboto Medium Regular', 'Noto Sans Regular'],
+			'text-font': ['RobotoMediumRegular-NotoSansRegular'],
 			'text-size': [
 				'interpolate',
 				['linear', 1],
@@ -3489,7 +3489,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 		'source-layer': 'place',
 		maxzoom: 1,
 		layout: {
-			'text-font': ['Roboto Medium Regular', 'Noto Sans Regular'],
+			'text-font': ['RobotoMediumRegular-NotoSansRegular'],
 			'text-size': {
 				stops: [
 					[0, 12],
