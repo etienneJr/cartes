@@ -1711,7 +1711,7 @@ export default function voyageStyle(key) {
 				minzoom: 13,
 				layout: {
 					'icon-size': 1,
-					'text-font': ['Roboto Regular', 'Noto Sans Regular'],
+					'text-font': ['RobotoRegular-NotoSansRegular'],
 					'text-size': {
 						stops: [
 							[12, 10],

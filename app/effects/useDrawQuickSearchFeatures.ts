@@ -85,7 +85,7 @@ export default function useDrawQuickSearchFeatures(
 						'text-field': ['get', 'name'],
 						'text-offset': [0, 1.25],
 						'text-anchor': 'top',
-						'text-font': ['Roboto Regular', 'Noto Sans Regular'],
+						'text-font': ['RobotoRegular-NotoSansRegular'],
 					},
 					paint: {
 						'text-color': '#503f38',

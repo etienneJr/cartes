@@ -160,7 +160,7 @@ export default function useDrawElectionClusterResults(
 					['get', 'cat'],
 					{ 'min-fraction-digits': 1, 'max-fraction-digits': 1 },
 				],
-				'text-font': ['Roboto Regular', 'Noto Sans Regular'],
+				'text-font': ['RobotoRegular-NotoSansRegular'],
 				'text-size': 10,
 			},
 			paint: {
