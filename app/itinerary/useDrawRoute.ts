@@ -41,7 +41,7 @@ export default function useDrawRoute(isItineraryMode, map, geojson, id) {
 			layout: {
 				'text-field': ['get', 'letter'],
 				'text-size': 16,
-				'text-font': ['Roboto Regular', 'Noto Sans Regular'],
+				'text-font': ['RobotoRegular-NotoSansRegular'],
 			},
 		})
 		console.log('will add layer poinst', id + 'Points')

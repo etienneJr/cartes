@@ -75,7 +75,7 @@ export const contourLayers = [
 		source: 'contours',
 		'source-layer': 'contours',
 		layout: {
-			'text-font': ['Roboto Regular', 'Noto Sans Regular'],
+			'text-font': ['RobotoRegular-NotoSansRegular'],
 			'text-size': {
 				base: 1,
 				stops: [
@@ -113,7 +113,7 @@ export const contourLayers = [
 		source: 'contours',
 		'source-layer': 'contours',
 		layout: {
-			'text-font': ['Roboto Regular', 'Noto Sans Regular'],
+			'text-font': ['RobotoRegular-NotoSansRegular'],
 			'text-size': {
 				base: 1,
 				stops: [
