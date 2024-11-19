@@ -137,7 +137,7 @@ export default function useDrawTransit(map, transit, selectedConnection, date) {
 			source: id,
 			layout: {
 				'symbol-placement': 'line',
-				'text-font': ['Roboto Bold', 'Noto Sans Bold'],
+				'text-font': ['RobotoBold-NotoSansBold'],
 				'text-field': '{name}', // part 2 of this is how to do it
 				'text-transform': 'uppercase',
 				'text-size': 16,
