@@ -9,6 +9,7 @@ import Link from 'next/link'
 import styled from 'styled-components'
 import ItineraryButton, { ResetIcon } from './itinerary/ItineraryButton'
 
+export const mapButtonSize = '2.15rem'
 export const MapButtonsWrapper = styled.div`
 	position: fixed;
 	top: 12rem;
@@ -20,8 +21,8 @@ export const MapButtonsWrapper = styled.div`
 `
 export const MapButton = styled.div`
 	margin-bottom: 0.4rem;
-	width: 1.9rem;
-	height: 1.9rem;
+	width: ${mapButtonSize};
+	height: ${mapButtonSize};
 	text-align: center;
 	border-radius: 4px;
 	box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);

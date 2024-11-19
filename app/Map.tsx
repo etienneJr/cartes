@@ -4,7 +4,7 @@ import 'maplibre-gl/dist/maplibre-gl.css'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { sortGares } from './gares'
 
-import MapButtons from '@/components/MapButtons'
+import MapButtons, { mapButtonSize } from '@/components/MapButtons'
 import { goodIconSize, useComputeMapPadding } from '@/components/mapUtils'
 import useSetSearchParams from '@/components/useSetSearchParams'
 import useDrawQuickSearchFeatures from './effects/useDrawQuickSearchFeatures'
@@ -452,6 +452,10 @@ export default function Map(props) {
 							font-weight: 600;
 							filter: drop-shadow(0px 0px 2px #ffffffa6);
 						}
+					}
+					.maplibregl-ctrl-top-right button {
+						width: ${mapButtonSize};
+						height: ${mapButtonSize};
 					}
 				`}
 			/>
