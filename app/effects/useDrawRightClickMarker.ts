@@ -1,7 +1,11 @@
 import { Marker } from 'maplibre-gl'
 import { useEffect } from 'react'
 
-export default function useDrawRightClickMarker(map, geocodedClickedPoint) {
+export default function useDrawRightClickMarker(
+	map,
+	geocodedClickedPoint,
+	padding
+) {
 	useEffect(() => {
 		if (!map || !geocodedClickedPoint) return
 
@@ -9,6 +13,8 @@ export default function useDrawRightClickMarker(map, geocodedClickedPoint) {
 
 		const lon = geocodedClickedPoint.longitude,
 			lat = geocodedClickedPoint.latitude
+
+		map.flyTo({ center: [lon, lat] })
 
 		if (!lon || !lat) return
 		const marker = new Marker({

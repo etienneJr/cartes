@@ -1,40 +1,26 @@
-import { buildPhotonItem } from '../fetchPhoton'
 import { debounce } from '../utils/utils'
-import { photonServerUrl } from '@/app/serverUrls'
+import { convert } from 'geo-coordinates-parser' //ES6
 
-const regexp = /^de\s(.+)\s(?:à|a)(.+)$/i
-
-function fetchPhotonRaw(v, localSearch, zoom) {
-	return fetch(
-		`${photonServerUrl}/api/?q=${encodeURIComponent(v)}&limit=30&lang=fr${
-			localSearch ? `&lat=${localSearch[0]}&lon=${localSearch[1]}` : ''
-		}${zoom ? `&zoom=${Math.round(zoom)}` : ''}`
-	).then((res) => res.json())
+function hasNumber(str) {
+	return /\d?/.test(str)
 }
 
-//TODO doesn't work below, fix it
-
-function detectSmartItinerary(input, localSearch, zoom, then) {
+function detect(input, localSearch, zoom, then, setCoordinatesState) {
 	if (!input) return
-	const detected = input.match(regexp)
-	if (!detected) return
-	const [, from, to] = detected
 
-	const promises = Promise.all(
-		[from, to].map((pointInput) =>
-			fetchPhotonRaw(pointInput, localSearch, zoom)
-		)
-	)
+	if (!hasNumber(input)) return
 
-	promises.then((res) =>
-		then(
-			res.map((featureCollection) =>
-				buildPhotonItem(featureCollection.features[0])
-			)
-		)
-	)
+	try {
+		const converted = convert(input)
+		console.log('indigo coord', converted)
+		setCoordinatesState('Coordonnées détectées !')
+		return then([converted.decimalLatitude, converted.decimalLongitude])
+	} catch {
+		/*we get here if the string is not valid coordinates or format is inconsistent between lat and long*/
+		return setCoordinatesState(null)
+	}
 }
 
-const debouncedDetectSmartItinerary = debounce(1000, detectSmartItinerary)
+const detectCoordinates = debounce(1000, detect)
 
-export default debouncedDetectSmartItinerary
+export default detectCoordinates

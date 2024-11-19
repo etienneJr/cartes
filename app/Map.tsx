@@ -118,6 +118,7 @@ export default function Map(props) {
 	const [distanceMode, setDistanceMode] = useState(false)
 
 	const padding = useComputeMapPadding(trackedSnap, searchParams)
+
 	useGeolocationAutofocus(map, itinerary?.isItineraryMode, geolocation, padding)
 
 	useEffect(() => {
@@ -351,7 +352,7 @@ export default function Map(props) {
 		zoom
 	)
 	*/
-	useDrawRightClickMarker(map, geocodedClickedPoint)
+	useDrawRightClickMarker(map, geocodedClickedPoint, padding)
 
 	/* Abandoned code that should be revived. Traveling with train + bike is an
 	 * essential objective of Cartes */

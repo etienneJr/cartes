@@ -1,7 +1,3 @@
-import {
-	buildOverpassRequest,
-	overpassResultsToGeojson,
-} from '@/app/effects/useOverpassRequest'
 import { debounce } from '../utils/utils'
 
 function onlyNumbers(str) {

@@ -28,6 +28,7 @@ export default function ClickedPoint({
 			>
 				<strong>Adresse</strong>
 				<Address tags={item} noPrefix={true} />
+				<LatLong {...{ latitude, longitude }} />
 				{origin && (
 					<>
 						<strong>Distance</strong>
@@ -102,7 +103,8 @@ const LatLong = ({ latitude, longitude }) => (
 			}
 		`}
 	>
-		<small>longitude</small>&nbsp;{longitude.toFixed(4)} <small>latitude</small>
-		&nbsp;{latitude.toFixed(4)}
+		<small>latitude</small>
+		&nbsp;{latitude.toFixed(4)} <small>longitude</small>&nbsp;
+		{longitude.toFixed(4)}
 	</div>
 )

@@ -26,6 +26,7 @@ import SearchHistory from './_components/SearchResults/SearchHistory'
 import SearchLoader from './_components/SearchResults/SearchLoader'
 import SearchNoResults from './_components/SearchResults/SearchNoResults'
 import SearchResultsContainer from './_components/SearchResults/SearchResultsContainer'
+import detectCoordinates from '@/components/placeSearch/detectCoordinates'
 
 /* I'm  not sure of the interest to attache `results` to each state step.
  * It could be cached across the app. No need to re-query photon for identical
@@ -53,6 +54,7 @@ export default function PlaceSearch({
 	const [searchHistory, setSearchHistory] = useLocalStorage('searchHistory', [])
 	const [itineraryProposition, setItineraryProposition] = useState()
 	const [postalCodeState, setPostalCodeState] = useState()
+	const [coordinatesState, setCoordinatesState] = useState()
 
 	const urlSearchQuery = searchParams.q
 
@@ -100,6 +102,27 @@ export default function PlaceSearch({
 				const [from, to] = result
 				setItineraryProposition([from, to])
 			})
+
+			detectCoordinates(
+				searchValue,
+				localSearch,
+				zoom,
+				([latitude, longitude]) => {
+					setSearchParams({
+						clic: latitude + '|' + longitude,
+					})
+					const newStateEntry = {}
+					const newState = replaceArrayIndex(
+						state,
+						stepIndex,
+						newStateEntry
+						//validated: false, // TODO was important or not ? could be stored in each state array entries and calculated ?
+					)
+
+					setState(newState)
+				},
+				setCoordinatesState
+			)
 
 			detectCodePostal(
 				searchValue,
@@ -256,6 +279,11 @@ export default function PlaceSearch({
 
 			{postalCodeState && (
 				<AnimatedSearchProposition>{postalCodeState}</AnimatedSearchProposition>
+			)}
+			{coordinatesState && (
+				<AnimatedSearchProposition>
+					{coordinatesState}
+				</AnimatedSearchProposition>
 			)}
 
 			{shouldShowResults && (
