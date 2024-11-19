@@ -12,7 +12,7 @@ import ItineraryButton, { ResetIcon } from './itinerary/ItineraryButton'
 export const mapButtonSize = '2.15rem'
 export const MapButtonsWrapper = styled.div`
 	position: fixed;
-	top: 12rem;
+	top: 13rem;
 	right: 0.6rem;
 	z-index: 1;
 	display: flex;
