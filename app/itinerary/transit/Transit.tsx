@@ -157,6 +157,7 @@ const TransitTimeline = ({
 			<ul>
 				{connections.map((el, index) => (
 					<Connection
+						key={index}
 						connection={el}
 						endTime={endTime}
 						date={date}
@@ -272,7 +273,9 @@ export const Line = ({
 				>
 					{transports.map((transport) => (
 						<li
-							key={transport.shortName}
+							key={
+								transport.shortName || transport.move_type + transport.seconds
+							}
 							css={`
 								width: ${(transport.seconds / connection.seconds) * 100}%;
 								height: 1.8rem;

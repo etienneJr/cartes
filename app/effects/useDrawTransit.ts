@@ -70,6 +70,7 @@ export default function useDrawTransit(map, transit, selectedConnection, date) {
 		}
 		console.log('useDrawTransit fc', featureCollection)
 		const id = 'transit-' + Math.random()
+		console.log('indigo random', id)
 
 		try {
 			const source = map.getSource(id)
@@ -81,6 +82,7 @@ export default function useDrawTransit(map, transit, selectedConnection, date) {
 		console.log('will (re)draw transport route geojson')
 		map.addSource(id, { type: 'geojson', data: featureCollection })
 
+		console.log('indigo add layer poinst', id)
 		map.addLayer({
 			source: id,
 			type: 'line',

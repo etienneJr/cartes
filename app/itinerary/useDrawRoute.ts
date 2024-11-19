@@ -6,7 +6,8 @@ import { safeRemove } from '../effects/utils'
 import { useDimensions } from '@/components/react-modal-sheet/hooks'
 
 /*
- * Draws the walk or cycle route provided by BRouter directly as Geojson
+ * Draws the walk or cycle route provided by BRouter directly as Geojson, and
+ * also the distance line that sets the context
  * */
 export default function useDrawRoute(isItineraryMode, map, geojson, id) {
 	const { width, height } = useDimensions()
@@ -20,7 +21,7 @@ export default function useDrawRoute(isItineraryMode, map, geojson, id) {
 			!geojson.features.length
 		)
 			return undefined
-		console.log('will draw useDrawRoute inside ' + id, id, geojson)
+		console.log('will draw useDrawRoute inside ' + id, geojson)
 
 		map.addSource(id, {
 			type: 'geojson',
@@ -44,7 +45,7 @@ export default function useDrawRoute(isItineraryMode, map, geojson, id) {
 				'text-font': ['RobotoRegular-NotoSansRegular'],
 			},
 		})
-		console.log('will add layer poinst', id + 'Points')
+		console.log('indigo add layer poinst', id + 'Points')
 		map.addLayer(
 			{
 				id: id + 'Points',
@@ -119,6 +120,7 @@ export default function useDrawRoute(isItineraryMode, map, geojson, id) {
 			'distance' + 'Points'
 		)
 
+		console.log('indigo add layer', id)
 		map.addLayer(
 			{
 				id: id + 'Contour',
