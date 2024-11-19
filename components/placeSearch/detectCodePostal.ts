@@ -36,7 +36,7 @@ out skel qt;
 function detect(input, localSearch, zoom, then, setPostalCodeState) {
 	if (!input) return
 
-	if (onlyNumbers(input) && input.length !== 5) return
+	if (!onlyNumbers(input) || input.length !== 5) return
 
 	setPostalCodeState(`Code postal détecté. Chargement...`)
 	overpassRequest(input, then)
