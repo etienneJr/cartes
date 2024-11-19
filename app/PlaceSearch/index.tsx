@@ -56,6 +56,15 @@ export default function PlaceSearch({
 	const [postalCodeState, setPostalCodeState] = useState()
 	const [coordinatesState, setCoordinatesState] = useState()
 
+	useEffect(() => {
+		if (!coordinatesState) return
+
+		const timeoutReference = setTimeout(() => setCoordinatesState(null), 4000)
+		return () => {
+			clearTimeout(timeoutReference)
+		}
+	}, [coordinatesState, setCoordinatesState])
+
 	const urlSearchQuery = searchParams.q
 
 	const step = getArrayIndex(state, stepIndex) || {
