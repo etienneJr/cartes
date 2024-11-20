@@ -6,6 +6,7 @@ import { encodePlace } from '@/app/utils'
 import { computeHumanDistance } from '@/app/RouteRésumé'
 import { OpenIndicator, getOh } from '@/app/osm/OpeningHours'
 import opening_hours from 'opening_hours'
+import { computeRoseDirection } from '../SimilarNodes'
 
 export default function CategoryResult({ result, setSearchParams }) {
 	console.log('indigo test', result)
@@ -17,6 +18,7 @@ export default function CategoryResult({ result, setSearchParams }) {
 		lat,
 		lon,
 		distance,
+		bearing,
 	} = result
 
 	const url = setSearchParams(
@@ -29,6 +31,7 @@ export default function CategoryResult({ result, setSearchParams }) {
 	const humanDistance = computeHumanDistance(distance * 1000)
 	const { isOpen } = oh ? getOh(oh) : {}
 	const isOpenByDefault = category['open by default']
+	const roseDirection = computeRoseDirection(bearing)
 	return (
 		<Link
 			href={url}
@@ -105,6 +108,14 @@ export default function CategoryResult({ result, setSearchParams }) {
 							<OpenIndicator isOpen={isOpen === 'error' ? false : isOpen} />
 						))}
 				</header>
+				{description && <p>{description}</p>}
+				<small
+					css={`
+						text-align: right;
+					`}
+				>
+					à {humanDistance[0]} {humanDistance[1]} vers {roseDirection}
+				</small>
 			</div>
 		</Link>
 	)
