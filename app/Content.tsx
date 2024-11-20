@@ -30,8 +30,7 @@ import TransportMap from './transport/TransportMap'
 import useOgImageFetcher from './useOgImageFetcher'
 import { useWhatChanged } from '@/components/utils/useWhatChanged'
 import { feature } from '@turf/turf'
-
-const getMinimumQuickSearchZoom = (mobile) => (mobile ? 10.5 : 12) // On a small screen, 70 %  of the tiles are not visible, hence this rule
+import { getMinimumQuickSearchZoom } from './QuickFeatureSearchUI'
 
 export default function Content(props) {
 	const {
@@ -212,19 +211,12 @@ export default function Content(props) {
 							stepIndex: searchStepIndex,
 							geolocation,
 							placeholder: isItineraryModeNoSteps ? 'Votre destination' : null,
+							minimumQuickSearchZoom,
+							vers,
+							snap,
+							quickSearchFeaturesMap,
 						}}
 					/>
-					{zoom > minimumQuickSearchZoom && (
-						<QuickFeatureSearch
-							{...{
-								searchParams,
-								searchInput: vers?.inputValue,
-								setSnap,
-								snap,
-								quickSearchFeaturesMap,
-							}}
-						/>
-					)}
 					{searchParams.favoris !== 'oui' &&
 						searchParams.style !== 'transports' && (
 							<QuickBookmarks oldAllez={searchParams.allez} />

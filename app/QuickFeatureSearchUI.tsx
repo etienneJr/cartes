@@ -4,9 +4,10 @@ import styled from 'styled-components'
 
 const quickSearchButtonwidth = '2.2rem'
 
+export const getMinimumQuickSearchZoom = (mobile) => (mobile ? 10.5 : 12) // On a small screen, 70 %  of the tiles are not visible, hence this rule
+
 export const goldCladding = `
-border-color: gold !important;
-background: #f8f3e0 !important;
+filter: drop-shadow(0 0 0.15rem gold);
 `
 
 export const quickSearchButtonStyle = (clicked, background, filter) => `

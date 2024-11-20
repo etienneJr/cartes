@@ -27,6 +27,7 @@ import SearchLoader from './_components/SearchResults/SearchLoader'
 import SearchNoResults from './_components/SearchResults/SearchNoResults'
 import SearchResultsContainer from './_components/SearchResults/SearchResultsContainer'
 import detectCoordinates from '@/components/placeSearch/detectCoordinates'
+import QuickFeatureSearch from '../QuickFeatureSearch'
 
 /* I'm  not sure of the interest to attache `results` to each state step.
  * It could be cached across the app. No need to re-query photon for identical
@@ -43,6 +44,10 @@ export default function PlaceSearch({
 	stepIndex,
 	geolocation,
 	placeholder,
+	minimumQuickSearchZoom,
+	vers,
+	snap,
+	quickSearchFeaturesMap,
 }) {
 	console.log('lightgreen stepIndex', stepIndex, state)
 	console.log('lightgreen autofocus', autoFocus)
@@ -295,6 +300,17 @@ export default function PlaceSearch({
 				</AnimatedSearchProposition>
 			)}
 
+			{zoom > minimumQuickSearchZoom && (
+				<QuickFeatureSearch
+					{...{
+						searchParams,
+						searchInput: vers?.inputValue,
+						setSnap,
+						snap,
+						quickSearchFeaturesMap,
+					}}
+				/>
+			)}
 			{shouldShowResults && (
 				<div>
 					{step.results && (
