@@ -13,6 +13,7 @@ import {
 } from './QuickFeatureSearchUI'
 import categories from './categories.yaml'
 import moreCategories from './moreCategories.yaml'
+import CategoryResults from '@/components/categories/CategoryResults'
 
 export const categoryIconUrl = (category) => {
 	if (!category.icon)
@@ -206,7 +207,6 @@ export default function QuickFeatureSearch({
 					</div>
 				)}
 			</div>
-
 			{(showMore || (doFilter && filteredMoreCategories.length > 0)) && (
 				<MoreCategories
 					getNewSearchParamsLink={getNewSearchParamsLink}
@@ -215,6 +215,11 @@ export default function QuickFeatureSearch({
 					doFilter={doFilter}
 				/>
 			)}
+			<CategoryResults
+				resultsEntries={Object.entries(quickSearchFeaturesMap).filter(
+					([k, v]) => categoriesSet.includes(k)
+				)}
+			/>
 		</div>
 	)
 }
