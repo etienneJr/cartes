@@ -3,16 +3,20 @@ import categoryColors from '@/app/categoryColors.yaml'
 import Link from 'next/link'
 import { buildAllezPart } from '@/app/SetDestination'
 import { encodePlace } from '@/app/utils'
+import { computeHumanDistance } from '@/app/RouteRésumé'
+import { OpenIndicator, getOh } from '@/app/osm/OpeningHours'
+import opening_hours from 'opening_hours'
 
 export default function CategoryResult({ result, setSearchParams }) {
 	console.log('indigo test', result)
 	const {
-		tags: { name, description },
+		tags: { name, description, opening_hours: oh },
 		category,
 		type: featureType,
 		id,
 		lat,
 		lon,
+		distance,
 	} = result
 
 	const url = setSearchParams(
@@ -21,6 +25,10 @@ export default function CategoryResult({ result, setSearchParams }) {
 		},
 		true
 	)
+
+	const humanDistance = computeHumanDistance(distance * 1000)
+	const { isOpen } = oh ? getOh(oh) : {}
+	const isOpenByDefault = category['open by default']
 	return (
 		<Link
 			href={url}
@@ -36,8 +44,6 @@ export default function CategoryResult({ result, setSearchParams }) {
 					margin: 0.4rem 0;
 					padding: 0.6rem 0.6rem;
 					header {
-						display: flex;
-						align-items: center;
 						h2 {
 							margin: 0;
 							margin-left: 0.4rem;
@@ -45,38 +51,59 @@ export default function CategoryResult({ result, setSearchParams }) {
 							font-size: 90%;
 						}
 					}
+					header {
+						display: flex;
+						justify-content: space-between;
+					}
 				`}
 			>
 				<header>
 					<div
 						css={`
-							background: ${categoryColors[category.category]};
-							border-radius: 2rem;
-							width: 1.6rem;
-							height: 1.6rem;
 							display: flex;
 							align-items: center;
-							justify-content: center;
-							img {
-								width: 1rem;
-								height: auto;
-								filter: invert(1);
-							}
 						`}
 					>
-						<Image
-							src={
-								category.icon.startsWith('http')
-									? category.icon
-									: '/icons/' + category.icon + '.svg'
-							}
-							width="10"
-							height="10"
-							alt={'Icône pour la catégorie ' + category.name}
-						/>{' '}
+						<div
+							css={`
+								background: ${categoryColors[category.category]};
+								border-radius: 2rem;
+								width: 1.6rem;
+								height: 1.6rem;
+								display: flex;
+								align-items: center;
+								justify-content: center;
+								img {
+									width: 1rem;
+									height: auto;
+									filter: invert(1);
+								}
+							`}
+						>
+							<Image
+								src={
+									category.icon.startsWith('http')
+										? category.icon
+										: '/icons/' + category.icon + '.svg'
+								}
+								width="10"
+								height="10"
+								alt={'Icône pour la catégorie ' + category.name}
+							/>{' '}
+						</div>
+						<h2>{name}</h2>
 					</div>
-					<h2>{name}</h2>
-					<p>{description}</p>
+					{!isOpenByDefault &&
+						(oh == null ? (
+							<span
+								css={`
+									display: inline-block;
+									width: 1.8rem;
+								`}
+							></span>
+						) : (
+							<OpenIndicator isOpen={isOpen === 'error' ? false : isOpen} />
+						))}
 				</header>
 			</div>
 		</Link>
