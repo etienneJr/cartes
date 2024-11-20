@@ -1,7 +1,7 @@
 import baseCategories from '@/app/categories.yaml'
 import moreCategories from '@/app/moreCategories.yaml'
 
-const categories = [...baseCategories, ...moreCategories]
+export const categories = [...baseCategories, ...moreCategories]
 
 // use this to complete categoryColors.yaml
 console.log(

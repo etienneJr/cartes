@@ -5,11 +5,18 @@ import useSetSearchParams from '../useSetSearchParams'
 import Image from 'next/image'
 import closeIcon from '@/public/close.svg'
 import { sortBy } from '../utils/utils'
+import CategoryResult from './CategoryResult'
+import { categories } from '../categories'
 
 export default function CategoryResults({ resultsEntries, center }) {
 	const setSearchParams = useSetSearchParams()
 	const resultsWithoutOrder = resultsEntries
-			.map(([k, v]) => v)
+			.map(([k, list]) =>
+				list.map((v) => ({
+					...v,
+					category: categories.find((cat) => cat.name === k),
+				}))
+			)
 			.flat()
 			.filter((feature) => feature.tags.name)
 			.map((feature) => {
@@ -31,6 +38,11 @@ export default function CategoryResults({ resultsEntries, center }) {
 						width: 0.9rem;
 						height: auto;
 					}
+					margin-left: 0.2rem;
+					> div > span {
+						color: #666;
+						font-size: 90%;
+					}
 				`}
 			>
 				<div>
@@ -51,7 +63,11 @@ export default function CategoryResults({ resultsEntries, center }) {
 			</div>
 			<ol>
 				{results.map((result) => (
-					<li key={result.id}>{result.tags?.name}</li>
+					<CategoryResult
+						key={result.id}
+						result={result}
+						setSearchParams={setSearchParams}
+					/>
 				))}
 			</ol>
 		</section>
