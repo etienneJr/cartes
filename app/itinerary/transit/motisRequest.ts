@@ -137,7 +137,7 @@ export const computeMotisTrip = async (
 
 						console.log('red debug', trip?.id)
 						const tripId = trip?.id.id.replace(
-							/(.+)\|(.+)\_(.+)/,
+							/(.+)\|([^_]+)\_(.+)/,
 							(correspondance, p1, p2, p3, decalage, chaine) => p1 + p3
 						)
 						const doFetch = async () => {
