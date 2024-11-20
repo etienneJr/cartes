@@ -268,6 +268,7 @@ export default function Container(props) {
 							geocodedClickedPoint,
 							wikidata,
 							setLatLngClicked,
+							center: debouncedCenter,
 						}}
 					/>
 				</ContentWrapper>

@@ -1,11 +1,26 @@
 import Link from 'next/link'
+import { bearing } from '@turf/bearing'
+import turfDistance from '@turf/distance'
 import useSetSearchParams from '../useSetSearchParams'
 import Image from 'next/image'
 import closeIcon from '@/public/close.svg'
+import { sortBy } from '../utils/utils'
 
-export default function CategoryResults({ resultsEntries }) {
+export default function CategoryResults({ resultsEntries, center }) {
 	const setSearchParams = useSetSearchParams()
-	const results = resultsEntries.map(([k,v])=> {})
+	const resultsWithoutOrder = resultsEntries
+			.map(([k, v]) => v)
+			.flat()
+			.filter((feature) => feature.tags.name)
+			.map((feature) => {
+				const { lon: lon2, lat: lat2 } = feature
+				return {
+					...feature,
+					distance: turfDistance([lon2, lat2], center),
+					bearing: bearing(center, [lon2, lat2]),
+				}
+			}),
+		results = sortBy((result) => result.distance)(resultsWithoutOrder)
 	return (
 		<section css={``}>
 			<div
@@ -34,7 +49,11 @@ export default function CategoryResults({ resultsEntries }) {
 					</Link>
 				)}
 			</div>
-			<ol>{results.map(result)=> <li key={result.id}>{result.tags?.name}</li>}</ol>
+			<ol>
+				{results.map((result) => (
+					<li key={result.id}>{result.tags?.name}</li>
+				))}
+			</ol>
 		</section>
 	)
 }

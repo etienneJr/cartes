@@ -44,6 +44,7 @@ export default function QuickFeatureSearch({
 	setSnap,
 	snap,
 	quickSearchFeaturesMap,
+	center,
 }) {
 	const [categoriesSet] = getCategories(searchParams)
 	console.log('indigo t', categoriesSet)
@@ -216,6 +217,7 @@ export default function QuickFeatureSearch({
 				/>
 			)}
 			<CategoryResults
+				center={center}
 				resultsEntries={Object.entries(quickSearchFeaturesMap).filter(
 					([k, v]) => categoriesSet.includes(k)
 				)}

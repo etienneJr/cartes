@@ -65,6 +65,7 @@ export default function Content(props) {
 		quickSearchFeaturesMap,
 		setDisableDrag,
 		wikidata,
+		center,
 	} = props
 
 	useWhatChanged(props, 'Render component Content')
@@ -215,6 +216,7 @@ export default function Content(props) {
 							vers,
 							snap,
 							quickSearchFeaturesMap,
+							center,
 						}}
 					/>
 					{searchParams.favoris !== 'oui' &&

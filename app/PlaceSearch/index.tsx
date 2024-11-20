@@ -48,6 +48,7 @@ export default function PlaceSearch({
 	vers,
 	snap,
 	quickSearchFeaturesMap,
+	center,
 }) {
 	console.log('lightgreen stepIndex', stepIndex, state)
 	console.log('lightgreen autofocus', autoFocus)
@@ -308,6 +309,7 @@ export default function PlaceSearch({
 						setSnap,
 						snap,
 						quickSearchFeaturesMap,
+						center,
 					}}
 				/>
 			)}
