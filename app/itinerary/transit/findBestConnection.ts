@@ -47,12 +47,22 @@ export default function findBestConnection(connections) {
 		.map((connection) => {
 			try {
 				const departure = connection.stops[0].departure.time
-				const humanTime = humanDepartureTime(new Date(departure * 1000), true)
+				const date = new Date(departure * 1000)
+				if (date < new Date()) return false
+				const humanTime = humanDepartureTime(date, true)
 				return humanTime
 			} catch (e) {
 				console.log('Error building best connection next departures', e)
 			}
 		})
+		.filter(Boolean)
+
+	console.log('bestConnection next departures', nextDepartures)
+	// This is arbitrary. It helps us exclude the display of the "best connection"
+	// bloc in the case of onTrip requests. We could also just compute the onTrip
+	// status as a criteria, but who knows, maybe this mode can produce a best
+	// connection with 3 next departures in some cases ?
+	if (nextDepartures.length < 2) return null
 
 	return {
 		best,
