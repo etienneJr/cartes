@@ -196,6 +196,7 @@ export default function useFetchItinerary(searchParams, state, allez) {
 		date,
 		searchParams.correspondances,
 		searchParams.debut,
+		searchParams.planification,
 	])
 
 	const resetItinerary = useCallback(

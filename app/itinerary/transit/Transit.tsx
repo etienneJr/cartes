@@ -45,7 +45,7 @@ export default function Transit({ itinerary, searchParams }) {
 				}
 			`}
 		>
-			<DateSelector date={date} />
+			<DateSelector date={date} planification={searchParams.planification} />
 			<TransitOptions searchParams={searchParams} />
 			<TransitContent {...{ itinerary, searchParams, date }} />
 		</div>

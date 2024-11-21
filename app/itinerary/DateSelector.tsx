@@ -8,6 +8,7 @@ import { useState } from 'react'
 import { useInterval } from 'usehooks-ts'
 import { DialogButton } from '../UI'
 import { nowStamp, stamp } from './transit/utils'
+import longueVueIcon from '@/public/longuevue.svg'
 
 export const initialDate = (type = 'date', givenDate) => {
 	const stringDate = (
@@ -32,7 +33,7 @@ export const isDateNow = (date, diff = 5) => {
 }
 
 // Can be type date (day + hour) or type day
-export default function DateSelector({ date, type = 'date' }) {
+export default function DateSelector({ date, type = 'date', planification }) {
 	const [forceShowDateInput, setForceShowDateInput] = useState(false)
 	const defaultDate = initialDate(type)
 	const [localDate, setLocalDate] = useState(date || defaultDate)
@@ -138,7 +139,31 @@ export default function DateSelector({ date, type = 'date' }) {
 					backOrForth: 'forth',
 				}}
 			/>
+			<PreTripMode {...{ setSearchParams, planification }} />
 		</div>
+	)
+}
+
+const PreTripMode = ({ setSearchParams, planification }) => {
+	return (
+		<Link
+			href={setSearchParams(
+				{ planification: planification === 'oui' ? undefined : 'oui' },
+				true
+			)}
+		>
+			<Image
+				src={longueVueIcon}
+				alt="Icône longue vue représentant le mode planification à la journée"
+				css={`
+					width: 1.5rem;
+					height: auto;
+					padding-top: 0.3rem;
+					margin-left: 0.1rem;
+					opacity: ${planification === 'oui' ? 1 : 0.3};
+				`}
+			/>
+		</Link>
 	)
 }
 
