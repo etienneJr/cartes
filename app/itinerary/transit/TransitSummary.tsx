@@ -1,6 +1,6 @@
-import BestConnection from './BestConnection'
-import Image from 'next/image'
 import transitIcon from '@/public/transit.svg'
+import Image from 'next/image'
+import BestConnection from './BestConnection'
 import {
 	NoMoreTransitToday,
 	NoTransit,
@@ -9,7 +9,6 @@ import {
 import TransitLoader from './TransitLoader'
 import findBestConnection from './findBestConnection'
 import { connectionStart, filterNextConnections } from './utils'
-import Link from 'next/link'
 
 export default function TransitSummary({ itinerary }) {
 	const data = itinerary.routes.transit
@@ -51,9 +50,27 @@ export default function TransitSummary({ itinerary }) {
 					margin: 0;
 				}
 				margin: 0.6rem;
+				> div {
+					background: var(--lighterColor);
+					border-radius: 1rem;
+					width: 2rem;
+					height: 2rem;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					margin-right: 0.4rem;
+					img {
+						filter: invert(1);
+						width: 1.8rem;
+						height: auto;
+					}
+				}
 			`}
 		>
-			<Image src={transitIcon} alt="Icône transport en commun" />
+			{' '}
+			<div>
+				<Image src={transitIcon} alt="Icône transport en commun" />
+			</div>
 			<p>Voir les {nextConnections.length} options de transport en commun</p>
 		</div>
 	)

@@ -197,6 +197,7 @@ export default function useFetchItinerary(searchParams, state, allez) {
 		searchParams.correspondances,
 		searchParams.debut,
 		searchParams.fin,
+		searchParams.tortue,
 		searchParams.planification,
 	])
 
