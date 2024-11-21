@@ -1,16 +1,18 @@
 'use client'
 
 import useSetSearchParams from '@/components/useSetSearchParams'
-import { useState } from 'react'
-import { DialogButton } from '../UI'
-import { useInterval } from 'usehooks-ts'
-import Link from 'next/link'
-import Image from 'next/image'
-import { nowStamp, stamp } from './transit/utils'
 import calendarIcon from '@/public/calendar.svg'
+import Image from 'next/image'
+import Link from 'next/link'
+import { useState } from 'react'
+import { useInterval } from 'usehooks-ts'
+import { DialogButton } from '../UI'
+import { nowStamp, stamp } from './transit/utils'
 
-export const initialDate = (type = 'date') => {
-	const stringDate = new Date().toLocaleString('fr')
+export const initialDate = (type = 'date', givenDate) => {
+	const stringDate = (
+		givenDate ? new Date(givenDate) : new Date()
+	).toLocaleString('fr')
 	const [date, hour] = stringDate.split(' ')
 
 	const day = date.split('/').reverse().join('-')
@@ -19,25 +21,30 @@ export const initialDate = (type = 'date') => {
 	return day + 'T' + hour.slice(0, -3)
 }
 
-export const isDateNow = (date) => {
+export const isDateNow = (date, diff = 5) => {
 	const now = nowStamp()
 	const dateStamp = stamp(date)
 
 	const difference = dateStamp - now
 
 	console.log('lightgreen diff in minutes', difference / 60)
-	return difference < 60 * 10 // 10 minutes
+	return difference < 60 * diff // 5 minutes
 }
 
 // Can be type date (day + hour) or type day
 export default function DateSelector({ date, type = 'date' }) {
-	const [notNow, setNotNow] = useState(false)
+	const [forceShowDateInput, setForceShowDateInput] = useState(false)
 	const defaultDate = initialDate(type)
 	const [localDate, setLocalDate] = useState(date || defaultDate)
 	const setSearchParams = useSetSearchParams()
 
-	const hideDate = !notNow && isDateNow(date)
-
+	console.log('indigo ddate', date, isDateNow(date))
+	const shouldShowDateInput = forceShowDateInput || !isDateNow(date)
+	const updateDate = (newDate, noPush = true) => {
+		if (!noPush) setLocalDate(newDate)
+		return setSearchParams({ date: encodeDate(newDate) }, noPush)
+	}
+	const isFuture = !isDateNow(date, 9)
 	return (
 		<div
 			css={`
@@ -47,8 +54,16 @@ export default function DateSelector({ date, type = 'date' }) {
 				justify-content: end;
 			`}
 		>
-			{' '}
-			{hideDate ? (
+			{isFuture && (
+				<QuickDateWard
+					{...{
+						date,
+						updateDate,
+						backOrForth: 'back',
+					}}
+				/>
+			)}
+			{!shouldShowDateInput ? (
 				<span
 					css={`
 						display: flex;
@@ -61,7 +76,7 @@ export default function DateSelector({ date, type = 'date' }) {
 				>
 					Maintenant{' '}
 					<button
-						onClick={() => setNotNow(true)}
+						onClick={() => setForceShowDateInput(true)}
 						title="Changer le moment du départ "
 					>
 						<Image
@@ -76,6 +91,7 @@ export default function DateSelector({ date, type = 'date' }) {
 					<input
 						css={`
 							margin-right: 0.4rem !important;
+							margin-left: 0.4rem !important;
 							font-size: 110%;
 							height: 1.4rem;
 							padding: 0 0.2rem;
@@ -113,13 +129,15 @@ export default function DateSelector({ date, type = 'date' }) {
 				</>
 			)}
 			{type === 'date' && (
-				<UpdateDate
-					date={localDate}
-					updateDate={(newDate) =>
-						setSearchParams({ date: encodeDate(newDate) }, true)
-					}
-				/>
+				<UpdateDate date={localDate} updateDate={updateDate} />
 			)}
+			<QuickDateWard
+				{...{
+					date,
+					updateDate,
+					backOrForth: 'forth',
+				}}
+			/>
 		</div>
 	)
 }
@@ -158,3 +176,39 @@ const UpdateDate = ({ date, updateDate }) => {
 }
 export const encodeDate = (date) => date?.replace(/:/, 'h')
 export const decodeDate = (date) => date?.replace(/h/, ':')
+function addMinutes(date, minutes) {
+	return new Date(date.getTime() + minutes * 60000)
+}
+
+// TODO enable the user to click this button twice or thrice and update only
+// once. setTimeout gogo !
+const QuickDateWard = ({ date, updateDate, backOrForth = 'forth' }) => {
+	const nextDate = initialDate(
+		'date',
+		addMinutes(new Date(date), backOrForth === 'forth' ? 10 : -10)
+	)
+	console.log('indigo date', date, nextDate)
+	return (
+		<button
+			onClick={() => updateDate(nextDate, false)}
+			css={`
+				padding: 0;
+				margin: 0;
+				margin-left: 0.2rem;
+				margin-bottom: 0.2rem;
+			`}
+		>
+			<Image
+				src={backOrForth === 'back' ? '/backward-10.svg' : '/forward-10.svg'}
+				alt="Partir 10 minutes plus tôt"
+				width="10"
+				height="10"
+				css={`
+					width: 1.5rem;
+					height: auto;
+					vertical-align: middle;
+				`}
+			/>
+		</button>
+	)
+}
