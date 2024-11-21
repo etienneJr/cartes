@@ -1531,7 +1531,12 @@ On n'est pas à l'abri d'effets secondaires ici.
 
 			'line-color': [
 				'case',
-				['==', ['get', 'subclass'], 'living_street'],
+				[
+					'any',
+					['==', ['get', 'subclass'], 'living_street'],
+					['==', ['get', 'maxspeed'], 'walk'],
+				],
+
 				'hsl(0,0%,100%)',
 				[
 					'any',
@@ -1658,7 +1663,11 @@ On n'est pas à l'abri d'effets secondaires ici.
 				// living_street or other tags that remain to be found, as
 				// "medium"-friendly to pedestrians, cyclists and buses
 				'#99a6c3',
-				['<=', ['to-number', ['get', 'maxspeed']], 30],
+				[
+					'any',
+					['==', ['get', 'maxspeed'], 'walk'],
+					['<=', ['to-number', ['get', 'maxspeed']], 30],
+				],
 				'hsl(215,20%,95%)',
 				'#99a6c3',
 			],
