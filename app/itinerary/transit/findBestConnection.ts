@@ -27,6 +27,7 @@ export default function findBestConnection(connections) {
 			return (
 				walkingTime <
 				// experimental, not optimal at all. See note above
+				// TODO compute according to transit/modes/decodeStepModeParams !
 				2 *
 					connection.transports.find(
 						(transport) => transport.move_type === 'Transport'
@@ -48,7 +49,7 @@ export default function findBestConnection(connections) {
 			try {
 				const departure = connection.stops[0].departure.time
 				const date = new Date(departure * 1000)
-				if (date < new Date()) return false
+				if (date.getTime() < new Date().getTime()) return false
 				const humanTime = humanDepartureTime(date, true)
 				return humanTime
 			} catch (e) {

@@ -40,8 +40,10 @@ const buildRequestBody = (start, destination, date, searchParams) => {
 		point([destination.lng, destination.lat])
 	)
 
-	const { start: startModeParam } = decodeStepModeParams(searchParams)
-	const symmetricModes = stepModeParamsToMotis(startModeParam, requestDistance)
+	const { start: startModeParam, end: endModeParam } =
+		decodeStepModeParams(searchParams)
+	const start_modes = stepModeParamsToMotis(startModeParam, requestDistance)
+	const destination_modes = stepModeParamsToMotis(endModeParam, requestDistance)
 
 	console.log('itinerary distance', requestDistance)
 
@@ -73,10 +75,10 @@ const buildRequestBody = (start, destination, date, searchParams) => {
 						extend_interval_earlier: true,
 						extend_interval_later: true,
 				  },
-			start_modes: symmetricModes,
+			start_modes,
 			destination_type: 'InputPosition',
 			destination,
-			destination_modes: symmetricModes,
+			destination_modes,
 			search_type: 'Default',
 			search_dir: 'Forward',
 			router: '',

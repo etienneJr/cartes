@@ -16,10 +16,12 @@ export const decodeStepModeParams = (searchParams) => {
 		const start = decodeStepModeParam(debut)
 		const end = decodeStepModeParam(fin)
 
-		return {
+		const result = {
 			start,
 			end,
 		}
+		console.log('indigo decoded', result)
+		return result
 	} catch (e) {
 		console.error('Error decoding start mode, start time, or end...', e)
 	}
