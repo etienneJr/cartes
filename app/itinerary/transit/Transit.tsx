@@ -1,8 +1,8 @@
 import { isOverflowX } from '@/components/css/utils'
 import DetailsButton from '@/components/transit/DetailsButton'
 import TransitInstructions from '@/components/transit/TransitInstructions'
+import TransitOptions from '@/components/transit/TransitOptions'
 import useSetSearchParams from '@/components/useSetSearchParams'
-import { findContrastedTextColor } from '@/components/utils/colors'
 import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
 import { useResizeObserver } from 'usehooks-ts'
@@ -15,7 +15,6 @@ import {
 	TransitScopeLimit,
 } from './NoTransitMessages'
 import TransitLoader from './TransitLoader'
-import TransitOptions from '@/components/transit/TransitOptions'
 import TransportMoveBlock from './TransportMoveBlock'
 import findBestConnection from './findBestConnection'
 import {
@@ -194,12 +193,13 @@ const Connection = ({
 				margin-bottom: 0.1rem;
 				cursor: pointer;
 				> div {
-					${selected && `border: 2px solid var(--color);`}
+					${selected &&
+					`border: 2px solid var(--lighterColor);
+					background: var(--lightestColor)`}
 				}
 			`}
 			onClick={() => setSelectedConnection(index)}
 		>
-			{' '}
 			<Line
 				connectionsTimeRange={connectionsTimeRange}
 				transports={connection.transports}
@@ -305,7 +305,10 @@ export const Line = ({
 							`}
 						>
 							<DetailsButton
-								link={setSearchParams({ choix, details: 'oui' }, true)}
+								link={setSearchParams(
+									{ choix: choix || 0, details: 'oui' },
+									true
+								)}
 							/>
 						</div>
 					)}
