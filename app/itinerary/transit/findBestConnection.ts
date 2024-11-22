@@ -97,3 +97,21 @@ export const getBestIntervals = (connections, best) => {
 	const description = humanDuration(max).interval
 	return description
 }
+
+const removeDans = (dans) => (s) => dans ? s.replace('dans ', '') : s
+const removeÀ = (à) => (s) => à ? s.replace('à ', '') : s
+export const nextDeparturesSentence = (departures) => {
+	let dans = false,
+		à = false
+
+	return departures
+		.slice(0, 4)
+		.map((departure) => {
+			const lower = departure.toLowerCase()
+			const result = removeDans(dans)(removeÀ(à)(lower))
+			if (lower.includes('dans ')) dans = true
+			if (lower.includes('à ')) à = true
+			return result
+		})
+		.join(', ')
+}
