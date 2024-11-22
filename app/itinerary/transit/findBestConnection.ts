@@ -27,6 +27,7 @@ export default function findBestConnection(connections) {
 			return (
 				walkingTime <
 				// experimental, not optimal at all. See note above
+				// TODO compute according to transit/modes/decodeStepModeParams !
 				2 *
 					connection.transports.find(
 						(transport) => transport.move_type === 'Transport'
@@ -47,12 +48,22 @@ export default function findBestConnection(connections) {
 		.map((connection) => {
 			try {
 				const departure = connection.stops[0].departure.time
-				const humanTime = humanDepartureTime(new Date(departure * 1000), true)
+				const date = new Date(departure * 1000)
+				if (date.getTime() < new Date().getTime()) return false
+				const humanTime = humanDepartureTime(date, true)
 				return humanTime
 			} catch (e) {
 				console.log('Error building best connection next departures', e)
 			}
 		})
+		.filter(Boolean)
+
+	console.log('bestConnection next departures', nextDepartures)
+	// This is arbitrary. It helps us exclude the display of the "best connection"
+	// bloc in the case of onTrip requests. We could also just compute the onTrip
+	// status as a criteria, but who knows, maybe this mode can produce a best
+	// connection with 3 next departures in some cases ?
+	if (nextDepartures.length < 2) return null
 
 	return {
 		best,
@@ -85,4 +96,22 @@ export const getBestIntervals = (connections, best) => {
 	console.log('orange max', max, intervals)
 	const description = humanDuration(max).interval
 	return description
+}
+
+const removeDans = (dans) => (s) => dans ? s.replace('dans ', '') : s
+const removeÀ = (à) => (s) => à ? s.replace('à ', '') : s
+export const nextDeparturesSentence = (departures) => {
+	let dans = false,
+		à = false
+
+	return departures
+		.slice(0, 4)
+		.map((departure) => {
+			const lower = departure.toLowerCase()
+			const result = removeDans(dans)(removeÀ(à)(lower))
+			if (lower.includes('dans ')) dans = true
+			if (lower.includes('à ')) à = true
+			return result
+		})
+		.join(', ')
 }

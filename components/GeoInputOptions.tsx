@@ -26,7 +26,6 @@ export default function GeoInputOptions({
 	data,
 	updateState,
 	rulesPath = '',
-	dispatchUpdateSituation = () => () => null,
 }) {
 	return (
 		<ul>
@@ -41,7 +40,6 @@ export default function GeoInputOptions({
 							updateState,
 							rulesPath,
 							data,
-							dispatchUpdateSituation,
 						}}
 					/>
 				))}
@@ -76,14 +74,7 @@ export const buildLocationText = (item) => {
 	return locationText
 }
 
-const Option = ({
-	whichInput,
-	option,
-	updateState,
-	dispatchUpdateSituation,
-	rulesPath,
-	data,
-}) => {
+const Option = ({ whichInput, option, updateState, rulesPath, data }) => {
 	const choice = option.choice,
 		inputValue = data.inputValue
 
@@ -147,18 +138,6 @@ const Option = ({
 				onClick={(e) => {
 					const newState = { ...data, choice: { ...option, inputValue } }
 
-					const value =
-						rulesPath === 'transport . avion'
-							? option.city
-							: option.name || option.city
-					const entry = [
-						rulesPath +
-							' . ' +
-							{ depuis: 'départ', vers: 'arrivée' }[whichInput],
-						`'${value}'`,
-					]
-
-					dispatchUpdateSituation(entry[0])(entry[1])
 					updateState(newState)
 				}}
 			>

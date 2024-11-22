@@ -10,6 +10,10 @@ export default function useGeocodeRightClick(stringClickedPoint) {
 		}
 		const clickedPoint = stringClickedPoint.split('|')
 
+		const latitude = +clickedPoint[0],
+			longitude = +clickedPoint[1]
+
+		setData({ latitude, longitude, data: null })
 		const doFetch = async () => {
 			const request = await fetch(
 				`${photonServerUrl}/reverse?lon=${clickedPoint[1]}&lat=${clickedPoint[0]}`
@@ -17,8 +21,8 @@ export default function useGeocodeRightClick(stringClickedPoint) {
 			const json = await request.json()
 
 			const result = {
-				latitude: +clickedPoint[0],
-				longitude: +clickedPoint[1],
+				latitude,
+				longitude,
 				data: json,
 			}
 			setData(result)

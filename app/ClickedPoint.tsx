@@ -5,7 +5,8 @@ export default function ClickedPoint({
 	geocodedClickedPoint: { latitude, longitude, data },
 	geolocation,
 }) {
-	console.log('clickedPoint', latitude, longitude, data)
+	if (latitude && longitude && !data) return <p>Géolocation en cours...</p>
+	console.log('lightgreen clickedPoint', latitude, longitude, data)
 	const origin = geolocation
 	if (!data)
 		return (
@@ -27,6 +28,7 @@ export default function ClickedPoint({
 			>
 				<strong>Adresse</strong>
 				<Address tags={item} noPrefix={true} />
+				<LatLong {...{ latitude, longitude }} />
 				{origin && (
 					<>
 						<strong>Distance</strong>
@@ -101,7 +103,8 @@ const LatLong = ({ latitude, longitude }) => (
 			}
 		`}
 	>
-		<small>longitude</small>&nbsp;{longitude.toFixed(4)} <small>latitude</small>
-		&nbsp;{latitude.toFixed(4)}
+		<small>latitude</small>
+		&nbsp;{latitude.toFixed(4)} <small>longitude</small>&nbsp;
+		{longitude.toFixed(4)}
 	</div>
 )

@@ -265,7 +265,10 @@ export default function Container(props) {
 							containerRef,
 							trackedSnap,
 							setTrackedSnap,
+							geocodedClickedPoint,
 							wikidata,
+							setLatLngClicked,
+							center: debouncedCenter,
 						}}
 					/>
 				</ContentWrapper>

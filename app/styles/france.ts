@@ -1,11 +1,12 @@
 import { getFetchUrlBase, pmtilesServerUrl } from '../serverUrls'
-import { contourLayers, hillshadeLayers } from './terrainLayers'
+import { cycleHighwayLayers, cycleHighwayMaxZoom } from './cycleHighwayLayers'
 
 //Fonts used :
 //https://maplibre.org/font-maker
 //['RobotoRegular-NotoSansRegular'],
 //['RobotoItalic-NotoSansItalic'],
 //['RobotoMediumRegular-NotoSansRegular'],
+//['RobotoBold-NotoSansBold']
 //
 //
 
@@ -45,6 +46,14 @@ export default function franceStyle(transportMode, noVariableTiles = false) {
 			trees: {
 				type: 'vector',
 				url: 'pmtiles://' + pmtilesServerUrl + '/trees.pmtiles',
+			},
+			cycleHighways: {
+				type: 'vector',
+				url: 'pmtiles://' + pmtilesServerUrl + '/cycleHighways.pmtiles',
+			},
+			bathymetry: {
+				type: 'vector',
+				url: 'pmtiles://' + pmtilesServerUrl + '/bathymetry.pmtiles',
 			},
 		},
 		layers: transportMode ? lightenLayers(layers) : layers,
@@ -319,6 +328,27 @@ const layers = [
 			//['==', 'class', 'ocean'],
 		],
 	},
+	{
+		id: 'water-depth',
+		type: 'fill',
+		source: 'bathymetry',
+		'source-layer': 'bathymetry',
+		layout: {},
+		paint: {
+			// cubic bezier is a four point curve for smooth and precise styling
+			// adjust the points to change the rate and intensity of interpolation
+			'fill-color': [
+				'interpolate',
+				['cubic-bezier', 0, 0.5, 1, 0.5],
+				['get', 'amin'],
+				-9000,
+				'#260167',
+				0,
+				oceanColor,
+			],
+		},
+	},
+
 	{
 		id: 'Rock',
 		type: 'fill',
@@ -1269,7 +1299,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 				7,
 				0.5,
 				10,
-				['match', ['get', 'class'], ['trunk', 'primary'], 2.4, 0],
+				['match', ['get', 'class'], ['trunk', 'primary'], 1.5, 0],
 				12,
 				['match', ['get', 'class'], ['trunk', 'primary'], 3, 0.5],
 				14,
@@ -1501,7 +1531,12 @@ On n'est pas à l'abri d'effets secondaires ici.
 
 			'line-color': [
 				'case',
-				['==', ['get', 'subclass'], 'living_street'],
+				[
+					'any',
+					['==', ['get', 'subclass'], 'living_street'],
+					['==', ['get', 'maxspeed'], 'walk'],
+				],
+
 				'hsl(0,0%,100%)',
 				[
 					'any',
@@ -1628,7 +1663,11 @@ On n'est pas à l'abri d'effets secondaires ici.
 				// living_street or other tags that remain to be found, as
 				// "medium"-friendly to pedestrians, cyclists and buses
 				'#99a6c3',
-				['<=', ['to-number', ['get', 'maxspeed']], 30],
+				[
+					'any',
+					['==', ['get', 'maxspeed'], 'walk'],
+					['<=', ['to-number', ['get', 'maxspeed']], 30],
+				],
 				'hsl(215,20%,95%)',
 				'#99a6c3',
 			],
@@ -1637,7 +1676,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 				['linear', 2],
 				['zoom'],
 				10,
-				['match', ['get', 'class'], ['trunk', 'primary'], 1.5, 1],
+				['match', ['get', 'class'], ['trunk', 'primary'], 1.3, 0.8],
 				12,
 				['match', ['get', 'class'], ['trunk', 'primary'], 2.5, 1],
 				14,
@@ -1789,6 +1828,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 			['==', '$type', 'LineString'],
 			['in', 'class', 'path', 'pedestrian'],
 			['!=', 'brunnel', 'tunnel'],
+			['!=', 'subclass', 'cycleway'],
 		],
 	},
 	{
@@ -1807,11 +1847,25 @@ On n'est pas à l'abri d'effets secondaires ici.
 				['zoom'],
 				8,
 				'#916BD4',
-				20,
-				'hsl(0, 0%, 90%)',
+				19,
+				'hsl(0, 0%, 70%)',
 			],
-			'line-width': ['interpolate', ['linear'], ['zoom'], 0, 0, 9, 2, 22, 6],
-			'line-opacity': ['interpolate', ['linear'], ['zoom'], 5, 0.2, 9, 1],
+			'line-width': [
+				'interpolate',
+				['linear'],
+				['zoom'],
+				0,
+				0,
+				9,
+				2,
+				14,
+				1,
+				17,
+				3,
+				22,
+				6,
+			],
+			'line-opacity': ['match', ['get', 'service'], 'yard', 0.4, 1],
 		},
 		metadata: {},
 		filter: ['all', ['!in', 'brunnel', 'tunnel'], ['==', 'class', 'rail']],
@@ -1823,13 +1877,21 @@ On n'est pas à l'abri d'effets secondaires ici.
 		'source-layer': 'transportation',
 		layout: { visibility: 'visible' },
 		paint: {
-			'line-color': 'hsl(0,0%,72%)',
+			'line-color': [
+				'interpolate',
+				['exponential', 1],
+				['zoom'],
+				8,
+				'#916BD4',
+				18,
+				'hsl(0, 0%, 90%)',
+			],
 			'line-width': {
 				base: 1.4,
 				stops: [
-					[14.5, 0],
-					[15, 3],
-					[20, 8],
+					[14.5, 2],
+					[15, 6],
+					[20, 10],
 				],
 			},
 			'line-opacity': ['match', ['get', 'service'], 'yard', 0.5, 1],
@@ -1887,6 +1949,75 @@ On n'est pas à l'abri d'effets secondaires ici.
 		},
 		metadata: {},
 		filter: ['all', ['in', 'subclass', 'tram', 'light_rail']],
+	},
+	...cycleHighwayLayers,
+	{
+		id: 'Cycleway outline',
+		type: 'line',
+		minzoom: cycleHighwayMaxZoom,
+		source: 'openmaptiles',
+		'source-layer': 'transportation',
+		layout: { visibility: 'visible' },
+		paint: {
+			'line-color': 'hsl(240, 45%, 33%)',
+			'line-width': [
+				'interpolate',
+				['linear', 2],
+				['zoom'],
+				5,
+				0,
+				10,
+				0,
+				12,
+				1,
+				14,
+				1,
+				16,
+				3,
+				22,
+				14,
+			],
+			'line-opacity': 0.8,
+		},
+		filter: [
+			'all',
+			['==', '$type', 'LineString'],
+			['in', 'subclass', 'cycleway'],
+		],
+	},
+	{
+		id: 'Cycleway',
+		type: 'line',
+		minzoom: cycleHighwayMaxZoom,
+		source: 'openmaptiles',
+		'source-layer': 'transportation',
+		layout: { visibility: 'visible' },
+		paint: {
+			'line-color': 'hsl(240, 71%, 72%)',
+			'line-width': [
+				'interpolate',
+				['linear', 2],
+				['zoom'],
+				5,
+				0,
+				10,
+				0,
+				12,
+				1,
+				14,
+				1,
+				16,
+				2,
+				22,
+				9,
+			],
+			'line-opacity': 1,
+		},
+		filter: [
+			'all',
+			['==', '$type', 'LineString'],
+			['in', 'subclass', 'cycleway'],
+		],
 	},
 	{
 		id: 'Building',
@@ -2419,8 +2550,8 @@ On n'est pas à l'abri d'effets secondaires ici.
 				'match',
 				['get', 'class'],
 				'motorway',
-				['literal', ['Roboto Bold', 'Noto Sans Bold']],
-				['literal', ['Roboto Regular']],
+				['literal', ['RobotoBold-NotoSansBold']],
+				['literal', ['RobotoRegular-NotoSansRegular']],
 			],
 			'text-size': 10,
 			'icon-image': 'road_{ref_length}',
@@ -2461,7 +2592,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 				'match',
 				['get', 'class'],
 				'motorway',
-				['literal', ['Roboto Bold', 'Noto Sans Bold']],
+				['literal', ['RobotoBold-NotoSansBold']],
 				['literal', ['RobotoRegular-NotoSansRegular']],
 			],
 			'text-size': 9,
@@ -3413,72 +3544,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 		metadata: {},
 		filter: ['all', ['==', 'class', 'continent']],
 	},
-	{
-		id: 'Cycleway outline',
-		type: 'line',
-		source: 'openmaptiles',
-		'source-layer': 'transportation',
-		layout: { visibility: 'visible' },
-		paint: {
-			'line-color': 'hsl(240, 45%, 33%)',
-			'line-width': [
-				'interpolate',
-				['linear', 2],
-				['zoom'],
-				5,
-				0,
-				10,
-				0,
-				12,
-				1,
-				14,
-				1,
-				16,
-				3,
-				22,
-				14,
-			],
-			'line-opacity': 0.8,
-		},
-		filter: [
-			'all',
-			['match', ['get', 'subclass'], ['cycleway'], true, false],
-			['==', ['geometry-type'], 'LineString'],
-		],
-	},
-	{
-		id: 'Cycleway',
-		type: 'line',
-		source: 'openmaptiles',
-		'source-layer': 'transportation',
-		layout: { visibility: 'visible' },
-		paint: {
-			'line-color': 'hsl(240, 71%, 72%)',
-			'line-width': [
-				'interpolate',
-				['linear', 2],
-				['zoom'],
-				5,
-				0,
-				10,
-				0,
-				12,
-				1,
-				14,
-				1,
-				16,
-				2,
-				22,
-				9,
-			],
-			'line-opacity': 1,
-		},
-		filter: [
-			'all',
-			['match', ['get', 'subclass'], ['cycleway'], true, false],
-			['==', ['geometry-type'], 'LineString'],
-		],
-	},
+
 	//...hillshadeLayers,
 	//	...contourLayers,
 ]

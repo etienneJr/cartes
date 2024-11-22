@@ -30,11 +30,7 @@ export default function Steps({
 	const allez = steps.map((step) => step?.key).join('->')
 
 	return (
-		<section
-			css={`
-				margin: 0 0 1rem 0;
-			`}
-		>
+		<section>
 			<AddStepButton
 				url={setSearchParams({ allez: '->' + allez }, true)}
 				title={'Ajouter un point comme départ'}
@@ -181,7 +177,7 @@ const Item = ({
 						)
 					}}
 				>
-					<Icon text={letterFromIndex(index)} />{' '}
+					<StepIcon text={letterFromIndex(index)} />{' '}
 					<span
 						css={`
 							min-width: 6rem;
@@ -300,7 +296,7 @@ const RemoveStepLink = ({ setSearchParams, stepKey, state }) => {
 	)
 }
 
-const Icon = ({ text }) => (
+export const StepIcon = ({ text }) => (
 	<span
 		css={`
 			display: inline-block;

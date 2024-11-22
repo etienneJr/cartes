@@ -40,24 +40,10 @@ export default function useOverpassRequest(bbox, categories) {
 			const request = await fetch(url)
 			const json = await request.json()
 
-			const nodesOrWays = json.elements.filter((element) => {
-				if (!['way', 'node'].includes(element.type)) return false // TODO relations should be handled
-				return true
-			})
-
-			const waysNodes = nodesOrWays
-				.filter((el) => el.type === 'way')
-				.map((el) => el.nodes)
-				.flat()
-			const interestingElements = nodesOrWays.filter(
-				(el) => !waysNodes.find((id) => id === el.id)
-			)
-			const nodeElements = interestingElements
-				.map((element) => {
-					if (element.type === 'node') return element
-					return enrichOsmFeatureWithPolyon(element, json.elements)
-				})
-				.map((element) => ({ ...element, categoryName: category.name }))
+			const nodeElements = overpassResultsToGeojson(json).map((element) => ({
+				...element,
+				categoryName: category.name,
+			}))
 
 			setFeatures((features) => ({
 				...features,
@@ -73,4 +59,24 @@ export default function useOverpassRequest(bbox, categories) {
 	useEffect(() => {})
 
 	return [features]
+}
+
+export const overpassResultsToGeojson = (json) => {
+	const nodesOrWays = json.elements.filter((element) => {
+		if (!['way', 'node'].includes(element.type)) return false // TODO relations should be handled
+		return true
+	})
+
+	const waysNodes = nodesOrWays
+		.filter((el) => el.type === 'way')
+		.map((el) => el.nodes)
+		.flat()
+	const interestingElements = nodesOrWays.filter(
+		(el) => !waysNodes.find((id) => id === el.id)
+	)
+	const nodeElements = interestingElements.map((element) => {
+		if (element.type === 'node') return element
+		return enrichOsmFeatureWithPolyon(element, json.elements)
+	})
+	return nodeElements
 }

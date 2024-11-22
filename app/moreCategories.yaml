@@ -32,6 +32,18 @@
     '[amenity=restaurant][cuisine~crepe]'
     #icon: hermine ne marche pas :/
   icon: https://cdn.jsdelivr.net/gh/osmandapp/OsmAnd-resources/icons/svg/food/restaurant.svg
+- name: Italien & Pizza
+  category: Manger et boire
+  dictionary:
+    - pizza
+    - italien
+    - pâtes
+  query:
+    - '[amenity=restaurant][cuisine~italian|pizza]'
+    - '[vending=pizza]'
+    - '[food=pizza]'
+    - '["food:pizza"=yes]'
+  icon: https://cdn.jsdelivr.net/gh/mapbox/maki/icons/restaurant.svg # TODO pizza
 - name: Libanais
   category: Manger et boire
   dictionary:

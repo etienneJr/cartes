@@ -129,7 +129,16 @@ export default function useFetchItinerary(searchParams, state, allez) {
 
 		async function fetchTransitRoute(multiplePoints, itineraryDistance, date) {
 			const minTransitDistance = 0.5 // please walk or bike
-			if (itineraryDistance < minTransitDistance) return null
+			if (itineraryDistance < minTransitDistance)
+				return {
+					state: 'error',
+					reason: `Le mode transport en commun est désactivé quand la distance à vol d'oiseau du trajet est inférieure à ${
+						minTransitDistance * 1000
+					} m.`,
+					solution: `Votre trajet actuel fait ${Math.round(
+						itineraryDistance * 1000
+					)} m.`,
+				}
 			const points =
 				multiplePoints.length > 2
 					? [multiplePoints[0], multiplePoints.slice(-1)[0]]
@@ -148,23 +157,68 @@ export default function useFetchItinerary(searchParams, state, allez) {
 				date,
 				multiplePoints
 			)
-			const json = await computeMotisTrip(lonLats[0], lonLats[1], date)
+
+			const json = await computeMotisTrip(
+				lonLats[0],
+				lonLats[1],
+				date,
+				searchParams
+			)
 
 			console.log('lightgreen motis', json)
 
 			if (json.state === 'error') return json
 
 			if (!json?.content) return null
-			const notTransitType = ['Walk', 'Cycle']
+			const notTransitType = ['Walk', 'Cycle', 'Car']
 			const { connections } = json.content
-			if (
-				connections.every((connection) =>
-					connection.transports.every((transport) =>
-						notTransitType.includes(transport.move_type)
-					)
+
+			const isNotTransitConnection = (connection) =>
+				connection.transports.every((transport) =>
+					notTransitType.includes(transport.move_type)
 				)
+
+			const transitConnections = connections.filter(
+				(connection) => !isNotTransitConnection(connection)
 			)
-				return null
+
+			// TODO this is coded dirtily because Motis' v2 will require a rewrite,
+			// with a cleaner API. But the UI principles will stay the same
+			const mumo_types = {
+				car: 'conduirez',
+				foot: 'marcherez',
+				bike: 'roulerez',
+			}
+			if (connections.length === 1 && isNotTransitConnection(connections[0])) {
+				const mumo_type = connections[0].transports.reduce((memo, t) => {
+					const mumo = t.move.mumo_type
+					return memo === undefined ? mumo : mumo === memo ? memo : null
+				}, undefined)
+				if (!mumo_type)
+					return {
+						state: 'error',
+						reason: 'Pas de transport en commun trouvé :/',
+					}
+
+				const word = mumo_types[mumo_type]
+
+				return {
+					state: 'error',
+					reason: `Vous ${word} davantage pour aller prendre le bus que d'y aller directement 😅`,
+					solution: `Changez les options d'approche et d'arrivée`,
+				}
+			}
+
+			if (transitConnections.length === 0) {
+				if (searchParams.planification !== 'oui') {
+					return setSearchParams({ planification: 'oui' })
+				}
+
+				return {
+					state: 'error',
+					reason: 'Pas de transport en commun trouvé :/',
+				}
+			}
 			/*
 			return sections.map((el) => ({
 				type: 'Feature',
@@ -172,7 +226,7 @@ export default function useFetchItinerary(searchParams, state, allez) {
 				geometry: { coordinates: el.geojson.coordinates, type: 'LineString' },
 			}))
 			*/
-			return json.content
+			return { ...json.content, connections: transitConnections }
 		}
 		//TODO fails is 3rd point is closer to 1st than 2nd, use reduce that sums
 		const itineraryDistance = distance(points[0], points.slice(-1)[0])
@@ -181,11 +235,27 @@ export default function useFetchItinerary(searchParams, state, allez) {
 		fetchTransitRoute(points, itineraryDistance, date).then((transit) =>
 			setRoutes((routes) => ({ ...routes, transit }))
 		)
-	}, [points, setRoutes, date])
+	}, [
+		points,
+		setRoutes,
+		date,
+		searchParams.correspondances,
+		searchParams.debut,
+		searchParams.fin,
+		searchParams.tortue,
+		searchParams.planification,
+	])
 
 	const resetItinerary = useCallback(
 		() =>
-			setSearchParams({ allez: undefined, mode: undefined, choix: undefined }),
+			setSearchParams({
+				allez: undefined,
+				mode: undefined,
+				choix: undefined,
+				debut: undefined,
+				fin: undefined,
+				planification: undefined,
+			}),
 		[setSearchParams]
 	)
 

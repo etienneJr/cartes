@@ -2,7 +2,7 @@ import { Loader } from '@/components/loader'
 import useSetSearchParams from '@/components/useSetSearchParams'
 import { getThumb } from '@/components/wikidata'
 import Link from 'next/link'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useLocalStorage } from 'usehooks-ts'
 import BookmarkButton from './BookmarkButton'
 import Bookmarks from './Bookmarks'
@@ -29,8 +29,8 @@ import { defaultTransitFilter } from './transport/TransitFilter'
 import TransportMap from './transport/TransportMap'
 import useOgImageFetcher from './useOgImageFetcher'
 import { useWhatChanged } from '@/components/utils/useWhatChanged'
-
-const getMinimumQuickSearchZoom = (mobile) => (mobile ? 10.5 : 12) // On a small screen, 70 %  of the tiles are not visible, hence this rule
+import { feature } from '@turf/turf'
+import { getMinimumQuickSearchZoom } from './QuickFeatureSearchUI'
 
 export default function Content(props) {
 	const {
@@ -65,6 +65,7 @@ export default function Content(props) {
 		quickSearchFeaturesMap,
 		setDisableDrag,
 		wikidata,
+		center,
 	} = props
 
 	useWhatChanged(props, 'Render component Content')
@@ -76,6 +77,8 @@ export default function Content(props) {
 		ogImage = ogImages[url],
 		tagImage = tags?.image,
 		mainImage = tagImage || ogImage // makes a useless request for ogImage that won't be displayed to prefer mainImage : TODO also display OG
+
+	const [featureImageError, setFeatureImageError] = useState(false)
 
 	const [tutorials, setTutorials] = useLocalStorage('tutorials', {})
 	const introductionRead = tutorials.introduction,
@@ -209,19 +212,13 @@ export default function Content(props) {
 							stepIndex: searchStepIndex,
 							geolocation,
 							placeholder: isItineraryModeNoSteps ? 'Votre destination' : null,
+							minimumQuickSearchZoom,
+							vers,
+							snap,
+							quickSearchFeaturesMap,
+							center,
 						}}
 					/>
-					{zoom > minimumQuickSearchZoom && (
-						<QuickFeatureSearch
-							{...{
-								searchParams,
-								searchInput: vers?.inputValue,
-								setSnap,
-								snap,
-								quickSearchFeaturesMap,
-							}}
-						/>
-					)}
 					{searchParams.favoris !== 'oui' &&
 						searchParams.style !== 'transports' && (
 							<QuickBookmarks oldAllez={searchParams.allez} />
@@ -254,9 +251,10 @@ export default function Content(props) {
 								}}
 							/>
 						)}
-						{mainImage && (
+						{mainImage && !featureImageError && (
 							<FeatureImage
 								src={mainImage}
+								onError={() => setFeatureImageError(true)}
 								css={`
 									width: 100%;
 									height: 6rem;

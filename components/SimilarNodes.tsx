@@ -190,7 +190,7 @@ const NodeList = ({ nodes, setSearchParams, isOpenByDefault }) => (
 	</ul>
 )
 
-const computeRoseDirection = (bearing) =>
+export const computeRoseDirection = (bearing) =>
 	Math.abs(bearing) > 135
 		? 'le sud'
 		: Math.abs(bearing) < 45
