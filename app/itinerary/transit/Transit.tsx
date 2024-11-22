@@ -32,6 +32,8 @@ import {
 export default function Transit({ itinerary, searchParams }) {
 	const date = itinerary.date
 
+	console.log('indigo transit yo', itinerary)
+
 	return (
 		<div
 			css={`
@@ -56,7 +58,8 @@ const TransitContent = ({ itinerary, searchParams, date }) => {
 	const data = itinerary.routes.transit
 	if (!data) return
 	if (data.state === 'loading') return <TransitLoader />
-	if (data.state === 'error') return <NoTransit reason={data.reason} />
+	if (data.state === 'error')
+		return <NoTransit reason={data.reason} solution={data.solution} />
 
 	if (!data?.connections || !data.connections.length)
 		return <TransitScopeLimit />

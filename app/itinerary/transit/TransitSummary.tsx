@@ -17,7 +17,7 @@ export default function TransitSummary({ itinerary }) {
 	if (data.state === 'error')
 		return (
 			<section>
-				<NoTransit reason={data.reason} />
+				<NoTransit reason={data.reason} solution={data.solution} />
 				<button css="margin: 0 0 0 auto; display: block">
 					→ Choisir une date
 				</button>

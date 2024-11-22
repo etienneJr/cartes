@@ -129,7 +129,16 @@ export default function useFetchItinerary(searchParams, state, allez) {
 
 		async function fetchTransitRoute(multiplePoints, itineraryDistance, date) {
 			const minTransitDistance = 0.5 // please walk or bike
-			if (itineraryDistance < minTransitDistance) return null
+			if (itineraryDistance < minTransitDistance)
+				return {
+					state: 'error',
+					reason: `Le mode transport en commun est désactivé quand la distance à vol d'oiseau du trajet est inférieure à ${
+						minTransitDistance * 1000
+					} m.`,
+					solution: `Votre trajet actuel fait ${Math.round(
+						itineraryDistance * 1000
+					)} m.`,
+				}
 			const points =
 				multiplePoints.length > 2
 					? [multiplePoints[0], multiplePoints.slice(-1)[0]]
@@ -169,6 +178,34 @@ export default function useFetchItinerary(searchParams, state, allez) {
 						notTransitType.includes(transport.move_type)
 					)
 			)
+
+			// TODO this is coded dirtily because Motis' v2 will require a rewrite,
+			// with a cleaner API. But the UI principles will stay the same
+			const mumo_types = {
+				car: 'conduirez',
+				foot: 'marcherez',
+				bike: 'roulerez',
+			}
+			if (connections.length === 1) {
+				const mumo_type = connections[0].transports.reduce((memo, t) => {
+					const mumo = t.move.mumo_type
+					return memo === undefined ? mumo : mumo === memo ? memo : null
+				}, undefined)
+				if (!mumo_type)
+					return {
+						state: 'error',
+						reason: 'Pas de transport en commun trouvé :/',
+					}
+
+				const word = mumo_types[mumo_type]
+
+				return {
+					state: 'error',
+					reason: `Vous ${word} davantage pour aller prendre le bus que d'y aller directement 😅`,
+					solution: `Changez les options d'approche et d'arrivée`,
+				}
+			}
+
 			if (transitConnections.length === 0)
 				return {
 					state: 'error',
