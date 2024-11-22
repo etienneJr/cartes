@@ -33,7 +33,7 @@ export const stepModeParamsToMotis = (stepModeParams, distance) => {
 	// This is the state of the art of our comprehension of how to use Motis to
 	// produce useful intermodal results in France, letting the user find the
 	// closest train station for more long range requests
-	// See https://github.com/laem/cartes/issues/416
+	// See https://github.com/cartesapp/cartes/issues/416
 	//
 	// Here we set a threshold in km (50) for either not asking a trip starting with a bike
 	// segment because we expect the user will use local transit, or ask it with a

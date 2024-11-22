@@ -5,7 +5,7 @@
 	"author": "Maël THOMAS-QUILLÉVÉRÉ <laem@kont.me>",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/laem/cartes.git"
+		"url": "https://github.com/cartesapp/cartes.git"
 	},
 	"engines": {
 		"node": ">=18"

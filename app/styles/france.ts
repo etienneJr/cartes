@@ -26,7 +26,7 @@ export default function franceStyle(transportMode, noVariableTiles = false) {
 		name: transportMode ? 'Transports' : 'France',
 		sources: {
 			// We're not really using openmaptiles anymore, but a modified version of
-			// it, see cartesapp/gtfs/tiles.ts
+			// it, see cartesapp/serveur/tiles.ts
 			openmaptiles: {
 				url: openmaptilesUrl,
 				//url: 'pmtiles://https://panoramax.openstreetmap.fr/pmtiles/planet.pmtiles',
@@ -119,7 +119,7 @@ const lightenLayers = (layers) =>
 		}
 	})
 
-// See laem/gtfs's process-openmaptiles.lua
+// See cartesapp/serveur's process-openmaptiles.lua
 export const nameExpression = [
 	['get', 'name:fr'], // cartes.app est une application française
 	['get', 'name:latin'], // keep compatibility with Panoramax's planet.pmtiles that cover other tiles than the 4 mega tiles surrounding the hexagone
