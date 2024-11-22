@@ -63,7 +63,10 @@ const buildRequestBody = (start, destination, date, searchParams) => {
 							begin,
 							end,
 						},
-						min_connection_count: 1,
+						min_connection_count: 5,
+						/* Update nov 2024 : the doc is not online anymore, Motis v2 is the
+						 * way to go. Setting it to 5 in pretrip now that we have a default
+						 * onTrip. We'll see this matter again for the migration */
 						/* I do not understand these options. E.g. in Rennes, from 16h30 to
 						 * 18h30, setting this and min_connection_count to 5 leads to results
 						 * at 23h30 ! Way too much.

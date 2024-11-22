@@ -206,11 +206,16 @@ export default function useFetchItinerary(searchParams, state, allez) {
 				}
 			}
 
-			if (transitConnections.length === 0)
+			if (transitConnections.length === 0) {
+				if (searchParams.planification !== 'oui') {
+					return setSearchParams({ planification: 'oui' })
+				}
+
 				return {
 					state: 'error',
 					reason: 'Pas de transport en commun trouvé :/',
 				}
+			}
 			/*
 			return sections.map((el) => ({
 				type: 'Feature',
