@@ -172,11 +172,14 @@ export default function useFetchItinerary(searchParams, state, allez) {
 			if (!json?.content) return null
 			const notTransitType = ['Walk', 'Cycle', 'Car']
 			const { connections } = json.content
+
+			const isNotTransitConnection = (connection) =>
+				connection.transports.every((transport) =>
+					notTransitType.includes(transport.move_type)
+				)
+
 			const transitConnections = connections.filter(
-				(connection) =>
-					!connection.transports.every((transport) =>
-						notTransitType.includes(transport.move_type)
-					)
+				(connection) => !isNotTransitConnection(connection)
 			)
 
 			// TODO this is coded dirtily because Motis' v2 will require a rewrite,
@@ -186,7 +189,7 @@ export default function useFetchItinerary(searchParams, state, allez) {
 				foot: 'marcherez',
 				bike: 'roulerez',
 			}
-			if (connections.length === 1) {
+			if (connections.length === 1 && isNotTransitConnection(connections[0])) {
 				const mumo_type = connections[0].transports.reduce((memo, t) => {
 					const mumo = t.move.mumo_type
 					return memo === undefined ? mumo : mumo === memo ? memo : null
@@ -251,6 +254,7 @@ export default function useFetchItinerary(searchParams, state, allez) {
 				choix: undefined,
 				debut: undefined,
 				fin: undefined,
+				planification: undefined,
 			}),
 		[setSearchParams]
 	)
