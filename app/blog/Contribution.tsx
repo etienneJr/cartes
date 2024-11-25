@@ -4,7 +4,7 @@ import Link from 'next/link'
 export default function Contribution({ slug }) {
 	return (
 		<Link
-			href={`https://github.com/laem/cartes/edit/master/articles/${slug}.mdx`}
+			href={`https://github.com/cartesapp/cartes/edit/master/articles/${slug}.mdx`}
 			style={css`
 				display: block;
 				margin: 0 0 0 auto;

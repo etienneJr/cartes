@@ -5,7 +5,7 @@ export const dateCool = (date) =>
 		day: 'numeric',
 	})
 
-const repo = 'laem/cartes'
+const repo = 'cartesapp/cartes'
 
 export const getLastEdit = async (name) => {
 	try {
