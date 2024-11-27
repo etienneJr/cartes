@@ -1,5 +1,6 @@
 import { Loader } from '@/components/loader'
 import useSetSearchParams from '@/components/useSetSearchParams'
+import { useWhatChanged } from '@/components/utils/useWhatChanged'
 import { getThumb } from '@/components/wikidata'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
@@ -14,7 +15,7 @@ import OsmFeature from './OsmFeature'
 import { PlaceButtonList } from './PlaceButtonsUI'
 import PlaceSearch from './PlaceSearch'
 import QuickBookmarks from './QuickBookmarks'
-import QuickFeatureSearch from './QuickFeatureSearch'
+import { getMinimumQuickSearchZoom } from './QuickFeatureSearchUI'
 import SetDestination from './SetDestination'
 import ShareButton from './ShareButton'
 import { DialogButton, ModalCloseButton } from './UI'
@@ -28,9 +29,7 @@ import { defaultAgencyFilter } from './transport/AgencyFilter'
 import { defaultTransitFilter } from './transport/TransitFilter'
 import TransportMap from './transport/TransportMap'
 import useOgImageFetcher from './useOgImageFetcher'
-import { useWhatChanged } from '@/components/utils/useWhatChanged'
-import { feature } from '@turf/turf'
-import { getMinimumQuickSearchZoom } from './QuickFeatureSearchUI'
+import PaymentBlock from '@/components/PaymentBlock'
 
 export default function Content(props) {
 	const {
@@ -107,6 +106,7 @@ export default function Content(props) {
 		!clickTipRead,
 		geocodedClickedPoint,
 		searchParams.gare,
+		searchParams.abonnement,
 	]
 
 	const hasContent = content.some(
@@ -173,11 +173,12 @@ export default function Content(props) {
 
 	const showIntroduction = searchParams.intro
 
+	const { abonnement } = searchParams
 	useEffect(() => {
-		if (!showIntroduction) return
+		if (!showIntroduction && !abonnement) return
 
 		setTimeout(() => setSnap(1), 200)
-	}, [showIntroduction, setSnap])
+	}, [showIntroduction, setSnap, abonnement])
 
 	if (showIntroduction)
 		return (
@@ -194,6 +195,9 @@ export default function Content(props) {
 				</DialogButton>
 			</ExplanationWrapper>
 		)
+
+	if (searchParams.abonnement)
+		return <PaymentBlock {...{ setSearchParams, openSheet }} />
 
 	return (
 		<ContentWrapper>
