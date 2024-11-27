@@ -3,35 +3,42 @@
 import { ContentSection } from '@/app/ContentUI'
 import { ModalCloseButton } from '@/app/UI'
 import { useEffect, useState } from 'react'
+import { useLocalStorage } from 'usehooks-ts'
 
 export default function PaymentBlock({ setSearchParams, openSheet }) {
 	const [choice, setChoice] = useState(false)
 	const [message, setMessage] = useState(null)
+	const [uuid, setUuid] = useLocalStorage('uuid', null)
+
 	useEffect(() => {
-		if (!choice) return
+		if (uuid) return
+		setUuid(crypto.randomUUID())
+	}, [uuid, setUuid])
+
+	useEffect(() => {
+		if (!uuid) return
 
 		const doFetch = async () => {
 			try {
-				const uuidSet = localStorage.getItem('uuid')
-
-				if (uuidSet) return setMessage('Déjà voté !')
-
-				const uuid = crypto.randomUUID()
-
-				localStorage.setItem('uuid', uuid)
-
 				// For now we don't collect votes
 
-				const url = `https://bright-ant-40.deno.dev/sondage-paiement/${uuid}/${choice}`
-				const request = await fetch(url)
-				const text = await request.text()
-				setMessage(text)
+				if (!choice) {
+					const traceUrl = `https://bright-ant-40.deno.dev/sondage-paiement/${uuid}/vu`
+					const traceRequest = await fetch(traceUrl)
+					const traceText = await traceRequest.text()
+				} else {
+					const url = `https://bright-ant-40.deno.dev/sondage-paiement/${uuid}/${choice}`
+					const request = await fetch(url)
+					const text = await request.text()
+					setMessage(text)
+				}
 			} catch (e) {
 				console.log('Erreur dans le sondage de paiement', e)
 			}
 		}
 		doFetch()
-	}, [choice, setMessage])
+	}, [choice, setMessage, uuid])
+
 	return (
 		<section>
 			<ContentSection>
@@ -56,6 +63,7 @@ export default function PaymentBlock({ setSearchParams, openSheet }) {
 								display: flex;
 								flex-wrap: wrap;
 								gap: 1rem;
+								justify-content: end;
 								button {
 									padding: 0.2rem 1rem;
 									background: linear-gradient(
@@ -72,8 +80,9 @@ export default function PaymentBlock({ setSearchParams, openSheet }) {
 								50 centimes par mois
 							</button>
 							<button onClick={() => setChoice('6-an')}>6 € par an</button>
+							<button onClick={() => setChoice('0')}>Pas pour l'instant</button>
 						</section>
-						<p css="text-align: right; ">
+						<p css="text-align: right; margin-top: 1rem">
 							<small>Sans engagement, évidemment.</small>
 						</p>
 					</section>
