@@ -5,16 +5,15 @@ import { useState } from 'react'
 export default function PaymentBlock({ setSearchParams, openSheet }) {
 	const [choice, setChoice] = useState(false)
 	return (
-		<div>
-			<ModalCloseButton
-				title="Fermer l'encart abonnement"
-				css="right: .4rem"
-				onClick={() => {
-					setSearchParams({ abonnement: undefined })
-					openSheet(false)
-				}}
-			/>
+		<section>
 			<ContentSection>
+				<ModalCloseButton
+					title="Fermer l'encart abonnement"
+					onClick={() => {
+						setSearchParams({ abonnement: undefined })
+						openSheet(false)
+					}}
+				/>
 				<h2>Financer l'initiative Cartes</h2>
 				<p>
 					Vous ne trouverez pas de pubs ici. Pour continuer de développer
@@ -58,6 +57,6 @@ export default function PaymentBlock({ setSearchParams, openSheet }) {
 					</p>
 				)}
 			</ContentSection>
-		</div>
+		</section>
 	)
 }
