@@ -1,9 +1,37 @@
+'use client'
+
 import { ContentSection } from '@/app/ContentUI'
-import { ContentWrapper, ModalCloseButton } from '@/app/UI'
-import { useState } from 'react'
+import { ModalCloseButton } from '@/app/UI'
+import { useEffect, useState } from 'react'
 
 export default function PaymentBlock({ setSearchParams, openSheet }) {
 	const [choice, setChoice] = useState(false)
+	const [message, setMessage] = useState(null)
+	useEffect(() => {
+		if (!choice) return
+
+		const doFetch = async () => {
+			try {
+				const uuidSet = localStorage.getItem('uuid')
+
+				if (uuidSet) return setMessage('Déjà voté !')
+
+				const uuid = crypto.randomUUID()
+
+				localStorage.setItem('uuid', uuid)
+
+				// For now we don't collect votes
+
+				const url = `https://bright-ant-40.deno.dev/sondage-paiement/${uuid}/${choice}`
+				const request = await fetch(url)
+				const text = await request.text()
+				setMessage(text)
+			} catch (e) {
+				console.log('Erreur dans le sondage de paiement', e)
+			}
+		}
+		doFetch()
+	}, [choice, setMessage])
 	return (
 		<section>
 			<ContentSection>
@@ -40,22 +68,22 @@ export default function PaymentBlock({ setSearchParams, openSheet }) {
 								}
 							`}
 						>
-							<button onClick={() => setChoice('0,5/mois')}>
+							<button onClick={() => setChoice('05-mois')}>
 								50 centimes par mois
 							</button>
-							<button onClick={() => setChoice('6/an')}>6 € par an</button>
+							<button onClick={() => setChoice('6-an')}>6 € par an</button>
 						</section>
 						<p css="text-align: right; ">
 							<small>Sans engagement, évidemment.</small>
 						</p>
 					</section>
 				)}
-				{choice && (
-					<p css="margin-top: 1rem">
-						🙏 Merci ! Votre choix nous permet de mesurer l'intérêt. Intégrer un
-						système de paiement n'est pas trivial.
-					</p>
-				)}
+				{choice &&
+					(message ? (
+						<p css="margin-top: 1rem">{message}</p>
+					) : (
+						<p>Appel en cours...</p>
+					))}
 			</ContentSection>
 		</section>
 	)
