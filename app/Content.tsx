@@ -79,7 +79,12 @@ export default function Content(props) {
 
 	const [featureImageError, setFeatureImageError] = useState(false)
 
-	const [tutorials, setTutorials] = useLocalStorage('tutorials', {})
+	const [tutorials, setTutorials] = useLocalStorage(
+		'tutorials',
+		{},
+		{ initializeWithValue: false }
+	)
+
 	const introductionRead = tutorials.introduction,
 		clickTipRead = true || tutorials.clickTip
 
