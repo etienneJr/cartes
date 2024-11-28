@@ -14,9 +14,9 @@ const setUpHover = (map) => {
 	let lastHover = null
 
 	const setHoverOn = (feature) =>
-		feature && map.setFeatureState(feature, { hover: true })
+		feature?.id && map.setFeatureState(feature, { hover: true })
 	const setHoverOff = (feature) =>
-		feature && map.setFeatureState(feature, { hover: false })
+		feature?.id && map.setFeatureState(feature, { hover: false })
 
 	const onMouseMove = (e) => {
 		if (e.features && e.features.length > 0) {

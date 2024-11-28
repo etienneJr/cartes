@@ -57,7 +57,13 @@ export default function PlaceSearch({
 	if (stepIndex == null) throw new Error('Step index necessary')
 
 	const [isLocalSearch, setIsLocalSearch] = useState(true)
-	const [searchHistory, setSearchHistory] = useLocalStorage('searchHistory', [])
+	const [searchHistory, setSearchHistory] = useLocalStorage(
+		'searchHistory',
+		[],
+		{
+			initializeWithValue: false,
+		}
+	)
 	const [itineraryProposition, setItineraryProposition] = useState()
 	const [postalCodeState, setPostalCodeState] = useState()
 	const [coordinatesState, setCoordinatesState] = useState()

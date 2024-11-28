@@ -1,4 +1,3 @@
-import distance from '@turf/distance'
 import Image from 'next/image'
 import { useLocalStorage } from 'usehooks-ts'
 import { PlaceButton } from './PlaceButtonsUI'
@@ -6,7 +5,14 @@ import { PlaceButton } from './PlaceButtonsUI'
 export const pointHash = (point) => point.geometry.coordinates.join('|')
 
 export default function BookmarkButton({ geocodedClickedPoint, osmFeature }) {
-	const [bookmarks, setBookmarks] = useLocalStorage('bookmarks', [])
+	const [bookmarks, setBookmarks] = useLocalStorage(
+		'bookmarks',
+		[],
+
+		{
+			initializeWithValue: false,
+		}
+	)
 	const properties = geocodedClickedPoint
 		? geocodedClickedPoint.data?.features?.length > 0 &&
 		  geocodedClickedPoint.data.features[0].properties

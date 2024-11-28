@@ -20,7 +20,10 @@ export default function StyleChooser({
 }) {
 	const [localStorageStyleKey, setLocalStorageStyleKey] = useLocalStorage(
 		'style',
-		null
+		null,
+		{
+			initializeWithValue: false,
+		}
 	)
 	const setSearchParams = useSetSearchParams()
 
