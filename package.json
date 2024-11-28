@@ -89,6 +89,7 @@
 		"openmoji": "^15.0.0",
 		"osmtogeojson": "^3.0.0-beta.5",
 		"pmtiles": "^3.2.0",
+		"postcss-nested": "^7.0.2",
 		"process": "^0.11.10",
 		"rbush": "^4.0.1",
 		"react": "^19.0.0-rc-45804af1-20241021",

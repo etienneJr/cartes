@@ -16,9 +16,6 @@ const nextConfig = {
 	experimental: {
 		reactCompiler: true,
 	},
-	compiler: {
-		styledComponents: true,
-	},
 	/*
 	compilerOptions: {
 		baseUrl: '.',
