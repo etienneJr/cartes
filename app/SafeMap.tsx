@@ -1,6 +1,6 @@
 import isWebglSupported from '@/components/isWebglSupported'
 import Map from './Map'
-import css from '@/components/css/convertToJs'
+import { css } from 'next-yak'
 
 export default function SafeMap(props) {
 	const supported = isWebglSupported()
@@ -8,7 +8,7 @@ export default function SafeMap(props) {
 	if (supported === false)
 		return (
 			<section
-				style={css`
+				css={css`
 					margin: 20vh auto 0 auto;
 					width: 20rem;
 					background: blue;

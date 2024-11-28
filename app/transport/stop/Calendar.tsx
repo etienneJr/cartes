@@ -1,4 +1,4 @@
-import css from '@/components/css/convertToJs'
+import {css} from 'next-yak'
 import { useEffect, useRef, useState } from 'react'
 import { nowAsYYMMDD } from './Route'
 
@@ -45,7 +45,7 @@ export default function Calendar({ data }) {
 				value={day}
 				min={today}
 				onChange={(e) => setDay(e.target.value)}
-				style={css`
+				css={css`
 					cursor: pointer;
 					margin-top: 0.6rem;
 					display: block;

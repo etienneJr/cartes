@@ -77,7 +77,7 @@ export default function ContactAndSocial({
 					href={`https://annuaire-entreprises.data.gouv.fr/etablissement/${siret}`}
 					target="_blank"
 					title="Fiche entreprise sur l'annuaire officiel des entreprises"
-					style={css`
+					css={css`
 						display: flex;
 						align-items: center;
 					`}
@@ -85,7 +85,7 @@ export default function ContactAndSocial({
 					<Image
 						src={'/annuaire-entreprises.svg'}
 						alt="logo Marianne représentant l'annuaire des entreprises"
-						style={css`
+						css={css`
 							margin: 0 0.3rem 0 0.2rem;
 							width: 1.4rem;
 							height: auto;

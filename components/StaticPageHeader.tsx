@@ -8,7 +8,7 @@ export default function ({ small }) {
 		<header>
 			<Link
 				href="/"
-				style={css`
+				css={css`
 					text-decoration: none;
 				`}
 			>

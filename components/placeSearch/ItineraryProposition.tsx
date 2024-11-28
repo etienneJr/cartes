@@ -4,6 +4,7 @@ import ItineraryIcon from '@/public/itinerary-circle-plain.svg'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { encodePlace } from '@/app/utils'
+import { css } from 'next-yak'
 
 export default function ({ setSearchParams, data: [from, to] }) {
 	return (
@@ -31,7 +32,15 @@ export default function ({ setSearchParams, data: [from, to] }) {
 			>
 				<Image src={ItineraryIcon} alt="Lancer un itinéraire" />
 				<span>
-					Itinéraire {from.name} <span css="margin: 0 .4rem">➤</span> {to.name}
+					Itinéraire {from.name}
+					<span
+						css={css`
+							margin: 0 0.4rem;
+						`}
+					>
+						➤
+					</span>{' '}
+					{to.name}
 				</span>
 			</Link>
 		</AnimatedSearchProposition>

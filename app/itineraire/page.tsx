@@ -1,4 +1,4 @@
-import css from '@/components/css/convertToJs'
+import {css} from 'next-yak'
 import Link from 'next/link'
 import { PresentationWrapper } from '../presentation/UI'
 import CTA from '@/app/presentation/CTA'
@@ -25,7 +25,7 @@ export default function () {
 			</header>
 			<CTA>Calculer un itinéraire</CTA>
 			<section
-				style={css`
+				css={css`
 					margin: 2rem 0;
 				`}
 			>

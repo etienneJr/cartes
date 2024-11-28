@@ -1,6 +1,4 @@
-'use client'
-
-import {styled} from 'next-yak'
+import { styled } from 'next-yak'
 
 export const ExplanationWrapper = styled.div`
 	h1 {

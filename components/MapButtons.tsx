@@ -2,7 +2,7 @@
 
 import useMeasureDistance from '@/app/useMeasureDistance'
 import Emoji from '@/components/Emoji'
-import css from '@/components/css/convertToJs'
+import {css} from 'next-yak'
 import useSetSearchParams from '@/components/useSetSearchParams'
 import { omit } from '@/components/utils/utils'
 import Link from 'next/link'
@@ -169,7 +169,7 @@ export default function MapButtons({
 }
 export const MapIcon = () => (
 	<img
-		style={css`
+		css={css`
 			width: 1.4rem;
 			height: 1.4rem;
 			margin: 0 !important;
@@ -182,7 +182,7 @@ export const MapIcon = () => (
 )
 export const DistanceIcon = () => (
 	<img
-		style={css`
+		css={css`
 			width: 1.4rem;
 			height: 1.4rem;
 			margin: 0 !important;

@@ -1,4 +1,4 @@
-import css from '@/components/css/convertToJs'
+import {css} from 'next-yak'
 import { sortBy } from '@/components/utils/utils'
 import Link from 'next/link'
 import { OtherArticlesList, OtherArticlesSection } from './UI'
@@ -22,7 +22,7 @@ export default function ({ excludeUrl }) {
 									</Link>
 								</div>
 								<small
-									style={css`
+									css={css`
 										color: var(--color);
 										font-size: 90%;
 									`}

@@ -3,7 +3,7 @@ import css from '../css/convertToJs'
 export default function Diapo({ children }) {
 	return (
 		<div
-			style={css`
+			css={css`
 				height: 100vh;
 			`}
 		>

@@ -6,7 +6,7 @@ import WebIcon from '@/public/web.svg'
 import Image from 'next/image'
 import './devices.css'
 import Phone from './Phone'
-import css from '@/components/css/convertToJs'
+import {css} from 'next-yak'
 import { description } from '../layout'
 import CTA from './CTA'
 
@@ -146,7 +146,7 @@ export default function () {
 				propose en premier lieu des moyens de transport écologiques :
 			</p>
 			<ul
-				style={css`
+				css={css`
 					padding-left: 1rem;
 				`}
 			>
@@ -212,7 +212,7 @@ export default function () {
 			</p>
 			<p>Voici un exemple sur un commerce à Rennes :</p>
 			<blockquote
-				style={css`
+				css={css`
 					line-height: 1rem;
 					margin-bottom: 1rem;
 					border: 1px dashed var(--color);
@@ -226,7 +226,7 @@ export default function () {
 
 			<iframe
 				src="https://cartes.app/?allez=Little+Beetles|n5352517991|-1.6826|48.1118"
-				style={css(iframeStyle)}
+				css={css(iframeStyle)}
 			/>
 			<p>
 				Pour intégrer <strong>votre lieu</strong>, remplacez simplement le

@@ -8,7 +8,7 @@ import Presentation1 from './presentation1.mdx'
 import Presentation2 from './presentation2.mdx'
 import Presentation3 from './presentation3.mdx'
 import Presentation4 from './presentation4.mdx'
-import css from '@/components/css/convertToJs'
+import {css} from 'next-yak'
 
 export const metadata: Metadata = {
 	title: 'Cartes - Présentation SOTM 2024',
@@ -29,7 +29,7 @@ export default function () {
 							<h2>
 								State of the Map{' '}
 								<span
-									style={css`
+									css={css`
 										color: crimson;
 									`}
 								>
@@ -40,7 +40,7 @@ export default function () {
 						</header>
 					</PresentationWrapper>
 					<small
-						style={css`
+						css={css`
 							font-size: 80%;
 							color: gray;
 						`}

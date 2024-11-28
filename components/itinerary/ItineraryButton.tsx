@@ -1,4 +1,4 @@
-import css from '@/components/css/convertToJs'
+import {css} from 'next-yak'
 import { MapButton } from '../MapButtons'
 
 export default function ItineraryButton({
@@ -34,7 +34,7 @@ export default function ItineraryButton({
 
 export const ItineraryIcon = () => (
 	<img
-		style={css`
+		css={css`
 			width: 1.4rem;
 			height: 1.4rem;
 			margin: 0 !important;
@@ -47,7 +47,7 @@ export const ItineraryIcon = () => (
 )
 export const ResetIcon = () => (
 	<img
-		style={css`
+		css={css`
 			width: 1.4rem;
 			height: 1.4rem;
 		`}

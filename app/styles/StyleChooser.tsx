@@ -1,4 +1,4 @@
-import css from '@/components/css/convertToJs'
+import {css} from 'next-yak'
 import useSetSearchParams from '@/components/useSetSearchParams'
 import informationIcon from '@/public/information.svg'
 import Image from 'next/image'
@@ -103,7 +103,7 @@ const Styles = ({
 }) => {
 	return (
 		<ul
-			style={css`
+			css={css`
 				display: flex;
 				justify-content: center;
 				flex-wrap: wrap;

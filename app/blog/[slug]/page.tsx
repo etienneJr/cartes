@@ -1,7 +1,7 @@
 import { allArticles } from '@/.contentlayer/generated'
 import Article from '@/components/Article'
 import BlueskyComments from '@/components/BlueskyComments'
-import css from '@/components/css/convertToJs'
+import {css} from 'next-yak'
 import { getMDXComponent } from 'next-contentlayer2/hooks'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -47,7 +47,7 @@ export default async function Post(props: Props) {
 				{!post.tags?.includes('page') && (
 					<Link
 						href="/blog"
-						style={css`
+						css={css`
 							margin-top: 0.6rem;
 							display: inline-block;
 						`}

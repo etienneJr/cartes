@@ -1,4 +1,4 @@
-import css from '@/components/css/convertToJs'
+import {css} from 'next-yak'
 
 export default function Brand({ brand, brandWikidata, brandWikipedia }) {
 	if (!(brand || brandWikidata || brandWikipedia)) return null
@@ -16,7 +16,7 @@ export default function Brand({ brand, brandWikidata, brandWikipedia }) {
 				alt="Logo de Wikipedia"
 				width="20"
 				height="20"
-				style={css`
+				css={css`
 					vertical-align: middle;
 				`}
 			/>{' '}
@@ -30,7 +30,7 @@ export default function Brand({ brand, brandWikidata, brandWikipedia }) {
 
 export const Wikidata = ({ id }) => (
 	<span
-		style={css`
+		css={css`
 			margin-left: 0.8rem;
 		`}
 	>
@@ -39,7 +39,7 @@ export const Wikidata = ({ id }) => (
 			alt="Logo de Wikidata"
 			width="20"
 			height="20"
-			style={css`
+			css={css`
 				vertical-align: middle;
 			`}
 		/>{' '}

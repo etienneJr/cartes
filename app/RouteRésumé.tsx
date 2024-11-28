@@ -1,5 +1,5 @@
 import DownloadGPXWrapper from '@/components/DownloadGPXWrapper'
-import css from '@/components/css/convertToJs'
+import { css } from 'next-yak'
 import LightsWarning from './LightsWarning'
 import ProfileChooser from './ProfileChooser'
 import ValhallaRésumé from './itinerary/ValhallaRésumé'
@@ -50,7 +50,7 @@ export default function RouteRésumé({
 	return (
 		<section>
 			<div
-				css={`
+				css={css`
 					position: relative;
 					display: flex;
 					align-items: center;
@@ -155,7 +155,7 @@ const BrouterModeContent = ({
 						(déniveléCumulé / distance) *
 						100
 					).toFixed(1)}%`}
-					style={css(
+					css={css(
 						`background: ${deniveléColor(
 							déniveléCumulé,
 							distance
@@ -176,7 +176,11 @@ const BrouterModeContent = ({
 				/>
 			)}
 			{mode === 'cycling' && data.safe && (
-				<p css="text-align: right">
+				<p
+					css={css`
+						text-align: right;
+					`}
+				>
 					<small>
 						{data.safe.safeRatio < 0.3
 							? '❗️'

@@ -14,7 +14,7 @@ export default function CircularIcon({
 	return (
 		<div
 			{...rest}
-			style={css(`
+			css={css(`
 				position: relative;
 				width: ${size};
 				height: ${size};
@@ -22,7 +22,7 @@ export default function CircularIcon({
 			`)}
 		>
 			<div
-				style={css(`
+				css={css(`
 					position: absolute;
 					background: ${background};
 					border-radius: 3rem;
@@ -31,7 +31,7 @@ export default function CircularIcon({
 				`)}
 			/>
 			<img
-				style={css(`
+				css={css(`
 					position: absolute;
 					width: 100%;
 					height: 100%;

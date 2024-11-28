@@ -22,7 +22,7 @@ export default async function BlueskyComments({ uri }) {
 
 	return (
 		<div
-			style={css`
+			css={css`
 				max-width: 700px;
 				margin: 0 auto 2rem auto;
 			`}
@@ -34,7 +34,7 @@ export default async function BlueskyComments({ uri }) {
 			</p>
 			{noReplies ? null : (
 				<ol
-					style={css`
+					css={css`
 						list-style-type: none;
 					`}
 				>

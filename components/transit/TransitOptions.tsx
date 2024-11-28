@@ -1,4 +1,5 @@
 import useSetSearchParams from '@/components/useSetSearchParams'
+import { css } from 'next-yak'
 import correspondanceIcon from '@/public/correspondance.svg'
 import tortoiseIcon from '@/public/tortoise.svg'
 import Image from 'next/image'
@@ -15,7 +16,7 @@ export default function TransitOptions({ searchParams }) {
 
 	return (
 		<section
-			css={`
+			css={css`
 				margin: 0.8rem 0.4rem;
 				img {
 					width: 1.4rem;
@@ -36,7 +37,7 @@ export default function TransitOptions({ searchParams }) {
 					{...{ partKey: 'debut', searchParams, setSearchParams }}
 				/>
 				<Button
-					css={`
+					css={css`
 						cursor: pointer;
 						position: relative;
 					`}
@@ -54,12 +55,12 @@ export default function TransitOptions({ searchParams }) {
 					<Image
 						src={correspondanceIcon}
 						alt="Icône de correspondance de transport en commun"
-						css={`
+						css={css`
 							width: 2.6rem !important;
 						`}
 					/>
 					<span
-						css={`
+						css={css`
 							position: absolute;
 							left: 50%;
 							top: 50%;
@@ -75,11 +76,23 @@ export default function TransitOptions({ searchParams }) {
 							<div>
 								<div>
 									{correspondances == null ? (
-										<div css="font-size: 140%; max-height: .8rem; line-height: .6rem">
+										<div
+											css={css`
+												font-size: 140%;
+												max-height: 0.8rem;
+												line-height: 0.6rem;
+											`}
+										>
 											∞
 										</div>
 									) : (
-										<span css="font-size: 100%; line-height: .8rem; white-space: nowrap">
+										<span
+											css={css`
+												font-size: 100%;
+												line-height: 0.8rem;
+												white-space: nowrap;
+											`}
+										>
 											{+correspondances + 1} max
 										</span>
 									)}
@@ -93,7 +106,7 @@ export default function TransitOptions({ searchParams }) {
 					src={tortoiseIcon}
 					alt="Icône d'une tortue symbolisant une correspondance moins rapide"
 					onClick={() => setSearchParams({ tortue: tortue ? undefined : 3 })}
-					css={`
+					css={css`
 						margin-right: 0.3rem;
 						width: 1rem;
 						cursor: pointer;

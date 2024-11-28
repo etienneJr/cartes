@@ -1,4 +1,4 @@
-import css from '@/components/css/convertToJs'
+import {css} from 'next-yak'
 import Link from 'next/link'
 import { PresentationWrapper } from '../presentation/UI'
 import regionsRaw from './regions.yaml'
@@ -90,7 +90,7 @@ export default async function () {
 			</header>
 
 			<section
-				style={css`
+				css={css`
 					margin: 2rem 0;
 				`}
 			>
@@ -107,7 +107,7 @@ export default async function () {
 					</a>
 				</p>
 				<section
-					style={css`
+					css={css`
 						margin-top: 3vh;
 						background: var(--lightestColor);
 						padding: 0.1rem 1rem 2rem;

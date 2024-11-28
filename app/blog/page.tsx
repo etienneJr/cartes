@@ -5,7 +5,7 @@ import { List } from './UI'
 import { dateCool } from './utils'
 import Logo from '@/public/logo.svg'
 import Image from 'next/image'
-import css from '@/components/css/convertToJs'
+import {css} from 'next-yak'
 
 export const blogArticles = allArticles.filter(
 	(article) =>
@@ -28,7 +28,7 @@ const Page = () => {
 	return (
 		<main>
 			<nav
-				style={css`
+				css={css`
 					margin-top: 1rem;
 				`}
 			>
@@ -38,7 +38,7 @@ const Page = () => {
 						alt="Logo de Cartes.app"
 						width="100"
 						height="100"
-						style={css`
+						css={css`
 							width: 2rem;
 							height: auto;
 							margin-right: 0.6rem;

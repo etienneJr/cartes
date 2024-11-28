@@ -1,4 +1,4 @@
-import css from '@/components/css/convertToJs'
+import {css} from 'next-yak'
 import Image from 'next/image'
 
 export const mdxComponents: MDXComponents = {
@@ -8,7 +8,7 @@ export const mdxComponents: MDXComponents = {
 		return (
 			<span
 				className="image-container"
-				style={css`
+				css={css`
 					position: relative;
 					width: 100%;
 					padding-bottom: 1vh;
