@@ -1,5 +1,5 @@
 import useSetSearchParams from '@/components/useSetSearchParams'
-import { css } from 'next-yak'
+import { css, styled } from 'next-yak'
 import correspondanceIcon from '@/public/correspondance.svg'
 import tortoiseIcon from '@/public/tortoise.svg'
 import Image from 'next/image'
@@ -102,16 +102,10 @@ export default function TransitOptions({ searchParams }) {
 						)}
 					</span>
 				</Button>
-				<Image
+				<TortoiseImage
 					src={tortoiseIcon}
 					alt="Icône d'une tortue symbolisant une correspondance moins rapide"
 					onClick={() => setSearchParams({ tortue: tortue ? undefined : 3 })}
-					css={css`
-						margin-right: 0.3rem;
-						width: 1rem;
-						cursor: pointer;
-						opacity: ${tortue ? 1 : 0.3};
-					`}
 					title="Multiplier par 3 le temps de correspondance"
 				/>
 				<StartEndOptions
@@ -122,3 +116,10 @@ export default function TransitOptions({ searchParams }) {
 		</section>
 	)
 }
+
+const TortoiseImage = styled(Image)`
+	margin-right: 0.3rem;
+	width: 1rem;
+	cursor: pointer;
+	opacity: ${({ $tortue }) => ($tortue ? 1 : 0.3)};
+`
