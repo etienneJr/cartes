@@ -1,52 +1,37 @@
- import { getHasStepBeingSearched } from '@/app/itinerary/Steps'
- import { InputStyle } from '@/components/InputStyle'
- import { close } from '@/components/icons/close'
- 
- type IProps = {
- 	state: any
- 	value: any
- 	setIsMyInputFocused: any
- 	onDestinationChange: any
- 	setSnap: any
- 	placeholder: any
- 	autofocus: boolean
- }
- 
- export default ({
- 	autofocus,
- 	state,
- 	value,
- 	setIsMyInputFocused,
- 	onDestinationChange,
- 	setSnap,
- 	placeholder,
- }: IProps) => {
- 	return (
- 		<InputStyle
- 			css={css`
- 				color: white;
- 				input {
- 					max-width: 22rem;
- 					width: 83vw;
- 					background: var(--lightestColor);
- 					color: var(--darkColor);
- 					border: none;
- 					margin-bottom: 0;
- 					outline: 0.15rem solid
- 						${getHasStepBeingSearched(state) ? 'yellow' : 'var(--lightColor)'} !important;
- 				}
- 				position: relative;
- 			`}
- 		>
- 			<input
- 				type="text"
- 				value={value || ''}
- 				onBlur={() => setIsMyInputFocused(false)}
- 				onFocus={() => setIsMyInputFocused(true)}
- 				autoFocus={autofocus}
- 				onClick={(e) => {
- 					setSnap(0, 'PlaceSearch')
- 					/*
+import { getHasStepBeingSearched } from '@/app/itinerary/Steps'
+import { InputStyle } from '@/components/InputStyle'
+import { close } from '@/components/icons/close'
+
+type IProps = {
+	state: any
+	value: any
+	setIsMyInputFocused: any
+	onDestinationChange: any
+	setSnap: any
+	placeholder: any
+	autofocus: boolean
+}
+
+export default ({
+	autofocus,
+	state,
+	value,
+	setIsMyInputFocused,
+	onDestinationChange,
+	setSnap,
+	placeholder,
+}: IProps) => {
+	return (
+		<InputStyle $stateBeingSearched={getHasStepBeingSearched(state)}>
+			<input
+				type="text"
+				value={value || ''}
+				onBlur={() => setIsMyInputFocused(false)}
+				onFocus={() => setIsMyInputFocused(true)}
+				autoFocus={autofocus}
+				onClick={(e) => {
+					setSnap(0, 'PlaceSearch')
+					/*
  				// Old comment :
  				// --------------
  				// Combining two calls hits the sweet spot between chrome and
@@ -68,27 +53,27 @@
  					e.target.focus()
  				}, 600)
  				*/
- 				}}
- 				placeholder={placeholder || 'Saint-Malo, Nancy, Café du Port...'}
- 				onChange={({ target: { value } }) => onDestinationChange(value)}
- 			/>
- 			{value && (
- 				<button
- 					onClick={() => onDestinationChange(null)}
- 					css={css`
- 						position: absolute;
- 						right: 5px;
- 						top: 50%;
- 						transform: translateY(-50%);
- 						height: 30px;
- 						width: 30px;
- 						padding: 7px;
- 						color: var(--darkerColor);
- 					`}
- 				>
- 					{close}
- 				</button>
- 			)}
- 		</InputStyle>
- 	)
- }
+				}}
+				placeholder={placeholder || 'Saint-Malo, Nancy, Café du Port...'}
+				onChange={({ target: { value } }) => onDestinationChange(value)}
+			/>
+			{value && (
+				<button
+					onClick={() => onDestinationChange(null)}
+					css={css`
+						position: absolute;
+						right: 5px;
+						top: 50%;
+						transform: translateY(-50%);
+						height: 30px;
+						width: 30px;
+						padding: 7px;
+						color: var(--darkerColor);
+					`}
+				>
+					{close}
+				</button>
+			)}
+		</InputStyle>
+	)
+}
