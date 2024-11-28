@@ -90,8 +90,8 @@ const Page = async (props) => {
 				minHeight: '100vh',
 			}}
 		>
-			<PaymentBanner parameter={searchParams.abonnement} />
 			<Suspense>
+				<PaymentBanner parameter={searchParams.abonnement} />
 				<Container
 					searchParams={searchParams}
 					state={state}
