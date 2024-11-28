@@ -83,6 +83,7 @@ const Page = async (props) => {
 
 	const agencyEntry = await fetchAgency(searchParams)
 
+	// can't use next-yak for RSC where there is generateMetadata https://github.com/jantimon/next-yak/issues/112#issuecomment-2217800543
 	return (
 		<main
 			style={{
@@ -92,6 +93,7 @@ const Page = async (props) => {
 		>
 			<Suspense>
 				<PaymentBanner parameter={searchParams.abonnement} />
+
 				<Container
 					searchParams={searchParams}
 					state={state}

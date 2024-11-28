@@ -1,6 +1,6 @@
 'use client'
 
-import styled from 'styled-components'
+import {styled} from 'next-yak'
 
 export const Text = styled.span`
 	display: inline-flex;

@@ -3,6 +3,7 @@ import createMDX from '@next/mdx'
 import path from 'path'
 import { fileURLToPath } from 'url'
 const __filename = fileURLToPath(import.meta.url)
+import { withYak } from 'next-yak/withYak'
 
 import mdxOptions from './mdxOptions.mjs'
 
@@ -91,4 +92,4 @@ const nextConfig = {
 
 const withMDX = createMDX({ options: mdxOptions })
 
-export default withContentlayer(withMDX(nextConfig))
+export default withYak(withContentlayer(withMDX(nextConfig)))

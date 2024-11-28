@@ -1,6 +1,6 @@
 'use client'
 
-import styled from 'styled-components'
+import {styled} from 'next-yak'
 
 export const FeatureImage = styled.img`
 	--shadow-color: 210deg 28% 58%;

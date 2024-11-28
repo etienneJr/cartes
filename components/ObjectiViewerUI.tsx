@@ -1,5 +1,5 @@
 'use client'
-import styled from 'styled-components'
+import {styled} from 'next-yak'
 
 export const OrderedList = styled.ol`
 	padding-left: 2rem;

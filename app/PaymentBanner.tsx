@@ -1,5 +1,5 @@
 import { PaymentBannerWrapper } from '@/components/PaymentUI'
-import css from '@/components/css/convertToJs'
+import { css } from 'next-yak'
 import starGradient from '@/public/star-fill-gradient.svg'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -12,7 +12,7 @@ export default function PaymentBanner({ parameter }) {
 					title="Souscrire"
 					src={starGradient}
 					alt="Une étoile dégradée de bleu"
-					style={css`
+					css={css`
 						width: 1.6rem;
 						height: auto;
 					`}
