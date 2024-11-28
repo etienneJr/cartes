@@ -8,7 +8,9 @@ import { useLocalStorage } from 'usehooks-ts'
 export default function PaymentBlock({ setSearchParams, openSheet }) {
 	const [choice, setChoice] = useState(false)
 	const [message, setMessage] = useState(null)
-	const [uuid, setUuid] = useLocalStorage('uuid', null)
+	const [uuid, setUuid] = useLocalStorage('uuid', null, {
+		initializeWithValue: false,
+	})
 
 	useEffect(() => {
 		if (uuid) return

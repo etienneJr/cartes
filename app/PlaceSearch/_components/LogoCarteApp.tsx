@@ -4,7 +4,14 @@ import Logo from '@/public/logo.svg'
 import Image from 'next/image'
 
 export default () => {
-	const [tutorials, setTutorials] = useLocalStorage('tutorials', {})
+	const [tutorials, setTutorials] = useLocalStorage(
+		'tutorials',
+		{},
+
+		{
+			initializeWithValue: false,
+		}
+	)
 
 	return (
 		<button

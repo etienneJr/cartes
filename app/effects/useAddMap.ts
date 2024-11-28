@@ -113,7 +113,10 @@ export default function useAddMap(
 
 	const [autoPitchPreference, setAutoPitchPreference] = useLocalStorage(
 		'autoPitchPreference',
-		null
+		null,
+		{
+			initializeWithValue: false,
+		}
 	)
 
 	useEffect(() => {
@@ -136,10 +139,17 @@ export default function useAddMap(
 		}
 	}, [map, autoPitchPreference, setAutoPitchPreference])
 
-	const [lastGeolocation] = useLocalStorage('lastGeolocation', {
-		center: defaultCenter,
-		zoom: defaultZoom,
-	})
+	const [lastGeolocation] = useLocalStorage(
+		'lastGeolocation',
+		{
+			center: defaultCenter,
+			zoom: defaultZoom,
+		},
+
+		{
+			initializeWithValue: false,
+		}
+	)
 
 	useEffectDebugger(() => {
 		if (!mapContainerRef.current) return

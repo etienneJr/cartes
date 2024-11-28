@@ -72,7 +72,8 @@ export default function Container(props) {
 	const [isMapLoaded, setMapLoaded] = useState(false)
 	const [lastGeolocation, setLastGeolocation] = useLocalStorage(
 		'lastGeolocation',
-		{ center: defaultCenter, zoom: defaultZoom }
+		{ center: defaultCenter, zoom: defaultZoom },
+		{ initializeWithValue: false }
 	)
 
 	console.log('LAST', lastGeolocation.center, lastGeolocation.zoom)

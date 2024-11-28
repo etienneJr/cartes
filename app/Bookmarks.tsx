@@ -9,7 +9,14 @@ import { buildAddress } from '@/components/osm/buildAddress'
 
 export default function Favoris() {
 	const setSearchParams = useSetSearchParams()
-	const [bookmarks, setBookmarks] = useLocalStorage('bookmarks', [])
+	const [bookmarks, setBookmarks] = useLocalStorage(
+		'bookmarks',
+		[],
+
+		{
+			initializeWithValue: false,
+		}
+	)
 	console.log('purple', bookmarks)
 	return (
 		<section

@@ -89,7 +89,10 @@ export default function Map(props) {
 	const stepsLength = state.filter((step) => step?.key).length
 	const [autoPitchPreference, setAutoPitchPreference] = useLocalStorage(
 		'autoPitchPreference',
-		null
+		null,
+		{
+			initializeWithValue: false,
+		}
 	)
 
 	const autoPitchPreferenceIsNo = autoPitchPreference === 'no'

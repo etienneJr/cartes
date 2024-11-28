@@ -3,7 +3,14 @@ import { useEffect } from 'react'
 import { useLocalStorage } from 'usehooks-ts'
 
 export default function useDrawBookmarks(map) {
-	const [bookmarks, setBookmarks] = useLocalStorage('bookmarks', [])
+	const [bookmarks, setBookmarks] = useLocalStorage(
+		'bookmarks',
+		[],
+
+		{
+			initializeWithValue: false,
+		}
+	)
 
 	useEffect(() => {
 		const markers = bookmarks.map((bookmark) => {
