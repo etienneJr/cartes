@@ -1,6 +1,7 @@
 import { getHasStepBeingSearched } from '@/app/itinerary/Steps'
 import { InputStyle } from '@/components/InputStyle'
 import { close } from '@/components/icons/close'
+import { css } from 'next-yak'
 
 type IProps = {
 	state: any
