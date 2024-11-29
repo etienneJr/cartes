@@ -1,9 +1,9 @@
 import useSetSearchParams from '@/components/useSetSearchParams'
 import Link from 'next/link'
-import { Line } from './transit/Transit'
 import TransitSummary from './transit/TransitSummary'
 import { nowStamp } from './transit/utils'
 import { css } from 'next-yak'
+import { Line } from './transit/Line'
 
 export default function Timeline({ itinerary }) {
 	console.log('lightgreen timeline', itinerary)

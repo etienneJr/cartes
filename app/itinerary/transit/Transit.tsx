@@ -25,6 +25,7 @@ import {
 	humanDuration,
 } from './utils'
 import { css, styled } from 'next-yak'
+import { Line } from './Line'
 
 /* This is a megacomponent. Don't worry, it'll stay like this until the UX
  * decisions are stabilized. We don't have many users yet */
@@ -220,6 +221,35 @@ const Connection = ({
 	)
 }
 
+const TimelineTransportBlockWrapper = styled.span`
+	${(p) =>
+		p.$constraint == 'smallest' &&
+		css`
+			strong {
+				border: 2px solid white;
+				z-index: 1;
+			}
+		`}
+	display: inline-block;
+	width: 100%;
+	background: ${(p) => p.$background};
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	padding: 0.2rem 0;
+	border-radius: 0.2rem;
+	img {
+		display: ${(p) => (p.$displayImage ? 'block' : 'none')};
+		height: 0.8rem;
+		width: auto;
+		margin-right: 0.2rem;
+	}
+	${(p) =>
+		p.$moveType === 'Walk' &&
+		css`
+			border-bottom: 4px dotted #5c0ba0;
+		`}
+`
 // The code in this component is a mess. We're handling Motis's transport types
 // + our own through brouter and valhalla. A refactoring should be done at some
 // point
@@ -243,32 +273,12 @@ export const TimelineTransportBlock = ({ transport }) => {
 	}, [setConstraint, isOverflow, constraint])
 
 	return (
-		<span
+		<TimelineTransportBlockWrapper
+			$background={background}
+			$constraint={constraint}
+			$displayImage={displayImage}
+			$moveType={transport.move_type}
 			ref={ref}
-			css={css`
-				${constraint == 'smallest' &&
-				`
- 		  strong {
- 			  border: 2px solid white;
- 				z-index: 1
- 		  }
- 			`}
-				display: inline-block;
-				width: 100%;
-				background: ${background};
-				height: 100%;
-				display: flex;
-				justify-content: center;
-				padding: 0.2rem 0;
-				border-radius: 0.2rem;
-				img {
-					display: ${displayImage ? 'block' : 'none'};
-					height: 0.8rem;
-					width: auto;
-					margin-right: 0.2rem;
-				}
-				${transport.move_type === 'Walk' && `border-bottom: 4px dotted #5c0ba0`}
-			`}
 			title={`${humanDuration(transport.seconds).single} de ${
 				transport.frenchTrainType ||
 				transport.move?.name ||
@@ -324,6 +334,6 @@ export const TimelineTransportBlock = ({ transport }) => {
 			) : (
 				correspondance[transport.move_type]
 			)}
-		</span>
+		</TimelineTransportBlockWrapper>
 	)
 }

@@ -59,11 +59,11 @@ export const Line = ({
 							key={
 								transport.shortName || transport.move_type + transport.seconds
 							}
-							css={css`
-								width: ${(transport.seconds / connection.seconds) * 100}%;
-								height: 1.8rem;
-								border-right: 2px solid white;
-							`}
+							style={{
+								width: (transport.seconds / connection.seconds) * 100 + '%',
+								height: '1.8rem',
+								borderRight: '2px solid white',
+							}}
 						>
 							<TimelineTransportBlock transport={transport} />
 						</li>
