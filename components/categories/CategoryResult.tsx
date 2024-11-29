@@ -33,76 +33,44 @@ export default function CategoryResult({ result, setSearchParams }) {
 	const isOpenByDefault = category['open by default']
 	const roseDirection = computeRoseDirection(bearing)
 	return (
-		<Link
-			href={url}
-			css={css`
-				text-decoration: none;
-				color: inherit;
-			`}
-		>
-			<div
+		<ResultLinkWrapper href={url}>
+			<header>
+				<div>
+					<ImageWrapper $background={categoryColors[category.category]}>
+						<Image
+							src={
+								category.icon.startsWith('http')
+									? category.icon
+									: '/icons/' + category.icon + '.svg'
+							}
+							width="10"
+							height="10"
+							alt={'Icône pour la catégorie ' + category.name}
+						/>{' '}
+					</ImageWrapper>
+					<h2>{name}</h2>
+				</div>
+				{!isOpenByDefault &&
+					(oh == null ? (
+						<span
+							css={css`
+								display: inline-block;
+								width: 1.8rem;
+							`}
+						></span>
+					) : (
+						<OpenIndicator isOpen={isOpen === 'error' ? false : isOpen} />
+					))}
+			</header>
+			{description && <p>{description}</p>}
+			<small
 				css={css`
-					border-radius: 0.3rem;
-					background: white;
-					margin: 0.4rem 0;
-					padding: 0.6rem 0.6rem;
-					header {
-						h2 {
-							margin: 0;
-							margin-left: 0.4rem;
-							font-weight: bold;
-							font-size: 90%;
-						}
-					}
-					header {
-						display: flex;
-						justify-content: space-between;
-					}
+					text-align: right;
 				`}
 			>
-				<header>
-					<div
-						css={css`
-							display: flex;
-							align-items: center;
-						`}
-					>
-						<ImageWrapper $background={categoryColors[category.category]}>
-							<Image
-								src={
-									category.icon.startsWith('http')
-										? category.icon
-										: '/icons/' + category.icon + '.svg'
-								}
-								width="10"
-								height="10"
-								alt={'Icône pour la catégorie ' + category.name}
-							/>{' '}
-						</ImageWrapper>
-						<h2>{name}</h2>
-					</div>
-					{!isOpenByDefault &&
-						(oh == null ? (
-							<span
-								css={css`
-									display: inline-block;
-									width: 1.8rem;
-								`}
-							></span>
-						) : (
-							<OpenIndicator isOpen={isOpen === 'error' ? false : isOpen} />
-						))}
-				</header>
-				{description && <p>{description}</p>}
-				<small
-					css={css`
-						text-align: right;
-					`}
-				>
-					à {humanDistance[0]} {humanDistance[1]} vers {roseDirection}
-				</small>
-			</div>
-		</Link>
+				à {humanDistance[0]} {humanDistance[1]} vers {roseDirection}
+			</small>
+		</ResultLinkWrapper>
 	)
 }
 
@@ -118,5 +86,31 @@ const ImageWrapper = styled.div`
 		width: 1rem;
 		height: auto;
 		filter: invert(1);
+	}
+`
+
+const ResultLinkWrapper = styled(Link)`
+	text-decoration: none;
+	color: inherit;
+	display: block;
+	border-radius: 0.3rem;
+	background: white;
+	margin: 0.4rem 0;
+	padding: 0.6rem 0.6rem;
+	header {
+		h2 {
+			margin: 0;
+			margin-left: 0.4rem;
+			font-weight: bold;
+			font-size: 90%;
+		}
+	}
+	header {
+		display: flex;
+		justify-content: space-between;
+		> div {
+			display: flex;
+			align-items: center;
+		}
 	}
 `

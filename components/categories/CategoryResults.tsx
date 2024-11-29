@@ -64,13 +64,13 @@ export default function CategoryResults({ resultsEntries, center }) {
 const ResultsSummary = styled.div`
 	display: flex;
 	justify-content: space-between;
+	margin-left: 0.2rem;
+	> div > div > span {
+		color: #666;
+		font-size: 90%;
+	}
 	img {
 		width: 0.9rem;
 		height: auto;
-	}
-	margin-left: 0.2rem;
-	> div > span {
-		color: #666;
-		font-size: 90%;
 	}
 `
