@@ -8,6 +8,7 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { removeStatePart } from '../SetDestination'
 import { css, styled } from 'next-yak'
+import { StepList } from '../itineraire/StepsUI'
 
 export default function Steps({
 	setState,
@@ -36,33 +37,12 @@ export default function Steps({
 				url={setSearchParams({ allez: '->' + allez }, true)}
 				title={'Ajouter un point comme départ'}
 			/>
-			<Reorder.Group
+			<StepList
 				axis="y"
 				values={steps.map((step) => step?.key)}
 				onReorder={(newItems) =>
 					setSearchParams({ allez: newItems.join('->') })
 				}
-				css={css`
-					width: 100%;
-					background: var(--lightestColor);
-					border-radius: 0.4rem;
-					padding: 0.2rem 0.3rem;
-					list-style-type: none;
-					position: relative;
-					z-index: 8;
-					border: 1px solid var(--lighterColor);
-					li {
-						padding: 0.3rem 0.4rem;
-						border-bottom: 1px solid var(--lighterColor);
-						background: var(--lightestColor);
-						display: flex;
-						align-items: center;
-						justify-content: space-between;
-					}
-					li:last-child {
-						border-bottom: none;
-					}
-				`}
 			>
 				{steps.map((step, index) => (
 					<Item
@@ -81,7 +61,7 @@ export default function Steps({
 						}}
 					/>
 				))}
-			</Reorder.Group>
+			</StepList>
 			<AddStepButton
 				url={setSearchParams({ allez: allez + '->' }, true)}
 				title={'Ajouter un point comme destination'}
@@ -89,30 +69,26 @@ export default function Steps({
 		</section>
 	)
 }
+const AddStepButtonWrapper = styled.div`
+	z-index: 7;
+	display: flex;
+	align-items: center;
+	justify-content: end;
+	height: 0.55rem;
+	margin-right: 1.8rem;
+	img {
+		width: 1.2rem;
+		height: auto;
+		vertical-align: sub;
+		opacity: 0.4;
+	}
+`
 const AddStepButton = ({ url, title, style }) => (
-	<div
-		css={css`
-			z-index: 7;
-			display: flex;
-			align-items: center;
-			justify-content: end;
-			height: 0.55rem;
-			margin-right: 1.8rem;
-		`}
-	>
+	<AddStepButtonWrapper>
 		<StepLink href={url} title={title} $style={style}>
-			<Image
-				src={addIcon}
-				alt="Supprimer cette étape"
-				css={css`
-					width: 1.2rem;
-					height: auto;
-					vertical-align: sub;
-					opacity: 0.4;
-				`}
-			/>
+			<Image src={addIcon} alt="Supprimer cette étape" />
 		</StepLink>
-	</div>
+	</AddStepButtonWrapper>
 )
 
 const StepLink = styled(Link)`
