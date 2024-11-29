@@ -12,22 +12,21 @@ const beginningsOfSecondaryTags = ['source', 'fixme:', 'note', 'ref:']
 const isSecondary = ([k, v]) =>
 	beginningsOfSecondaryTags.some((begining) => k.startsWith(begining))
 
+const TagList = styled.ul`
+	margin-top: 0.6rem;
+	padding-left: 0.6rem;
+	list-style-type: none;
+	border-left: 4px solid var(--lightColor);
+	line-height: 1.4rem;
+	img {
+		opacity: 0.7;
+	}
+	display: flex;
+	flex-direction: column;
+`
 export default function Tags({ tags }) {
 	return (
-		<ul
-			css={css`
-				margin-top: 0.6rem;
-				padding-left: 0.6rem;
-				list-style-type: none;
-				border-left: 4px solid var(--lightColor);
-				line-height: 1.4rem;
-				img {
-					opacity: 0.7;
-				}
-				display: flex;
-				flex-direction: column;
-			`}
-		>
+		<TagList>
 			{tags.map(([raw, [k, v]], i) => (
 				<li
 					key={k + v}
@@ -44,7 +43,7 @@ export default function Tags({ tags }) {
 					</span>
 				</li>
 			))}
-		</ul>
+		</TagList>
 	)
 }
 const isFrenchAdministration = (tags) =>
