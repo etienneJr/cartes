@@ -20,6 +20,7 @@ import Brand, { Wikidata } from './tags/Brand'
 import Stop, { isNotTransportStop, transportKeys } from './transport/stop/Stop'
 import { computeSncfUicControlDigit } from './utils'
 import { css } from 'next-yak'
+import { OsmFeatureHeader, OsmFeatureWrapper } from './OsmFeatureUI'
 
 export default function OsmFeature({ data, transportStopData }) {
 	if (!data.tags) return null
@@ -100,51 +101,9 @@ export default function OsmFeature({ data, transportStopData }) {
 		: soloTags
 
 	return (
-		<div
-			css={css`
-				a {
-					color: var(--darkColor);
-				}
-				> small {
-					line-height: 0.9rem;
-					display: inline-block;
-				}
-			`}
-		>
-			{' '}
+		<OsmFeatureWrapper>
 			<SoloTags tags={filteredSoloTags} />
-			<div
-				css={css`
-					position: relative;
-					margin-bottom: 0.8rem;
-					h1 {
-						margin: 0;
-						margin-bottom: 0.3rem;
-						font-size: 140%;
-						line-height: 1.3rem;
-					}
-					details {
-						margin-top: -2rem;
-						summary {
-							display: block;
-							text-align: right;
-						}
-						summary img {
-							width: 1.2rem;
-							height: auto;
-						}
-						ul {
-							margin-left: 1.6rem;
-						}
-					}
-					small {
-						text-align: right;
-					}
-					h2 {
-						font-size: 105%;
-					}
-				`}
-			>
+			<OsmFeatureHeader>
 				<h1>{name}</h1>
 				<details>
 					<summary title="Nom du lieu dans d'autres langues">
@@ -172,7 +131,7 @@ export default function OsmFeature({ data, transportStopData }) {
 						{nameBrezhoneg}
 					</small>
 				)}
-			</div>
+			</OsmFeatureHeader>
 			{description && <small>{description}</small>}
 			{adminLevel && !frenchAdminLevel && (
 				<div>
@@ -277,6 +236,6 @@ export default function OsmFeature({ data, transportStopData }) {
 			{wikidata && <Wikidata id={wikidata} />}
 			<SimilarNodes node={data} />
 			<OsmLinks data={data} />
-		</div>
+		</OsmFeatureWrapper>
 	)
 }
