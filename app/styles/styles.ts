@@ -1,3 +1,4 @@
+import cassini from './cassiniIgnStyle'
 import cyclOsm from './cyclOsmStyle'
 import elections from './elections'
 import franceStyle from './france'
@@ -89,6 +90,7 @@ export const styles = {
 		emoji: '⛄️',
 		hasTerrain: true,
 	},
+	cassini: { url: cassini(key), name: 'Cassini', emoji: '🐎' },
 	'street-complete': {
 		// Taken from MapTiler's dataviz style
 		url: testStreetComplete,
