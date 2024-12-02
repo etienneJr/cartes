@@ -11,7 +11,7 @@ const style = (key) => ({
 				'https://data.geopf.fr/wmts?layer=BNF-IGNF_GEOGRAPHICALGRIDSYSTEMS.CASSINI&style=normal&tilematrixset=PM&Service=WMTS&Request=GetTile&Version=1.0.0&Format=image%2Fpng&TileMatrix={z}&TileCol={x}&TileRow={y}',
 			],
 			tileSize: 256,
-			attribution: 'Cassini | Map data © IGN + BNF',
+			attribution: 'Cassini | ',
 		},
 	},
 	layers: [
