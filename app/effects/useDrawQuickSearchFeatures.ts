@@ -27,8 +27,11 @@ export default function useDrawQuickSearchFeatures(
 		if (!map) return
 		const imageUrl = categoryIconUrl(category)
 
+		const imageFilename = category.icon
+		if (imageFilename.includes('http')) return
+
 		buildSvgImage(
-			imageUrl,
+			imageFilename,
 			(img) => {
 				const imageName = category.name + '-cartes' // avoid collisions
 				const mapImage = map.getImage(imageName)

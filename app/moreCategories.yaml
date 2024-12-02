@@ -22,7 +22,7 @@
     - croissant
     - patisserie
   query: '[shop=pastry]'
-  icon: https://cdn.jsdelivr.net/gh/mapbox/maki/icons/bakery.svg
+  icon: bakery
 - name: Crêperie
   category: Manger et boire
   dictionary:
@@ -31,7 +31,7 @@
   query:
     '[amenity=restaurant][cuisine~crepe]'
     #icon: hermine ne marche pas :/
-  icon: https://cdn.jsdelivr.net/gh/osmandapp/OsmAnd-resources/icons/svg/food/restaurant.svg
+  icon: hermine
 - name: Libanais
   category: Manger et boire
   dictionary:
@@ -39,14 +39,14 @@
     - houmous
     - sandwich
   query: '[amenity=restaurant][cuisine~lebanese]'
-  icon: https://cdn.jsdelivr.net/gh/osmandapp/OsmAnd-resources/icons/svg/food/restaurant.svg
+  icon: restaurant
 - name: Fast food
   category: Manger et boire
   dictionary:
     - burger
     - macdo
   query: '[amenity=fast_food]'
-  icon: https://cdn.jsdelivr.net/gh/osmandapp/OsmAnd-resources/icons/svg/food/fastfood.svg
+  icon: fastfood
 - name: Fromagerie
   category: Manger et boire
   dictionary:
@@ -83,13 +83,13 @@
     - '[amenity=nightclub]'
     - '[amenity=festival_grounds]'
     - '[amenity=theatre]' # Exemple : salle de concert à Brest https://www.openstreetmap.org/way/42531718#map=18/48.38500/-4.48092
-  icon: https://cdn.jsdelivr.net/gh/mapbox/maki/icons/music.svg
+  icon: music
   category: Loisirs
 
 - name: plage
   category: Tourisme
   query: '[natural=beach]'
-  icon: https://cdn.jsdelivr.net/gh/mapbox/maki/icons/beach.svg
+  icon: beach
 
 - name: Jeux pour enfants
   category: Loisirs
@@ -111,7 +111,7 @@
     - urgences
     - clinique
   query: '[amenity=hospital]'
-  icon: https://cdn.jsdelivr.net/gh/mapbox/maki/icons/hospital.svg
+  icon: hospital
 - name: clinique
   category: Santé
   dictionary:
@@ -120,18 +120,18 @@
   query:
     - '[amenity=clinic]'
     - '[healthcare=clinic]'
-  icon: https://cdn.jsdelivr.net/gh/mapbox/maki/icons/hospital.svg
+  icon: hospital
 - name: médecin
   category: Santé
   dictionary:
     - docteur
     - généraliste
   query: '[amenity=doctors]'
-  icon: https://cdn.jsdelivr.net/gh/osmandapp/OsmAnd-resources/icons/svg/health/doctors3.svg
+  icon: doctors
 - name: Pharmacie
   category: Santé
   query: '[amenity=pharmacy]'
-  icon: https://cdn.jsdelivr.net/gh/mapbox/maki/icons/pharmacy.svg
+  icon: pharmacy
 - name: dentiste
   category: Santé
   dictionary:
@@ -227,7 +227,7 @@
     - fresque
     - mosaïque
   query: '[tourism=artwork]'
-  icon: https://cdn.jsdelivr.net/gh/osmandapp/OsmAnd-resources/icons/svg/tourist/artwork.svg
+  icon: artwork
 - name: Attraction
   category: Tourisme
   dictionary:
@@ -240,7 +240,7 @@
     - place
     - pont
   query: '[tourism=attraction]'
-  icon: https://cdn.jsdelivr.net/gh/osmandapp/OsmAnd-resources/icons/svg/tourist/attraction.svg
+  icon: attraction
 
 - name: Information
   category: Tourisme
@@ -252,7 +252,7 @@
     - direction
     - nature
   query: '[tourism=information]'
-  icon: https://cdn.jsdelivr.net/gh/osmandapp/OsmAnd-resources/icons/svg/special/information.svg
+  icon: information
 - name: Pique-nique
   category: Tourisme
   dictionary:
@@ -262,7 +262,7 @@
     - banc
     - casse-croute
   query: '[tourism=picnic_site]'
-  icon: https://cdn.jsdelivr.net/gh/osmandapp/OsmAnd-resources/icons/svg/tourist/picnic.svg
+  icon: picnic
 - name: Camping
   category: Tourisme
   dictionary:
@@ -271,7 +271,7 @@
     - tente
     - caravane
   query: '[tourism~"camp_site|caravan_site"]'
-  icon: https://cdn.jsdelivr.net/gh/osmandapp/OsmAnd-resources/icons/svg/accommodation/camping.svg
+  icon: camping
 
 ################################
 
@@ -390,7 +390,7 @@
     - électrique
     - borne
   query: '[amenity=charging_station]'
-  icon: https://cdn.jsdelivr.net/gh/mapbox/maki@8.0.1/icons/charging-station.svg
+  icon: charging-station
 
 - name: Station de gonflage
   category: Déplacements
@@ -402,7 +402,7 @@
   query:
     - '[amenity=compressed_air]'
     - '[compressed_air=yes]'
-  icon: https://cdn.jsdelivr.net/gh/osmandapp/OsmAnd-resources/icons/svg/amenity/compressed_air.svg
+  icon: compressed_air
 
 - name: Aire de covoiturage
   category: Déplacements
@@ -413,7 +413,7 @@
   query:
     - '[carpool=designated]'
     - '[amenity=car_pooling]'
-  icon: https://cdn.jsdelivr.net/gh/osmandapp/OsmAnd-resources/icons/svg/transport/car_pooling.svg
+  icon: car_pooling
 
 - name: Location de voiture
   category: Déplacements
@@ -433,7 +433,7 @@
     - stationnement
     - fauteuil
   query: '[parking_space=disabled]'
-  icon: https://cdn.jsdelivr.net/gh/mapbox/maki@8.0.1/icons/wheelchair.svg
+  icon: wheelchair
 
 #######################
 # SPORTS
@@ -453,7 +453,7 @@
     - 🏉
     - 🏀
   query: '[leisure=sports_centre]["sport"!="swimming"]'
-  icon: https://cdn.jsdelivr.net/gh/osmandapp/OsmAnd-resources/icons/svg/sport/pitch.svg
+  icon: pitch
 
 - name: Gymnase
   category: Sports
@@ -472,7 +472,7 @@
     - 🤾‍♂️
     - 🤾‍♀️
   query: '[leisure=sports_hall]'
-  icon: https://cdn.jsdelivr.net/gh/osmandapp/OsmAnd-resources/icons/svg/sport/gymnasium.svg
+  icon: gymnasium
 
 - name: Terrain multisport
   category: Sports
@@ -487,7 +487,7 @@
     - 🥅
     - 🏀
   query: '[leisure=pitch][sport=multi]'
-  icon: https://cdn.jsdelivr.net/gh/osmandapp/OsmAnd-resources/icons/svg/sport/pitch.svg
+  icon: pitch
 
 - name: Stade
   category: Sports
@@ -499,7 +499,7 @@
     - 🥅
     - 🏉
   query: '[leisure=stadium]'
-  icon: https://cdn.jsdelivr.net/gh/osmandapp/OsmAnd-resources/icons/svg/sport/stadium.svg
+  icon: stadium
 
 - name: Tennis
   category: Sports
@@ -509,7 +509,7 @@
     - 🥎
     - balle
   query: '["leisure"="pitch"][sport=tennis]'
-  icon: https://cdn.jsdelivr.net/gh/mapbox/maki/icons/tennis.svg
+  icon: tennis
 
 - name: Piscine
   category: Sports
@@ -529,7 +529,7 @@
     - 🤽‍♀️
       # basin only  query: '[leisure=swimming_pool][access=yes]'
   query: '[leisure=sports_centre][sport=swimming]'
-  icon: https://cdn.jsdelivr.net/gh/osmandapp/OsmAnd-resources/icons/svg/sport/swimming_outdoor.svg
+  icon: swimming_outdoor
 
 - name: Salle de musculation
   category: Sports
@@ -543,7 +543,7 @@
     - 🏋️‍♂️
     - 🏋️‍♀️
   query: '["leisure"="fitness_centre"]'
-  icon: https://cdn.jsdelivr.net/gh/osmandapp/OsmAnd-resources/icons/svg/sport/fitness_centre.svg
+  icon: fitness_centre
 
 - title: Équipements de fitness
   name: equipements+de+fitness
@@ -558,7 +558,7 @@
   query:
     - '[fitness_station]'
     - '["leisure"="fitness_station"]'
-  icon: https://cdn.jsdelivr.net/gh/osmandapp/OsmAnd-resources/icons/svg/sport/fitness_station.svg
+  icon: fitness_station
 
 - name: Golf
   category: Sports
@@ -571,7 +571,7 @@
     - 🏌️
     - 🚩
   query: '["leisure"="golf_course"]'
-  icon: https://cdn.jsdelivr.net/gh/osmandapp/OsmAnd-resources/icons/svg/sport/golf.svg
+  icon: golf
 
 - title: Centre équestre
   name: centre+equestre
@@ -586,7 +586,7 @@
   query:
     - '["leisure"="horse_riding"]'
     - '[leisure=sports_centre][sport=equestrian]'
-  icon: https://cdn.jsdelivr.net/gh/osmandapp/OsmAnd-resources/icons/svg/sport/horse_riding.svg
+  icon: horse_riding
 
 - name: Dojo
   category: Sports
@@ -603,7 +603,7 @@
     - 🤼‍♂️
     - 🤼‍♀️
   query: '["amenity"="dojo"]'
-  icon: https://cdn.jsdelivr.net/gh/osmandapp/OsmAnd-resources/icons/svg/sport/judo.svg
+  icon: judo
 
 - name: Patinoire
   category: Sports
@@ -616,7 +616,7 @@
   query:
     - '["leisure"="ice_rink"]'
     - '[sport=ice_skating]'
-  icon: https://cdn.jsdelivr.net/gh/osmandapp/OsmAnd-resources/icons/svg/sport/iceskating.svg
+  icon: iceskating
 
 - name: Skatepark
   category: Sports
@@ -631,7 +631,7 @@
     - 🛹
   query:
     - '["leisure"="pitch"][sport=skateboard]'
-  icon: https://cdn.jsdelivr.net/gh/osmandapp/OsmAnd-resources/icons/svg/sport/skateboard.svg
+  icon: skateboard
 
 - name: Pumptrack
   category: Sports
@@ -646,7 +646,7 @@
     - 🛹
   query:
     - '["cycling"="pump_track"]'
-  icon: https://cdn.jsdelivr.net/gh/osmandapp/OsmAnd-resources/icons/svg/sport/skateboard.svg
+  icon: skateboard
 
 # PAR SPORTS
 
@@ -661,7 +661,7 @@
   query:
     - '["leisure"="pitch"][sport=football]'
     - '[leisure=pitch][sport=multi]'
-  icon: https://cdn.jsdelivr.net/gh/osmandapp/OsmAnd-resources/icons/svg/sport/soccer.svg
+  icon: soccer
 
 - name: Basketball
   category: Sports
@@ -675,7 +675,7 @@
   query:
     - '["leisure"="pitch"][sport=basketball]'
     - '[leisure=pitch][sport=multi]'
-  icon: https://cdn.jsdelivr.net/gh/osmandapp/OsmAnd-resources/icons/svg/sport/basketball.svg
+  icon: basketball
 
 - name: Judo
   category: Sports
@@ -690,7 +690,7 @@
   query:
     - '["sport"="judo"]'
     - '["amenity"="dojo"]'
-  icon: https://cdn.jsdelivr.net/gh/osmandapp/OsmAnd-resources/icons/svg/sport/judo.svg
+  icon: judo
 
 - title: Pétanque
   name: petanque
@@ -709,7 +709,7 @@
     - 🏉
   query:
     - '["leisure"="pitch"][sport=rugby]'
-  icon: https://cdn.jsdelivr.net/gh/osmandapp/OsmAnd-resources/icons/svg/sport/rugby_union.svg
+  icon: rugby_union
 
 - name: Handball
   category: Sports
@@ -723,7 +723,7 @@
   query:
     - '["leisure"="pitch"][sport=handball]'
     - '[leisure=pitch][sport=multi]'
-  icon: https://cdn.jsdelivr.net/gh/osmandapp/OsmAnd-resources/icons/svg/sport/handball.svg
+  icon: handball
 
 - title: Canoë-Kayak
   name: canoe+kayak
@@ -737,7 +737,7 @@
     - 🚣‍♀️
     - 🚣
   query: '[sport=canoe]'
-  icon: https://cdn.jsdelivr.net/gh/osmandapp/OsmAnd-resources/icons/svg/sport/canoe.svg
+  icon: canoe
 
 - name: Ping-Pong
   category: Sports
@@ -747,7 +747,7 @@
     - tennis de table
     - 🏓
   query: '[sport=table_tennis]'
-  icon: https://cdn.jsdelivr.net/gh/osmandapp/OsmAnd-resources/icons/svg/sport/table_tennis.svg
+  icon: table_tennis
 
 - name: Escalade
   category: Sports
@@ -760,7 +760,7 @@
     - 🪨
     - ⛰️
   query: '[sport=climbing]'
-  icon: https://cdn.jsdelivr.net/gh/osmandapp/OsmAnd-resources/icons/svg/sport/hillclimbing.svg
+  icon: hillclimbing
 
 - title: Athlétisme
   name: athletisme
@@ -773,7 +773,7 @@
     - 🏃‍♂️
     - 🏃
   query: '[sport=athletics]'
-  icon: https://cdn.jsdelivr.net/gh/osmandapp/OsmAnd-resources/icons/svg/sport/athletics.svg
+  icon: athletics
 
 - name: Surf
   category: Sports
