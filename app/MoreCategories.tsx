@@ -125,9 +125,10 @@ const MapIcon = ({ category, color }) => {
 				src={src}
 				alt={alt}
 				css={`
-					width: 1rem;
-					height: auto;
+					width: 1.1rem;
+					height: 1.1rem;
 					vertical-align: sub;
+					margin-bottom: 0.05rem;
 				`}
 			/>
 		)
