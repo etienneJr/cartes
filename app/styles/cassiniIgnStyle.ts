@@ -20,7 +20,6 @@ const style = (key) => ({
 			type: 'raster',
 			source: 'raster-tiles',
 			minzoom: 0,
-			maxzoom: 14,
 		},
 	],
 	glyphs: 'https://api.maptiler.com/fonts/{fontstack}/{range}.pbf?key=' + key,
