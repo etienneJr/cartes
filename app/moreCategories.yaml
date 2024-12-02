@@ -355,6 +355,19 @@
   query: '[amenity=bicycle_parking]'
   icon: bicycle-parking
 
+- name: parking-velo-securise # pas d'accent pour que les url soient propres : toujours en 2024 les navigateurs (états-uniens) refusent une vision non états-unienne du Web sous prétexte de lutte contre le phishing
+  title: Parking vélo sécurisé
+  category: Déplacements
+  dictionary:
+    - rack sécurisé
+    - box vélo
+    - parking sécurisé
+    - stationnement sécurisé
+  query:
+    - '[amenity=bicycle_parking][locked=yes]'
+    - '[bicycle_parking=lockers]'
+  icon: bicycle-parking-secured
+
 - name: reparation-velo
   title: Réparation de vélo
   category: Déplacements
@@ -368,19 +381,6 @@
     - '[amenity=bicycle_repair_station]'
     - '["service:bicycle:repair"=yes]'
   icon: bicycle_repair_station
-
-- name: parking-velo-securise # pas d'accent pour que les url soient propres : toujours en 2024 les navigateurs (états-uniens) refusent une vision non états-unienne du Web sous prétexte de lutte contre le phishing
-  title: Parking vélo sécurisé
-  category: Déplacements
-  dictionary:
-    - rack sécurisé
-    - box vélo
-    - parking sécurisé
-    - stationnement sécurisé
-  query:
-    - '[amenity=bicycle_parking][locked=yes]'
-    - '[bicycle_parking=lockers]'
-  icon: bicycle-parking-secured
 
 - name: Essence
   category: Déplacements
