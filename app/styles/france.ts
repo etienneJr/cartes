@@ -1536,8 +1536,13 @@ On n'est pas à l'abri d'effets secondaires ici.
 					['==', ['get', 'subclass'], 'living_street'],
 					['==', ['get', 'maxspeed'], 'walk'],
 				],
-
 				'hsl(0,0%,100%)',
+				['==', ['get', 'maxspeed'], 'FR:zone30'],
+				'hsl(215,20%,95%)',
+				['==', ['get', 'maxspeed'], 'FR:urban'],
+				'hsl(215,20%,80%)',
+				['==', ['get', 'maxspeed'], 'FR:rural'],
+				'#99a6c3',
 				[
 					'any',
 					['==', ['get', 'class'], 'service'],
