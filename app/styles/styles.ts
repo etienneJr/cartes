@@ -90,7 +90,13 @@ export const styles = {
 		emoji: '⛄️',
 		hasTerrain: true,
 	},
-	cassini: { url: cassini(key), name: 'Cassini', emoji: '🐎' },
+	cassini: { 
+		url: cassini(key), 
+		name: 'Cassini', 
+		emoji: '🐎',
+		secondary: true,
+		description: "Carte de Cassini, 18e siècle. Source IGN et BNF.",
+	},
 	'street-complete': {
 		// Taken from MapTiler's dataviz style
 		url: testStreetComplete,
