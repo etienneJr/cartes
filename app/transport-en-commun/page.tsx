@@ -102,7 +102,7 @@ export default async function () {
 				<p>
 					Dans la liste ci-dessous, un lien signifie que le réseau est intégré.
 					Le vôtre n'y est pas ?{' '}
-					<a href="https://github.com/laem/gtfs?tab=readme-ov-file#couverture">
+					<a href="https://github.com/cartesapp/serveur?tab=readme-ov-file#couverture">
 						Venez aider !
 					</a>
 				</p>

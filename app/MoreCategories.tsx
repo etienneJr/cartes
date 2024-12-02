@@ -10,6 +10,7 @@ export default function MoreCategories({
 	getNewSearchParamsLink,
 	categoriesSet,
 	filteredMoreCategories,
+	doFilter,
 }) {
 	const groups = filteredMoreCategories.reduce((memo, next) => {
 		return {
@@ -22,7 +23,11 @@ export default function MoreCategories({
 			css={`
 				margin-bottom: 0.6rem;
 				@media (max-width: 800px) {
+					${doFilter
+						? `margin-top: .6rem;`
+						: `
 					margin-bottom: 50vh;
+					`}
 				}
 				ol,
 				ul {
@@ -85,14 +90,13 @@ export default function MoreCategories({
 										<li
 											key={category.name}
 											css={`
+												${category.score < exactThreshold && goldCladding}
+
 												${categoriesSet.includes(category.name) &&
 												`
 background: var(--lighterColor) !important;
 border-color: var(--darkColor) !important;
 `}
-
-												${console.log('catscore', category.score) ||
-												(category.score < exactThreshold && goldCladding)}
 											`}
 										>
 											<Link href={getNewSearchParamsLink(category)}>

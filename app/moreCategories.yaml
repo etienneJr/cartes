@@ -32,6 +32,18 @@
     '[amenity=restaurant][cuisine~crepe]'
     #icon: hermine ne marche pas :/
   icon: hermine
+- name: Italien & Pizza
+  category: Manger et boire
+  dictionary:
+    - pizza
+    - italien
+    - pâtes
+  query:
+    - '[amenity=restaurant][cuisine~italian|pizza]'
+    - '[vending=pizza]'
+    - '[food=pizza]'
+    - '["food:pizza"=yes]'
+  icon: restaurant
 - name: Libanais
   category: Manger et boire
   dictionary:

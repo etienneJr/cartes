@@ -3,6 +3,8 @@ import { handleColor } from '@/app/itinerary/transit/motisRequest'
 import { findContrastedTextColor } from '@/components/utils/colors'
 import { safeRemove } from './utils'
 import { filterNextConnections } from '../itinerary/transit/utils'
+import bezierSpline from '@turf/bezier-spline'
+import { lineString } from '@turf/turf'
 
 export default function useDrawTransit(map, transit, selectedConnection, date) {
 	const connections =
@@ -19,33 +21,56 @@ export default function useDrawTransit(map, transit, selectedConnection, date) {
 
 		const featureCollection = {
 			type: 'FeatureCollection',
-			features: transports.reduce((memo, next) => {
-				const route_text_color = handleColor(next.route_text_color, '#000000')
-				console.log('next', next)
-				return [
-					...memo,
-					{
-						type: 'Feature',
-						properties: {
-							name: next.route_short_name || '',
-							move_type: next.move_type,
-							route_color: next.route_color || '#d3b2ee',
-							route_color_darker: next.route_color_darker || '',
-							route_text_color,
-							inverse_color: findContrastedTextColor(route_text_color, true),
+			features: transports
+				.reduce((memo, next) => {
+					const route_text_color = handleColor(next.route_text_color, '#000000')
+					console.log('next', next)
+
+					return [
+						...memo,
+						{
+							type: 'Feature',
+							properties: {
+								name: next.route_short_name || '',
+								move_type: next.move_type,
+								route_color: next.route_color || '#d3b2ee',
+								route_color_darker: next.route_color_darker || '',
+								route_text_color,
+								inverse_color: findContrastedTextColor(route_text_color, true),
+							},
+							geometry: {
+								type: 'LineString',
+								coordinates: stops
+									.slice(next.move.range.from, next.move.range.to + 1)
+									.map((stop) => [stop.station.pos.lng, stop.station.pos.lat]),
+							},
 						},
+					]
+				}, [])
+				.map((feature) => {
+					const coordinates = feature.geometry.coordinates
+					if (coordinates.length <= 2) return feature
+
+					var curved = bezierSpline(lineString(coordinates), {
+						sharpness: 0.6,
+						resolution: 10000,
+					})
+
+					console.log('banana', curved.geometry.coordinates.length)
+
+					return {
+						...feature,
 						geometry: {
-							type: 'LineString',
-							coordinates: stops
-								.slice(next.move.range.from, next.move.range.to + 1)
-								.map((stop) => [stop.station.pos.lng, stop.station.pos.lat]),
+							...feature.geometry,
+							coordinates: curved.geometry.coordinates,
 						},
-					},
-				]
-			}, []),
+					}
+				})
+				.filter(Boolean),
 		}
-		console.log(featureCollection)
+		console.log('useDrawTransit fc', featureCollection)
 		const id = 'transit-' + Math.random()
+		console.log('indigo random', id)
 
 		try {
 			const source = map.getSource(id)
@@ -57,6 +82,7 @@ export default function useDrawTransit(map, transit, selectedConnection, date) {
 		console.log('will (re)draw transport route geojson')
 		map.addSource(id, { type: 'geojson', data: featureCollection })
 
+		console.log('indigo add layer poinst', id)
 		map.addLayer({
 			source: id,
 			type: 'line',
@@ -113,7 +139,7 @@ export default function useDrawTransit(map, transit, selectedConnection, date) {
 			source: id,
 			layout: {
 				'symbol-placement': 'line',
-				'text-font': ['Roboto Regular', 'Noto Sans Regular'],
+				'text-font': ['RobotoBold-NotoSansBold'],
 				'text-field': '{name}', // part 2 of this is how to do it
 				'text-transform': 'uppercase',
 				'text-size': 16,

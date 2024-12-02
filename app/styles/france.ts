@@ -1,11 +1,12 @@
 import { getFetchUrlBase, pmtilesServerUrl } from '../serverUrls'
-import { contourLayers, hillshadeLayers } from './terrainLayers'
+import { cycleHighwayLayers, cycleHighwayMaxZoom } from './cycleHighwayLayers'
 
 //Fonts used :
 //https://maplibre.org/font-maker
-//['Roboto Regular', 'Noto Sans Regular'],
-//['Roboto Italic', 'Noto Sans Italic'],
-//['Roboto Medium Regular', 'Noto Sans Regular'],
+//['RobotoRegular-NotoSansRegular'],
+//['RobotoItalic-NotoSansItalic'],
+//['RobotoMediumRegular-NotoSansRegular'],
+//['RobotoBold-NotoSansBold']
 //
 //
 
@@ -25,7 +26,7 @@ export default function franceStyle(transportMode, noVariableTiles = false) {
 		name: transportMode ? 'Transports' : 'France',
 		sources: {
 			// We're not really using openmaptiles anymore, but a modified version of
-			// it, see cartesapp/gtfs/tiles.ts
+			// it, see cartesapp/serveur/tiles.ts
 			openmaptiles: {
 				url: openmaptilesUrl,
 				//url: 'pmtiles://https://panoramax.openstreetmap.fr/pmtiles/planet.pmtiles',
@@ -45,6 +46,14 @@ export default function franceStyle(transportMode, noVariableTiles = false) {
 			trees: {
 				type: 'vector',
 				url: 'pmtiles://' + pmtilesServerUrl + '/trees.pmtiles',
+			},
+			cycleHighways: {
+				type: 'vector',
+				url: 'pmtiles://' + pmtilesServerUrl + '/cycleHighways.pmtiles',
+			},
+			bathymetry: {
+				type: 'vector',
+				url: 'pmtiles://' + pmtilesServerUrl + '/bathymetry.pmtiles',
 			},
 		},
 		layers: transportMode ? lightenLayers(layers) : layers,
@@ -110,7 +119,7 @@ const lightenLayers = (layers) =>
 		}
 	})
 
-// See laem/gtfs's process-openmaptiles.lua
+// See cartesapp/serveur's process-openmaptiles.lua
 export const nameExpression = [
 	['get', 'name:fr'], // cartes.app est une application française
 	['get', 'name:latin'], // keep compatibility with Panoramax's planet.pmtiles that cover other tiles than the 4 mega tiles surrounding the hexagone
@@ -319,6 +328,27 @@ const layers = [
 			//['==', 'class', 'ocean'],
 		],
 	},
+	{
+		id: 'water-depth',
+		type: 'fill',
+		source: 'bathymetry',
+		'source-layer': 'bathymetry',
+		layout: {},
+		paint: {
+			// cubic bezier is a four point curve for smooth and precise styling
+			// adjust the points to change the rate and intensity of interpolation
+			'fill-color': [
+				'interpolate',
+				['cubic-bezier', 0, 0.5, 1, 0.5],
+				['get', 'amin'],
+				-9000,
+				'#260167',
+				0,
+				oceanColor,
+			],
+		},
+	},
+
 	{
 		id: 'Rock',
 		type: 'fill',
@@ -1269,7 +1299,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 				7,
 				0.5,
 				10,
-				['match', ['get', 'class'], ['trunk', 'primary'], 2.4, 0],
+				['match', ['get', 'class'], ['trunk', 'primary'], 1.5, 0],
 				12,
 				['match', ['get', 'class'], ['trunk', 'primary'], 3, 0.5],
 				14,
@@ -1501,7 +1531,12 @@ On n'est pas à l'abri d'effets secondaires ici.
 
 			'line-color': [
 				'case',
-				['==', ['get', 'subclass'], 'living_street'],
+				[
+					'any',
+					['==', ['get', 'subclass'], 'living_street'],
+					['==', ['get', 'maxspeed'], 'walk'],
+				],
+
 				'hsl(0,0%,100%)',
 				[
 					'any',
@@ -1628,7 +1663,11 @@ On n'est pas à l'abri d'effets secondaires ici.
 				// living_street or other tags that remain to be found, as
 				// "medium"-friendly to pedestrians, cyclists and buses
 				'#99a6c3',
-				['<=', ['to-number', ['get', 'maxspeed']], 30],
+				[
+					'any',
+					['==', ['get', 'maxspeed'], 'walk'],
+					['<=', ['to-number', ['get', 'maxspeed']], 30],
+				],
 				'hsl(215,20%,95%)',
 				'#99a6c3',
 			],
@@ -1637,7 +1676,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 				['linear', 2],
 				['zoom'],
 				10,
-				['match', ['get', 'class'], ['trunk', 'primary'], 1.5, 1],
+				['match', ['get', 'class'], ['trunk', 'primary'], 1.3, 0.8],
 				12,
 				['match', ['get', 'class'], ['trunk', 'primary'], 2.5, 1],
 				14,
@@ -1789,6 +1828,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 			['==', '$type', 'LineString'],
 			['in', 'class', 'path', 'pedestrian'],
 			['!=', 'brunnel', 'tunnel'],
+			['!=', 'subclass', 'cycleway'],
 		],
 	},
 	{
@@ -1807,11 +1847,25 @@ On n'est pas à l'abri d'effets secondaires ici.
 				['zoom'],
 				8,
 				'#916BD4',
-				20,
-				'hsl(0, 0%, 90%)',
+				19,
+				'hsl(0, 0%, 70%)',
 			],
-			'line-width': ['interpolate', ['linear'], ['zoom'], 0, 0, 9, 2, 22, 6],
-			'line-opacity': ['interpolate', ['linear'], ['zoom'], 5, 0.2, 9, 1],
+			'line-width': [
+				'interpolate',
+				['linear'],
+				['zoom'],
+				0,
+				0,
+				9,
+				2,
+				14,
+				1,
+				17,
+				3,
+				22,
+				6,
+			],
+			'line-opacity': ['match', ['get', 'service'], 'yard', 0.4, 1],
 		},
 		metadata: {},
 		filter: ['all', ['!in', 'brunnel', 'tunnel'], ['==', 'class', 'rail']],
@@ -1823,13 +1877,21 @@ On n'est pas à l'abri d'effets secondaires ici.
 		'source-layer': 'transportation',
 		layout: { visibility: 'visible' },
 		paint: {
-			'line-color': 'hsl(0,0%,72%)',
+			'line-color': [
+				'interpolate',
+				['exponential', 1],
+				['zoom'],
+				8,
+				'#916BD4',
+				18,
+				'hsl(0, 0%, 90%)',
+			],
 			'line-width': {
 				base: 1.4,
 				stops: [
-					[14.5, 0],
-					[15, 3],
-					[20, 8],
+					[14.5, 2],
+					[15, 6],
+					[20, 10],
 				],
 			},
 			'line-opacity': ['match', ['get', 'service'], 'yard', 0.5, 1],
@@ -1887,6 +1949,75 @@ On n'est pas à l'abri d'effets secondaires ici.
 		},
 		metadata: {},
 		filter: ['all', ['in', 'subclass', 'tram', 'light_rail']],
+	},
+	...cycleHighwayLayers,
+	{
+		id: 'Cycleway outline',
+		type: 'line',
+		minzoom: cycleHighwayMaxZoom,
+		source: 'openmaptiles',
+		'source-layer': 'transportation',
+		layout: { visibility: 'visible' },
+		paint: {
+			'line-color': 'hsl(240, 45%, 33%)',
+			'line-width': [
+				'interpolate',
+				['linear', 2],
+				['zoom'],
+				5,
+				0,
+				10,
+				0,
+				12,
+				1,
+				14,
+				1,
+				16,
+				3,
+				22,
+				14,
+			],
+			'line-opacity': 0.8,
+		},
+		filter: [
+			'all',
+			['==', '$type', 'LineString'],
+			['in', 'subclass', 'cycleway'],
+		],
+	},
+	{
+		id: 'Cycleway',
+		type: 'line',
+		minzoom: cycleHighwayMaxZoom,
+		source: 'openmaptiles',
+		'source-layer': 'transportation',
+		layout: { visibility: 'visible' },
+		paint: {
+			'line-color': 'hsl(240, 71%, 72%)',
+			'line-width': [
+				'interpolate',
+				['linear', 2],
+				['zoom'],
+				5,
+				0,
+				10,
+				0,
+				12,
+				1,
+				14,
+				1,
+				16,
+				2,
+				22,
+				9,
+			],
+			'line-opacity': 1,
+		},
+		filter: [
+			'all',
+			['==', '$type', 'LineString'],
+			['in', 'subclass', 'cycleway'],
+		],
 	},
 	{
 		id: 'Building',
@@ -2103,7 +2234,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 		'source-layer': 'waterway',
 		minzoom: 13,
 		layout: {
-			'text-font': ['Roboto Italic', 'Noto Sans Italic'],
+			'text-font': ['RobotoItalic-NotoSansItalic'],
 			'text-size': {
 				stops: [
 					[12, 8],
@@ -2140,7 +2271,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 		minzoom: 0,
 		maxzoom: 14,
 		layout: {
-			'text-font': ['Roboto Italic', 'Noto Sans Italic'],
+			'text-font': ['RobotoItalic-NotoSansItalic'],
 			'text-size': [
 				'interpolate',
 				['linear', 1],
@@ -2183,7 +2314,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 		'source-layer': 'water_name',
 		minzoom: 0,
 		layout: {
-			'text-font': ['Roboto Italic', 'Noto Sans Italic'],
+			'text-font': ['RobotoItalic-NotoSansItalic'],
 			'text-size': {
 				stops: [
 					[10, 13],
@@ -2211,7 +2342,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 		'source-layer': 'housenumber',
 		minzoom: 18,
 		layout: {
-			'text-font': ['Roboto Regular', 'Noto Sans Regular'],
+			'text-font': ['RobotoRegular-NotoSansRegular'],
 			'text-size': 10,
 			'text-field': '{housenumber}',
 			visibility: 'visible',
@@ -2230,7 +2361,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 		'source-layer': 'transportation_name',
 		minzoom: 13,
 		layout: {
-			'text-font': ['Roboto Italic', 'Noto Sans Italic'],
+			'text-font': ['RobotoItalic-NotoSansItalic'],
 			'text-size': {
 				base: 1,
 				stops: [
@@ -2262,7 +2393,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 		'source-layer': 'transportation_name',
 		minzoom: 12,
 		layout: {
-			'text-font': ['Roboto Italic', 'Noto Sans Italic'],
+			'text-font': ['RobotoItalic-NotoSansItalic'],
 			'text-size': {
 				base: 1,
 				stops: [
@@ -2296,7 +2427,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 					[19, 1],
 				],
 			},
-			'text-font': ['Roboto Regular', 'Noto Sans Regular'],
+			'text-font': ['RobotoRegular-NotoSansRegular'],
 			'icon-image': 'oneway',
 			visibility: 'visible',
 			'icon-rotate': ['match', ['get', 'oneway'], 1, 90, -90],
@@ -2336,7 +2467,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 		minzoom: 6,
 		maxzoom: 22,
 		layout: {
-			'text-font': ['Roboto Regular', 'Noto Sans Regular'],
+			'text-font': ['RobotoRegular-NotoSansRegular'],
 			'text-size': {
 				stops: [
 					[13, 10],
@@ -2381,7 +2512,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 		maxzoom: 22,
 		layout: {
 			'icon-size': 1,
-			'text-font': ['Roboto Regular', 'Noto Sans Regular'],
+			'text-font': ['RobotoRegular-NotoSansRegular'],
 			'text-size': 9,
 			'icon-image': 'exit_{ref_length}',
 			'text-field': '{ref}',
@@ -2419,8 +2550,8 @@ On n'est pas à l'abri d'effets secondaires ici.
 				'match',
 				['get', 'class'],
 				'motorway',
-				['literal', ['Roboto Bold', 'Noto Sans Bold']],
-				['literal', ['Roboto Regular']],
+				['literal', ['RobotoBold-NotoSansBold']],
+				['literal', ['RobotoRegular-NotoSansRegular']],
 			],
 			'text-size': 10,
 			'icon-image': 'road_{ref_length}',
@@ -2461,8 +2592,8 @@ On n'est pas à l'abri d'effets secondaires ici.
 				'match',
 				['get', 'class'],
 				'motorway',
-				['literal', ['Roboto Bold', 'Noto Sans Bold']],
-				['literal', ['Roboto Regular', 'Noto Sans Regular']],
+				['literal', ['RobotoBold-NotoSansBold']],
+				['literal', ['RobotoRegular-NotoSansRegular']],
 			],
 			'text-size': 9,
 			'icon-image': '{network}_{ref_length}',
@@ -2506,7 +2637,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 		minzoom: 17,
 		layout: {
 			'icon-size': 0.7,
-			'text-font': ['Roboto Regular', 'Noto Sans Regular'],
+			'text-font': ['RobotoRegular-NotoSansRegular'],
 			'text-size': {
 				stops: [
 					[12, 10],
@@ -2543,7 +2674,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 		minzoom: 13,
 		layout: {
 			'icon-size': 1,
-			'text-font': ['Roboto Regular', 'Noto Sans Regular'],
+			'text-font': ['RobotoRegular-NotoSansRegular'],
 			'text-size': {
 				stops: [
 					[12, 10],
@@ -2580,7 +2711,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 		minzoom: 13,
 		layout: {
 			'icon-size': 1,
-			'text-font': ['Roboto Regular', 'Noto Sans Regular'],
+			'text-font': ['RobotoRegular-NotoSansRegular'],
 			'text-size': {
 				stops: [
 					[12, 10],
@@ -2621,7 +2752,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 		minzoom: 13,
 		layout: {
 			'icon-size': 1,
-			'text-font': ['Roboto Regular', 'Noto Sans Regular'],
+			'text-font': ['RobotoRegular-NotoSansRegular'],
 			'text-size': {
 				stops: [
 					[12, 10],
@@ -2781,7 +2912,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 		minzoom: 9,
 		maxzoom: 22,
 		layout: {
-			'text-font': ['Roboto Italic', 'Noto Sans Italic'],
+			'text-font': ['RobotoItalic-NotoSansItalic'],
 			'text-size': ['interpolate', ['linear'], ['zoom'], 9, 11, 14, 14],
 			'text-field': ['coalesce', ...nameExpression],
 			visibility: 'visible',
@@ -2846,7 +2977,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 					[9, 0],
 				],
 			},
-			'text-font': ['Roboto Regular', 'Noto Sans Regular'],
+			'text-font': ['RobotoRegular-NotoSansRegular'],
 			'text-size': [
 				'interpolate',
 				['linear', 1],
@@ -2949,7 +3080,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 					[18, 1],
 				],
 			},
-			'text-font': ['Roboto Medium Regular', 'Noto Sans Regular'],
+			'text-font': ['RobotoMediumRegular-NotoSansRegular'],
 			'text-size': {
 				stops: [
 					[10, 10],
@@ -3047,7 +3178,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 				16,
 				['match', ['get', 'class'], 'international', 1, 0.8],
 			],
-			'text-font': ['Roboto Medium Regular', 'Noto Sans Regular'],
+			'text-font': ['RobotoMediumRegular-NotoSansRegular'],
 			'text-size': [
 				'interpolate',
 				['linear'],
@@ -3113,7 +3244,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 		'source-layer': 'aeroway',
 		minzoom: 15,
 		layout: {
-			'text-font': ['Roboto Medium Regular', 'Noto Sans Regular'],
+			'text-font': ['RobotoMediumRegular-NotoSansRegular'],
 			'text-size': {
 				stops: [
 					[15, 10],
@@ -3139,7 +3270,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 		minzoom: 3,
 		maxzoom: 9,
 		layout: {
-			'text-font': ['Roboto Medium Regular', 'Noto Sans Regular'],
+			'text-font': ['RobotoMediumRegular-NotoSansRegular'],
 			'text-size': {
 				stops: [
 					[3, 8],
@@ -3185,7 +3316,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 					[14, 0.8],
 				],
 			},
-			'text-font': ['Roboto Regular', 'Noto Sans Regular'],
+			'text-font': ['RobotoRegular-NotoSansRegular'],
 			'text-size': [
 				'interpolate',
 				['linear', 1],
@@ -3249,7 +3380,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 				13,
 				0,
 			],
-			'text-font': ['Roboto Medium Regular', 'Noto Sans Regular'],
+			'text-font': ['RobotoMediumRegular-NotoSansRegular'],
 			'text-size': [
 				'interpolate',
 				['linear', 1],
@@ -3300,7 +3431,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 				13,
 				0,
 			],
-			'text-font': ['Roboto Medium Regular', 'Noto Sans Regular'],
+			'text-font': ['RobotoMediumRegular-NotoSansRegular'],
 			'text-size': [
 				'interpolate',
 				['linear', 1],
@@ -3338,7 +3469,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 		minzoom: 1,
 		maxzoom: 12,
 		layout: {
-			'text-font': ['Roboto Medium Regular', 'Noto Sans Regular'],
+			'text-font': ['RobotoMediumRegular-NotoSansRegular'],
 			'text-size': [
 				'interpolate',
 				['linear', 1],
@@ -3392,7 +3523,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 		'source-layer': 'place',
 		maxzoom: 1,
 		layout: {
-			'text-font': ['Roboto Medium Regular', 'Noto Sans Regular'],
+			'text-font': ['RobotoMediumRegular-NotoSansRegular'],
 			'text-size': {
 				stops: [
 					[0, 12],
@@ -3413,72 +3544,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 		metadata: {},
 		filter: ['all', ['==', 'class', 'continent']],
 	},
-	{
-		id: 'Cycleway outline',
-		type: 'line',
-		source: 'openmaptiles',
-		'source-layer': 'transportation',
-		layout: { visibility: 'visible' },
-		paint: {
-			'line-color': 'hsl(240, 45%, 33%)',
-			'line-width': [
-				'interpolate',
-				['linear', 2],
-				['zoom'],
-				5,
-				0,
-				10,
-				0,
-				12,
-				1,
-				14,
-				1,
-				16,
-				3,
-				22,
-				14,
-			],
-			'line-opacity': 0.8,
-		},
-		filter: [
-			'all',
-			['match', ['get', 'subclass'], ['cycleway'], true, false],
-			['==', ['geometry-type'], 'LineString'],
-		],
-	},
-	{
-		id: 'Cycleway',
-		type: 'line',
-		source: 'openmaptiles',
-		'source-layer': 'transportation',
-		layout: { visibility: 'visible' },
-		paint: {
-			'line-color': 'hsl(240, 71%, 72%)',
-			'line-width': [
-				'interpolate',
-				['linear', 2],
-				['zoom'],
-				5,
-				0,
-				10,
-				0,
-				12,
-				1,
-				14,
-				1,
-				16,
-				2,
-				22,
-				9,
-			],
-			'line-opacity': 1,
-		},
-		filter: [
-			'all',
-			['match', ['get', 'subclass'], ['cycleway'], true, false],
-			['==', ['geometry-type'], 'LineString'],
-		],
-	},
+
 	//...hillshadeLayers,
 	//	...contourLayers,
 ]

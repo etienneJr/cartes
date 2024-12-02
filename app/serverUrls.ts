@@ -16,6 +16,10 @@ export const motisServerUrl =
 export const photonServerUrl = process.env.NEXT_PUBLIC_PHOTON_SERVER_URL
 
 export const getFetchUrlBase = () => {
+	const givenDomain = process.env.NEXT_PUBLIC_DOMAIN
+	// Coolify has a similar way to Vercel to inject the domain, but Dokploy has not
+	if (givenDomain) return 'https://' + givenDomain
+
 	const branchUrl = process.env.NEXT_PUBLIC_VERCEL_BRANCH_URL
 	const isMaster = branchUrl?.includes('-git-master-')
 	const domain = isMaster ? process.env.NEXT_PUBLIC_BASE_DOMAIN : branchUrl

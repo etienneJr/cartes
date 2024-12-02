@@ -1,4 +1,5 @@
 import { useDebounce } from '@/components/utils'
+import computeDistance from '@turf/distance'
 import { useEffect } from 'react'
 
 export default function useGeolocationAutofocus(
@@ -12,7 +13,12 @@ export default function useGeolocationAutofocus(
 	useEffect(() => {
 		if (!map || !debouncedGeolocation || !active) return
 
+		const { lng, lat } = map.getCenter()
+
 		const { latitude, longitude } = debouncedGeolocation
-		map.flyTo({ padding, center: [longitude, latitude] })
+
+		const distance = computeDistance([lng, lat], [longitude, latitude])
+
+		if (distance < 0.1) map.flyTo({ padding, center: [longitude, latitude] })
 	}, [debouncedGeolocation, active])
 }

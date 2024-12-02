@@ -3,7 +3,7 @@ import DateSelector from '../DateSelector'
 import noTransports from '@/public/no-transports.svg'
 import Image from 'next/image'
 
-const MessageBlock = ({ message }) => (
+const MessageBlock = ({ message, solution }) => (
 	<section
 		css={`
 			margin-top: 2rem;
@@ -22,12 +22,15 @@ const MessageBlock = ({ message }) => (
 			src={noTransports}
 			alt="Icône d'erreur du calcul de transport en commun"
 		/>
-		<p>{message}</p>
+		<div>
+			<p>{message}</p>
+			{solution && <p>👉️ {solution}</p>}
+		</div>
 	</section>
 )
 
-export const NoTransit = ({ reason }) => {
-	if (reason) return <MessageBlock message={reason} />
+export const NoTransit = ({ reason, solution }) => {
+	if (reason) return <MessageBlock message={reason} solution={solution} />
 	if (!reason)
 		return <MessageBlock message={'Pas de transport en commun trouvé :('} />
 }

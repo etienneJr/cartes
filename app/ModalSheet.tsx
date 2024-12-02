@@ -13,7 +13,14 @@ export default function ModalSheet(props) {
 	const { osmFeature, styleChooser, searchParams } = props
 	const { trackedSnap, setTrackedSnap } = props
 
-	const [tutorials, setTutorials] = useLocalStorage('tutorials', {})
+	const [tutorials, setTutorials] = useLocalStorage(
+		'tutorials',
+		{},
+
+		{
+			initializeWithValue: false,
+		}
+	)
 
 	const [isOpen, setOpen] = useState(false)
 	const [disableDrag, setDisableDrag] = useState(false)

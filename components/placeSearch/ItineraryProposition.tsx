@@ -7,27 +7,7 @@ import { encodePlace } from '@/app/utils'
 
 export default function ({ setSearchParams, data: [from, to] }) {
 	return (
-		<motion.section
-			initial={{ opacity: 0, scale: 0, x: -600 }}
-			animate={{ opacity: 1, scale: 1, x: 0 }}
-			css={`
-				background: white;
-				border-radius: 0.4rem;
-				padding: 0.6rem;
-				margin-top: 0.8rem;
-				border: 1px solid var(--lightestColor);
-				a {
-					display: flex;
-					align-items: center;
-					text-decoration: none;
-					img {
-						width: 1.4rem;
-						height: auto;
-						margin-right: 0.6rem;
-					}
-				}
-			`}
-		>
+		<AnimatedSearchProposition>
 			<Link
 				href={setSearchParams(
 					{
@@ -54,6 +34,31 @@ export default function ({ setSearchParams, data: [from, to] }) {
 					Itinéraire {from.name} <span css="margin: 0 .4rem">➤</span> {to.name}
 				</span>
 			</Link>
-		</motion.section>
+		</AnimatedSearchProposition>
 	)
 }
+export const AnimatedSearchProposition = ({ children }) => (
+	<motion.section
+		initial={{ opacity: 0, scale: 0, x: -600 }}
+		animate={{ opacity: 1, scale: 1, x: 0 }}
+		css={`
+			background: white;
+			border-radius: 0.4rem;
+			padding: 0.6rem;
+			margin-top: 0.8rem;
+			border: 1px solid var(--lightestColor);
+			a {
+				display: flex;
+				align-items: center;
+				text-decoration: none;
+				img {
+					width: 1.4rem;
+					height: auto;
+					margin-right: 0.6rem;
+				}
+			}
+		`}
+	>
+		{children}
+	</motion.section>
+)

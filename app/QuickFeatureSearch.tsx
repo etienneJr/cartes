@@ -13,6 +13,7 @@ import {
 } from './QuickFeatureSearchUI'
 import categories from './categories.yaml'
 import moreCategories from './moreCategories.yaml'
+import CategoryResults from '@/components/categories/CategoryResults'
 
 export const categoryIconUrl = (category) => {
 	if (!category.icon)
@@ -34,8 +35,8 @@ export function initializeFuse(categories) {
 
 const fuse = initializeFuse(categories)
 const fuseMore = initializeFuse(moreCategories)
-export const threshold = 0.05
-export const exactThreshold = 0.01
+export const threshold = 0.02
+export const exactThreshold = 0.005
 
 export default function QuickFeatureSearch({
 	searchParams,
@@ -43,8 +44,10 @@ export default function QuickFeatureSearch({
 	setSnap,
 	snap,
 	quickSearchFeaturesMap,
+	center,
 }) {
 	const [categoriesSet] = getCategories(searchParams)
+	console.log('indigo t', categoriesSet)
 	const [showMore, setShowMore] = useState(false)
 	const hasLieu = searchParams.allez
 	const setSearchParams = useSetSearchParams()
@@ -77,7 +80,11 @@ export default function QuickFeatureSearch({
 
 		[searchInput, hasLieu]
 	)
-	console.log('elel', filteredCategories, filteredMoreCategories)
+	console.log(
+		'cat score',
+		filteredCategories.map((el) => el.name + el.score),
+		filteredMoreCategories.map((el) => el.name + el.score)
+	)
 
 	const getNewSearchParamsLink = buildGetNewSearchParams(
 		searchParams,
@@ -175,37 +182,46 @@ export default function QuickFeatureSearch({
 						})}
 					</ul>
 				</div>
-				<div
-					css={`
-						${quickSearchButtonStyle(
-							showMore,
-							'var(--darkerColor)',
-							!showMore ? 'invert(1)' : ''
-						)}
-					`}
-				>
-					<button
-						onClick={() => {
-							if (snap > 1) setSnap(1, 'QuickFeatureSearch')
-							setShowMore(!showMore)
-						}}
+				{!doFilter && (
+					<div
+						css={`
+							${quickSearchButtonStyle(
+								showMore,
+								'var(--darkerColor)',
+								!showMore ? 'invert(1)' : ''
+							)}
+						`}
 					>
-						<Image
-							src={'/icons/more.svg'}
-							width="10"
-							height="10"
-							alt="Voir plus de catégories de recherche"
-						/>
-					</button>
-				</div>
+						<button
+							onClick={() => {
+								if (snap > 1) setSnap(1, 'QuickFeatureSearch')
+								setShowMore(!showMore)
+							}}
+						>
+							<Image
+								src={'/icons/more.svg'}
+								width="10"
+								height="10"
+								alt="Voir plus de catégories de recherche"
+							/>
+						</button>
+					</div>
+				)}
 			</div>
 			{(showMore || (doFilter && filteredMoreCategories.length > 0)) && (
 				<MoreCategories
 					getNewSearchParamsLink={getNewSearchParamsLink}
 					categoriesSet={categoriesSet}
 					filteredMoreCategories={filteredMoreCategories}
+					doFilter={doFilter}
 				/>
 			)}
+			<CategoryResults
+				center={center}
+				resultsEntries={Object.entries(quickSearchFeaturesMap).filter(
+					([k, v]) => categoriesSet.includes(k)
+				)}
+			/>
 		</div>
 	)
 }

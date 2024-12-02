@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   id="emoji"
+   viewBox="0 0 72 72"
+   version="1.1"
+   sodipodi:docname="backward-10.svg"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview25624"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="3.4404775"
+     inkscape:cx="31.681648"
+     inkscape:cy="49.266417"
+     inkscape:window-width="949"
+     inkscape:window-height="1041"
+     inkscape:window-x="962"
+     inkscape:window-y="5"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="emoji" />
+  <defs
+     id="defs214">
+    <marker
+       style="overflow:visible"
+       id="RoundedArrow"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="RoundedArrow"
+       markerWidth="5.3340001"
+       markerHeight="2.6670001"
+       viewBox="0 0 6.1347524 5.9304951"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid">
+      <path
+         transform="scale(0.7)"
+         d="m -0.21114562,-4.1055728 6.42229122,3.21114561 a 1,1 90 0 1 0,1.78885438 L -0.21114562,4.1055728 A 1.236068,1.236068 31.717474 0 1 -2,3 v -6 a 1.236068,1.236068 148.28253 0 1 1.78885438,-1.1055728 z"
+         style="fill:context-stroke;fill-rule:evenodd;stroke:none"
+         id="path1367" />
+    </marker>
+  </defs>
+  <path
+     sodipodi:type="spiral"
+     style="fill:none;fill-rule:evenodd;stroke:#2988e6;stroke-width:3.74567;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#RoundedArrow)"
+     id="path10667"
+     sodipodi:cx="-2.6192412"
+     sodipodi:cy="-2.942822"
+     sodipodi:expansion="1"
+     sodipodi:revolution="1.7805544"
+     sodipodi:radius="16.548201"
+     sodipodi:argument="-18.758266"
+     sodipodi:t0="0.68504119"
+     d="m -1.5015275,8.3381409 c -6.7728361,1.575142 -13.3254575,-3.3251078 -14.7108175,-9.9341631 -1.684479,-8.0360423 4.150057,-15.7305488 12.0172179,-17.2520438 2.0433947,-0.395189 4.15943511,-0.384831 6.2010317,0.01654"
+     transform="matrix(-1.7789836,0,0,1.7789836,34.519545,47.332612)" />
+  <text
+     xml:space="preserve"
+     style="font-weight:bold;font-size:29.3333px;font-family:Ubuntu;-inkscape-font-specification:'Ubuntu Bold';text-align:center;letter-spacing:-1.55px;text-anchor:middle;fill:#2988e6;fill-opacity:1;stroke:#2988e6;stroke-width:26.4567;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
+     x="29.381775"
+     y="50.382923"
+     id="text465"><tspan
+       sodipodi:role="line"
+       id="tspan463"
+       style="font-weight:bold;font-size:29.3333px;fill:#2988e6;fill-opacity:1;stroke:none;stroke-width:26.4567"
+       x="28.606775"
+       y="50.382923">-10'</tspan></text>
+</svg>

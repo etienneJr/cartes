@@ -2,6 +2,7 @@ import Image from 'next/image'
 import { TimelineTransportBlock } from './Transit'
 import { routeTypeName } from './transportIcon'
 import { capitalise0 } from '@/components/utils/utils'
+import { nextDeparturesSentence } from './findBestConnection'
 
 export default function BestConnection({ bestConnection }) {
 	console.log('prune best', bestConnection)
@@ -39,7 +40,7 @@ export default function BestConnection({ bestConnection }) {
 			<div>
 				<small>Il y a un {transportType} optimal !</small>
 				<p>
-					Le {transportType} direct
+					Le direct
 					<span
 						css={`
 							display: inline-block;
@@ -49,7 +50,7 @@ export default function BestConnection({ bestConnection }) {
 					>
 						<TimelineTransportBlock transport={transport} />
 					</span>
-					passe <strong>{bestConnection.interval}</strong> à l'arrêt{' '}
+					passe {bestConnection.interval} à l'arrêt{' '}
 					<em
 						css={`
 							white-space: nowrap;
@@ -60,14 +61,9 @@ export default function BestConnection({ bestConnection }) {
 					.
 				</p>
 				<p>
-					⌚️{' '}
-					{capitalise0(
-						bestConnection.nextDepartures
-							.slice(0, 4)
-							.map((departure) => departure.toLowerCase())
-							.join(', ')
-					)}
-					.
+					<small>
+						⌚️ Partir {nextDeparturesSentence(bestConnection.nextDepartures)}.
+					</small>
 				</p>
 			</div>
 		</div>

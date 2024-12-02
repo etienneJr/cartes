@@ -206,7 +206,11 @@ export default function OsmFeature({ data, transportStopData }) {
 			)}
 			{website && (
 				<div>
-					<a href={website} target="_blank" title="Site Web">
+					<a
+						href={website.startsWith('http') ? website : 'https://' + website}
+						target="_blank"
+						title="Site Web"
+					>
 						<Emoji e="🌍️" /> <span>Site web</span>
 					</a>
 				</div>

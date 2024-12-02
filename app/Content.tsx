@@ -1,8 +1,9 @@
 import { Loader } from '@/components/loader'
 import useSetSearchParams from '@/components/useSetSearchParams'
+import { useWhatChanged } from '@/components/utils/useWhatChanged'
 import { getThumb } from '@/components/wikidata'
 import Link from 'next/link'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useLocalStorage } from 'usehooks-ts'
 import BookmarkButton from './BookmarkButton'
 import Bookmarks from './Bookmarks'
@@ -14,7 +15,7 @@ import OsmFeature from './OsmFeature'
 import { PlaceButtonList } from './PlaceButtonsUI'
 import PlaceSearch from './PlaceSearch'
 import QuickBookmarks from './QuickBookmarks'
-import QuickFeatureSearch from './QuickFeatureSearch'
+import { getMinimumQuickSearchZoom } from './QuickFeatureSearchUI'
 import SetDestination from './SetDestination'
 import ShareButton from './ShareButton'
 import { DialogButton, ModalCloseButton } from './UI'
@@ -28,9 +29,7 @@ import { defaultAgencyFilter } from './transport/AgencyFilter'
 import { defaultTransitFilter } from './transport/TransitFilter'
 import TransportMap from './transport/TransportMap'
 import useOgImageFetcher from './useOgImageFetcher'
-import { useWhatChanged } from '@/components/utils/useWhatChanged'
-
-const getMinimumQuickSearchZoom = (mobile) => (mobile ? 10.5 : 12) // On a small screen, 70 %  of the tiles are not visible, hence this rule
+import PaymentBlock from '@/components/PaymentBlock'
 
 export default function Content(props) {
 	const {
@@ -65,6 +64,7 @@ export default function Content(props) {
 		quickSearchFeaturesMap,
 		setDisableDrag,
 		wikidata,
+		center,
 	} = props
 
 	useWhatChanged(props, 'Render component Content')
@@ -77,7 +77,14 @@ export default function Content(props) {
 		tagImage = tags?.image,
 		mainImage = tagImage || ogImage // makes a useless request for ogImage that won't be displayed to prefer mainImage : TODO also display OG
 
-	const [tutorials, setTutorials] = useLocalStorage('tutorials', {})
+	const [featureImageError, setFeatureImageError] = useState(false)
+
+	const [tutorials, setTutorials] = useLocalStorage(
+		'tutorials',
+		{},
+		{ initializeWithValue: false }
+	)
+
 	const introductionRead = tutorials.introduction,
 		clickTipRead = true || tutorials.clickTip
 
@@ -104,6 +111,7 @@ export default function Content(props) {
 		!clickTipRead,
 		geocodedClickedPoint,
 		searchParams.gare,
+		searchParams.abonnement,
 	]
 
 	const hasContent = content.some(
@@ -170,11 +178,12 @@ export default function Content(props) {
 
 	const showIntroduction = searchParams.intro
 
+	const { abonnement } = searchParams
 	useEffect(() => {
-		if (!showIntroduction) return
+		if (!showIntroduction && !abonnement) return
 
 		setTimeout(() => setSnap(1), 200)
-	}, [showIntroduction, setSnap])
+	}, [showIntroduction, setSnap, abonnement])
 
 	if (showIntroduction)
 		return (
@@ -191,6 +200,9 @@ export default function Content(props) {
 				</DialogButton>
 			</ExplanationWrapper>
 		)
+
+	if (searchParams.abonnement)
+		return <PaymentBlock {...{ setSearchParams, openSheet }} />
 
 	return (
 		<ContentWrapper>
@@ -209,19 +221,13 @@ export default function Content(props) {
 							stepIndex: searchStepIndex,
 							geolocation,
 							placeholder: isItineraryModeNoSteps ? 'Votre destination' : null,
+							minimumQuickSearchZoom,
+							vers,
+							snap,
+							quickSearchFeaturesMap,
+							center,
 						}}
 					/>
-					{zoom > minimumQuickSearchZoom && (
-						<QuickFeatureSearch
-							{...{
-								searchParams,
-								searchInput: vers?.inputValue,
-								setSnap,
-								snap,
-								quickSearchFeaturesMap,
-							}}
-						/>
-					)}
 					{searchParams.favoris !== 'oui' &&
 						searchParams.style !== 'transports' && (
 							<QuickBookmarks oldAllez={searchParams.allez} />
@@ -230,7 +236,7 @@ export default function Content(props) {
 			)}
 			{showIntroductionLink && (
 				<Link href={setSearchParams({ intro: true }, true)}>
-					À propos de Cartes
+					À propos de Cartes 🇫🇷
 				</Link>
 			)}
 
@@ -254,9 +260,10 @@ export default function Content(props) {
 								}}
 							/>
 						)}
-						{mainImage && (
+						{mainImage && !featureImageError && (
 							<FeatureImage
 								src={mainImage}
+								onError={() => setFeatureImageError(true)}
 								css={`
 									width: 100%;
 									height: 6rem;

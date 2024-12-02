@@ -4,9 +4,10 @@ import 'maplibre-gl/dist/maplibre-gl.css'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { sortGares } from './gares'
 
-import MapButtons from '@/components/MapButtons'
+import MapButtons, { mapButtonSize } from '@/components/MapButtons'
 import { goodIconSize, useComputeMapPadding } from '@/components/mapUtils'
 import useSetSearchParams from '@/components/useSetSearchParams'
+import useDrawQuickSearchFeatures from './effects/useDrawQuickSearchFeatures'
 import useAddMap, { globeLight, highZoomLight } from './effects/useAddMap'
 import { getStyle } from './styles/styles'
 import useHoverOnMapFeatures from './useHoverOnMapFeatures'
@@ -23,6 +24,7 @@ import useDrawElectionClusterResults from './effects/useDrawElectionCluserResult
 import useDrawPanoramaxPosition, {
 	useAddPanoramaxLayer,
 } from './effects/useDrawPanoramaxPosition'
+import useDrawRightClickMarker from './effects/useDrawRightClickMarker'
 import useDrawSearchResults from './effects/useDrawSearchResults'
 import useDrawTransport from './effects/useDrawTransport'
 import useImageSearch from './effects/useImageSearch'
@@ -75,17 +77,22 @@ export default function Map(props) {
 		quickSearchFeaturesMap,
 		trackedSnap,
 		panoramaxPosition,
+		geocodedClickedPoint,
 		setMapLoaded,
 		wikidata,
 		setLastGeolocation,
 		geolocation,
 	} = props
 	useWhatChanged(props, 'Render component Map')
+
 	const mapContainerRef = useRef(null)
 	const stepsLength = state.filter((step) => step?.key).length
 	const [autoPitchPreference, setAutoPitchPreference] = useLocalStorage(
 		'autoPitchPreference',
-		null
+		null,
+		{
+			initializeWithValue: false,
+		}
 	)
 
 	const autoPitchPreferenceIsNo = autoPitchPreference === 'no'
@@ -114,6 +121,7 @@ export default function Map(props) {
 	const [distanceMode, setDistanceMode] = useState(false)
 
 	const padding = useComputeMapPadding(trackedSnap, searchParams)
+
 	useGeolocationAutofocus(map, itinerary?.isItineraryMode, geolocation, padding)
 
 	useEffect(() => {
@@ -347,6 +355,7 @@ export default function Map(props) {
 		zoom
 	)
 	*/
+	useDrawRightClickMarker(map, geocodedClickedPoint, padding)
 
 	/* Abandoned code that should be revived. Traveling with train + bike is an
 	 * essential objective of Cartes */
@@ -447,6 +456,10 @@ export default function Map(props) {
 							font-weight: 600;
 							filter: drop-shadow(0px 0px 2px #ffffffa6);
 						}
+					}
+					.maplibregl-ctrl-top-right button {
+						width: ${mapButtonSize};
+						height: ${mapButtonSize};
 					}
 				`}
 			/>

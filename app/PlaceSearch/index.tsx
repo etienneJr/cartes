@@ -1,9 +1,17 @@
 import GeoInputOptions from '@/components/GeoInputOptions'
+import computeDistance from '@turf/distance'
 import fetchPhoton from '@/components/fetchPhoton'
 import { buildAddress } from '@/components/osm/buildAddress'
-import ItineraryProposition from '@/components/placeSearch/ItineraryProposition'
+import ItineraryProposition, {
+	AnimatedSearchProposition,
+} from '@/components/placeSearch/ItineraryProposition'
+import detectCodePostal from '@/components/placeSearch/detectCodePostal'
 import detectSmartItinerary from '@/components/placeSearch/detectSmartItinerary'
-import { getArrayIndex, replaceArrayIndex } from '@/components/utils/utils'
+import {
+	getArrayIndex,
+	replaceArrayIndex,
+	sortBy,
+} from '@/components/utils/utils'
 import { isIOS } from '@react-aria/utils'
 import { useEffect, useState } from 'react'
 import { useLocalStorage } from 'usehooks-ts'
@@ -18,6 +26,8 @@ import SearchHistory from './_components/SearchResults/SearchHistory'
 import SearchLoader from './_components/SearchResults/SearchLoader'
 import SearchNoResults from './_components/SearchResults/SearchNoResults'
 import SearchResultsContainer from './_components/SearchResults/SearchResultsContainer'
+import detectCoordinates from '@/components/placeSearch/detectCoordinates'
+import QuickFeatureSearch from '../QuickFeatureSearch'
 
 /* I'm  not sure of the interest to attache `results` to each state step.
  * It could be cached across the app. No need to re-query photon for identical
@@ -34,6 +44,11 @@ export default function PlaceSearch({
 	stepIndex,
 	geolocation,
 	placeholder,
+	minimumQuickSearchZoom,
+	vers,
+	snap,
+	quickSearchFeaturesMap,
+	center,
 }) {
 	console.log('lightgreen stepIndex', stepIndex, state)
 	console.log('lightgreen autofocus', autoFocus)
@@ -42,8 +57,25 @@ export default function PlaceSearch({
 	if (stepIndex == null) throw new Error('Step index necessary')
 
 	const [isLocalSearch, setIsLocalSearch] = useState(true)
-	const [searchHistory, setSearchHistory] = useLocalStorage('searchHistory', [])
+	const [searchHistory, setSearchHistory] = useLocalStorage(
+		'searchHistory',
+		[],
+		{
+			initializeWithValue: false,
+		}
+	)
 	const [itineraryProposition, setItineraryProposition] = useState()
+	const [postalCodeState, setPostalCodeState] = useState()
+	const [coordinatesState, setCoordinatesState] = useState()
+
+	useEffect(() => {
+		if (!coordinatesState) return
+
+		const timeoutReference = setTimeout(() => setCoordinatesState(null), 4000)
+		return () => {
+			clearTimeout(timeoutReference)
+		}
+	}, [coordinatesState, setCoordinatesState])
 
 	const urlSearchQuery = searchParams.q
 
@@ -91,6 +123,61 @@ export default function PlaceSearch({
 				const [from, to] = result
 				setItineraryProposition([from, to])
 			})
+
+			detectCoordinates(
+				searchValue,
+				localSearch,
+				zoom,
+				([latitude, longitude]) => {
+					setSearchParams({
+						clic: latitude + '|' + longitude,
+					})
+					const newStateEntry = {}
+					const newState = replaceArrayIndex(
+						state,
+						stepIndex,
+						newStateEntry
+						//validated: false, // TODO was important or not ? could be stored in each state array entries and calculated ?
+					)
+
+					setState(newState)
+				},
+				setCoordinatesState
+			)
+
+			detectCodePostal(
+				searchValue,
+				localSearch,
+				zoom,
+				(results) => {
+					if (!results?.length) return
+					console.log('indigo res', results)
+
+					const osmFeature = sortBy(
+						({ lon, lat }) => -computeDistance([local[1], local[0]], [lon, lat])
+					)(results.filter((element) => element.type === 'relation'))[0]
+
+					const centerId = osmFeature.members.find(
+						(element) => element.role === 'admin_centre'
+					).ref
+
+					const center = results.find((result) => result.id === centerId)
+
+					console.log('indigo res', osmFeature, center)
+
+					const allez = buildAllezPart(
+						osmFeature.tags?.name,
+						encodePlace(osmFeature.type, osmFeature.id),
+						center.lon,
+						center.lat
+					)
+
+					setSearchParams({ allez })
+					setPostalCodeState(null)
+					console.log('indigo', allez)
+				},
+				setPostalCodeState
+			)
 
 			const oldStateEntry = state[stepIndex]
 			const stateEntry = {
@@ -211,6 +298,27 @@ export default function PlaceSearch({
 				/>
 			)}
 
+			{postalCodeState && (
+				<AnimatedSearchProposition>{postalCodeState}</AnimatedSearchProposition>
+			)}
+			{coordinatesState && (
+				<AnimatedSearchProposition>
+					{coordinatesState}
+				</AnimatedSearchProposition>
+			)}
+
+			{zoom > minimumQuickSearchZoom && (
+				<QuickFeatureSearch
+					{...{
+						searchParams,
+						searchInput: vers?.inputValue,
+						setSnap,
+						snap,
+						quickSearchFeaturesMap,
+						center,
+					}}
+				/>
+			)}
 			{shouldShowResults && (
 				<div>
 					{step.results && (

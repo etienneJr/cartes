@@ -15,7 +15,7 @@ Découvrez [nos motivations](https://cartes.app/blog/un-beau-voyage) et les dern
 
 ## Comment contribuer ?
 
-C'est par ici : [guide de contribution](https://github.com/laem/cartes/blob/master/CONTRIBUTING.md) !
+C'est par ici : [guide de contribution](https://github.com/cartesapp/cartes/blob/master/CONTRIBUTING.md) !
 Vous pouvez aussi poser des questions sur la section issues ou sur le [canal matrix](https://matrix.to/#/#cartes:matrix.org) pour les questions plus informelles.
 
 ## Et techniquement

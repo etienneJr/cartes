@@ -14,7 +14,7 @@ export default function natureStyle(
 				url: `https://api.maptiler.com/tiles/contours/tiles.json?key=${key}`,
 				type: 'vector',
 			},
-			'gel-raster-dem': {
+			'terrain-rgb': {
 				tiles: [
 					'pmtiles://https://data.source.coop/smartmaps/gel/gel.pmtiles/{z}/{x}/{y}.webp',
 				],
@@ -345,7 +345,7 @@ export default function natureStyle(
 			{
 				id: 'Hillshade',
 				type: 'hillshade',
-				source: 'gel-raster-dem',
+				source: 'terrain-rgb',
 				layout: {
 					visibility: 'visible',
 				},

@@ -44,13 +44,6 @@ export default function useDrawItinerary(
 	// geojson shape for trains, buses (appart from straight lines from stop to
 	// stop) nor walk
 
-	useDrawTransit(
-		map,
-		(!mode || mode === 'transit') && routes?.transit,
-		selectedConnection,
-		date
-	)
-
 	useFetchDrawBikeParkings(map, mode === 'cycling' && routes?.cycling)
 
 	const setSearchParams = useSetSearchParams()
@@ -102,6 +95,7 @@ export default function useDrawItinerary(
 		map,
 		cyclingReady && routes.cycling.safe?.cyclingSegmentsGeojson
 	)
+
 	useDrawRoute(isItineraryMode, map, cyclingReady && routes.cycling, 'cycling')
 
 	useDrawRoute(
@@ -122,6 +116,13 @@ export default function useDrawItinerary(
 	}, [carReady, routes?.car])
 
 	useDrawRoute(isItineraryMode, map, carReady && carGeojson, 'car')
+
+	useDrawTransit(
+		map,
+		(!mode || mode === 'transit') && routes?.transit,
+		selectedConnection,
+		date
+	)
 
 	const oldAllez = searchParams.allez
 	useEffect(() => {

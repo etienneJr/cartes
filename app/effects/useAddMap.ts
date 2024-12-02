@@ -113,7 +113,10 @@ export default function useAddMap(
 
 	const [autoPitchPreference, setAutoPitchPreference] = useLocalStorage(
 		'autoPitchPreference',
-		null
+		null,
+		{
+			initializeWithValue: false,
+		}
 	)
 
 	useEffect(() => {
@@ -136,10 +139,17 @@ export default function useAddMap(
 		}
 	}, [map, autoPitchPreference, setAutoPitchPreference])
 
-	const [lastGeolocation] = useLocalStorage('lastGeolocation', {
-		center: defaultCenter,
-		zoom: defaultZoom,
-	})
+	const [lastGeolocation] = useLocalStorage(
+		'lastGeolocation',
+		{
+			center: defaultCenter,
+			zoom: defaultZoom,
+		},
+
+		{
+			initializeWithValue: false,
+		}
+	)
 
 	useEffectDebugger(() => {
 		if (!mapContainerRef.current) return
@@ -161,28 +171,6 @@ export default function useAddMap(
 			attributionControl: false,
 			locale: frenchMaplibreLocale,
 			antialias: true,
-		})
-
-		const navigationControl = new maplibregl.NavigationControl({
-			visualizePitch: true,
-			showZoom: true,
-			showCompass: true,
-		})
-		newMap.addControl(navigationControl, 'top-right')
-
-		const geolocate = new maplibregl.GeolocateControl({
-			positionOptions: {
-				enableHighAccuracy: true,
-			},
-			trackUserLocation: true,
-		})
-
-		setGeolocate(geolocate)
-
-		newMap.addControl(geolocate)
-
-		geolocate.on('geolocate', function (e) {
-			setGeolocation(e.coords)
 		})
 
 		newMap.on('load', () => {
@@ -217,6 +205,28 @@ export default function useAddMap(
 	useEffect(() => {
 		if (!map) return
 
+		const navigationControl = new maplibregl.NavigationControl({
+			visualizePitch: true,
+			showZoom: !isMobile,
+			showCompass: true,
+		})
+		map.addControl(navigationControl, 'top-right')
+
+		const geolocate = new maplibregl.GeolocateControl({
+			positionOptions: {
+				enableHighAccuracy: true,
+			},
+			trackUserLocation: true,
+		})
+
+		setGeolocate(geolocate)
+
+		map.addControl(geolocate)
+
+		geolocate.on('geolocate', function (e) {
+			setGeolocation(e.coords)
+		})
+
 		const scale = new ScaleControl({
 			maxWidth: isMobile ? 80 : 200,
 			unit: 'metric',
@@ -226,11 +236,13 @@ export default function useAddMap(
 			if (!map || !scale) return
 			try {
 				map.removeControl(scale)
+				map.removeControl(navigationControl)
+				map.removeControl(geolocate)
 			} catch (e) {
 				console.log('Error removing scale')
 			}
 		}
-	}, [map, isMobile])
+	}, [map, isMobile, setGeolocation, setGeolocate])
 
 	useEffect(() => {
 		if (!map || !isMobile || window.location.hash !== defaultHash) return

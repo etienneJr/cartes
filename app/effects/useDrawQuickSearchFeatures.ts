@@ -65,7 +65,7 @@ export default function useDrawQuickSearchFeatures(
 					layout: {},
 					paint: {
 						'fill-color': colors['lightestColor'],
-						'fill-opacity': 0.6,
+						'fill-opacity': 0.3,
 					},
 				})
 				map.addLayer({
@@ -88,7 +88,7 @@ export default function useDrawQuickSearchFeatures(
 						'text-field': ['get', 'name'],
 						'text-offset': [0, 1.25],
 						'text-anchor': 'top',
-						'text-font': ['Roboto Regular', 'Noto Sans Regular'],
+						'text-font': ['RobotoRegular-NotoSansRegular'],
 					},
 					paint: {
 						'text-color': '#503f38',

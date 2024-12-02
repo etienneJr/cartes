@@ -11,6 +11,7 @@ import getName from './osm/getName'
 import getUrl from './osm/getUrl'
 import { stepOsmRequest } from './stepOsmRequest'
 import { Suspense } from 'react'
+import PaymentBanner from './PaymentBanner'
 
 export async function generateMetadata(
 	props: Props,
@@ -90,6 +91,7 @@ const Page = async (props) => {
 			}}
 		>
 			<Suspense>
+				<PaymentBanner parameter={searchParams.abonnement} />
 				<Container
 					searchParams={searchParams}
 					state={state}
