@@ -23,11 +23,7 @@ export default function MoreCategories({
 			css={`
 				margin-bottom: 0.6rem;
 				@media (max-width: 800px) {
-					${doFilter
-						? `margin-top: .6rem;`
-						: `
-					margin-bottom: 50vh;
-					`}
+					${doFilter && `margin-top: .6rem;`}
 				}
 				ol,
 				ul {
