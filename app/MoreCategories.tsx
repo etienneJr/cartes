@@ -3,6 +3,8 @@ import Link from 'next/link'
 import { exactThreshold } from './QuickFeatureSearch'
 import { goldCladding } from './QuickFeatureSearchUI'
 import categoryColors from '@/app/categoryColors.yaml'
+import buildSvgImage from './effects/buildSvgImage'
+import { useEffect, useState } from 'react'
 
 export default function MoreCategories({
 	getNewSearchParamsLink,
@@ -21,11 +23,7 @@ export default function MoreCategories({
 			css={`
 				margin-bottom: 0.6rem;
 				@media (max-width: 800px) {
-					${doFilter
-						? `margin-top: .6rem;`
-						: `
-					margin-bottom: 50vh;
-					`}
+					${doFilter && `margin-top: .6rem;`}
 				}
 				ol,
 				ul {
@@ -98,6 +96,7 @@ border-color: var(--darkColor) !important;
 											`}
 										>
 											<Link href={getNewSearchParamsLink(category)}>
+												<MapIcon category={category} color={groupColor} />{' '}
 												{uncapitalise0(category.title || category.name)}
 											</Link>
 										</li>
@@ -110,4 +109,27 @@ border-color: var(--darkColor) !important;
 			</ol>
 		</div>
 	)
+}
+
+const MapIcon = ({ category, color }) => {
+	const [src, setSrc] = useState()
+
+	const alt = 'Icône de la catégorie' + (category.title || category.name)
+	useEffect(() => {
+		buildSvgImage(category.icon, (_, src) => setSrc(src), color)
+	}, [category.icon])
+
+	if (src)
+		return (
+			<img
+				src={src}
+				alt={alt}
+				css={`
+					width: 1.1rem;
+					height: 1.1rem;
+					vertical-align: sub;
+					margin-bottom: 0.05rem;
+				`}
+			/>
+		)
 }

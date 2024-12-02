@@ -1,3 +1,7 @@
+import { JSDOM } from 'jsdom'
+
+const dom = new JSDOM(`<!DOCTYPE html><p>Hello world</p>`)
+
 /**
  * @param {String} HTML representing a single element.
  * @param {Boolean} flag representing whether or not to trim input whitespace, defaults to true.
@@ -9,7 +13,7 @@ export function fromHTML(html, trim = true) {
 	if (!html) return null
 
 	// Then set up a new template element.
-	const template = document.createElement('template')
+	const template = dom.window.document.createElement('template')
 	template.innerHTML = html
 	const result = template.content.children
 

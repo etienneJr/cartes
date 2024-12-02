@@ -29,7 +29,13 @@ export default function CategoryResults({ resultsEntries, center }) {
 			}),
 		results = sortBy((result) => result.distance)(resultsWithoutOrder)
 	return (
-		<section css={``}>
+		<section
+			css={`
+				@media (max-width: 800px) {
+					margin-bottom: 50vh;
+				}
+			`}
+		>
 			<div
 				css={`
 					display: flex;
