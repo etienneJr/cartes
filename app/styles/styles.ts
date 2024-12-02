@@ -1,3 +1,4 @@
+import cassini from './cassiniIgnStyle'
 import cyclOsm from './cyclOsmStyle'
 import elections from './elections'
 import franceStyle from './france'
@@ -88,6 +89,15 @@ export const styles = {
 		originalName: 'Winter',
 		emoji: '⛄️',
 		hasTerrain: true,
+	},
+	cassini: { 
+		url: cassini(key), 
+		name: 'Cassini', 
+		attribution: '<a href="https://www.ign.fr/institut/espace-presse/une-nouvelle-version-interactive-de-la-carte-de-cassini-sur-le-geoportail" target="_blank">IGN + BNF</a>',
+		emoji: '🐎',
+		secondary: true,
+		artistic: true,
+		description: "Carte de Cassini, 18e siècle. Source IGN et BNF.",
 	},
 	'street-complete': {
 		// Taken from MapTiler's dataviz style
