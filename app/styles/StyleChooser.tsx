@@ -119,7 +119,7 @@ const Styles = ({
 					return (
 						<li key={k}>
 							{/* Was previously a Link but for some reason probably after the
- 						client useSetSearchParams change, the link reloads the page. Maybe solve this with an object href ? */}
+						client useSetSearchParams change, the link reloads the page. Maybe solve this with an object href ? */}
 							<Button
 								$active={style.key === k}
 								onClick={() => {

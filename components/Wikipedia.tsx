@@ -72,7 +72,7 @@ const Wrapper = styled.section`
 			p.$shortenText?.length > 100
 				? ''
 				: `
- 				    margin-bottom: .8rem`}
+				    margin-bottom: .8rem`}
 	}
 	> p > img {
 		vertical-align: text-bottom;
@@ -82,10 +82,10 @@ const Wrapper = styled.section`
 		${(p) =>
 			p.$shortenText?.length > 100
 				? `
- 					z-index: 2;
- 					position: absolute;
- 					right: 0;
- 					`
+					z-index: 2;
+					position: absolute;
+					right: 0;
+					`
 				: `float: right; `};
 	}
 `

@@ -7,8 +7,8 @@ const quickSearchButtonwidth = '2.2rem'
 export const getMinimumQuickSearchZoom = (mobile) => (mobile ? 10.5 : 12) // On a small screen, 70 %  of the tiles are not visible, hence this rule
 
 export const goldCladding = `
- filter: drop-shadow(0 0 0.15rem gold);
- `
+filter: drop-shadow(0 0 0.15rem gold);
+`
 
 //export const quickSearchButtonStyle = (clicked, background, filter) => `
 export const QuickSearchElement = styled.li`
@@ -42,7 +42,7 @@ export const QuickSearchElement = styled.li`
 		filter: ${(p) =>
 			p.$filter ||
 			`invert(16%) sepia(24%) saturate(3004%)
- 						hue-rotate(180deg) brightness(89%) contrast(98%)`};
+						hue-rotate(180deg) brightness(89%) contrast(98%)`};
 	}
 	background: ${(p) =>
 		!p.$clicked ? p.$background || 'white' : 'var(--lighterColor)'};
@@ -51,13 +51,13 @@ export const QuickSearchElement = styled.li`
 		p.$clicked &&
 		`border-color: var(--darkColor) !important;
 
- 	img {
- 	${(p) =>
+	img {
+	${(p) =>
 		p.$filter ||
 		`
- 		filter: invert(23%) sepia(100%) saturate(1940%) hue-rotate(206deg)
- 			brightness(89%) contrast(84%)`};
- 	}`}
+		filter: invert(23%) sepia(100%) saturate(1940%) hue-rotate(206deg)
+			brightness(89%) contrast(84%)`};
+	}`}
 
 	${(p) => p.$setGoldCladding && goldCladding}
 `
@@ -106,8 +106,8 @@ export const FeatureList = styled.ul`
 	${(p) =>
 		p.$showMore &&
 		`
- 							flex-wrap: wrap;
- 							li {margin-bottom: .3rem}
+							flex-wrap: wrap;
+							li {margin-bottom: .3rem}
 
- 							`}
+							`}
 `

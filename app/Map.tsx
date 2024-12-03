@@ -41,9 +41,9 @@ if (process.env.NEXT_PUBLIC_MAPTILER == null) {
 }
 
 /*******
- * This component should hold only the hooks that depend on the map or are user
- * interactions. Components that can be rendered server side to make beautiful and useful meta previews of URLs must be written in the Container component or above
- *******/
+* This component should hold only the hooks that depend on the map or are user
+* interactions. Components that can be rendered server side to make beautiful and useful meta previews of URLs must be written in the Container component or above
+*******/
 
 export default function Map(props) {
 	const {
@@ -305,8 +305,8 @@ export default function Map(props) {
 
 		const tailoredZoom = //TODO should be defined by the feature's polygon if any
 			/* ['city'].includes(vers.choice.type)
- 			? 12
- 			: */
+			? 12
+			: */
 			Math.max(15, zoom)
 		console.log(
 			'blue',
@@ -346,16 +346,16 @@ export default function Map(props) {
 	/* TODO Transform this to handle the last itinery point if alone (just a POI url),
 	 * but also to add markers to all the steps of the itinerary */
 	/* Should be merged with the creation of route markers
- 	useSetTargetMarkerAndZoom(
- 		map,
- 		target,
- 		state.vers.marker,
- 		state.vers.choice.type,
- 		setState,
- 		setLatLngClicked,
- 		zoom
- 	)
- 	*/
+	useSetTargetMarkerAndZoom(
+		map,
+		target,
+		state.vers.marker,
+		state.vers.choice.type,
+		setState,
+		setLatLngClicked,
+		zoom
+	)
+	*/
 	useDrawRightClickMarker(map, geocodedClickedPoint, padding)
 
 	/* Abandoned code that should be revived. Traveling with train + bike is an
@@ -369,11 +369,11 @@ export default function Map(props) {
 			const element = document.createElement('div')
 			const factor = { 1: 0.9, 2: 1.1, 3: 1.3 }[gare.niveau] || 0.7
 			element.style.cssText = `
- 				display: flex;
- 				flex-direction: column;
- 				align-items: center;
- 				cursor: help;
- 			`
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				cursor: help;
+			`
 			const size = goodIconSize(zoom, factor) + 'px'
 
 			const image = document.createElement('img')

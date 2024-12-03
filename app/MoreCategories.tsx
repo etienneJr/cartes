@@ -55,8 +55,8 @@ const Wrapper = styled.div`
 			p.$doFilter
 				? `margin-top: .6rem;`
 				: `
- 					margin-bottom: 50vh;
- 					`}
+					margin-bottom: 50vh;
+					`}
 	}
 	ol,
 	ul {
@@ -111,9 +111,9 @@ const Category = styled.li`
 	${(p) =>
 		p.$active
 			? `
- background: var(--lighterColor) !important;
- border-color: var(--darkColor) !important;
+background: var(--lighterColor) !important;
+border-color: var(--darkColor) !important;
 
- `
+`
 			: ''}
 `

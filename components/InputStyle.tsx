@@ -39,12 +39,12 @@ export const InputStyle = styled.span`
 	${(props) =>
 		props.suffixed &&
 		`
- 	input {
- 		text-align: right;
- 	}
- 	`}
+	input {
+		text-align: right;
+	}
+	`}
 	input:focus,
- 	select:focus {
+	select:focus {
 		border-color: var(--color);
 	}
 

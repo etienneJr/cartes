@@ -34,10 +34,10 @@ export default function ModalSheet(props) {
 			console.log('snapp to ' + i, ' from component ', fromComponent)
 
 			/*
- 			if (i < snapPoints.length - 1) setOpen(true)
- 			setTimeout(() => {
- 			}, 1000)
- 			*/
+			if (i < snapPoints.length - 1) setOpen(true)
+			setTimeout(() => {
+			}, 1000)
+			*/
 
 			ref.current?.snapTo(i)
 		},
