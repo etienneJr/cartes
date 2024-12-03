@@ -2,11 +2,10 @@
 
 import useMeasureDistance from '@/app/useMeasureDistance'
 import Emoji from '@/components/Emoji'
-import { css } from 'next-yak'
 import useSetSearchParams from '@/components/useSetSearchParams'
 import { omit } from '@/components/utils/utils'
+import { css, styled } from 'next-yak'
 import Link from 'next/link'
-import { styled } from 'next-yak'
 import ItineraryButton, { ResetIcon } from './itinerary/ItineraryButton'
 
 export const mapButtonSize = '2.15rem'
@@ -37,13 +36,11 @@ export const MapButton = styled.div`
 	cursor: pointer;
 	${(p) =>
 		p.$active &&
-		`
-
-	border: 3px solid var(--color);
-	width: 4rem;
-height: 4rem;
-
-	`}
+		css`
+			border: 3px solid var(--color);
+			width: 4rem;
+			height: 4rem;
+		`}
 	position: relative;
 	> button:first-child {
 		width: 100%;

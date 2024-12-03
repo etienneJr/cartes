@@ -16,7 +16,6 @@ export default function ClickItineraryInstruction({ state }) {
 		<div
 			css={css`
 				margin: 1rem 0;
-
 				text-align: center;
 				img {
 					width: 1.2rem;

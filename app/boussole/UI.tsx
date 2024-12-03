@@ -1,6 +1,6 @@
 'use client'
 
-import {styled} from 'next-yak'
+import { styled } from 'next-yak'
 
 export const Compass = styled.div`
 	position: relative;
@@ -32,7 +32,7 @@ export const Compass = styled.div`
 		left: 50%;
 		transform: translate(-50%, -50%);
 		transition: transform 0.1s ease-out;
-		background: url(https://purepng.com/public/uploads/large/purepng.com-compasscompassinstrumentnavigationcardinal-directionspointsdiagram-1701527842316onq7x.png)
+		background: url('https://purepng.com/public/uploads/large/purepng.com-compasscompassinstrumentnavigationcardinal-directionspointsdiagram-1701527842316onq7x.png')
 			center no-repeat;
 		background-size: contain;
 	}
