@@ -6,6 +6,7 @@ import { ModalCloseButton } from './UI'
 import useSetSearchParams from '@/components/useSetSearchParams'
 import { useState } from 'react'
 import { buildAddress } from '@/components/osm/buildAddress'
+import { css } from 'next-yak'
 
 export default function Favoris() {
 	const setSearchParams = useSetSearchParams()

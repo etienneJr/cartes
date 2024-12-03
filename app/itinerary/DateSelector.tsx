@@ -9,6 +9,7 @@ import { useInterval } from 'usehooks-ts'
 import { DialogButton } from '../UI'
 import { nowStamp, stamp } from './transit/utils'
 import longueVueIcon from '@/public/longuevue.svg'
+import { css, styled } from 'next-yak'
 
 export const initialDate = (type = 'date', givenDate) => {
 	const stringDate = (
@@ -83,7 +84,12 @@ export default function DateSelector({ date, type = 'date', planification }) {
 						<Image
 							src={calendarIcon}
 							alt="Icône d'un agenda"
-							css="width: 1.6rem; height: auto; vertical-align: sub; margin-left: .2rem"
+							css={css`
+								width: 1.6rem;
+								height: auto;
+								vertical-align: sub;
+								margin-left: 0.2rem;
+							`}
 						/>
 					</button>
 				</span>
@@ -152,20 +158,21 @@ const PreTripMode = ({ setSearchParams, planification }) => {
 				true
 			)}
 		>
-			<Image
+			<PreTripModeImage
 				src={longueVueIcon}
 				alt="Icône longue vue représentant le mode planification à la journée"
-				css={css`
-					width: 1.5rem;
-					height: auto;
-					padding-top: 0.3rem;
-					margin-left: 0.1rem;
-					opacity: ${planification === 'oui' ? 1 : 0.3};
-				`}
+				$planification={planification}
 			/>
 		</Link>
 	)
 }
+const PreTripModeImage = styled(Image)`
+	width: 1.5rem;
+	height: auto;
+	padding-top: 0.3rem;
+	margin-left: 0.1rem;
+	opacity: ${(p) => (p.$planification === 'oui' ? 1 : 0.3)};
+`
 
 const newTimestamp = () => new Date().getTime() / 1000
 
