@@ -14,7 +14,7 @@ const __dirname = path.dirname(__filename)
 const nextConfig = {
 	reactStrictMode: false,
 	experimental: {
-		reactCompiler: true,
+		reactCompiler: false,
 	},
 	/*
 	compilerOptions: {
