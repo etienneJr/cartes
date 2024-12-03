@@ -79,7 +79,7 @@
 		"geo-coordinates-parser": "^1.7.4",
 		"gray-matter": "^4.0.3",
 		"jsdom": "^25.0.1",
-		"maplibre-gl": "v5.0.0-pre.7",
+		"maplibre-gl": "5.0.0-pre.8",
 		"next": "15.0.3",
 		"next-contentlayer2": "0.5.1",
 		"next-mdx-remote": "^5.0.0",
