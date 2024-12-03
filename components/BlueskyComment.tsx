@@ -1,5 +1,4 @@
-'use client'
-
+import { css } from 'next-yak'
 import { dateCool } from '@/app/blog/utils'
 
 export default function Comment({ data }) {
@@ -40,7 +39,6 @@ export default function Comment({ data }) {
 				}
 			`}
 		>
-			{' '}
 			<section>
 				<header>
 					<img src={avatar} alt={`Image du compte ${handle}`} />

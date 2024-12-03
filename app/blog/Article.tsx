@@ -52,7 +52,7 @@ export default async function Article({ post, slug }) {
 					<hr />
 				</header>
 				<MDXContent components={mdxComponents} />
-				<Contribution slug={params.slug} />
+				<Contribution slug={slug} />
 				<OtherArticles excludeUrl={post.url} />
 			</ArticleWrapper>
 			{post?.bluesky && <BlueskyComments uri={post.bluesky} />}

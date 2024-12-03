@@ -1,7 +1,7 @@
 import { AppBskyFeedDefs, BskyAgent } from '@atproto/api'
 const agent = new BskyAgent({ service: 'https://public.api.bsky.app' })
 import Comment from '@/components/BlueskyComment'
-import css from './css/convertToJs'
+import { css } from 'next-yak'
 
 export default async function BlueskyComments({ uri }) {
 	const part = uri.split('app.bsky.feed.post/')[1]

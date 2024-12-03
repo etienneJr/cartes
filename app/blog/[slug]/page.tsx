@@ -7,6 +7,7 @@ export const generateMetadata = async (props) => {
 	const post = allArticles.find(
 		(post) => post._raw.flattenedPath === params.slug
 	)
+	if (!post) return null
 	const lastEdit = await getLastEdit(params.slug)
 	return {
 		title: post.titre.raw,
@@ -26,6 +27,9 @@ export default async function Post(props: Props) {
 	const post = allArticles.find(
 		(post) => post._raw.flattenedPath === params.slug
 	)
+
+	console.log('POSTOU', post, params.slug)
+	if (!post) return null
 
 	return <Article post={post} slug={params.slug} />
 }

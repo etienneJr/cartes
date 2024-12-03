@@ -1,8 +1,8 @@
-import {css} from 'next-yak'
+import { css } from 'next-yak'
 import { sortBy } from '@/components/utils/utils'
 import Link from 'next/link'
 import { OtherArticlesList, OtherArticlesSection } from './UI'
-import { blogArticles } from './page'
+import { blogArticles } from './blogArticles'
 import { dateCool } from './utils'
 
 export default function ({ excludeUrl }) {
