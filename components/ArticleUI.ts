@@ -1,4 +1,5 @@
 import { styled } from 'next-yak'
+import Link from 'next/link'
 
 const Article = styled.article`
 	max-width: 700px;
@@ -101,3 +102,8 @@ const Article = styled.article`
 `
 
 export default Article
+
+export const BackToBlogLink = styled(Link)`
+	margin-top: 0.6rem;
+	display: inline-block;
+`

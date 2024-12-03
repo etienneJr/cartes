@@ -1,10 +1,8 @@
-import ArticleWrapper from '@/components/ArticleUI'
+import Contribution from '@/app/blog/Contribution'
+import ArticleWrapper, { BackToBlogLink } from '@/components/ArticleUI'
 import BlueskyComments from '@/components/BlueskyComments'
 import { getMDXComponent } from 'next-contentlayer2/hooks'
-import { css } from 'next-yak'
 import Image from 'next/image'
-import Link from 'next/link'
-import Contribution from '@/app/blog/Contribution'
 import OtherArticles from './OtherArticles'
 import { mdxComponents } from './mdxComponents'
 import { dateCool, getLastEdit } from './utils'
@@ -19,15 +17,7 @@ export default async function Article({ post, slug }) {
 		<div>
 			<ArticleWrapper>
 				{!post.tags?.includes('page') && (
-					<Link
-						href="/blog"
-						css={css`
-							margin-top: 0.6rem;
-							display: inline-block;
-						`}
-					>
-						← Retour au blog
-					</Link>
+					<BackToBlogLink href="/blog">← Retour au blog</BackToBlogLink>
 				)}
 				<header>
 					{post.image && (
