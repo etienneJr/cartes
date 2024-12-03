@@ -1,4 +1,4 @@
-import css from '../css/convertToJs'
+import { css } from 'next-yak'
 
 export default function Diapo({ children }) {
 	return (

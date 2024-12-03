@@ -2,7 +2,7 @@
 import icons from '@/app/icons/icons.json'
 import { omit } from './utils/utils'
 import Highlighter from 'react-highlight-words'
-import css from './css/convertToJs'
+import { css, styled } from 'next-yak'
 import { buildAddress } from './osm/buildAddress'
 
 // Beware, this file is shared by the Map app, and the carbon footprint / € calculators
@@ -89,51 +89,7 @@ const Option = ({ whichInput, option, updateState, rulesPath, data }) => {
 	const iconPath = foundIcon ? urlBase + foundIcon[1] : `/dot.svg`
 
 	return (
-		<li
-			css={css`
-				padding: 0;
-				border-radius: 0;
-				${choice && choice.name === option.name
-					? 'background: var(--color); color: var(--textColor)'
-					: ''};
-				border-bottom: 1px solid var(--lightestColor);
-				button {
-					font-size: 90%;
-					line-height: 130%;
-					display: flex;
-					align-items: center;
-					text-align: left;
-					width: 100%;
-					padding: 0.5rem;
-					border-radius: 0;
-				}
-				button > span {
-					display: flex;
-					justify-content: space-between;
-					flex-wrap: wrap;
-					gap: 0 0.9rem;
-					align-items: center;
-					width: 100%;
-				}
-
-				button > span > span:nth-of-type(2) {
-					flex-grow: 1;
-					text-align: right;
-					opacity: 0.6;
-					font-size: 80%;
-				}
-
-				button:hover {
-					background: var(--lightestColor);
-				}
-				button > img {
-					width: 1.2rem;
-					height: 1.2rem;
-					margin-right: 0.6rem;
-					filter: invert(1);
-				}
-			`}
-		>
+		<Li $chosen={choice && choice.name === option.name}>
 			<button
 				onClick={(e) => {
 					const newState = { ...data, choice: { ...option, inputValue } }
@@ -164,10 +120,53 @@ const Option = ({ whichInput, option, updateState, rulesPath, data }) => {
 					)}
 				</span>
 			</button>
-		</li>
+		</Li>
 	)
 }
 
 const highlightStyle = css`
 	background: var(--lighterColor);
+`
+
+const Li = styled.li`
+	padding: 0;
+	border-radius: 0;
+	${(p) =>
+		p.$chosen ? 'background: var(--color); color: var(--textColor)' : ''};
+	border-bottom: 1px solid var(--lightestColor);
+	button {
+		font-size: 90%;
+		line-height: 130%;
+		display: flex;
+		align-items: center;
+		text-align: left;
+		width: 100%;
+		padding: 0.5rem;
+		border-radius: 0;
+	}
+	button > span {
+		display: flex;
+		justify-content: space-between;
+		flex-wrap: wrap;
+		gap: 0 0.9rem;
+		align-items: center;
+		width: 100%;
+	}
+
+	button > span > span:nth-of-type(2) {
+		flex-grow: 1;
+		text-align: right;
+		opacity: 0.6;
+		font-size: 80%;
+	}
+
+	button:hover {
+		background: var(--lightestColor);
+	}
+	button > img {
+		width: 1.2rem;
+		height: 1.2rem;
+		margin-right: 0.6rem;
+		filter: invert(1);
+	}
 `

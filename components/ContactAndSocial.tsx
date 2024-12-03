@@ -1,7 +1,7 @@
 import Emoji from './Emoji'
 import Image from 'next/image'
-import css from './css/convertToJs'
 import { atOrUrl } from '@/app/utils'
+import { css } from 'next-yak'
 
 export default function ContactAndSocial({
 	email,
