@@ -1,12 +1,11 @@
-import { css, styled } from 'next-yak'
 import useSetSearchParams from '@/components/useSetSearchParams'
 import informationIcon from '@/public/information.svg'
+import { css, styled } from 'next-yak'
 import Image from 'next/image'
-import { useLocalStorage } from 'usehooks-ts'
 import { ModalCloseButton } from '../UI'
-import { styles } from './styles'
 import PanoramaxChooser from './PanoramaxChooser'
 import TerrainChooser from './TerrainChooser'
+import { styles } from './styles'
 
 const styleList = Object.entries(styles)
 
@@ -18,27 +17,10 @@ export default function StyleChooser({
 	zoom,
 	setZoom,
 }) {
-	const [localStorageStyleKey, setLocalStorageStyleKey] = useLocalStorage(
-		'style',
-		null,
-		{
-			initializeWithValue: false,
-		}
-	)
 	const setSearchParams = useSetSearchParams()
 
 	return (
-		<section
-			css={css`
-				h1 {
-					font-size: 160%;
-					font-weight: 300;
-					margin-top: 0;
-					margin-left: 0.4rem;
-				}
-				position: relative;
-			`}
-		>
+		<Wrapper>
 			<ModalCloseButton
 				title="Fermer l'encart de choix du style"
 				onClick={() => {
@@ -68,24 +50,15 @@ export default function StyleChooser({
 				style={style}
 			/>
 			<details>
-				<summary
-					css={css`
-						color: #aaa;
-						text-align: right;
-						margin: 1.4rem 1.4rem 0.8rem 0;
-					`}
-				>
-					Autres styles
-				</summary>
+				<summary>Autres styles</summary>
 				<Styles
 					styleList={styleList.filter(([, el]) => el.secondary)}
 					setSearchParams={setSearchParams}
 					style={style}
 					searchParams={searchParams}
-					setLocalStorageStyleKey={setLocalStorageStyleKey}
 				/>
 			</details>
-		</section>
+		</Wrapper>
 	)
 }
 
@@ -93,13 +66,7 @@ const StyleOptions = styled.section`
 	display: flex;
 	padding: 0 2rem;
 `
-const Styles = ({
-	style,
-	styleList,
-	setSearchParams,
-	searchParams,
-	setLocalStorageStyleKey,
-}) => {
+const Styles = ({ style, styleList, setSearchParams, searchParams }) => {
 	return (
 		<StyleList>
 			{styleList.map(
@@ -124,7 +91,11 @@ const Styles = ({
 								$active={style.key === k}
 								onClick={() => {
 									setStyleUrl()
-									setLocalStorageStyleKey(k)
+									try {
+										localStorage.setItem('style', k)
+									} catch (e) {
+										console.log("Can't set local storage for style choice")
+									}
 								}}
 								title={'Passer au style ' + (title || name)}
 							>
@@ -134,21 +105,7 @@ const Styles = ({
 									height="50"
 									alt={imageAlt}
 								/>
-								<div
-									css={css`
-										position: relative;
-										width: 100%;
-										text-align: center;
-										line-height: 1.9rem;
-										img {
-											position: absolute;
-											right: -0.5rem;
-											top: -0.6rem;
-											width: 1.2rem;
-											height: auto;
-										}
-									`}
-								>
+								<div>
 									{name}
 									{description && (
 										<aside
@@ -181,7 +138,12 @@ const Button = styled.button`
 	align-items: center;
 	text-decoration: none;
 	color: inherit;
-	${(p) => p.$active && `color: var(--color); font-weight: bold`}
+	${(p) =>
+		p.$active &&
+		css`
+			color: var(--color);
+			font-weight: bold;
+		`}
 	background: white;
 	border-radius: 0.4rem;
 	border: 1px solid var(--lightestColor);
@@ -191,7 +153,24 @@ const Button = styled.button`
 		object-fit: cover;
 		border-top-left-radius: 0.4rem;
 		border-top-right-radius: 0.4rem;
-		${(p) => p.$active && `border: 3px solid var(--color);`}
+		${(p) =>
+			p.$active &&
+			css`
+				border: 3px solid var(--color);
+			`}
+	}
+	div {
+		position: relative;
+		width: 100%;
+		text-align: center;
+		line-height: 1.9rem;
+		img {
+			position: absolute;
+			right: -0.5rem;
+			top: -0.6rem;
+			width: 1.2rem;
+			height: auto;
+		}
 	}
 `
 
@@ -204,5 +183,19 @@ const StyleList = styled.div`
 	margin-top: 1rem;
 	li {
 		margin: 0.6rem 0.25rem;
+	}
+`
+const Wrapper = styled.section`
+	h1 {
+		font-size: 160%;
+		font-weight: 300;
+		margin-top: 0;
+		margin-left: 0.4rem;
+	}
+	position: relative;
+	summary {
+		color: #aaa;
+		text-align: right;
+		margin: 1.4rem 1.4rem 0.8rem 0;
 	}
 `
