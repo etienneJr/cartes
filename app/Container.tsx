@@ -23,7 +23,7 @@
  * bbox
  **/
 
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { getCategories } from '@/components/categories'
 import ModalSwitch from './ModalSwitch'
@@ -122,7 +122,14 @@ export default function Container(props) {
 
 	const [safeStyleKey, setSafeStyleKey] = useState(null)
 	console.log('lightpink ssk', safeStyleKey)
-	const [localStorageStyleKey] = useLocalStorage('style', null)
+	const [localStorageStyleKey, setLocalStorageStyleKey] = useState(null)
+	useEffect(() => {
+		try {
+			const style = localStorage.getItem('style')
+			setLocalStorageStyleKey(style)
+		} catch (e) {}
+	}, [setLocalStorageStyleKey])
+
 	const styleKey = searchParams.style || localStorageStyleKey || 'france'
 	const style = useMemo(() => getStyle(styleKey), [styleKey])
 

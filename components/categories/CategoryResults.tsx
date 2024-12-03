@@ -28,6 +28,7 @@ export default function CategoryResults({ resultsEntries, center }) {
 				}
 			}),
 		results = sortBy((result) => result.distance)(resultsWithoutOrder)
+	if (!results.length) return null
 	return (
 		<section
 			css={`

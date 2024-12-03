@@ -18,13 +18,6 @@ export default function StyleChooser({
 	zoom,
 	setZoom,
 }) {
-	const [localStorageStyleKey, setLocalStorageStyleKey] = useLocalStorage(
-		'style',
-		null,
-		{
-			initializeWithValue: false,
-		}
-	)
 	const setSearchParams = useSetSearchParams()
 
 	return (
@@ -87,20 +80,13 @@ export default function StyleChooser({
 					setSearchParams={setSearchParams}
 					style={style}
 					searchParams={searchParams}
-					setLocalStorageStyleKey={setLocalStorageStyleKey}
 				/>
 			</details>
 		</section>
 	)
 }
 
-const Styles = ({
-	style,
-	styleList,
-	setSearchParams,
-	searchParams,
-	setLocalStorageStyleKey,
-}) => {
+const Styles = ({ style, styleList, setSearchParams, searchParams }) => {
 	return (
 		<ul
 			style={css`
@@ -138,7 +124,11 @@ const Styles = ({
 							<button
 								onClick={() => {
 									setStyleUrl()
-									setLocalStorageStyleKey(k)
+									try {
+										localStorage.setItem('style', k)
+									} catch (e) {
+										console.log("Can't set local storage for style choice")
+									}
 								}}
 								title={'Passer au style ' + (title || name)}
 								css={`
