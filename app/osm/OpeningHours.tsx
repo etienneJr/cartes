@@ -166,7 +166,7 @@ export const OpenIndicator = ({ isOpen }) => (
 	<OpenIndicatorContainer
 		$isOpen={isOpen}
 		title={isOpen ? 'Ouvert actuellement' : 'Fermé actuellement'}
-	></OpenIndicatorContainer>
+	/>
 )
 
 const OpenIndicatorContainer = styled.span`

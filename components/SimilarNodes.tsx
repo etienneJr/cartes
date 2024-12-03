@@ -11,6 +11,7 @@ import { capitalise0, sortBy } from './utils/utils'
 import { OpenIndicator, getOh } from '@/app/osm/OpeningHours'
 import { categoryIconUrl } from '@/app/QuickFeatureSearch'
 import { bearing } from '@turf/bearing'
+import { css, styled } from 'next-yak'
 
 // This is very scientific haha
 const latDifferenceOfRennes = 0.07,
@@ -157,12 +158,7 @@ const NodeList = ({ nodes, setSearchParams, isOpenByDefault }) => (
 				<li key={f.id}>
 					{!isOpenByDefault &&
 						(oh == null ? (
-							<span
-								css={css`
-									display: inline-block;
-									width: 1.8rem;
-								`}
-							></span>
+							<OpenIndicatorPlaceholder />
 						) : (
 							<OpenIndicator isOpen={isOpen === 'error' ? false : isOpen} />
 						))}
@@ -189,6 +185,11 @@ const NodeList = ({ nodes, setSearchParams, isOpenByDefault }) => (
 		})}
 	</ul>
 )
+
+const OpenIndicatorPlaceholder = styled.span`
+	display: inline-block;
+	width: 1.8rem;
+`
 
 export const computeRoseDirection = (bearing) =>
 	Math.abs(bearing) > 135
