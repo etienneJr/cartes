@@ -1,7 +1,5 @@
-'use client'
-
 import Link from 'next/link'
-import {styled} from 'next-yak'
+import { css, styled } from 'next-yak'
 
 export const DiapoWrapper = styled.div`
 	color: var(--darkerColor);
@@ -103,36 +101,37 @@ export const DiapoWrapper = styled.div`
 		max-width: 80%;
 	}
 `
-
+const ImageGridList = styled.ul`
+	max-height: 60vh;
+	display: flex;
+	flex-wrap: ${(p) => p.$wrap};
+	justify-content: center;
+	padding: 0 5%;
+	list-style-type: none;
+	gap: 6%;
+	align-items: center;
+	li {
+		img {
+			${(p) =>
+				p.$orientation === 'landscape'
+					? css`
+							max-height: 30vh;
+					  `
+					: css`
+							max-width: 20vw;
+					  `}
+			display: block;
+			object-fit: cover;
+		}
+	}
+`
 export const ImageGrid = ({
 	images,
 	orientation = 'landscape',
 	wrap = 'nowrap',
 }) => {
 	return (
-		<ul
-			css={css`
-				max-height: 60vh;
-				display: flex;
-				flex-wrap: ${wrap};
-				justify-content: center;
-				padding: 0 5%;
-				list-style-type: none;
-				gap: 6%;
-				align-items: center;
-				li {
-					img {
-						${orientation === 'landscape'
-							? `
-						max-height: 30vh;
-						`
-							: `max-width: 20vw;`}
-						display: block;
-						object-fit: cover;
-					}
-				}
-			`}
-		>
+		<ImageGridList $wrap={wrap} $orientation={orientation}>
 			{images.map((image) => (
 				<li key={image.img}>
 					<a href={image.url}>
@@ -140,7 +139,7 @@ export const ImageGrid = ({
 					</a>
 				</li>
 			))}
-		</ul>
+		</ImageGridList>
 	)
 }
 

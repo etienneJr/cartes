@@ -1,4 +1,4 @@
-import {css} from 'next-yak'
+import { css } from 'next-yak'
 import { PresentationWrapper } from '../UI'
 import TechDependenciesGallery from '@/components/TechDependenciesGallery'
 
@@ -19,7 +19,7 @@ export default function () {
 				`}
 			>
 				<TechDependenciesGallery
-					css={css`
+					additionalCss={css`
 						max-width: 100%;
 						gap: 6vh;
 					`}
