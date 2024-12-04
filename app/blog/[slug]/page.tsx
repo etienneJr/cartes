@@ -1,4 +1,4 @@
-import { allArticles } from '@/.contentlayer/generated'
+import { allArticles } from '../blogArticles'
 import { getLastEdit } from '../utils'
 import Article from '../Article'
 
