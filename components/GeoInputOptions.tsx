@@ -124,9 +124,9 @@ const Option = ({ whichInput, option, updateState, rulesPath, data }) => {
 	)
 }
 
-const highlightStyle = css`
-	background: var(--lighterColor);
-`
+const highlightStyle = {
+	background: 'var(--lighterColor)',
+}
 
 const Li = styled.li`
 	padding: 0;

@@ -23,7 +23,7 @@ export default function MoreCategories({
 				{Object.entries(groups).map(([group, categories]) => {
 					const groupColor = categoryColors[group]
 					return (
-						<Group key={group}>
+						<Group key={group} $groupColor={groupColor}>
 							<h2>{group}</h2>
 							<div>
 								<ul>

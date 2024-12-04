@@ -1,13 +1,13 @@
 'use client'
 
-import { styled } from 'next-yak'
+import { css, styled } from 'next-yak'
 
 const quickSearchButtonwidth = '2.2rem'
 
 export const getMinimumQuickSearchZoom = (mobile) => (mobile ? 10.5 : 12) // On a small screen, 70 %  of the tiles are not visible, hence this rule
 
-export const goldCladding = `
-filter: drop-shadow(0 0 0.15rem gold);
+export const goldCladding = css`
+	filter: drop-shadow(0 0 0.15rem gold);
 `
 
 //export const quickSearchButtonStyle = (clicked, background, filter) => `

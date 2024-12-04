@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import SearchResultsContainer from './SearchResultsContainer'
+import { css } from 'next-yak'
 
 export default ({
 	sideSheet,
