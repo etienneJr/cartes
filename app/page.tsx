@@ -6,12 +6,12 @@ import fetchAgency, {
 } from '@/components/transport/fetchAgency'
 import { ResolvingMetadata } from 'next/dist/lib/metadata/types/metadata-interface'
 import { Props } from 'next/script'
+import { Suspense } from 'react'
 import Container from './Container'
+import PaymentBanner from './PaymentBanner'
 import getName from './osm/getName'
 import getUrl from './osm/getUrl'
 import { stepOsmRequest } from './stepOsmRequest'
-import { Suspense } from 'react'
-import PaymentBanner from './PaymentBanner'
 
 export async function generateMetadata(
 	props: Props,

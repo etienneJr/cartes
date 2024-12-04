@@ -25,13 +25,6 @@ export default function SideSheet(props) {
 				&::-webkit-scrollbar {
 					display: none;
 				}
-				@media (max-width: 800px) {
-					position: fixed;
-					bottom: 0;
-					left: 0;
-					width: 100vw;
-					${modalSheetBoxShadow}
-				}
 			`}
 		>
 			<Content {...props} sideSheet={true} />
