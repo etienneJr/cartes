@@ -1,4 +1,4 @@
-import { blogArticles } from '@/app/blog/page'
+import { blogArticles } from '@/app/blog/blogArticles'
 import { writeFileSync } from 'fs'
 import RSS from 'rss'
 
