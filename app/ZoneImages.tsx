@@ -10,7 +10,7 @@ import {
 import useSetSearchParams from '@/components/useSetSearchParams'
 import Link from 'next/link'
 import panoramaxIcon from '@/public/panoramax.svg'
-import { css } from 'next-yak'
+import { css, styled } from 'next-yak'
 
 export function useZoneImages({
 	latLngClicked,
@@ -126,51 +126,14 @@ export function ZoneImages({
 	//TODO handle multiple images ?
 	const panoramaxImage = panoramaxImages && panoramaxImages[0]
 	return (
-		<div
-			css={css`
-				margin-top: 1rem;
-				overflow: scroll;
-				white-space: nowrap;
-				&::-webkit-scrollbar {
-					display: none;
-				}
-			`}
-		>
+		<Wrapper>
 			{(panoramaxImages || images?.length > 0) && (
-				<ul
-					css={css`
-						margin: 0 0 0.4rem 0;
-						display: flex;
-						list-style-type: none;
-
-						li {
-							padding: 0;
-							margin: 0 0.4rem;
-						}
-						img {
-						}
-					`}
-				>
+				<ul>
 					{panoramaxImage && (
 						<Link
 							href={setSearchParams({ panoramax: panoramaxImage.id }, true)}
 						>
-							<div
-								css={css`
-									position: relative;
-									> img:first-child {
-										position: absolute;
-										bottom: 0.8rem;
-										left: 0.4rem;
-										width: 2.2rem;
-										height: auto;
-									}
-									> img:last-child {
-										border: 2px solid #83328a;
-									}
-								`}
-								title="Cette zone est visualisable depuis la rue grâce au projet Panoramax"
-							>
+							<PanoramaxImageWrapper title="Cette zone est visualisable depuis la rue grâce au projet Panoramax">
 								<Image src={panoramaxIcon} alt="Logo du projet Panoramax" />
 								<FeatureImage
 									src={panoramaxImage.thumb}
@@ -178,7 +141,7 @@ export function ZoneImages({
 									width="150"
 									height="150"
 								/>
-							</div>
+							</PanoramaxImageWrapper>
 						</Link>
 					)}
 					{images &&
@@ -187,13 +150,7 @@ export function ZoneImages({
 							const { url } = image
 							return (
 								<li key={url}>
-									<button
-										onClick={() => focusImage(image)}
-										css={css`
-											margin: 0;
-											padding: 0;
-										`}
-									>
+									<button onClick={() => focusImage(image)}>
 										<FeatureImage
 											src={url}
 											alt="Image de terrain issue de Wikimedia Commons"
@@ -208,12 +165,7 @@ export function ZoneImages({
 			)}
 			{zoneImages?.length > 0 && (
 				<div>
-					<small
-						css={css`
-							color: #88aed4;
-							margin-bottom: 0.6rem;
-						`}
-					>
+					<small>
 						{!allPhotos ? (
 							<span>
 								Photos des articles Wikipedia du coin.{' '}
@@ -232,6 +184,48 @@ export function ZoneImages({
 					</small>
 				</div>
 			)}
-		</div>
+		</Wrapper>
 	)
 }
+
+const Wrapper = styled.section`
+	margin-top: 1rem;
+	overflow: scroll;
+	white-space: nowrap;
+	&::-webkit-scrollbar {
+		display: none;
+	}
+	> ul {
+		margin: 0 0 0.4rem 0;
+		display: flex;
+		list-style-type: none;
+
+		li {
+			padding: 0;
+			margin: 0 0.4rem;
+			button {
+				margin: 0;
+				padding: 0;
+			}
+		}
+		img {
+		}
+	}
+	small {
+		color: #88aed4;
+		margin-bottom: 0.6rem;
+	}
+`
+const PanoramaxImageWrapper = styled.div`
+	position: relative;
+	> img:first-child {
+		position: absolute;
+		bottom: 0.8rem;
+		left: 0.4rem;
+		width: 2.2rem;
+		height: auto;
+	}
+	> img:last-child {
+		border: 2px solid #83328a;
+	}
+`

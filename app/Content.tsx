@@ -265,28 +265,11 @@ export default function Content(props) {
 							<FeatureImage
 								src={mainImage}
 								onError={() => setFeatureImageError(true)}
-								css={css`
-									width: 100%;
-									height: 6rem;
-									@media (min-height: 800px) {
-										height: 9rem;
-									}
-									object-fit: cover;
-								`}
+								$isHeaderImage={true}
 							/>
 						)}
 						{wikiFeatureImage && (
-							<FeatureImage
-								src={wikiFeatureImage}
-								css={css`
-									width: 100%;
-									height: 6rem;
-									@media (min-height: 800px) {
-										height: 9rem;
-									}
-									object-fit: cover;
-								`}
-							/>
+							<FeatureImage src={wikiFeatureImage} $isHeaderImage={true} />
 						)}
 						<ZoneImages
 							zoneImages={

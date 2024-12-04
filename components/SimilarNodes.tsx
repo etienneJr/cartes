@@ -101,33 +101,16 @@ export default function SimilarNodes({ node }) {
 	const isOpenByDefault = category['open by default']
 	const imageUrl = categoryIconUrl(category)
 	return (
-		<section
-			css={css`
-				margin-top: 2rem;
-				background: white;
-				border: 1px solid var(--lightestColor);
-				border-radius: 0.4rem;
-				padding: 0.3rem 0.8rem;
-				h3 {
-					margin-top: 0.4rem;
-				}
-			`}
-		>
+		<Wrapper>
 			{closestFeatures && (
 				<>
-					{' '}
 					<h3>{title} proches :</h3>
 					<NodeList
 						nodes={closestFeatures.slice(0, 10)}
 						setSearchParams={setSearchParams}
 						isOpenByDefault={isOpenByDefault}
 					/>
-					<details
-						css={css`
-							margin-top: 1rem;
-							margin-bottom: 0.4rem;
-						`}
-					>
+					<details>
 						<summary>Tous les {title} proches</summary>
 						<NodeList
 							nodes={closestFeatures.slice(10)}
@@ -137,9 +120,24 @@ export default function SimilarNodes({ node }) {
 					</details>
 				</>
 			)}
-		</section>
+		</Wrapper>
 	)
 }
+
+const Wrapper = styled.section`
+	margin-top: 2rem;
+	background: white;
+	border: 1px solid var(--lightestColor);
+	border-radius: 0.4rem;
+	padding: 0.3rem 0.8rem;
+	h3 {
+		margin-top: 0.4rem;
+	}
+	details {
+		margin-top: 1rem;
+		margin-bottom: 0.4rem;
+	}
+`
 
 const NodeList = ({ nodes, setSearchParams, isOpenByDefault }) => (
 	<ul
