@@ -10,6 +10,7 @@ import { ModalCloseButton } from '../UI'
 import Routes from './TransportMapRoutes'
 import { PlaceButton } from '../PlaceButtonsUI'
 import AgencyFilter from './AgencyFilter'
+import { css } from 'next-yak'
 
 export default function TransportMap({
 	day,

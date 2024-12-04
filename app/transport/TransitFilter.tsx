@@ -1,6 +1,5 @@
 import { capitalise0, sortBy } from '@/components/utils/utils'
-import { trainColors } from '../itinerary/motisRequest'
-import { isNil } from 'ramda'
+import { css, styled } from 'next-yak'
 
 export const defaultTransitFilter = 'plan général'
 // these are filter functions that select lines depending on properties
@@ -79,25 +78,14 @@ export default function TransitFilter({
 				{sortBy(([, num]) => num === 0)(filtered).map(
 					([key, selectedRoutes]) => {
 						return (
-							<label
-								key={key}
-								css={css`
-									background: white;
-									padding: 0 0.6rem 0.1rem 0.4rem;
-									border-radius: 0.3rem;
-									border: 1px solid var(--darkColor);
-									color: var(--darkColor);
-									cursor: pointer;
-									${selectedRoutes === 0 && ` color: gray`}
-								`}
-							>
+							<TransitFilterLabel key={key} $selectedRoutes={selectedRoutes}>
 								<input
 									type="radio"
 									checked={key === transitFilter}
 									onClick={() => setTransitFilter(key)}
 								/>
 								{capitalise0(key)} ({selectedRoutes})
-							</label>
+							</TransitFilterLabel>
 						)
 					}
 				)}
@@ -105,3 +93,13 @@ export default function TransitFilter({
 		</section>
 	)
 }
+
+const TransitFilterLabel = styled.label`
+	background: white;
+	padding: 0 0.6rem 0.1rem 0.4rem;
+	border-radius: 0.3rem;
+	border: 1px solid var(--darkColor);
+	color: var(--darkColor);
+	cursor: pointer;
+	${(p) => p.$selectedRoutes === 0 && ` color: gray`}
+`

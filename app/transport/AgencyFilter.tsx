@@ -1,5 +1,5 @@
-import { capitalise0, sortBy } from '@/components/utils/utils'
 import { area, bboxPolygon } from '@turf/turf'
+import { css } from 'next-yak'
 
 export const defaultAgencyFilter = 'urbain'
 // these are filter functions that select lines depending on properties
@@ -113,15 +113,17 @@ export default function AgencyFilter({ agencyFilter, setAgencyFilter }) {
 			>
 				{agencyFilters.map(([key]) => (
 					<label
-						css={css`
-							border: 2px solid
-								${key === agencyFilter ? `var(--darkColor)` : `var(--color);`};
-						`}
+						key={key}
+						style={{
+							border: `2px solid ${
+								key === agencyFilter ? `var(--darkColor)` : `var(--color)`
+							}`,
+						}}
 					>
 						<input
 							type="checkbox"
 							checked={agencyFilter === key}
-							key={key}
+							onChange={() => null}
 							onClick={() => setAgencyFilter(key)}
 						/>
 						<span>{key}</span>

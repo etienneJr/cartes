@@ -41,9 +41,9 @@ if (process.env.NEXT_PUBLIC_MAPTILER == null) {
 }
 
 /*******
-* This component should hold only the hooks that depend on the map or are user
-* interactions. Components that can be rendered server side to make beautiful and useful meta previews of URLs must be written in the Container component or above
-*******/
+ * This component should hold only the hooks that depend on the map or are user
+ * interactions. Components that can be rendered server side to make beautiful and useful meta previews of URLs must be written in the Container component or above
+ *******/
 
 export default function Map(props) {
 	const {

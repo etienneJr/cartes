@@ -1,8 +1,6 @@
-import useCompass from './useCompass'
-import compassArrow from '@/public/compass-arrow.svg'
 import { Marker } from 'maplibre-gl'
-import Image from 'next/image'
 import { useEffect, useState } from 'react'
+import useCompass from './useCompass'
 
 export default function MapCompassArrow({ geolocate, map }) {
 	const [where, setWhere] = useState()
