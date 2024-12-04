@@ -162,3 +162,8 @@ button:enabled {
 details > summary {
 	cursor: pointer;
 }
+
+/* In Firefox, while the image is loading, the alt text is shown. This is a bad visual experience providing zero accessibility benefits */
+img {
+	color: transparent;
+}
