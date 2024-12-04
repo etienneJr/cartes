@@ -10,7 +10,7 @@ import { ModalCloseButton } from '../UI'
 import Routes from './TransportMapRoutes'
 import { PlaceButton } from '../PlaceButtonsUI'
 import AgencyFilter from './AgencyFilter'
-import { css } from 'next-yak'
+import { css, styled } from 'next-yak'
 
 export default function TransportMap({
 	day,
@@ -97,16 +97,7 @@ export default function TransportMap({
 		bboxAgencies?.length > 0 &&
 		bboxAgencies.find(([id]) => id === selectedAgency)
 	return (
-		<section
-			css={css`
-				h1 {
-					margin-top: 1rem;
-					margin-bottom: -0.1rem;
-					line-height: 1.6rem;
-					font-size: 170%;
-				}
-			`}
-		>
+		<Wrapper>
 			<section>
 				{!selectedAgencyData && (
 					<header>
@@ -209,9 +200,18 @@ export default function TransportMap({
 					}
 				/>
 			)}
-		</section>
+		</Wrapper>
 	)
 }
+
+const Wrapper = styled.section`
+	h1 {
+		margin-top: 1rem;
+		margin-bottom: -0.1rem;
+		line-height: 1.6rem;
+		font-size: 170%;
+	}
+`
 
 const Agency = ({ data, backUrl }) => {
 	return (

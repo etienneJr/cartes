@@ -56,25 +56,8 @@ export default function TransitFilter({
 		return [key, selectedRoutes]
 	})
 	return (
-		<section
-			css={css`
-				margin-top: 1rem;
-			`}
-		>
-			<form
-				css={css`
-					width: 100%;
-					overflow: scroll;
-					height: 2.4rem;
-					label {
-						margin: 0.6rem;
-						white-space: nowrap;
-					}
-					input {
-						margin-right: 0.4rem;
-					}
-				`}
-			>
+		<section>
+			<TransitFilterForm>
 				{sortBy(([, num]) => num === 0)(filtered).map(
 					([key, selectedRoutes]) => {
 						return (
@@ -82,6 +65,7 @@ export default function TransitFilter({
 								<input
 									type="radio"
 									checked={key === transitFilter}
+									onChange={() => null}
 									onClick={() => setTransitFilter(key)}
 								/>
 								{capitalise0(key)} ({selectedRoutes})
@@ -89,7 +73,7 @@ export default function TransitFilter({
 						)
 					}
 				)}
-			</form>
+			</TransitFilterForm>
 		</section>
 	)
 }
@@ -102,4 +86,18 @@ const TransitFilterLabel = styled.label`
 	color: var(--darkColor);
 	cursor: pointer;
 	${(p) => p.$selectedRoutes === 0 && ` color: gray`}
+`
+
+const TransitFilterForm = styled.form`
+	margin-top: 1rem;
+	width: 100%;
+	overflow: scroll;
+	height: 2.4rem;
+	label {
+		margin: 0.6rem;
+		white-space: nowrap;
+	}
+	input {
+		margin-right: 0.4rem;
+	}
 `

@@ -1,5 +1,5 @@
 import { area, bboxPolygon } from '@turf/turf'
-import { css } from 'next-yak'
+import { css, styled } from 'next-yak'
 
 export const defaultAgencyFilter = 'urbain'
 // these are filter functions that select lines depending on properties
@@ -70,47 +70,8 @@ const sumOfRouteTypes = (types, stats) =>
 	}, 0)
 export default function AgencyFilter({ agencyFilter, setAgencyFilter }) {
 	return (
-		<section
-			css={css`
-				margin-top: 1rem;
-			`}
-		>
-			<form
-				css={css`
-					width: 100%;
-					overflow: scroll;
-					height: 3rem;
-					label {
-						margin: 0.6rem;
-						white-space: nowrap;
-						cursor: pointer;
-						background: var(--color);
-						color: white;
-						padding: 0 0.6rem;
-						line-height: 1.5rem;
-						border-radius: 0.3rem;
-						display: inline-flex;
-						align-items: center;
-						text-transform: uppercase;
-						font-weight: 300;
-						font-size: 90%;
-					}
-					input {
-						margin-right: 0.4rem;
-						border: 2px solid var(--darkColor);
-						background: white;
-						border-radius: 3px;
-						appearance: none;
-						width: 0.9rem;
-						height: 0.9rem;
-						margin-bottom: -0.05rem;
-						&:checked {
-							background: var(--darkColor);
-							border: 2px solid var(--lightestColor);
-						}
-					}
-				`}
-			>
+		<section>
+			<AgencyFilterForm>
 				{agencyFilters.map(([key]) => (
 					<label
 						key={key}
@@ -129,7 +90,43 @@ export default function AgencyFilter({ agencyFilter, setAgencyFilter }) {
 						<span>{key}</span>
 					</label>
 				))}
-			</form>
+			</AgencyFilterForm>
 		</section>
 	)
 }
+
+const AgencyFilterForm = styled.form`
+	margin-top: 1rem;
+	width: 100%;
+	overflow: scroll;
+	height: 3rem;
+	label {
+		margin: 0.6rem;
+		white-space: nowrap;
+		cursor: pointer;
+		background: var(--color);
+		color: white;
+		padding: 0 0.6rem;
+		line-height: 1.5rem;
+		border-radius: 0.3rem;
+		display: inline-flex;
+		align-items: center;
+		text-transform: uppercase;
+		font-weight: 300;
+		font-size: 90%;
+	}
+	input {
+		margin-right: 0.4rem;
+		border: 2px solid var(--darkColor);
+		background: white;
+		border-radius: 3px;
+		appearance: none;
+		width: 0.9rem;
+		height: 0.9rem;
+		margin-bottom: -0.05rem;
+		&:checked {
+			background: var(--darkColor);
+			border: 2px solid var(--lightestColor);
+		}
+	}
+`
