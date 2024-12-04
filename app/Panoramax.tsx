@@ -1,6 +1,7 @@
 import useSetSearchParams from '@/components/useSetSearchParams'
 import { Viewer } from '@panoramax/web-viewer'
 import '@panoramax/web-viewer/build/index.css'
+import { css } from 'next-yak'
 import panoramaxIcon from '@/public/panoramax.svg'
 import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
