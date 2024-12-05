@@ -1,15 +1,23 @@
 import { centerOfMass } from '@turf/turf'
 import { enrichOsmFeatureWithPolyon, osmRequest } from './osmRequest'
 import { decodePlace } from './utils'
+import { isServer } from './serverUrls'
 
 export const stepOsmRequest = async (point, state = []) => {
 	if (!point || point === '') return null
 	const [name, osmCode, longitude, latitude] = point.split('|')
 
+	console.log('indigo will 0', { isServer }, state)
 	const found = state
 		.filter(Boolean)
-		.find((point) => osmCode !== '' && point.osmCode === osmCode)
+		.find(
+			(point) =>
+				osmCode !== '' &&
+				point.osmCode === osmCode &&
+				!point.osmFeature?.failedServerOsmRequest
+		)
 	if (found) return found // already cached, don't make useless requests
+	console.log('indigo will ', { isServer }, state)
 
 	const [featureType, featureId] = decodePlace(osmCode)
 
@@ -36,6 +44,15 @@ export const stepOsmRequest = async (point, state = []) => {
 		*/
 
 		const element = elements.find((el) => el.id == featureId)
+
+		if (element.failedServerOsmRequest)
+			return {
+				...element,
+				osmCode,
+				longitude: longitude,
+				latitude: latitude,
+				name,
+			}
 
 		const featureCollectionFromOsmNodes = (nodes) => {
 			//console.log('yanodes', nodes)

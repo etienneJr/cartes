@@ -21,7 +21,7 @@ export const osmRequest = async (featureType, id, full) => {
 	if (!request.ok) {
 		console.log('lightgreen request not ok', request)
 
-		return []
+		return [{ id, failedServerOsmRequest: true, type: featureType }]
 	}
 	const json = await request.json()
 
