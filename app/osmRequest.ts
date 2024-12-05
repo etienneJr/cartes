@@ -8,7 +8,11 @@ export const osmRequest = async (featureType, id, full) => {
 	const request = await fetch(
 		`${apiUrlBase}/${featureType}/${id}${full ? '/full' : ''}.json`
 	)
-	if (!request.ok) return []
+	if (!request.ok) {
+		console.log('lightgreen request not ok', request)
+
+		return []
+	}
 	const json = await request.json()
 
 	const elements = json.elements

@@ -120,7 +120,6 @@ export default function Container(props) {
 	const [geolocation, setGeolocation] = useState(null)
 
 	const [safeStyleKey, setSafeStyleKey] = useState(null)
-	console.log('lightpink ssk', safeStyleKey)
 	const [localStorageStyleKey, setLocalStorageStyleKey] = useState(null)
 	useEffect(() => {
 		try {
