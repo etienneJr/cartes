@@ -30,3 +30,5 @@ export const getFetchUrlBase = () => {
 			: 'https://' + domain
 	return urlBase
 }
+
+export const isServer = typeof window === 'undefined'

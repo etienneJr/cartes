@@ -80,6 +80,7 @@ const Page = async (props) => {
 		console.log(error)
 		return [] // fallback to client side
 	})
+	console.log('lightgreen state from ssr rendering of osm node', state)
 
 	const agencyEntry = await fetchAgency(searchParams)
 
