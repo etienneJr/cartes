@@ -31,6 +31,7 @@ The app is based on :
 To set it up on your local computer, just run :
 
 ```
+# Install bun for your system with https://bun.sh/docs/installation
 bun install # We're using bun because npm can't handle the experimental react 19 version, it breaks the install
 bun dev # launch the web dev server
 ```
