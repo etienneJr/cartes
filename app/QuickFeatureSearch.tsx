@@ -12,6 +12,7 @@ import {
 	FeatureList,
 	FeatureListWrapper,
 	QuickSearchElement,
+	QuickSearchElementDiv,
 	SpinningDiscBorder,
 } from './QuickFeatureSearchUI'
 import categories from './categories.yaml'
@@ -155,7 +156,7 @@ export default function QuickFeatureSearch({
 					</FeatureList>
 				</FeatureListWrapper>
 				{!doFilter && (
-					<QuickSearchElement
+					<QuickSearchElementDiv
 						{...{
 							$clicked: showMore,
 							$background: 'var(--darkerColor)',
@@ -175,7 +176,7 @@ export default function QuickFeatureSearch({
 								alt="Voir plus de catégories de recherche"
 							/>
 						</button>
-					</QuickSearchElement>
+					</QuickSearchElementDiv>
 				)}
 			</div>
 			{(showMore || (doFilter && filteredMoreCategories.length > 0)) && (

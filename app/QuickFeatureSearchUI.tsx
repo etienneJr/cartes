@@ -10,8 +10,7 @@ export const goldCladding = css`
 	filter: drop-shadow(0 0 0.15rem gold);
 `
 
-//export const quickSearchButtonStyle = (clicked, background, filter) => `
-export const QuickSearchElement = styled.li`
+const quickSearchElementStyle = css`
 	& {
 		position: relative;
 		border-radius: ${quickSearchButtonwidth};
@@ -61,6 +60,14 @@ export const QuickSearchElement = styled.li`
 
 	${(p) => p.$setGoldCladding && goldCladding}
 `
+
+export const QuickSearchElement = styled.li`
+	${quickSearchElementStyle}
+`
+export const QuickSearchElementDiv = styled.div`
+	${quickSearchElementStyle}
+`
+
 export const SpinningDiscBorder = styled.div`
 	position: absolute;
 	top: 0;
