@@ -1,11 +1,13 @@
+'use client'
+
 import GeoInputOptions from '@/components/GeoInputOptions'
-import computeDistance from '@turf/distance'
 import fetchPhoton from '@/components/fetchPhoton'
 import { buildAddress } from '@/components/osm/buildAddress'
 import ItineraryProposition, {
 	AnimatedSearchProposition,
 } from '@/components/placeSearch/ItineraryProposition'
 import detectCodePostal from '@/components/placeSearch/detectCodePostal'
+import detectCoordinates from '@/components/placeSearch/detectCoordinates'
 import detectSmartItinerary from '@/components/placeSearch/detectSmartItinerary'
 import {
 	getArrayIndex,
@@ -13,8 +15,10 @@ import {
 	sortBy,
 } from '@/components/utils/utils'
 import { isIOS } from '@react-aria/utils'
+import computeDistance from '@turf/distance'
 import { useEffect, useState } from 'react'
 import { useLocalStorage } from 'usehooks-ts'
+import QuickFeatureSearch from '../QuickFeatureSearch'
 import { buildAllezPart, setAllezPart } from '../SetDestination'
 import { encodePlace } from '../utils'
 import { FromHereLink } from './_components/FromHereLink'
@@ -26,8 +30,6 @@ import SearchHistory from './_components/SearchResults/SearchHistory'
 import SearchLoader from './_components/SearchResults/SearchLoader'
 import SearchNoResults from './_components/SearchResults/SearchNoResults'
 import SearchResultsContainer from './_components/SearchResults/SearchResultsContainer'
-import detectCoordinates from '@/components/placeSearch/detectCoordinates'
-import QuickFeatureSearch from '../QuickFeatureSearch'
 
 /* I'm  not sure of the interest to attache `results` to each state step.
  * It could be cached across the app. No need to re-query photon for identical
@@ -104,14 +106,8 @@ export default function PlaceSearch({
 		setTimeout(() => instantaneousSetIsMyInputFocused(value), 300)
 	}
 
-	const [hash, setHash] = useState(null)
-
-	useEffect(() => {
-		setHash(window.location.hash)
-	}, [searchParams])
-
-	const local = hash && hash.split('/').slice(1, 3),
-		localSearch = isLocalSearch && local
+	const centerLatLon = [...center].reverse()
+	const localSearch = isLocalSearch && centerLatLon
 
 	// Should this function be coded as a useCallback ? I get an infinite loop
 	const onInputChange =
@@ -154,7 +150,7 @@ export default function PlaceSearch({
 					console.log('indigo res', results)
 
 					const osmFeature = sortBy(
-						({ lon, lat }) => -computeDistance([local[1], local[0]], [lon, lat])
+						({ lon, lat }) => -computeDistance(center, [lon, lat])
 					)(results.filter((element) => element.type === 'relation'))[0]
 
 					const centerId = osmFeature.members.find(
@@ -212,7 +208,7 @@ export default function PlaceSearch({
 			}
 		}
 
-	const safeLocal = local ? local.join('') : false
+	const safeLocal = centerLatLon ? centerLatLon.join('') : false
 	useEffect(() => {
 		if (value == undefined) return
 		onInputChange(stepIndex)(value)
