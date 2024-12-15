@@ -2,9 +2,9 @@
 
 import { ContentSection } from '@/app/ContentUI'
 import { ModalCloseButton } from '@/app/UI'
+import { css, styled } from 'next-yak'
 import { useEffect, useState } from 'react'
 import { useLocalStorage } from 'usehooks-ts'
-import { css, styled } from 'next-yak'
 
 export default function PaymentBlock({ setSearchParams, openSheet }) {
 	const [choice, setChoice] = useState(false)
