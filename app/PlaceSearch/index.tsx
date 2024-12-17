@@ -1,3 +1,5 @@
+'use client'
+
 import GeoInputOptions from '@/components/GeoInputOptions'
 import fetchPhoton from '@/components/fetchPhoton'
 import { buildAddress } from '@/components/osm/buildAddress'
@@ -105,14 +107,8 @@ export default function PlaceSearch({
 		setTimeout(() => instantaneousSetIsMyInputFocused(value), 300)
 	}
 
-	const [hash, setHash] = useState(null)
-
-	useEffect(() => {
-		setHash(window.location.hash)
-	}, [searchParams])
-
-	const local = hash && hash.split('/').slice(1, 3),
-		localSearch = isLocalSearch && local
+	const centerLatLon = [...center].reverse()
+	const localSearch = isLocalSearch && centerLatLon
 
 	// Should this function be coded as a useCallback ? I get an infinite loop
 	const onInputChange =
@@ -155,7 +151,7 @@ export default function PlaceSearch({
 					console.log('indigo res', results)
 
 					const osmFeature = sortBy(
-						({ lon, lat }) => -computeDistance([local[1], local[0]], [lon, lat])
+						({ lon, lat }) => -computeDistance(center, [lon, lat])
 					)(results.filter((element) => element.type === 'relation'))[0]
 
 					const centerId = osmFeature.members.find(
@@ -213,7 +209,7 @@ export default function PlaceSearch({
 			}
 		}
 
-	const safeLocal = local ? local.join('') : false
+	const safeLocal = centerLatLon ? centerLatLon.join('') : false
 	useEffect(() => {
 		if (value == undefined) return
 		onInputChange(stepIndex)(value)

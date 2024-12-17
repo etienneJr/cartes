@@ -6,6 +6,8 @@ Voici une [introduction générale](https://github.com/cartesapp/cartes/issues/3
 
 Aussi, n'oubliez jamais que d'autres sont passés ici avant vous : la section _[issues](https://github.com/cartesapp/cartes/issues)_ contient déjà un tas de problèmes à résoudre et d'informations utiles qui pourraient vous aider à contribuer : utilisez son moteur de recherche.
 
+En conséquence, les instructions de ce guide de contribution ne couvrent qu'une petite partie de la documentation présente sur github via les issues. 
+
 ## Comment ajouter une catégorie de recherche de lieux ?
 
 Copiez-collez l'un des blocs dans [categories.yaml](https://github.com/cartesapp/cartes/blob/master/app/categories.yaml) ou [moreCategories.yaml](https://github.com/cartesapp/cartes/blob/master/app/moreCategories.yaml) (les "more" apparaissent seulement au clic sur le gros bouton plus) et changez les attributs.
@@ -38,45 +40,3 @@ L’heuristique n’est pas clairement définie avec une fonction renvoyant un o
 Direction l'[autre dépot](https://github.com/cartesapp/serveur), côté serveur.
 
 ---
-
-Ci-dessous des informations plus générales sur la contribution.
-
-### Technologies
-
-Nous utilisons :
-
--   [TypeScript](https://www.typescriptlang.org) pour ajouter un système de typage à notre code JavaScript. Le typage n'est pas utilisé partout et il n'est pas obligatoire de le prendre en compte pour contribuer.
--   [NPM](https://npmjs.com) pour la gestion des dépendances
--   [React](https://reactjs.org) pour la gestion de l'interface utilisateur
--   [Next](https://nextjs.org) comme framework Web
--   [Prettier](https://prettier.io/) pour formater le code source, il faudra que vous configuriez votre éditeur de texte pour que les fichiers soit formatés automatiquement quand vous sauvegardez un fichier. Si vous utilisez [VS Code](https://code.visualstudio.com/) cette configuration est automatique.
--   [Eslint](https://eslint.org) qui permet par exemple d'éviter de garder des variables inutilisées
-
-### Démarrage
-
-```
-Cette option est nécessaire pour gérer Next 15 rc / React 19
-npm run dev --legacy-peer-deps
-```
-
-L'application est alors dispo sur https://localhost:8080.
-
-### Messages de commit
-
-A mettre sans retenue dans les messages de commit :
-
-https://github.com/atom/atom/blob/master/CONTRIBUTING.md#git-commit-messages
-
--   🎨 `:art:` when working on the app's visual style
--   🐎 `:racehorse:` when improving performance
--   📝 `:memo:` when writing docs
--   🐛 `:bug:` when fixing a bug
--   🔥 `:fire:` when removing code or files
--   💚 `:green_heart:` when fixing the CI build
--   ✅ `:white_check_mark:` when adding tests
--   ⬆️ `:arrow_up:` when upgrading dependencies
--   :sparkles: `:sparkles:` when formatting, renaming, reorganizing files
-
-### Publicodes
-
-Un tutoriel sur publicode est disponible sur https://publi.codes.

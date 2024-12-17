@@ -29,8 +29,9 @@ export default function CategoryResults({ resultsEntries, center }) {
 				}
 			}),
 		results = sortBy((result) => result.distance)(resultsWithoutOrder)
+	if (!results.length) return null
 	return (
-		<section>
+		<Section>
 			<ResultsSummary>
 				<div>
 					{resultsEntries.map(([k, v], i) => (
@@ -57,15 +58,20 @@ export default function CategoryResults({ resultsEntries, center }) {
 					/>
 				))}
 			</ol>
-		</section>
+		</Section>
 	)
 }
+const Section = styled.section`
+	@media (max-width: 800px) {
+		margin-bottom: 50vh;
+	}
+`
 
 const ResultsSummary = styled.div`
 	display: flex;
 	justify-content: space-between;
 	margin-left: 0.2rem;
-	> div > div > span {
+	> div > span {
 		color: #666;
 		font-size: 90%;
 	}

@@ -56,7 +56,7 @@
 		"@next/mdx": "^15.0.0",
 		"@openstreetmap/id-tagging-schema": "^6.8.1",
 		"@opentelemetry/api": "^1.9.0",
-		"@panoramax/web-viewer": "^3.1.1",
+		"@panoramax/web-viewer": "3.2.1",
 		"@react-aria/utils": "^3.25.3",
 		"@turf/bbox": "^7.1.0",
 		"@turf/bbox-polygon": "^7.1.0",
@@ -108,6 +108,7 @@
 		"string-replace-to-array": "^2.1.1",
 		"suncalc": "^1.9.0",
 		"svg-path-parser": "^1.1.0",
+		"svgo": "^3.3.2",
 		"swr": "^2.2.5",
 		"usehooks-ts": "^3.1.0"
 	},

@@ -4,6 +4,9 @@ import { exactThreshold } from './QuickFeatureSearch'
 import { goldCladding } from './QuickFeatureSearchUI'
 import categoryColors from '@/app/categoryColors.yaml'
 import { styled, css } from 'next-yak'
+import buildSvgImage from './effects/buildSvgImage'
+import { useEffect, useState } from 'react'
+import Image from 'next/image'
 
 export default function MoreCategories({
 	getNewSearchParamsLink,
@@ -34,6 +37,7 @@ export default function MoreCategories({
 											$isExact={category.score < exactThreshold}
 										>
 											<Link href={getNewSearchParamsLink(category)}>
+												<MapIcon category={category} color={groupColor} />{' '}
 												{uncapitalise0(category.title || category.name)}
 											</Link>
 										</Category>
@@ -51,14 +55,7 @@ export default function MoreCategories({
 const Wrapper = styled.div`
 	margin-bottom: 0.6rem;
 	@media (max-width: 800px) {
-		${(p) =>
-			p.$doFilter
-				? css`
-						margin-top: 0.6rem;
-				  `
-				: css`
-						margin-bottom: 50vh;
-				  `}
+		margin-top: ${(p) => (p.$doFilter ? `0.6rem` : '0')};
 	}
 	ol,
 	ul {
@@ -117,4 +114,21 @@ const Category = styled.li`
 					border-color: var(--darkColor) !important;
 			  `
 			: ''}
+`
+const MapIcon = ({ category, color }) => {
+	const [src, setSrc] = useState()
+
+	const alt = 'Icône de la catégorie' + (category.title || category.name)
+	useEffect(() => {
+		buildSvgImage(category.icon, (_, src) => setSrc(src), color)
+	}, [category.icon])
+
+	if (src) return <MapIconImage src={src} alt={alt} width="10" height="10" />
+}
+
+const MapIconImage = styled(Image)`
+	width: 1.1rem;
+	height: 1.1rem;
+	vertical-align: sub;
+	margin-bottom: 0.05rem;
 `

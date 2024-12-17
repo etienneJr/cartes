@@ -6,7 +6,7 @@
     - patisserie
   #emoji: 🥖
   query: '[shop=bakery]'
-  icon: https://cdn.jsdelivr.net/gh/mapbox/maki/icons/bakery.svg
+  icon: bakery
   category: Manger et boire
 - name: restaurant
   dictionary:
@@ -19,7 +19,7 @@
   query:
     - '[amenity=restaurant]'
     - '[vending=pizza]'
-  icon: https://cdn.jsdelivr.net/gh/mapbox/maki/icons/restaurant.svg
+  icon: restaurant
   category: Manger et boire
 - name: cafe
   title: Café, bar et pub
@@ -35,7 +35,7 @@
     - '["amenity"="bar"]'
     - '["amenity"="cafe"]'
     - '["amenity"="pub"]'
-  icon: https://cdn.jsdelivr.net/gh/mapbox/maki/icons/cafe.svg
+  icon: cafe
   category: Manger et boire
 - name: épicerie
   dictionary:
@@ -47,7 +47,7 @@
   query:
     - '["shop"~"convenience|supermarket"]'
     - '[amenity=marketplace]'
-  icon: https://cdn.jsdelivr.net/gh/mapbox/maki/icons/convenience.svg
+  icon: convenience
   category: Commerces
 - name: eau
   dictionary:
@@ -58,7 +58,7 @@
   query:
     - '[amenity=drinking_water]'
     - '[drinking_water=yes]'
-  icon: https://cdn.jsdelivr.net/gh/mapbox/maki/icons/water.svg
+  icon: water
   open by default: true
   category: Divers
 - name: toilettes
@@ -99,7 +99,7 @@
     - '[amenity=atm]'
     - '[atm=yes]'
   open by default: true
-  icon: https://cdn.jsdelivr.net/gh/mapbox/maki/icons/bank.svg
+  icon: bank
   category: Divers
 - name: Hôtel
   dictionary:
@@ -110,7 +110,7 @@
     - dormir
   query: '["tourism"~"hotel|chalet|guest_house|apartment"]'
   open by default: true
-  icon: https://cdn.jsdelivr.net/gh/mapbox/maki/icons/lodging.svg
+  icon: lodging
   category: Tourisme
 - name: vue
   title: Point de vue
@@ -118,12 +118,12 @@
     - panorama
   query: '[tourism=viewpoint]'
   open by default: true
-  icon: https://cdn.jsdelivr.net/gh/mapbox/maki/icons/viewpoint.svg
+  icon: viewpoint
   category: Tourisme
 - name: Cinéma
   dictionary:
     - ciné
     - film
   query: '[amenity=cinema]'
-  icon: https://cdn.jsdelivr.net/gh/mapbox/maki/icons/cinema.svg
+  icon: cinema
   category: Culture
