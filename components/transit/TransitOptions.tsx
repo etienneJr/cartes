@@ -31,7 +31,7 @@ export default function TransitOptions({ searchParams }) {
 			`}
 		>
 			<ol>
-				<StepIcon text={'A'} />
+				<StepIcon>A</StepIcon>
 
 				<StartEndOptions
 					{...{ partKey: 'debut', searchParams, setSearchParams }}
@@ -111,7 +111,7 @@ export default function TransitOptions({ searchParams }) {
 				<StartEndOptions
 					{...{ partKey: 'fin', searchParams, setSearchParams }}
 				/>
-				<StepIcon text={'B'} />
+				<StepIcon>B</StepIcon>
 			</ol>
 		</section>
 	)

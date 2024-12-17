@@ -83,9 +83,9 @@ const AddStepButtonWrapper = styled.div`
 		opacity: 0.4;
 	}
 `
-const AddStepButton = ({ url, title, style }) => (
+const AddStepButton = ({ url, title, $between }) => (
 	<AddStepButtonWrapper>
-		<StepLink href={url} title={title} $style={style}>
+		<StepLink href={url} title={title} $between={$between}>
 			<Image src={addIcon} alt="Supprimer cette étape" />
 		</StepLink>
 	</AddStepButtonWrapper>
@@ -95,7 +95,16 @@ const StepLink = styled(Link)`
 	text-decoration: none;
 	margin: 0rem 0.7rem;
 	display: inline-block;
-	${(p) => p.$style}
+	${(p) =>
+		p.$between
+			? css`
+					top: 1rem;
+					position: absolute;
+					right: 1.1rem;
+					background: var(--lightestColor);
+					border-radius: 1.8rem;
+			  `
+			: ''}
 `
 const Item = ({
 	index,
@@ -130,16 +139,7 @@ const Item = ({
 					: {}
 			}
 		>
-			<div
-				css={css`
-					display: flex;
-					justify-content: start;
-					align-items: center;
-					> span {
-						line-height: 1.4rem;
-					}
-				`}
-			>
+			<ItemContent>
 				<span
 					onClick={() => {
 						console.log('lightgreen allezpart', 'coucou')
@@ -152,7 +152,7 @@ const Item = ({
 						)
 					}}
 				>
-					<StepIcon text={letterFromIndex(index)} />{' '}
+					<StepIcon>{letterFromIndex(index)}</StepIcon>{' '}
 					<StepName $hasName={!step || !step.name}>
 						{beingSearched
 							? `Choisissez ${stepDefaultName}`
@@ -172,40 +172,18 @@ const Item = ({
 								width="10"
 								height="10"
 								alt="Icône croix"
-								css={css`
-									margin-left: 0.4rem;
-									filter: invert(1);
-								`}
 							/>{' '}
 							annuler
 						</button>
 					</span>
 				)}
-			</div>
-			<div
-				css={css`
-					position: relative;
-					&,
-					a {
-						display: flex;
-						align-items: center;
-					}
-					> a {
-						margin-right: 0.4rem;
-					}
-				`}
-			>
+			</ItemContent>
+			<ItemButtons>
 				{index < state.length - 1 && (
 					<AddStepButton
 						url={setSearchParams({ allez: allez.replace('->', '->->') }, true)}
 						title={'Ajouter un point intermédiaire'}
-						style={css`
-							top: 1rem;
-							position: absolute;
-							right: 1.1rem;
-							background: var(--lightestColor);
-							border-radius: 1.8rem;
-						`}
+						$between={true}
 					/>
 				)}
 				{key ? (
@@ -222,64 +200,56 @@ const Item = ({
 						<Dots />
 					</div>
 				) : (
-					<div
-						css={css`
-							width: 1.6rem;
-						`}
-					></div>
+					<Placeholder />
 				)}
 				{index !== 0 && index !== state.length - 1 && (
 					<RemoveStepLink {...{ setSearchParams, stepKey: key, state }} />
 				)}
-			</div>
+			</ItemButtons>
 		</Reorder.Item>
 	)
 }
+
+const Placeholder = styled.div`
+	width: 1.6rem;
+`
 
 const RemoveStepLink = ({ setSearchParams, stepKey, state }) => {
 	if (!stepKey) return null
 
 	return (
-		<Link
+		<RemoveStepLinkWrapper
 			href={setSearchParams({ allez: removeStatePart(stepKey, state) }, true)}
-			css={css`
-				position: absolute;
-				right: -1.6rem;
-				top: 0.15rem;
-				background: var(--lightestColor);
-				border-radius: 1rem;
-			`}
 		>
-			<Image
-				src={closeIcon}
-				alt="Supprimer cette étape"
-				css={css`
-					width: 1rem;
-					height: auto;
-					opacity: 0.6;
-				`}
-			/>
-		</Link>
+			<Image src={closeIcon} alt="Supprimer cette étape" />
+		</RemoveStepLinkWrapper>
 	)
 }
 
-export const StepIcon = ({ text }) => (
-	<span
-		css={css`
-			display: inline-block;
-			margin: 0 0.4rem 0 0;
-			background: var(--color);
-			color: white;
-			width: 1.4rem;
-			text-align: center;
-			height: 1.4rem;
-			line-height: 1.4rem;
-			border-radius: 2rem;
-		`}
-	>
-		{text}
-	</span>
-)
+const RemoveStepLinkWrapper = styled(Link)`
+	position: absolute;
+	right: -1.6rem;
+	top: 0.15rem;
+	background: var(--lightestColor);
+	border-radius: 1rem;
+	img {
+		width: 1rem;
+		height: auto;
+		opacity: 0.6;
+	}
+`
+
+export const StepIcon = styled.span`
+	display: inline-block;
+	margin: 0 0.4rem 0 0;
+	background: var(--color);
+	color: white;
+	width: 1.4rem;
+	text-align: center;
+	height: 1.4rem;
+	line-height: 1.4rem;
+	border-radius: 2rem;
+`
 
 const Dots = () => (
 	<span
@@ -319,6 +289,30 @@ const StepName = styled.span`
 					font-style: italic;
 			  `
 			: ''}
+`
+
+const ItemContent = styled.div`
+	display: flex;
+	justify-content: start;
+	align-items: center;
+	> span {
+		line-height: 1.4rem;
+	}
+	button > img {
+		margin-left: 0.4rem;
+		filter: invert(1);
+	}
+`
+const ItemButtons = styled.div`
+	position: relative;
+	&,
+	a {
+		display: flex;
+		align-items: center;
+	}
+	> a {
+		margin-right: 0.4rem;
+	}
 `
 
 export const letterFromIndex = (index) => String.fromCharCode(65 + (index % 26))
