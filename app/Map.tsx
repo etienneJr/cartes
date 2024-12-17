@@ -7,7 +7,6 @@ import { sortGares } from './gares'
 import MapButtons, { mapButtonSize } from '@/components/MapButtons'
 import { goodIconSize, useComputeMapPadding } from '@/components/mapUtils'
 import useSetSearchParams from '@/components/useSetSearchParams'
-import useDrawQuickSearchFeatures from './effects/useDrawQuickSearchFeatures'
 import useAddMap, { globeLight, highZoomLight } from './effects/useAddMap'
 import { getStyle } from './styles/styles'
 import useHoverOnMapFeatures from './useHoverOnMapFeatures'
@@ -15,6 +14,7 @@ import useTerrainControl from './useTerrainControl'
 
 import { useWhatChanged } from '@/components/utils/useWhatChanged'
 import getBbox from '@turf/bbox'
+import { styled } from 'next-yak'
 import { useLocalStorage } from 'usehooks-ts'
 import CenteredCross from './CenteredCross'
 import MapComponents from './MapComponents'
@@ -27,14 +27,13 @@ import useDrawPanoramaxPosition, {
 import useDrawRightClickMarker from './effects/useDrawRightClickMarker'
 import useDrawSearchResults from './effects/useDrawSearchResults'
 import useDrawTransport from './effects/useDrawTransport'
+import useGeolocationAutofocus from './effects/useGeolocationAutofocus'
 import useImageSearch from './effects/useImageSearch'
 import useMapClick from './effects/useMapClick'
 import useRightClick from './effects/useRightClick'
 import useSearchLocalTransit from './effects/useSearchLocalTransit'
 import useDrawItinerary from './itinerary/useDrawItinerary'
 import { computeCenterFromBbox } from './utils'
-import useGeolocationAutofocus from './effects/useGeolocationAutofocus'
-import { css, styled } from 'next-yak'
 
 if (process.env.NEXT_PUBLIC_MAPTILER == null) {
 	throw new Error('You have to configure env NEXT_PUBLIC_MAPTILER, see README')
@@ -442,12 +441,14 @@ export default function Map(props) {
 }
 
 const MapContainer = styled.div`
-	.maplibregl-ctrl button.maplibregl-ctrl-compass .maplibregl-ctrl-icon {
+	:global(
+			.maplibregl-ctrl button.maplibregl-ctrl-compass .maplibregl-ctrl-icon
+		) {
 		background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='29' height='29' fill='crimson' viewBox='0 0 29 29'%3E%3Cpath d='m10.5 14 4-8 4 8z'/%3E%3Cpath fill='%23ccc' d='m10.5 16 4 8 4-8z'/%3E%3C/svg%3E");
 	}
 
 	@media (max-width: 800px) {
-		.maplibregl-ctrl-bottom-left .maplibregl-ctrl-scale {
+		:global(.maplibregl-ctrl-bottom-left .maplibregl-ctrl-scale) {
 			margin-left: 3.6rem;
 			border-right: none;
 			border-left: none;
@@ -459,8 +460,8 @@ const MapContainer = styled.div`
 			filter: drop-shadow(0px 0px 2px #ffffffa6);
 		}
 	}
-	.maplibregl-ctrl-top-right button {
-		width: 2.5rem;
-		height: 2.5rem;
+	:global(.maplibregl-ctrl-top-right) button {
+		width: ${(p) => p.$mapButtonSize};
+		height: ${(p) => p.$mapButtonSize};
 	}
 `
