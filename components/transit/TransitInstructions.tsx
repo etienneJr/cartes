@@ -1,9 +1,16 @@
 import { ModalCloseButton } from '@/app/UI'
-import useSetSearchParams from '../useSetSearchParams'
-import Image from 'next/image'
-import { formatMotis, humanDuration } from '@/app/itinerary/transit/utils'
 import TransportMoveBlock from '@/app/itinerary/transit/TransportMoveBlock'
-import { css, styled } from 'next-yak'
+import { formatMotis, humanDuration } from '@/app/itinerary/transit/utils'
+import Image from 'next/image'
+import useSetSearchParams from '../useSetSearchParams'
+import {
+	Approach,
+	Arrival,
+	StationWrapper,
+	Transport,
+	Transports,
+	Wrapper,
+} from './TransitInstructionsUI'
 
 export default function TransitInstructions({ connection }) {
 	const setSearchParams = useSetSearchParams()
@@ -17,30 +24,14 @@ export default function TransitInstructions({ connection }) {
 	const start = moveTypeToFrench[transports[0].move_type]
 	const end = moveTypeToFrench[transports[transports.length - 1].move_type]
 	return (
-		<div
-			css={css`
-				position: relative;
-				h2 {
-					font-weight: 600;
-					margin-bottom: 0.4rem;
-				}
-			`}
-		>
+		<Wrapper>
 			<ModalCloseButton
 				onClick={() => {
 					setSearchParams({ details: undefined })
 				}}
 			/>
 			<h2>Feuille de route</h2>
-			<section
-				css={css`
-					> img {
-						width: 1.4rem;
-						height: auto;
-						vertical-align: sub;
-					}
-				`}
-			>
+			<Approach>
 				<Image
 					src={'/' + start.icon + '.svg'}
 					width="10"
@@ -52,15 +43,8 @@ export default function TransitInstructions({ connection }) {
 				{start.verb}{' '}
 				<span>{humanDuration(transports[0].seconds).single.toLowerCase()}</span>{' '}
 				jusqu'à l'arrêt {firstTransitStop.station.name}
-			</section>
-			<section
-				css={css`
-					margin: 0.6rem 0.4rem;
-					ol {
-						list-style-type: none;
-					}
-				`}
-			>
+			</Approach>
+			<Transports>
 				<ol>
 					{connection.transports
 						.filter(({ move_type }) => move_type === 'Transport')
@@ -77,7 +61,7 @@ export default function TransitInstructions({ connection }) {
 							const halts =
 								transportStops.length > 2 && transportStops.slice(1, -1)
 							return (
-								<Transport key={transport.route_id}>
+								<Transport key={transport.route_id} $transport={transport}>
 									<TransportMoveBlock transport={transport} />
 									<Station
 										{...{
@@ -86,15 +70,7 @@ export default function TransitInstructions({ connection }) {
 										}}
 									/>
 									{halts && (
-										<details
-											css={css`
-												summary {
-													padding-left: 0.5rem;
-													color: var(--darkColor);
-													list-style-type: none;
-												}
-											`}
-										>
+										<details>
 											<summary>
 												{halts.length} arrêts,{' '}
 												<span>
@@ -107,9 +83,9 @@ export default function TransitInstructions({ connection }) {
 												</span>
 											</summary>
 											<ol
-												css={css`
-													margin-bottom: 1.6rem;
-												`}
+												style={{
+													marginBottom: '1.6rem',
+												}}
 											>
 												{halts.map((stop, index) => (
 													<li key={stop.station.id}>
@@ -136,16 +112,8 @@ export default function TransitInstructions({ connection }) {
 							)
 						})}
 				</ol>
-			</section>
-			<section
-				css={css`
-					> img {
-						width: 1.4rem;
-						height: auto;
-						vertical-align: sub;
-					}
-				`}
-			>
+			</Transports>
+			<Arrival>
 				<Image
 					src={'/' + end.icon + '.svg'}
 					width="10"
@@ -159,8 +127,8 @@ export default function TransitInstructions({ connection }) {
 					).single.toLowerCase()}
 				</span>{' '}
 				jusqu'à votre destination.
-			</section>
-		</div>
+			</Arrival>
+		</Wrapper>
 	)
 }
 const Station = ({ transport, stop, baseTime = null, last = false }) => {
@@ -175,10 +143,10 @@ const Station = ({ transport, stop, baseTime = null, last = false }) => {
 					humanDuration(stop.arrival.time - baseTime).single
 				) : (
 					<span
-						css={css`
-							color: gray;
-							margin-left: 0.4rem;
-						`}
+						style={{
+							color: 'gray',
+							marginLeft: '0.4rem',
+						}}
 					>
 						{formatMotis(stop.departure?.time || stop.arrival?.time)}
 					</span>
@@ -187,27 +155,6 @@ const Station = ({ transport, stop, baseTime = null, last = false }) => {
 		</StationWrapper>
 	)
 }
-
-const StationWrapper = styled.section`
-	margin: 0.6rem 0 0.6rem -0.5rem;
-	display: flex;
-	align-items: center;
-	svg {
-		margin-bottom: -0.05rem;
-	}
-	> span {
-		display: flex;
-		align-items: center;
-		gap: 0.4rem;
-		line-height: 0.85rem;
-	}
-	> small {
-		color: gray;
-	}
-	width: 16rem;
-	justify-content: space-between;
-	${(p) => p.$last && `position: absolute; bottom: -.8rem; left: 0`}
-`
 
 const StationDisc = ({ color, last }) => (
 	<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width=".8rem">
@@ -227,19 +174,3 @@ const moveTypeToFrench = {
 	Bike: { verb: 'Roulez', icon: 'cycling.svg' },
 	Car: { verb: 'Roulez', icon: 'car.svg' },
 }
-
-const Transport = styled.li`
-	border-left: 4px solid ${(p) => p.$transport.route_color};
-	> span {
-		border-top-right-radius: 0.3rem;
-		border-bottom-right-radius: 0.3rem;
-		padding: 0.1rem 0.4rem;
-		margin-bottom: 0.4rem;
-		img {
-			height: 1rem;
-		}
-	}
-	margin-bottom: 1.6rem;
-	padding-bottom: 1.2rem;
-	position: relative;
-`
