@@ -28,7 +28,7 @@ import { css, styled } from 'next-yak'
 import { Line } from './Line'
 
 /* This is a megacomponent. Don't worry, it'll stay like this until the UX
-* decisions are stabilized. We don't have many users yet */
+ * decisions are stabilized. We don't have many users yet */
 
 export default function Transit({ itinerary, searchParams }) {
 	const date = itinerary.date
@@ -274,7 +274,7 @@ export const TimelineTransportBlock = ({ transport }) => {
 
 	return (
 		<TimelineTransportBlockWrapper
-			$background={background}
+			$background={background || 'transparent'}
 			$constraint={constraint}
 			$displayImage={displayImage}
 			$moveType={transport.move_type}

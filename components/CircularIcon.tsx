@@ -12,7 +12,7 @@ export default function CircularIcon({
 }) {
 	const size = givenSize || defaultSize
 	return (
-		<Wrapper $size={size} {...rest}>
+		<Wrapper $size={size} $hasOnClick={rest.onClick}>
 			<div />
 			<img src={src} alt={alt} width="100" height="100" />
 		</Wrapper>
@@ -23,10 +23,10 @@ const Wrapper = styled.div`
 	position: relative;
 	width: ${(p) => p.$size};
 	height: ${(p) => p.$size};
-	cursor: ${(p) => (p.$rest.onClick ? 'pointer' : 'normal')};
+	cursor: ${(p) => (p.$hasOnClick ? 'pointer' : 'normal')};
 	div {
 		position: absolute;
-		background: ${(p) => p.$background};
+		background: ${(p) => p.$background || 'transparent'};
 		border-radius: 3rem;
 		width: 100%;
 		height: 100%;

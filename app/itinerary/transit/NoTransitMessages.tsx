@@ -1,4 +1,4 @@
-import {styled} from 'next-yak'
+import { css, styled } from 'next-yak'
 import DateSelector from '../DateSelector'
 import noTransports from '@/public/no-transports.svg'
 import Image from 'next/image'
