@@ -57,7 +57,7 @@ export default function Itinerary({
 				<ClickItineraryInstruction state={state} />
 			) : (
 				<div>
-					<ol>
+					<ModeTabs>
 						{[
 							[
 								undefined,
@@ -87,7 +87,7 @@ export default function Itinerary({
 								</Link>
 							</li>
 						))}
-					</ol>
+					</ModeTabs>
 					{mode === undefined && <Timeline itinerary={itinerary} />}
 					{['cycling', 'walking', 'car'].includes(mode) && (
 						<RouteRésumé
@@ -110,18 +110,19 @@ export default function Itinerary({
 
 const Wrapper = styled(ContentSection)`
 	margin-bottom: 1rem;
-	ol {
-		margin-top: 0.1rem;
-		margin-left: 0;
-		padding-left: 0;
-		list-style-type: none;
-		display: flex;
-		align-items: center;
-		justify-content: start;
-		gap: 1rem;
-		width: 80%;
-		li {
-			margin: 0 0.4rem;
-		}
+`
+
+const ModeTabs = styled.ol`
+	margin-top: 0.1rem;
+	margin-left: 0;
+	padding-left: 0;
+	list-style-type: none;
+	display: flex;
+	align-items: center;
+	justify-content: start;
+	gap: 1rem;
+	width: 80%;
+	li {
+		margin: 0 0.4rem;
 	}
 `
