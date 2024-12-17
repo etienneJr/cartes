@@ -7,6 +7,7 @@ import shareIcon from '@/public/share.svg'
 import Image from 'next/image'
 import { getFetchUrlBase } from './serverUrls'
 import getName from './osm/getName'
+import { css } from 'next-yak'
 
 export default function ShareButton({ osmFeature, geocodedClickedPoint }) {
 	console.log('purple share', osmFeature, geocodedClickedPoint)
