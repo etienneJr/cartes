@@ -52,7 +52,6 @@ import { getStyle } from './styles/styles'
 import useTransportStopData from './transport/useTransportStopData'
 import useWikidata from './useWikidata'
 import { computeCenterFromBbox } from './utils'
-import useGeolocationAutofocus from './effects/useGeolocationAutofocus'
 
 // We don't want to redraw <Content instantaneously on map zoom or drag
 const contentDebounceDelay = 500
@@ -121,7 +120,6 @@ export default function Container(props) {
 	const [geolocation, setGeolocation] = useState(null)
 
 	const [safeStyleKey, setSafeStyleKey] = useState(null)
-	console.log('lightpink ssk', safeStyleKey)
 	const [localStorageStyleKey, setLocalStorageStyleKey] = useState(null)
 	useEffect(() => {
 		try {

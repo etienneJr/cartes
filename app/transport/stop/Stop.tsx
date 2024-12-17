@@ -35,7 +35,7 @@ export default function Stop({ tags, data }) {
 	return (
 		<div>
 			<ul
-				css={`
+				css={css`
 					list-style-type: none;
 				`}
 			>

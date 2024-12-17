@@ -37,7 +37,7 @@ export default function ({ data }) {
 				<small>(arrivée à {humanArrivalTime})</small>.
 			</p>
 			<p
-				css={`
+				css={css`
 					margin-top: 0.6rem;
 					background: #67063d;
 					color: white;

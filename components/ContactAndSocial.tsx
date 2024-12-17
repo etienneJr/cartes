@@ -1,7 +1,7 @@
 import Emoji from './Emoji'
 import Image from 'next/image'
-import css from './css/convertToJs'
 import { atOrUrl } from '@/app/utils'
+import { css, styled } from 'next-yak'
 
 export default function ContactAndSocial({
 	email,
@@ -14,7 +14,7 @@ export default function ContactAndSocial({
 }) {
 	return (
 		<div
-			css={`
+			css={css`
 				margin-bottom: 0.6rem;
 			`}
 		>
@@ -73,29 +73,30 @@ export default function ContactAndSocial({
 				</a>
 			)}
 			{siret && (
-				<a
+				<EntrepriseLink
 					href={`https://annuaire-entreprises.data.gouv.fr/etablissement/${siret}`}
 					target="_blank"
 					title="Fiche entreprise sur l'annuaire officiel des entreprises"
-					style={css`
-						display: flex;
-						align-items: center;
-					`}
 				>
 					<Image
 						src={'/annuaire-entreprises.svg'}
 						alt="logo Marianne représentant l'annuaire des entreprises"
-						style={css`
-							margin: 0 0.3rem 0 0.2rem;
-							width: 1.4rem;
-							height: auto;
-						`}
 						width={14}
 						height={14}
 					/>
 					<span>fiche entreprise</span>
-				</a>
+				</EntrepriseLink>
 			)}
 		</div>
 	)
 }
+
+const EntrepriseLink = styled.a`
+	display: flex;
+	align-items: center;
+	img {
+		margin: 0 0.3rem 0 0.2rem;
+		width: 1.4rem;
+		height: auto;
+	}
+`

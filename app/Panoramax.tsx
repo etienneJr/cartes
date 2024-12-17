@@ -1,6 +1,7 @@
 import useSetSearchParams from '@/components/useSetSearchParams'
 import { Viewer } from '@panoramax/web-viewer'
 import '@panoramax/web-viewer/build/index.css'
+import { css } from 'next-yak'
 import panoramaxIcon from '@/public/panoramax.svg'
 import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
@@ -70,7 +71,7 @@ export default function Panoramax({ id, onMove }) {
 	if (!id) return null
 	return (
 		<div
-			css={`
+			css={css`
 				height: 50vh;
 				width: 96vw;
 				top: 2vw;
@@ -142,7 +143,7 @@ export default function Panoramax({ id, onMove }) {
 				href="https://panoramax.fr"
 				target="_blank"
 				title="Images de rue grâce au projet public Panoramax"
-				css={`
+				css={css`
 					z-index: 1000;
 					position: absolute;
 					bottom: 0.6rem;

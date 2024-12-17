@@ -1,4 +1,4 @@
-import css from '@/components/css/convertToJs'
+import { css } from 'next-yak'
 import { useEffect, useRef, useState } from 'react'
 import { nowAsYYMMDD } from './Route'
 
@@ -45,7 +45,7 @@ export default function Calendar({ data }) {
 				value={day}
 				min={today}
 				onChange={(e) => setDay(e.target.value)}
-				style={css`
+				css={css`
 					cursor: pointer;
 					margin-top: 0.6rem;
 					display: block;
@@ -53,14 +53,14 @@ export default function Calendar({ data }) {
 				`}
 			/>
 			<div
-				css={`
+				css={css`
 					max-width: 100%;
 					white-space: nowrap;
 					overflow: scroll;
 				`}
 			>
 				<ul
-					css={`
+					css={css`
 						margin-top: 0.6rem;
 						display: flex;
 						width: auto;
@@ -103,9 +103,9 @@ export default function Calendar({ data }) {
 											{entries.map((entry) => (
 												<li
 													key={entry.arrival_time}
-													css={`
-														opacity: ${entry.arrivalDate < now ? 0.3 : 1};
-													`}
+													style={{
+														opacity: entry.arrivalDate < now ? 0.3 : 1,
+													}}
 												>
 													{entry.arrival_time.split(':')[1]}
 												</li>

@@ -1,10 +1,10 @@
-import css from '@/components/css/convertToJs'
+import {css} from 'next-yak'
 
 export default function CTA({ children, href = '/' }) {
 	return (
 		<a
 			href={href}
-			style={css`
+			css={css`
 				text-decoration: none;
 				font-size: 160%;
 				background: linear-gradient(30deg, var(--color), var(--darkColor));

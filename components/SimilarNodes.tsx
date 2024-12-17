@@ -11,6 +11,7 @@ import { capitalise0, sortBy } from './utils/utils'
 import { OpenIndicator, getOh } from '@/app/osm/OpeningHours'
 import { categoryIconUrl } from '@/app/QuickFeatureSearch'
 import { bearing } from '@turf/bearing'
+import { css, styled } from 'next-yak'
 
 // This is very scientific haha
 const latDifferenceOfRennes = 0.07,
@@ -100,33 +101,16 @@ export default function SimilarNodes({ node }) {
 	const isOpenByDefault = category['open by default']
 	const imageUrl = categoryIconUrl(category)
 	return (
-		<section
-			css={`
-				margin-top: 2rem;
-				background: white;
-				border: 1px solid var(--lightestColor);
-				border-radius: 0.4rem;
-				padding: 0.3rem 0.8rem;
-				h3 {
-					margin-top: 0.4rem;
-				}
-			`}
-		>
+		<Wrapper>
 			{closestFeatures && (
 				<>
-					{' '}
 					<h3>{title} proches :</h3>
 					<NodeList
 						nodes={closestFeatures.slice(0, 10)}
 						setSearchParams={setSearchParams}
 						isOpenByDefault={isOpenByDefault}
 					/>
-					<details
-						css={`
-							margin-top: 1rem;
-							margin-bottom: 0.4rem;
-						`}
-					>
+					<details>
 						<summary>Tous les {title} proches</summary>
 						<NodeList
 							nodes={closestFeatures.slice(10)}
@@ -136,13 +120,28 @@ export default function SimilarNodes({ node }) {
 					</details>
 				</>
 			)}
-		</section>
+		</Wrapper>
 	)
 }
 
+const Wrapper = styled.section`
+	margin-top: 2rem;
+	background: white;
+	border: 1px solid var(--lightestColor);
+	border-radius: 0.4rem;
+	padding: 0.3rem 0.8rem;
+	h3 {
+		margin-top: 0.4rem;
+	}
+	details {
+		margin-top: 1rem;
+		margin-bottom: 0.4rem;
+	}
+`
+
 const NodeList = ({ nodes, setSearchParams, isOpenByDefault }) => (
 	<ul
-		css={`
+		css={css`
 			margin-left: 0.2rem;
 			list-style-type: none;
 		`}
@@ -157,12 +156,7 @@ const NodeList = ({ nodes, setSearchParams, isOpenByDefault }) => (
 				<li key={f.id}>
 					{!isOpenByDefault &&
 						(oh == null ? (
-							<span
-								css={`
-									display: inline-block;
-									width: 1.8rem;
-								`}
-							></span>
+							<OpenIndicatorPlaceholder />
 						) : (
 							<OpenIndicator isOpen={isOpen === 'error' ? false : isOpen} />
 						))}
@@ -189,6 +183,11 @@ const NodeList = ({ nodes, setSearchParams, isOpenByDefault }) => (
 		})}
 	</ul>
 )
+
+const OpenIndicatorPlaceholder = styled.span`
+	display: inline-block;
+	width: 1.8rem;
+`
 
 export const computeRoseDirection = (bearing) =>
 	Math.abs(bearing) > 135

@@ -1,4 +1,4 @@
-import css from './css/convertToJs'
+import { css, styled } from 'next-yak'
 
 const defaultSize = '2rem'
 export default function CircularIcon({
@@ -12,37 +12,43 @@ export default function CircularIcon({
 }) {
 	const size = givenSize || defaultSize
 	return (
-		<div
-			{...rest}
-			style={css(`
-				position: relative;
-				width: ${size};
-				height: ${size};
-				cursor: ${rest.onClick ? 'pointer' : 'normal'}
-			`)}
+		<Wrapper
+			{...{
+				$background: background,
+				$size: size,
+				$hasOnClick: rest.onClick != null,
+				$padding: padding,
+				$black: black,
+			}}
 		>
-			<div
-				style={css(`
-					position: absolute;
-					background: ${background};
-					border-radius: 3rem;
-					width: 100%;
-					height: 100%;
-				`)}
-			/>
-			<img
-				style={css(`
-					position: absolute;
-					width: 100%;
-					height: 100%;
-					${black ? '' : 'filter: invert(1);'}
-					${padding ? `padding: ${padding};` : ``}
-				`)}
-				src={src}
-				alt={alt}
-				width="100"
-				height="100"
-			/>
-		</div>
+			<div />
+			<img src={src} alt={alt} width="100" height="100" />
+		</Wrapper>
 	)
 }
+
+const Wrapper = styled.div`
+	position: relative;
+	width: ${(p) => p.$size};
+	height: ${(p) => p.$size};
+	cursor: ${(p) => (p.$hasOnClick ? 'pointer' : 'normal')};
+	div {
+		position: absolute;
+		background: ${(p) => p.$background || 'transparent'};
+		border-radius: 3rem;
+		width: 100%;
+		height: 100%;
+	}
+	img {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		${(p) =>
+			p.$black
+				? ''
+				: css`
+						filter: invert(1);
+				  `}
+		padding: ${(p) => (p.$padding ? p.$padding : `0`)}
+	}
+`

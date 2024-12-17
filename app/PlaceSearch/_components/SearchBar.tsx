@@ -1,6 +1,7 @@
 import { getHasStepBeingSearched } from '@/app/itinerary/Steps'
 import { InputStyle } from '@/components/InputStyle'
 import { close } from '@/components/icons/close'
+import { css } from 'next-yak'
 
 type IProps = {
 	state: any
@@ -22,22 +23,7 @@ export default ({
 	placeholder,
 }: IProps) => {
 	return (
-		<InputStyle
-			css={`
-				color: white;
-				input {
-					max-width: 22rem;
-					width: 83vw;
-					background: var(--lightestColor);
-					color: var(--darkColor);
-					border: none;
-					margin-bottom: 0;
-					outline: 0.15rem solid
-						${getHasStepBeingSearched(state) ? 'yellow' : 'var(--lightColor)'} !important;
-				}
-				position: relative;
-			`}
-		>
+		<InputStyle $stateBeingSearched={getHasStepBeingSearched(state)}>
 			<input
 				type="text"
 				value={value || ''}
@@ -75,7 +61,7 @@ export default ({
 			{value && (
 				<button
 					onClick={() => onDestinationChange(null)}
-					css={`
+					css={css`
 						position: absolute;
 						right: 5px;
 						top: 50%;

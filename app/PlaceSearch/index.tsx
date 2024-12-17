@@ -16,6 +16,7 @@ import {
 } from '@/components/utils/utils'
 import { isIOS } from '@react-aria/utils'
 import computeDistance from '@turf/distance'
+import { styled } from 'next-yak'
 import { useEffect, useState } from 'react'
 import { useLocalStorage } from 'usehooks-ts'
 import QuickFeatureSearch from '../QuickFeatureSearch'
@@ -234,27 +235,7 @@ export default function PlaceSearch({
 
 	return (
 		<div>
-			<div
-				css={`
-					display: flex;
-					justify-content: center;
-					align-items: center;
-					margin-bottom: 0.4rem;
-
-					> button {
-						margin: 0;
-						padding: 0;
-						margin-right: 0.4rem;
-						> img {
-							width: 2rem;
-							height: auto;
-							vertical-align: middle;
-						}
-					}
-					margin-top: 0.2rem;
-					${sideSheet && `margin: .4rem 0`}
-				`}
-			>
+			<LogoWrapper $sideSheet={sideSheet}>
 				<LogoCarteApp />
 				<SearchBar
 					state={state}
@@ -265,7 +246,7 @@ export default function PlaceSearch({
 					placeholder={placeholder}
 					autofocus={autoFocus}
 				/>
-			</div>
+			</LogoWrapper>
 			<div>
 				{state.length > 1 &&
 					stepIndex === 0 && // TODO for VIA geolocal, less prioritary
@@ -377,3 +358,23 @@ export default function PlaceSearch({
 		</div>
 	)
 }
+
+const LogoWrapper = styled.div`
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 0.4rem;
+
+	> button {
+		margin: 0;
+		padding: 0;
+		margin-right: 0.4rem;
+		> img {
+			width: 2rem;
+			height: auto;
+			vertical-align: middle;
+		}
+	}
+	margin-top: 0.2rem;
+	${({ $sideSheet }) => $sideSheet && `margin: .4rem 0`}
+`

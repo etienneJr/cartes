@@ -1,6 +1,5 @@
 import { capitalise0, sortBy } from '@/components/utils/utils'
-import { trainColors } from '../itinerary/motisRequest'
-import { isNil } from 'ramda'
+import { css, styled } from 'next-yak'
 
 export const defaultTransitFilter = 'plan général'
 // these are filter functions that select lines depending on properties
@@ -57,51 +56,48 @@ export default function TransitFilter({
 		return [key, selectedRoutes]
 	})
 	return (
-		<section
-			css={`
-				margin-top: 1rem;
-			`}
-		>
-			<form
-				css={`
-					width: 100%;
-					overflow: scroll;
-					height: 2.4rem;
-					label {
-						margin: 0.6rem;
-						white-space: nowrap;
-					}
-					input {
-						margin-right: 0.4rem;
-					}
-				`}
-			>
+		<section>
+			<TransitFilterForm>
 				{sortBy(([, num]) => num === 0)(filtered).map(
 					([key, selectedRoutes]) => {
 						return (
-							<label
-								key={key}
-								css={`
-									background: white;
-									padding: 0 0.6rem 0.1rem 0.4rem;
-									border-radius: 0.3rem;
-									border: 1px solid var(--darkColor);
-									color: var(--darkColor);
-									cursor: pointer;
-									${selectedRoutes === 0 && ` color: gray`}
-								`}
-							>
+							<TransitFilterLabel key={key} $selectedRoutes={selectedRoutes}>
 								<input
 									type="radio"
 									checked={key === transitFilter}
+									onChange={() => null}
 									onClick={() => setTransitFilter(key)}
 								/>
 								{capitalise0(key)} ({selectedRoutes})
-							</label>
+							</TransitFilterLabel>
 						)
 					}
 				)}
-			</form>
+			</TransitFilterForm>
 		</section>
 	)
 }
+
+const TransitFilterLabel = styled.label`
+	background: white;
+	padding: 0 0.6rem 0.1rem 0.4rem;
+	border-radius: 0.3rem;
+	border: 1px solid var(--darkColor);
+	color: var(--darkColor);
+	cursor: pointer;
+	${(p) => p.$selectedRoutes === 0 && ` color: gray`}
+`
+
+const TransitFilterForm = styled.form`
+	margin-top: 1rem;
+	width: 100%;
+	overflow: scroll;
+	height: 2.4rem;
+	label {
+		margin: 0.6rem;
+		white-space: nowrap;
+	}
+	input {
+		margin-right: 0.4rem;
+	}
+`

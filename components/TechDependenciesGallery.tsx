@@ -1,36 +1,9 @@
-'use client'
 import dependencies from '@/components/dependencies.yaml'
+import { css, styled } from 'next-yak'
 
-export default function TechDependenciesGallery({ css }) {
+export default function TechDependenciesGallery({ additionalCss }) {
 	return (
-		<ul
-			css={`
-				max-height: 90%;
-				display: flex;
-				flex-wrap: wrap;
-				justify-content: center;
-				align-items: center;
-				padding: 0 5%;
-				list-style-type: none;
-				gap: 1vw;
-				max-width: 72vw;
-
-				li a {
-					text-decoration: none;
-					img {
-						height: 5vh;
-						width: auto;
-						display: block;
-						object-fit: cover;
-					}
-					display: flex;
-					flex-direction: column;
-					align-items: center;
-					justify-content: center;
-				}
-				${css}
-			`}
-		>
+		<Ul $additionalCss={additionalCss}>
 			{dependencies.map(({ img, url, text }) => (
 				<li key={url}>
 					<a href={'https://' + url} target="_blank">
@@ -39,6 +12,33 @@ export default function TechDependenciesGallery({ css }) {
 					</a>
 				</li>
 			))}
-		</ul>
+		</Ul>
 	)
 }
+
+const Ul = styled.ul`
+	max-height: 90%;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+	padding: 0 5%;
+	list-style-type: none;
+	gap: 1vw;
+	max-width: 72vw;
+
+	li a {
+		text-decoration: none;
+		img {
+			height: 5vh;
+			width: auto;
+			display: block;
+			object-fit: cover;
+		}
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+	}
+	${(p) => p.$additionalCss}
+`

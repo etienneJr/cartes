@@ -12,7 +12,7 @@ export default function GlobalError({
 		<html>
 			<body>
 				<h1
-					css={`
+					css={css`
 						background: blue;
 					`}
 				>

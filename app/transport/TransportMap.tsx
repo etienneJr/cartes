@@ -10,6 +10,7 @@ import { ModalCloseButton } from '../UI'
 import Routes from './TransportMapRoutes'
 import { PlaceButton } from '../PlaceButtonsUI'
 import AgencyFilter from './AgencyFilter'
+import { css, styled } from 'next-yak'
 
 export default function TransportMap({
 	day,
@@ -96,16 +97,7 @@ export default function TransportMap({
 		bboxAgencies?.length > 0 &&
 		bboxAgencies.find(([id]) => id === selectedAgency)
 	return (
-		<section
-			css={`
-				h1 {
-					margin-top: 1rem;
-					margin-bottom: -0.1rem;
-					line-height: 1.6rem;
-					font-size: 170%;
-				}
-			`}
-		>
+		<Wrapper>
 			<section>
 				{!selectedAgencyData && (
 					<header>
@@ -130,7 +122,7 @@ export default function TransportMap({
 					))}
 				<PlaceButton
 					as="div"
-					css={`
+					css={css`
 						margin-top: 0.8rem;
 						margin-bottom: 0.6rem;
 						text-align: right;
@@ -152,7 +144,7 @@ export default function TransportMap({
 					<section>
 						<p>Dans cette zone : </p>
 						<ol
-							css={`
+							css={css`
 								margin-left: 0.6rem;
 								list-style-type: none;
 								a {
@@ -174,7 +166,7 @@ export default function TransportMap({
 			</section>
 			{stop && (
 				<section
-					css={`
+					css={css`
 						position: relative;
 						padding-top: 0.6rem;
 					`}
@@ -208,9 +200,18 @@ export default function TransportMap({
 					}
 				/>
 			)}
-		</section>
+		</Wrapper>
 	)
 }
+
+const Wrapper = styled.section`
+	h1 {
+		margin-top: 1rem;
+		margin-bottom: -0.1rem;
+		line-height: 1.6rem;
+		font-size: 170%;
+	}
+`
 
 const Agency = ({ data, backUrl }) => {
 	return (

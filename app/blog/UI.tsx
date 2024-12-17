@@ -1,6 +1,4 @@
-'use client'
-
-import styled from 'styled-components'
+import { styled } from 'next-yak'
 import CTA from '../presentation/CTA'
 
 export const List = styled.ol`

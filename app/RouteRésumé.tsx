@@ -1,11 +1,27 @@
 import DownloadGPXWrapper from '@/components/DownloadGPXWrapper'
-import css from '@/components/css/convertToJs'
+import ElevationGraph from '@/components/itinerary/ElevationGraph'
+import { styled } from 'next-yak'
 import LightsWarning from './LightsWarning'
 import ProfileChooser from './ProfileChooser'
 import ValhallaRésumé from './itinerary/ValhallaRésumé'
 import TransitLoader from './itinerary/transit/TransitLoader'
 import { nowStamp } from './itinerary/transit/utils'
-import ElevationGraph from '@/components/itinerary/ElevationGraph'
+
+const Wrapper = styled.div`
+	position: relative;
+	display: flex;
+	align-items: center;
+	background: var(--lightestColor);
+	padding: 0.6rem;
+	color: var(--darkestColor);
+	line-height: 1.4rem;
+	border: ${({ $mode }) =>
+		$mode === 'cycling' ? '4px solid #8f53c1' : '4px dotted #8f53c1'};
+	margin-top: 1.4rem;
+	border-radius: 0.5rem;
+	@media (min-width: 1200px) {
+	}
+`
 
 export default function RouteRésumé({
 	mode,
@@ -49,24 +65,7 @@ export default function RouteRésumé({
 
 	return (
 		<section>
-			<div
-				css={`
-					position: relative;
-					display: flex;
-					align-items: center;
-					background: var(--lightestColor);
-					padding: 0.6rem;
-					color: var(--darkestColor);
-					line-height: 1.4rem;
-					border: ${mode === 'cycling'
-						? '4px solid #8f53c1'
-						: '4px dotted #8f53c1'};
-					margin-top: 1.4rem;
-					border-radius: 0.5rem;
-					@media (min-width: 1200px) {
-					}
-				`}
-			>
+			<Wrapper $mode={mode}>
 				{mode === 'car' ? (
 					<ValhallaRésumé data={data} />
 				) : (
@@ -79,7 +78,7 @@ export default function RouteRésumé({
 						}}
 					/>
 				)}
-			</div>
+			</Wrapper>
 			{['cycling', 'walking'].includes(mode) && data?.features && (
 				<DownloadGPXWrapper feature={data.features[0]} />
 			)}
@@ -155,17 +154,23 @@ const BrouterModeContent = ({
 						(déniveléCumulé / distance) *
 						100
 					).toFixed(1)}%`}
-					style={css(
-						`background: ${deniveléColor(
-							déniveléCumulé,
-							distance
-						)}; padding: 0 .2rem; border-radius: 0.3rem;`
-					)}
+					style={{
+						background: deniveléColor(déniveléCumulé, distance),
+						padding: '0 .2rem',
+						borderRadius: '0.3rem;',
+					}}
 				>
 					{déniveléCumulé}&nbsp;m
 				</strong>{' '}
 				de dénivelé{' '}
-				<small css="white-space: nowrap">({dénivelé}&nbsp;m en absolu)</small>.
+				<small
+					style={{
+						whiteSpace: 'nowrap',
+					}}
+				>
+					({dénivelé}&nbsp;m en absolu)
+				</small>
+				.
 			</p>
 			{mode === 'cycling' && (
 				<ProfileChooser
@@ -176,18 +181,19 @@ const BrouterModeContent = ({
 				/>
 			)}
 			{mode === 'cycling' && data.safe && (
-				<p css="text-align: right">
+				<p
+					style={{
+						textAlign: 'right',
+					}}
+				>
 					<small>
 						{data.safe.safeRatio < 0.3
 							? '❗️'
 							: data.safe.safeRatio < 0.5
 							? '⚠️ '
 							: ''}{' '}
-						Trajet{' '}
-						<span css="text-decoration: underline; text-decoration-color: LightSeaGreen; text-decoration-thickness: 2px">
-							sécurisé
-						</span>{' '}
-						à {Math.round(data.safe.safeRatio * 100)}%{' '}
+						Trajet <Securised>sécurisé</Securised> à{' '}
+						{Math.round(data.safe.safeRatio * 100)}%{' '}
 						{data.safe.safeRatio < 0.5 ? 'seulement' : ''}
 					</small>
 				</p>
@@ -230,3 +236,9 @@ const deniveléColor = (height, distance) => {
 	const difficulty = Math.round(index)
 	return deniveléColors[difficulty]
 }
+
+const Securised = styled.span`
+	text-decoration: underline;
+	text-decoration-color: LightSeaGreen;
+	text-decoration-thickness: 2px;
+`

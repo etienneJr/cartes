@@ -6,7 +6,7 @@ export default function GareInfo({ nom, uic8 }) {
 	console.log(date)
 	return (
 		<div
-			css={`
+			css={css`
 				display: flex;
 				flex-direction: column;
 				align-items: center;

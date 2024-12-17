@@ -1,5 +1,6 @@
 import sunCalc from 'suncalc'
 import Image from 'next/image'
+import { styled } from 'next-yak'
 
 const dateFormatter = Intl.DateTimeFormat('fr-FR', {
 	hour: 'numeric',
@@ -28,30 +29,7 @@ export default function LightsWarning({ longitude, latitude }) {
 	)
 
 	return (
-		<div
-			css={`
-				margin-top: 0.6rem;
-				strong {
-					background: var(--darkerColor);
-					color: white;
-					font-weight: normal;
-					padding: 0 0.3rem;
-					border-radius: 0.2rem;
-					box-shadow: -1px 0px 1px red;
-					white-space: nowrap;
-				}
-				> small {
-					display: flex;
-					align-items: center;
-					justify-content: end;
-				}
-				img {
-					height: 1.1rem;
-					width: auto;
-					margin-right: 0.4rem;
-				}
-			`}
-		>
+		<Wrapper>
 			<small>
 				<Image
 					src="/bike-lights.svg"
@@ -65,6 +43,29 @@ export default function LightsWarning({ longitude, latitude }) {
 					<strong>après {roundFormat(goldenHour)}</strong>
 				</span>
 			</small>
-		</div>
+		</Wrapper>
 	)
 }
+
+const Wrapper = styled.div`
+	margin-top: 0.6rem;
+	strong {
+		background: var(--darkerColor);
+		color: white;
+		font-weight: normal;
+		padding: 0 0.3rem;
+		border-radius: 0.2rem;
+		box-shadow: -1px 0px 1px red;
+		white-space: nowrap;
+	}
+	> small {
+		display: flex;
+		align-items: center;
+		justify-content: end;
+	}
+	img {
+		height: 1.1rem;
+		width: auto;
+		margin-right: 0.4rem;
+	}
+`

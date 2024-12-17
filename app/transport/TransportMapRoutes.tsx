@@ -10,7 +10,7 @@ export default function Routes({
 }) {
 	return (
 		<section
-			css={`
+			css={css`
 				position: relative;
 				margin-top: 0.6rem;
 				padding-top: 0.4rem;
@@ -26,7 +26,7 @@ export default function Routes({
 			)}
 
 			<ol
-				css={`
+				css={css`
 					margin: 1rem 0;
 					list-style-type: none;
 					> li {
@@ -39,7 +39,7 @@ export default function Routes({
 					return (
 						<li
 							key={route.properties.route_id}
-							css={`
+							css={css`
 								a {
 									text-decoration: none;
 									color: inherit;
@@ -52,7 +52,7 @@ export default function Routes({
 							{route.properties.isNight && <div>🌜️ Bus de nuit</div>}
 							{route.properties.isSchool && <div>🎒 Bus scolaire</div>}
 							<span
-								css={`
+								css={css`
 									margin-right: 1rem;
 								`}
 							>
@@ -61,7 +61,7 @@ export default function Routes({
 										<details open={routes.length === 1}>
 											<summary>Arrêts</summary>
 											<ol
-												css={`
+												css={css`
 													margin-left: 2rem;
 												`}
 											>
@@ -78,7 +78,7 @@ export default function Routes({
 								)}
 							</span>
 							<small
-								css={`
+								css={css`
 									text-align: right;
 									color: gray;
 								`}

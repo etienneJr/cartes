@@ -48,12 +48,12 @@ const url = `https://overpass-api.de/api/interpreter?data=[out%3Ajson][timeout%3
 // pas réussi en premier essai
 
 export const getRecentInterestingNodes = async () => {
-	console.log(url)
+	//console.log(url)
 	const request = await fetch(url)
 	const json = await request.json()
 
 	const nodes = json.elements
-	console.log('OVERPASS', nodes)
+	//console.log('OVERPASS', nodes)
 	const entries = nodes.map((node) => {
 		const typePart = encodePlace(node.type, node.id)
 		return {

@@ -1,8 +1,8 @@
-import css from '@/components/css/convertToJs'
 import { sortBy } from '@/components/utils/utils'
+import { styled } from 'next-yak'
 import Link from 'next/link'
 import { OtherArticlesList, OtherArticlesSection } from './UI'
-import { blogArticles } from './page'
+import { blogArticles } from './blogArticles'
 import { dateCool } from './utils'
 
 export default function ({ excludeUrl }) {
@@ -21,14 +21,7 @@ export default function ({ excludeUrl }) {
 										<h3 dangerouslySetInnerHTML={{ __html: titre.html }} />
 									</Link>
 								</div>
-								<small
-									style={css`
-										color: var(--color);
-										font-size: 90%;
-									`}
-								>
-									Publié le {dateCool(date)}
-								</small>
+								<SmallDate>Publié le {dateCool(date)}</SmallDate>
 							</li>
 						))}
 				</ol>
@@ -36,3 +29,8 @@ export default function ({ excludeUrl }) {
 		</OtherArticlesSection>
 	)
 }
+
+const SmallDate = styled.small`
+	color: var(--color);
+	font-size: 90%;
+`

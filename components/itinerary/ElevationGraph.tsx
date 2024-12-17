@@ -1,4 +1,6 @@
 import computeDistance from '@turf/distance'
+import { YakThemeProvider, styled } from 'next-yak'
+
 export default function ElevationGraph({ feature }) {
 	console.log('purple', feature)
 	if (!feature?.geometry) return
@@ -40,9 +42,9 @@ export default function ElevationGraph({ feature }) {
 
 	return (
 		<section
-			css={`
-				margin: 1.6rem 0.4rem;
-			`}
+			style={{
+				margin: '1.6rem 0.4rem',
+			}}
 		>
 			<LineChart data={data} baseElevation={lowest} />
 		</section>
@@ -71,65 +73,13 @@ const LineChart = ({ data, baseElevation }) => {
 	const last = data[data.length - 1]
 	const first = data[0]
 	return (
-		<div
-			css={`
-				padding: 2rem 3.5rem 2rem 1rem;
-
-				background: var(--lightestColor2);
-				border-radius: 0.5rem;
-				width: 100%;
-
-				.LineChart {
-					position: relative;
-					color: var(--lightColor);
-				}
-
-				.LineChart svg {
-					fill: none;
-					stroke: var(--darkColor);
-					display: block;
-					stroke-width: 2px;
-					border-bottom: 1px solid var(--lighterColor);
-				}
-
-				.LineChart .x-axis {
-					font-size: 85%;
-					position: absolute;
-					bottom: -1rem;
-					height: 1rem;
-					left: 0px;
-					right: 0;
-					display: flex;
-					justify-content: space-between;
-					color: var(--color);
-				}
-
-				.LineChart .y-axis {
-					font-size: 85%;
-					color: var(--color);
-					position: absolute;
-					top: 0;
-					right: -3.2rem;
-					bottom: 0px;
-					display: flex;
-					flex-direction: column;
-					justify-content: space-between;
-					align-items: flex-end;
-				}
-
-				.LineChart .y-axis > div::after {
-					margin-right: 4px;
-					content: attr(data-value);
-					display: inline-block;
-				}
-			`}
-		>
+		<LineChartWrapper>
 			<div className="LineChart">
 				<svg width={'100%'} viewBox={`-10 0 ${WIDTH + 20} ${HEIGHT + 10}`}>
 					<defs>
 						<linearGradient id="gradient" x1="0" x2="0" y1="0" y2="1">
-							<stop offset="5%" stop-color="var(--lighterColor)" />
-							<stop offset="95%" stop-color="var(--lightestColor2)" />
+							<stop offset="5%" stopColor="var(--lighterColor)" />
+							<stop offset="95%" stopColor="var(--lightestColor2)" />
 						</linearGradient>
 					</defs>
 					<path
@@ -151,24 +101,72 @@ const LineChart = ({ data, baseElevation }) => {
 						fill={'var(--lightestColor2)'}
 					/>
 				</svg>
-				<div className="x-axis">
+				<XAxis>
 					{x_ticks.map((v, i) => (
-						<div>
+						<div key={v}>
 							{Math.round(v)} <small>km</small>
 						</div>
 					))}
-				</div>
-				<div className="y-axis">
+				</XAxis>
+				<YAxis>
 					{y_ticks.map((v, i) => (
-						<div>
+						<div key={v}>
 							{Math.round(v + baseElevation)} <small>m</small>
 						</div>
 					))}
-				</div>
+				</YAxis>
 			</div>
-		</div>
+		</LineChartWrapper>
 	)
 }
+
+const LineChartWrapper = styled.div`
+	padding: 2rem 3.5rem 2rem 1rem;
+
+	background: var(--lightestColor2);
+	border-radius: 0.5rem;
+	width: 100%;
+
+	> div {
+		position: relative;
+		color: var(--lightColor);
+		svg {
+			fill: none;
+			stroke: var(--darkColor);
+			display: block;
+			stroke-width: 2px;
+			border-bottom: 1px solid var(--lighterColor);
+		}
+	}
+`
+const YAxis = styled.div`
+	font-size: 85%;
+	color: var(--color);
+	position: absolute;
+	top: 0;
+	right: -3.2rem;
+	bottom: 0px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: flex-end;
+	> div::after {
+		margin-right: 4px;
+		content: attr(data-value);
+		display: inline-block;
+	}
+`
+const XAxis = styled.div`
+	font-size: 85%;
+	position: absolute;
+	bottom: -1rem;
+	height: 1rem;
+	left: 0px;
+	right: 0;
+	display: flex;
+	justify-content: space-between;
+	color: var(--color);
+`
 
 function getTicks(count, max) {
 	return [...Array(count).keys()].map((d) => (max / (count - 1)) * parseInt(d))

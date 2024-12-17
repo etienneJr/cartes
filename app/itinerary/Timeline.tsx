@@ -1,6 +1,7 @@
 import useSetSearchParams from '@/components/useSetSearchParams'
+import { styled } from 'next-yak'
 import Link from 'next/link'
-import { Line } from './transit/Transit'
+import { Line } from './transit/Line'
 import TransitSummary from './transit/TransitSummary'
 import { nowStamp } from './transit/utils'
 
@@ -20,17 +21,7 @@ export default function Timeline({ itinerary }) {
 		to: now + max,
 	}
 	return (
-		<ol
-			css={`
-				margin-top: 1rem;
-				li {
-				}
-				a {
-					color: inherit;
-					text-decoration: none;
-				}
-			`}
-		>
+		<Ol>
 			{itinerary.routes.cycling?.features && (
 				<Link href={setSearchParams({ mode: 'velo' }, true)}>
 					<Line
@@ -75,6 +66,16 @@ export default function Timeline({ itinerary }) {
 			<Link href={setSearchParams({ mode: 'commun' }, true)}>
 				<TransitSummary itinerary={itinerary} />
 			</Link>
-		</ol>
+		</Ol>
 	)
 }
+
+const Ol = styled.ol`
+	margin-top: 1rem;
+	li {
+	}
+	a {
+		color: inherit;
+		text-decoration: none;
+	}
+`

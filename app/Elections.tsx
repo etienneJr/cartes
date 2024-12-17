@@ -21,7 +21,7 @@ export default function ({ searchParams, setSnap }) {
 	return (
 		<div>
 			<section
-				css={`
+				css={css`
 					position: relative;
 					margin-top: 1rem;
 					h3 {
@@ -42,7 +42,7 @@ export default function ({ searchParams, setSnap }) {
 				/>
 				<h3>Votre circonscription</h3>
 				<div
-					css={`
+					css={css`
 						background: white;
 						padding: 0.2rem 0.6rem;
 						border-radius: 0.4rem;
@@ -66,7 +66,7 @@ const NoCircoYet = ({ filter }) => {
 	return (
 		<section>
 			<section
-				css={`
+				css={css`
 					position: relative;
 					padding-top: 0.2rem;
 					margin-top: 1rem;

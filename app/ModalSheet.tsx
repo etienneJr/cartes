@@ -1,10 +1,11 @@
 import { Sheet, SheetRef } from '@/components/react-modal-sheet'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import styled from 'styled-components'
+import { styled } from 'next-yak'
 import Content from './Content'
 import ModalSheetReminder from './ModalSheetReminder'
 import { useDimensions } from '@/components/react-modal-sheet/hooks'
 import { useLocalStorage } from 'usehooks-ts'
+import { css } from 'next-yak'
 
 export const snapPoints = [-50, 0.5, 150, 100, 0],
 	initialSnap = 3
@@ -98,12 +99,12 @@ export default function ModalSheet(props) {
 				}}
 			>
 				<Sheet.Container
-					css={`
+					css={css`
 						background-color: var(--lightestColor2) !important;
 					`}
 				>
 					<Sheet.Header
-						css={`
+						css={css`
 							span {
 								background-color: var(--lighterColor) !important;
 							}

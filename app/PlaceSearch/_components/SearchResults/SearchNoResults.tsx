@@ -1,6 +1,6 @@
 export default ({ value }) => (
 	<div
-		css={`
+		css={css`
 			text-align: center;
 			font-size: 90%;
 			margin: 20px 0;

@@ -5,14 +5,13 @@ import ModalSheet from './ModalSheet'
 import SideSheet from './SideSheet'
 
 export default function ModalSwitch(props) {
-	const [mode, setMode] = useState('no-js')
+	const [mode, setMode] = useState('mobile')
 	const test = useMediaQuery('(min-width: 800px)')
 
 	useEffect(() => {
 		setMode(test ? 'desktop' : 'mobile')
 	}, [setMode, test])
 
-	if (mode === 'no-js') return <SideSheet {...props} />
 	if (mode === 'desktop') return <SideSheet {...props} />
 
 	return <ModalSheet {...props} />

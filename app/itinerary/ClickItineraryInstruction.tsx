@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import itineraryIcon from '@/public/itinerary-circle-plain.svg'
 import { useMediaQuery } from 'usehooks-ts'
+import { css, styled } from 'next-yak'
 
 export default function ClickItineraryInstruction({ state }) {
 	const stepKeys = state?.map((step) => step != null && step.key),
@@ -12,18 +13,7 @@ export default function ClickItineraryInstruction({ state }) {
 	const isMobile = useMediaQuery('(max-width: 800px)')
 	const actionIcon = isMobile ? '👆️' : '🖱️'
 	return (
-		<div
-			css={`
-				margin: 1rem 0;
-
-				text-align: center;
-				img {
-					width: 1.2rem;
-					height: auto;
-					margin-right: 0.6rem;
-				}
-			`}
-		>
+		<Wrapper>
 			<Image
 				src={itineraryIcon}
 				alt="Icone flèche représentant le mode itinéraire"
@@ -44,6 +34,16 @@ export default function ClickItineraryInstruction({ state }) {
 					ou {actionIcon} choisissez-la sur la carte.
 				</p>
 			) : null}
-		</div>
+		</Wrapper>
 	)
 }
+
+const Wrapper = styled.div`
+	margin: 1rem 0;
+	text-align: center;
+	img {
+		width: 1.2rem;
+		height: auto;
+		margin-right: 0.6rem;
+	}
+`

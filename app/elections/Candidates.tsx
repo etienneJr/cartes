@@ -23,7 +23,7 @@ export default function Candidates({ data }) {
 		return <p>Candidats non trouvés. Ils seront ajoutés prochainement.</p>
 	return (
 		<section
-			css={`
+			css={css`
 				h3 {
 					margin-bottom: 0;
 				}
@@ -48,14 +48,14 @@ export default function Candidates({ data }) {
 						return (
 							<li
 								key={PrenomPsn + NomPsn}
-								css={`
+								css={css`
 									margin: 0.8rem 0 0.8rem 0;
 									display: flex;
 									align-items: center;
 								`}
 							>
 								<div
-									css={`
+									css={css`
 										background: ${safeColor};
 										width: 2.2rem;
 										height: 2.2rem;
@@ -65,7 +65,7 @@ export default function Candidates({ data }) {
 								></div>
 								<div>
 									<div
-										css={`
+										css={css`
 											text-decoration: underline;
 											text-decoration-color: #bbb;
 											margin-right: 0.6rem;
@@ -82,7 +82,7 @@ export default function Candidates({ data }) {
 									>
 										{LibNuaCand || ' ? '}
 									</div>
-									<div css={``}>
+									<div css={css``}>
 										{PrenomPsn} {NomPsn}
 									</div>
 									<div>
@@ -97,7 +97,7 @@ export default function Candidates({ data }) {
 			<a
 				href="https://github.com/f3reg/lg2024/"
 				target="_blank"
-				css={`
+				css={css`
 					text-decoration: none;
 					color: gray;
 					margin-bottom: 0.6rem;

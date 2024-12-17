@@ -1,9 +1,9 @@
-import css from '../css/convertToJs'
+import { css } from 'next-yak'
 
 export default function Diapo({ children }) {
 	return (
 		<div
-			style={css`
+			css={css`
 				height: 100vh;
 			`}
 		>

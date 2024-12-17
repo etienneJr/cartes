@@ -1,11 +1,11 @@
-import styled from 'styled-components'
+import { css, styled } from 'next-yak'
 import DateSelector from '../DateSelector'
 import noTransports from '@/public/no-transports.svg'
 import Image from 'next/image'
 
 const MessageBlock = ({ message, solution }) => (
 	<section
-		css={`
+		css={css`
 			margin-top: 2rem;
 			line-height: 1.3rem;
 			display: flex;

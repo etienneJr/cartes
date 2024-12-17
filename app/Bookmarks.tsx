@@ -6,6 +6,7 @@ import { ModalCloseButton } from './UI'
 import useSetSearchParams from '@/components/useSetSearchParams'
 import { useState } from 'react'
 import { buildAddress } from '@/components/osm/buildAddress'
+import { styled } from 'next-yak'
 
 export default function Favoris() {
 	const setSearchParams = useSetSearchParams()
@@ -19,11 +20,7 @@ export default function Favoris() {
 	)
 	console.log('purple', bookmarks)
 	return (
-		<section
-			css={`
-				position: relative;
-			`}
-		>
+		<Section>
 			<ModalCloseButton
 				title="Fermer l'encart favoris"
 				onClick={() => {
@@ -33,15 +30,7 @@ export default function Favoris() {
 			<h2>Gérer mes favoris</h2>
 
 			<h3>Adresses</h3>
-			<ul
-				css={`
-					padding-left: 0.6rem;
-					li {
-						display: flex;
-						align-items: center;
-					}
-				`}
-			>
+			<ul>
 				{bookmarks.map((bookmark) => (
 					<Bookmark
 						key={pointHash(bookmark)}
@@ -54,9 +43,20 @@ export default function Favoris() {
 			<p>
 				<small>À venir.</small>
 			</p>
-		</section>
+		</Section>
 	)
 }
+
+const Section = styled.section`
+	position: relative;
+	ul {
+		padding-left: 0.6rem;
+		li {
+			display: flex;
+			align-items: center;
+		}
+	}
+`
 
 const Bookmark = ({ bookmark, setBookmarks }) => {
 	const address = buildAddress(bookmark.properties, true)
@@ -74,21 +74,7 @@ const Bookmark = ({ bookmark, setBookmarks }) => {
 		)
 
 	return (
-		<li
-			key={pointHash(bookmark)}
-			css={`
-				display: flex;
-				justify-content: space-between;
-				align-items: center;
-				padding: 0.3rem 0;
-				margin-bottom: 0.4rem;
-				border-bottom: 1px solid var(--lightestColor);
-				> div {
-					display: flex;
-					align-items: center;
-				}
-			`}
-		>
+		<Li key={pointHash(bookmark)}>
 			{!edition ? (
 				name ? (
 					<div>
@@ -99,14 +85,7 @@ const Bookmark = ({ bookmark, setBookmarks }) => {
 						<span>{name}</span>
 					</div>
 				) : address ? (
-					<address
-						css={`
-							line-height: 1.2rem;
-							font-style: normal;
-						`}
-					>
-						{address}
-					</address>
+					<address>{address}</address>
 				) : (
 					<div>
 						Point <small>{pointHash(bookmark)}</small>
@@ -122,22 +101,10 @@ const Bookmark = ({ bookmark, setBookmarks }) => {
 					/>
 				</div>
 			)}
-			<div
-				css={`
-					display: flex;
-					justify-content: end;
-				`}
-			>
+			<Buttons>
 				{!edition ? (
 					<button
 						title="Donner un autre nom au favori"
-						css={`
-							line-height: 1rem;
-							img {
-								width: 1.2rem;
-								height: auto;
-							}
-						`}
 						onClick={() => setEdition(true)}
 					>
 						<Image
@@ -150,13 +117,6 @@ const Bookmark = ({ bookmark, setBookmarks }) => {
 				) : (
 					<>
 						<button
-							css={`
-								line-height: 1rem;
-								img {
-									width: 1.2rem;
-									height: auto;
-								}
-							`}
 							title="Valider le nouveau nom du favori"
 							onClick={() => {
 								updateBookmark(edition)
@@ -172,13 +132,6 @@ const Bookmark = ({ bookmark, setBookmarks }) => {
 						</button>
 						<button
 							title="Annuler la modification du nom du favori"
-							css={`
-								line-height: 1rem;
-								img {
-									width: 1.2rem;
-									height: auto;
-								}
-							`}
 							onClick={() => {
 								setEdition(false)
 							}}
@@ -194,13 +147,6 @@ const Bookmark = ({ bookmark, setBookmarks }) => {
 				)}
 				<button
 					title="Supprimer ce favori"
-					css={`
-						line-height: 1rem;
-						img {
-							width: 1.2rem;
-							height: auto;
-						}
-					`}
 					onClick={() =>
 						setBookmarks((bookmarks) =>
 							bookmarks.filter((point) => {
@@ -212,7 +158,35 @@ const Bookmark = ({ bookmark, setBookmarks }) => {
 				>
 					<Image src="/trash.svg" width="10" height="10" alt="Icône poubelle" />
 				</button>
-			</div>
-		</li>
+			</Buttons>
+		</Li>
 	)
 }
+const Li = styled.li`
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0.3rem 0;
+	margin-bottom: 0.4rem;
+	border-bottom: 1px solid var(--lightestColor);
+	> div {
+		display: flex;
+		align-items: center;
+	}
+	address {
+		line-height: 1.2rem;
+		font-style: normal;
+	}
+`
+
+const Buttons = styled.div`
+	display: flex;
+	justify-content: end;
+	button {
+		line-height: 1rem;
+		img {
+			width: 1.2rem;
+			height: auto;
+		}
+	}
+`

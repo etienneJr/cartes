@@ -13,7 +13,7 @@ export default function DayView({ data }) {
 	console.log('purple', goodDayData)
 	return (
 		<div
-			css={`
+			css={css`
 				margin: 0.4rem 0;
 				width: 100%;
 				ol {
@@ -23,7 +23,7 @@ export default function DayView({ data }) {
 			`}
 		>
 			<ol
-				css={`
+				css={css`
 					width: 100%;
 					height: 100%;
 					display: flex;
@@ -47,7 +47,7 @@ export default function DayView({ data }) {
 				`}
 			>
 				<li
-					css={`
+					css={css`
 						/* this is au pif, use https://github.com/mourner/suncalc */
 						width: ${((8 - 2) / 24) * 100}%;
 						background: var(--darkerColor);
@@ -58,7 +58,7 @@ export default function DayView({ data }) {
 					<span>8h</span>
 				</li>
 				<li
-					css={`
+					css={css`
 						width: ${((20 - 8) / 24) * 100}%;
 						background: beige;
 					`}
@@ -68,7 +68,7 @@ export default function DayView({ data }) {
 					<span></span>
 				</li>
 				<li
-					css={`
+					css={css`
 						width: ${((26 - 20) / 24) * 100}%;
 						background: var(--darkerColor);
 					`}
@@ -79,7 +79,7 @@ export default function DayView({ data }) {
 				</li>
 			</ol>
 			<ol
-				css={`
+				css={css`
 					position: relative;
 				`}
 			>
@@ -90,7 +90,7 @@ export default function DayView({ data }) {
 					return (
 						<li
 							key={seconds}
-							css={`
+							css={css`
 								position: absolute;
 								left: ${position}%;
 								height: fit-content;

@@ -1,5 +1,4 @@
-'use client'
-
+import { css } from 'next-yak'
 import { dateCool } from '@/app/blog/utils'
 
 export default function Comment({ data }) {
@@ -9,7 +8,7 @@ export default function Comment({ data }) {
 	const coolDate = dateCool(createdAt)
 	return (
 		<li
-			css={`
+			css={css`
 				list-style-type: none;
 				background: linear-gradient(to bottom, var(--color), transparent);
 				padding-left: 1px;
@@ -40,7 +39,6 @@ export default function Comment({ data }) {
 				}
 			`}
 		>
-			{' '}
 			<section>
 				<header>
 					<img src={avatar} alt={`Image du compte ${handle}`} />

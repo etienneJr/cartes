@@ -1,4 +1,5 @@
 import transitIcon from '@/public/transit.svg'
+import { styled } from 'next-yak'
 import Image from 'next/image'
 import BestConnection from './BestConnection'
 import {
@@ -18,7 +19,12 @@ export default function TransitSummary({ itinerary }) {
 		return (
 			<section>
 				<NoTransit reason={data.reason} solution={data.solution} />
-				<button css="margin: 0 0 0 auto; display: block">
+				<button
+					style={{
+						margin: '0 0 0 auto',
+						display: 'block',
+					}}
+				>
 					→ Choisir une date
 				</button>
 			</section>
@@ -37,41 +43,40 @@ export default function TransitSummary({ itinerary }) {
 	const bestConnection = findBestConnection(nextConnections)
 	if (bestConnection) return <BestConnection bestConnection={bestConnection} />
 	return (
-		<div
-			css={`
-				display: flex;
-				align-items: center;
-				flex-wrap: wrap;
-				img {
-					width: 1.6rem;
-					height: auto;
-				}
-				p {
-					margin: 0;
-				}
-				margin: 0.6rem;
-				> div {
-					background: var(--lighterColor);
-					border-radius: 1rem;
-					width: 2rem;
-					height: 2rem;
-					display: flex;
-					align-items: center;
-					justify-content: center;
-					margin-right: 0.4rem;
-					img {
-						filter: invert(1);
-						width: 1.8rem;
-						height: auto;
-					}
-				}
-			`}
-		>
-			{' '}
+		<Wrapper>
 			<div>
 				<Image src={transitIcon} alt="Icône transport en commun" />
 			</div>
 			<p>Voir les {nextConnections.length} options de transport en commun</p>
-		</div>
+		</Wrapper>
 	)
 }
+
+const Wrapper = styled.div`
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	img {
+		width: 1.6rem;
+		height: auto;
+	}
+	p {
+		margin: 0;
+	}
+	margin: 0.6rem;
+	> div {
+		background: var(--lighterColor);
+		border-radius: 1rem;
+		width: 2rem;
+		height: 2rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin-right: 0.4rem;
+		img {
+			filter: invert(1);
+			width: 1.8rem;
+			height: auto;
+		}
+	}
+`

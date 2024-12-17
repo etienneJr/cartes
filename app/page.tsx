@@ -6,12 +6,12 @@ import fetchAgency, {
 } from '@/components/transport/fetchAgency'
 import { ResolvingMetadata } from 'next/dist/lib/metadata/types/metadata-interface'
 import { Props } from 'next/script'
+import { Suspense } from 'react'
 import Container from './Container'
+import PaymentBanner from './PaymentBanner'
 import getName from './osm/getName'
 import getUrl from './osm/getUrl'
 import { stepOsmRequest } from './stepOsmRequest'
-import { Suspense } from 'react'
-import PaymentBanner from './PaymentBanner'
 
 export async function generateMetadata(
 	props: Props,
@@ -80,9 +80,11 @@ const Page = async (props) => {
 		console.log(error)
 		return [] // fallback to client side
 	})
+	console.log('lightgreen state from ssr rendering of osm node', state)
 
 	const agencyEntry = await fetchAgency(searchParams)
 
+	// can't use next-yak for RSC where there is generateMetadata https://github.com/jantimon/next-yak/issues/112#issuecomment-2217800543
 	return (
 		<main
 			style={{
@@ -92,6 +94,7 @@ const Page = async (props) => {
 		>
 			<Suspense>
 				<PaymentBanner parameter={searchParams.abonnement} />
+
 				<Container
 					searchParams={searchParams}
 					state={state}

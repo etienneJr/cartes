@@ -12,7 +12,7 @@ export default function BestConnection({ bestConnection }) {
 	const transportType = routeTypeName(transport.route_type)
 	return (
 		<div
-			css={`
+			css={css`
 				background: white;
 				margin: 0.6rem 0;
 				border: 2px solid gold;
@@ -42,7 +42,7 @@ export default function BestConnection({ bestConnection }) {
 				<p>
 					Le direct
 					<span
-						css={`
+						css={css`
 							display: inline-block;
 							width: 4rem;
 							margin: 0 0.4rem;
@@ -52,7 +52,7 @@ export default function BestConnection({ bestConnection }) {
 					</span>
 					passe {bestConnection.interval} à l'arrêt{' '}
 					<em
-						css={`
+						css={css`
 							white-space: nowrap;
 						`}
 					>

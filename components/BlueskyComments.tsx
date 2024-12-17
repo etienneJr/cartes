@@ -1,7 +1,7 @@
 import { AppBskyFeedDefs, BskyAgent } from '@atproto/api'
 const agent = new BskyAgent({ service: 'https://public.api.bsky.app' })
 import Comment from '@/components/BlueskyComment'
-import css from './css/convertToJs'
+import { css } from 'next-yak'
 
 export default async function BlueskyComments({ uri }) {
 	const part = uri.split('app.bsky.feed.post/')[1]
@@ -22,7 +22,7 @@ export default async function BlueskyComments({ uri }) {
 
 	return (
 		<div
-			style={css`
+			css={css`
 				max-width: 700px;
 				margin: 0 auto 2rem auto;
 			`}
@@ -34,7 +34,7 @@ export default async function BlueskyComments({ uri }) {
 			</p>
 			{noReplies ? null : (
 				<ol
-					style={css`
+					css={css`
 						list-style-type: none;
 					`}
 				>

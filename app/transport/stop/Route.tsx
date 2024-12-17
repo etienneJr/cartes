@@ -119,7 +119,7 @@ export default function Route({ route, stops = [] }) {
 
 	return (
 		<li
-			css={`
+			css={css`
 				margin-top: 0.8rem;
 				margin-bottom: 1.4rem;
 			`}
@@ -127,7 +127,7 @@ export default function Route({ route, stops = [] }) {
 			<RouteName route={route} name={name} />
 			{route.route_type === 3 && hasMultipleTripDirections && (
 				<div
-					css={`
+					css={css`
 						display: flex;
 						align-items: center;
 						small {
@@ -143,7 +143,7 @@ export default function Route({ route, stops = [] }) {
 				</div>
 			)}
 			<ul
-				css={`
+				css={css`
 					display: flex;
 					justify-content: end;
 					list-style-type: none;
@@ -187,7 +187,7 @@ export const RouteName = ({ route, name = undefined }) => {
 			: givenShortName
 	return (
 		<span
-			css={`
+			css={css`
 				display: flex;
 				align-items: center;
 				justify-content: start;
@@ -206,7 +206,7 @@ export const RouteName = ({ route, name = undefined }) => {
 				height="100"
 			/>
 			<small
-				css={`
+				css={css`
 					strong {
 						background: ${backgroundColor};
 						padding: 0 0.25rem;

@@ -2,8 +2,8 @@ import type { MetadataRoute } from 'next'
 import { getRecentInterestingNodes } from '@/components/watchOsmPlaces.ts'
 import { gtfsServerUrl } from './serverUrls'
 import { getLastEdit } from './blog/utils'
-import { blogArticles } from './blog/page'
 import { generateFeed } from '@/lib/rss'
+import { blogArticles } from './blog/blogArticles'
 
 export const domain = 'https://cartes.app'
 
@@ -42,6 +42,7 @@ export default async function sitemap(): MetadataRoute.Sitemap {
 		newNodes = await getRecentInterestingNodes()
 	}
 
+	console.log('PLOP')
 	const blogEntries = await Promise.all(
 		blogArticles.map(async ({ url, date, _raw: { flattenedPath } }) => {
 			const lastEdit = await getLastEdit(flattenedPath)
@@ -52,6 +53,7 @@ export default async function sitemap(): MetadataRoute.Sitemap {
 			}
 		})
 	)
+	console.log('PLOP2')
 	const agencies = await generateAgencies()
 	const entries = [
 		...basePaths.map((path) => ({

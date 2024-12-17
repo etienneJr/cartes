@@ -1,20 +1,7 @@
+import { styled } from 'next-yak'
+
 export default ({ setIsLocalSearch, isLocalSearch, state, stepIndex }) => (
-	<label
-		css={`
-			text-align: right;
-			margin: 0 0 auto auto;
-			display: block;
-			width: 8rem;
-			margin-top: 0.2rem;
-			background: var(--darkerColor);
-			color: white;
-			padding: 0rem 0.6rem 0rem;
-			border-radius: 0.3rem;
-			> span {
-				margin-left: 0.4rem;
-			}
-		`}
-	>
+	<Label>
 		<input
 			type="checkbox"
 			defaultChecked={isLocalSearch}
@@ -23,5 +10,20 @@ export default ({ setIsLocalSearch, isLocalSearch, state, stepIndex }) => (
 			}}
 		/>
 		<span>Chercher ici</span>
-	</label>
+	</Label>
 )
+
+const Label = styled.label`
+	text-align: right;
+	margin: 0 0 auto auto;
+	display: block;
+	width: 8rem;
+	margin-top: 0.2rem;
+	background: var(--darkerColor);
+	color: white;
+	padding: 0rem 0.6rem 0rem;
+	border-radius: 0.3rem;
+	> span {
+		margin-left: 0.4rem;
+	}
+`

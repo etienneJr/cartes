@@ -1,6 +1,6 @@
 'use client'
 
-import styled from 'styled-components'
+import { css, styled } from 'next-yak'
 
 export const FeatureImage = styled.img`
 	--shadow-color: 210deg 28% 58%;
@@ -12,4 +12,14 @@ export const FeatureImage = styled.img`
 	height: 6rem;
 	width: auto;
 	border-radius: 0.3rem;
+	${(p) =>
+		p.$isHeaderImage &&
+		css`
+			width: 100%;
+			height: 6rem;
+			@media (min-height: 800px) {
+				height: 9rem;
+			}
+			object-fit: cover;
+		`}
 `

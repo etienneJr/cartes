@@ -22,7 +22,7 @@ export default function ClickedPoint({
 	if (isAddress)
 		return (
 			<div
-				css={`
+				css={css`
 					margin: 1rem 0;
 				`}
 			>
@@ -46,7 +46,7 @@ export default function ClickedPoint({
 */
 	return (
 		<div
-			css={`
+			css={css`
 				margin: 1rem 0;
 			`}
 		>
@@ -97,7 +97,7 @@ const Distance = ({ destination, origin }) => {
 }
 const LatLong = ({ latitude, longitude }) => (
 	<div
-		css={`
+		css={css`
 			small {
 				color: #666;
 			}

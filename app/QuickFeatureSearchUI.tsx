@@ -1,18 +1,18 @@
 'use client'
 
-import styled from 'styled-components'
+import { css, styled } from 'next-yak'
 
 const quickSearchButtonwidth = '2.2rem'
 
 export const getMinimumQuickSearchZoom = (mobile) => (mobile ? 10.5 : 12) // On a small screen, 70 %  of the tiles are not visible, hence this rule
 
-export const goldCladding = `
-filter: drop-shadow(0 0 0.15rem gold);
+export const goldCladding = css`
+	filter: drop-shadow(0 0 0.15rem gold);
 `
 
-export const quickSearchButtonStyle = (clicked, background, filter) => `
+const quickSearchElementStyle = css`
 	& {
-	position: relative;
+		position: relative;
 		border-radius: ${quickSearchButtonwidth};
 
 		margin-right: 0.2rem;
@@ -20,11 +20,11 @@ export const quickSearchButtonStyle = (clicked, background, filter) => `
 			padding: 0.2rem 0.2rem 0.1rem 0.2rem;
 		}
 		border: 2px solid var(--lighterColor);
-				text-align: center;
-
+		text-align: center;
 	}
 
-	& > a, & > button {
+	& > a,
+	& > button {
 		width: ${quickSearchButtonwidth};
 		height: ${quickSearchButtonwidth};
 		padding: 0;
@@ -37,30 +37,37 @@ export const quickSearchButtonStyle = (clicked, background, filter) => `
 		margin: 0;
 		width: 1.2rem;
 		height: 1.2rem;
-					vertical-align: middle;
-					filter: ${
-						filter ||
-						`invert(16%) sepia(24%) saturate(3004%)
-						hue-rotate(180deg) brightness(89%) contrast(98%)`
-					};
+		vertical-align: middle;
+		filter: ${(p) =>
+			p.$filter ||
+			`invert(16%) sepia(24%) saturate(3004%)
+						hue-rotate(180deg) brightness(89%) contrast(98%)`};
 	}
-		background: ${!clicked ? background || 'white' : 'var(--lighterColor)'};
+	background: ${(p) =>
+		!p.$clicked ? p.$background || 'white' : 'var(--lighterColor)'};
 
-		${
-			clicked &&
-			`border-color: var(--darkColor) !important;
+	${(p) =>
+		p.$clicked &&
+		`border-color: var(--darkColor) !important;
 
 	img {
-	${
-		filter ||
+	${(p) =>
+		p.$filter ||
 		`
 		filter: invert(23%) sepia(100%) saturate(1940%) hue-rotate(206deg)
-			brightness(89%) contrast(84%)`
-	};
-	}`
-		}
+			brightness(89%) contrast(84%)`};
+	}`}
 
+	${(p) => p.$setGoldCladding && goldCladding}
 `
+
+export const QuickSearchElement = styled.li`
+	${quickSearchElementStyle}
+`
+export const QuickSearchElementDiv = styled.div`
+	${quickSearchElementStyle}
+`
+
 export const SpinningDiscBorder = styled.div`
 	position: absolute;
 	top: 0;
@@ -83,4 +90,31 @@ export const SpinningDiscBorder = styled.div`
 			transform: rotate(1turn);
 		}
 	}
+`
+export const FeatureListWrapper = styled.div`
+	overflow: hidden;
+	overflow-x: scroll;
+	touch-action: pan-x;
+	white-space: nowrap;
+	scrollbar-width: none;
+	&::-webkit-scrollbar {
+		width: 0px;
+		height: 0px;
+		background: transparent; /* Disable scrollbar Chrome/Safari/Webkit */
+	}
+	width: calc(100% - 3rem);
+`
+
+export const FeatureList = styled.ul`
+	padding: 0;
+	list-style-type: none;
+	display: flex;
+	align-items: center;
+	${(p) =>
+		p.$showMore &&
+		`
+							flex-wrap: wrap;
+							li {margin-bottom: .3rem}
+
+							`}
 `

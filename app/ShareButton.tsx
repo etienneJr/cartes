@@ -44,7 +44,7 @@ export default function ShareButton({ osmFeature, geocodedClickedPoint }) {
 		<PlaceButton>
 			{navigatorShare ? (
 				<button
-					css={`
+					css={css`
 						margin: 0 auto !important;
 					`}
 					title="Cliquez pour partager le lien"
@@ -99,7 +99,7 @@ export const DesktopShareButton = ({ url }) => {
 					'Partager'
 				) : (
 					<span
-						css={`
+						css={css`
 							background: white;
 							color: var(--color);
 							padding: 0 0.4rem;

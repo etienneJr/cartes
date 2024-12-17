@@ -1,14 +1,16 @@
-'use client'
-
 import useMeasureDistance from '@/app/useMeasureDistance'
 import Emoji from '@/components/Emoji'
-import css from '@/components/css/convertToJs'
 import useSetSearchParams from '@/components/useSetSearchParams'
 import { omit } from '@/components/utils/utils'
+import { css, styled } from 'next-yak'
 import Link from 'next/link'
-import styled from 'styled-components'
 import ItineraryButton, { ResetIcon } from './itinerary/ItineraryButton'
 
+const ResetDistanceButton = styled.button`
+	position: absolute;
+	bottom: -0.5rem;
+	right: -1.7rem;
+`
 export const mapButtonSize = '2.15rem'
 export const MapButtonsWrapper = styled.div`
 	position: fixed;
@@ -37,13 +39,11 @@ export const MapButton = styled.div`
 	cursor: pointer;
 	${(p) =>
 		p.$active &&
-		`
-
-	border: 3px solid var(--color);
-	width: 4rem;
-height: 4rem;
-
-	`}
+		css`
+			border: 3px solid var(--color);
+			width: 4rem;
+			height: 4rem;
+		`}
 	position: relative;
 	> button:first-child {
 		width: 100%;
@@ -85,7 +85,7 @@ export default function MapButtons({
 					>
 						<img
 							src={'/transports.svg'}
-							css={`
+							css={css`
 								filter: none !important;
 							`}
 						/>
@@ -95,7 +95,7 @@ export default function MapButtons({
 			{false && (
 				<MapButton
 					$active={searchParams.style === 'elections'}
-					css={`
+					css={css`
 						border: 2px solid purple;
 					`}
 				>
@@ -131,16 +131,9 @@ export default function MapButtons({
 					{distanceMode ? <small>{distance}</small> : null}
 				</button>
 				{distanceMode && (
-					<button
-						onClick={() => resetDistance()}
-						css={`
-							position: absolute;
-							bottom: -0.5rem;
-							right: -1.7rem;
-						`}
-					>
+					<ResetDistanceButton onClick={() => resetDistance()}>
 						<ResetIcon />
-					</button>
+					</ResetDistanceButton>
 				)}
 			</MapButton>
 			<ItineraryButton {...itinerary} />
@@ -158,9 +151,9 @@ export default function MapButtons({
 				>
 					<img
 						src={'/star.svg'}
-						css={`
-							filter: none !important;
-						`}
+						style={{
+							filter: 'none',
+						}}
 					/>
 				</Link>
 			</MapButton>
@@ -169,7 +162,7 @@ export default function MapButtons({
 }
 export const MapIcon = () => (
 	<img
-		style={css`
+		css={css`
 			width: 1.4rem;
 			height: 1.4rem;
 			margin: 0 !important;
@@ -182,7 +175,7 @@ export const MapIcon = () => (
 )
 export const DistanceIcon = () => (
 	<img
-		style={css`
+		css={css`
 			width: 1.4rem;
 			height: 1.4rem;
 			margin: 0 !important;

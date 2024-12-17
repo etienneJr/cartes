@@ -33,7 +33,7 @@ export default function FocusedImage({ focusedImage, focusImage }) {
 			<figure>
 				<img src={src} />
 				<figcaption
-					css={`
+					css={css`
 						background: var(--lightestColor);
 						color: var(--darkestColor);
 						padding: 0 0.6rem;
@@ -90,7 +90,7 @@ export const FocusedWrapper = ({ children }) => {
 	const mobile = useMediaQuery('(max-width: 800px)')
 	return (
 		<section
-			css={`
+			css={css`
 				position: fixed;
 				z-index: 100;
 				${mobile

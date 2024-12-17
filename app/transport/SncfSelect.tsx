@@ -13,12 +13,12 @@ export default function SncfSelect({ data, trainType, setTrainType }) {
 	const safeTrainType = trainType || 'Tout'
 	return (
 		<section
-			css={`
+			css={css`
 				margin-top: 1rem;
 			`}
 		>
 			<form
-				css={`
+				css={css`
 					width: 100%;
 					overflow: scroll;
 					height: 2.4rem;
@@ -38,7 +38,7 @@ export default function SncfSelect({ data, trainType, setTrainType }) {
 					return (
 						<label
 							key={key}
-							css={`
+							css={css`
 								background: ${background};
 								padding: 0 0.6rem 0.1rem 0.4rem;
 								border-radius: 0.3rem;

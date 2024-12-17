@@ -1,4 +1,4 @@
-import css from '@/components/css/convertToJs'
+import { css } from 'next-yak'
 import { PresentationWrapper } from '../UI'
 import TechDependenciesGallery from '@/components/TechDependenciesGallery'
 
@@ -14,12 +14,12 @@ export default function () {
 			</p>
 			<p>En voici une sélection.</p>
 			<section
-				style={css`
+				css={css`
 					margin: 2rem 0;
 				`}
 			>
 				<TechDependenciesGallery
-					css={`
+					additionalCss={css`
 						max-width: 100%;
 						gap: 6vh;
 					`}

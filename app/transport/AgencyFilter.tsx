@@ -1,5 +1,5 @@
-import { capitalise0, sortBy } from '@/components/utils/utils'
 import { area, bboxPolygon } from '@turf/turf'
+import { css, styled } from 'next-yak'
 
 export const defaultAgencyFilter = 'urbain'
 // these are filter functions that select lines depending on properties
@@ -70,64 +70,63 @@ const sumOfRouteTypes = (types, stats) =>
 	}, 0)
 export default function AgencyFilter({ agencyFilter, setAgencyFilter }) {
 	return (
-		<section
-			css={`
-				margin-top: 1rem;
-			`}
-		>
-			<form
-				css={`
-					width: 100%;
-					overflow: scroll;
-					height: 3rem;
-					label {
-						margin: 0.6rem;
-						white-space: nowrap;
-						cursor: pointer;
-						background: var(--color);
-						color: white;
-						padding: 0 0.6rem;
-						line-height: 1.5rem;
-						border-radius: 0.3rem;
-						display: inline-flex;
-						align-items: center;
-						text-transform: uppercase;
-						font-weight: 300;
-						font-size: 90%;
-					}
-					input {
-						margin-right: 0.4rem;
-						border: 2px solid var(--darkColor);
-						background: white;
-						border-radius: 3px;
-						appearance: none;
-						width: 0.9rem;
-						height: 0.9rem;
-						margin-bottom: -0.05rem;
-						&:checked {
-							background: var(--darkColor);
-							border: 2px solid var(--lightestColor);
-						}
-					}
-				`}
-			>
+		<section>
+			<AgencyFilterForm>
 				{agencyFilters.map(([key]) => (
 					<label
-						css={`
-							border: 2px solid
-								${key === agencyFilter ? `var(--darkColor)` : `var(--color);`};
-						`}
+						key={key}
+						style={{
+							border: `2px solid ${
+								key === agencyFilter ? `var(--darkColor)` : `var(--color)`
+							}`,
+						}}
 					>
 						<input
 							type="checkbox"
 							checked={agencyFilter === key}
-							key={key}
+							onChange={() => null}
 							onClick={() => setAgencyFilter(key)}
 						/>
 						<span>{key}</span>
 					</label>
 				))}
-			</form>
+			</AgencyFilterForm>
 		</section>
 	)
 }
+
+const AgencyFilterForm = styled.form`
+	margin-top: 1rem;
+	width: 100%;
+	overflow: scroll;
+	height: 3rem;
+	label {
+		margin: 0.6rem;
+		white-space: nowrap;
+		cursor: pointer;
+		background: var(--color);
+		color: white;
+		padding: 0 0.6rem;
+		line-height: 1.5rem;
+		border-radius: 0.3rem;
+		display: inline-flex;
+		align-items: center;
+		text-transform: uppercase;
+		font-weight: 300;
+		font-size: 90%;
+	}
+	input {
+		margin-right: 0.4rem;
+		border: 2px solid var(--darkColor);
+		background: white;
+		border-radius: 3px;
+		appearance: none;
+		width: 0.9rem;
+		height: 0.9rem;
+		margin-bottom: -0.05rem;
+		&:checked {
+			background: var(--darkColor);
+			border: 2px solid var(--lightestColor);
+		}
+	}
+`

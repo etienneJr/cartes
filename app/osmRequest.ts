@@ -1,14 +1,28 @@
 import turfDistance from '@turf/distance'
 import { centerOfMass } from '@turf/turf'
 import osmToGeojson from 'osmtogeojson'
+import { isServer } from './serverUrls'
 
 const apiUrlBase = `https://api.openstreetmap.org/api/0.6`
 export const osmRequest = async (featureType, id, full) => {
 	console.log('lightgreen will make OSM request', featureType, id, full)
 	const request = await fetch(
-		`${apiUrlBase}/${featureType}/${id}${full ? '/full' : ''}.json`
+		`${apiUrlBase}/${featureType}/${id}${full ? '/full' : ''}.json`,
+		{
+			...(isServer
+				? {
+						headers: {
+							'User-Agent': 'Cartes.app',
+						},
+				  }
+				: {}),
+		}
 	)
-	if (!request.ok) return []
+	if (!request.ok) {
+		console.log('lightgreen request not ok', request)
+
+		return [{ id, failedServerOsmRequest: true, type: featureType }]
+	}
 	const json = await request.json()
 
 	const elements = json.elements

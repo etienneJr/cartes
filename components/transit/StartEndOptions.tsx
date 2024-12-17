@@ -1,7 +1,6 @@
 import carIcon from '@/public/car.svg'
-import Image from 'next/image'
-
 import { getTimePart } from '@/components/transit/modes'
+import { ModeHr, ModeImage, ModeTimeButton } from './TransitOptionsUI'
 import { Button } from './UI'
 
 export default function StartEndOptions({
@@ -14,36 +13,14 @@ export default function StartEndOptions({
 
 	return (
 		<Button
-			css={`
-				flex-direction: row !important;
-				width: 6rem;
-			`}
+			style={{
+				flexDirection: 'row',
+				width: '6rem',
+			}}
 		>
-			<div
-				css={`
-					position: absolute;
-					top: calc(50% - 1px);
-					width: 6rem;
-					background: linear-gradient(
-						90deg,
-						var(--lighterColor) 0%,
-						transparent 30%,
-						transparent 80%,
-						var(--color) 100%
-					);
-					height: 2px;
-				`}
-			/>
+			<ModeHr />
 
 			<button
-				css={`
-					img {
-						height: 2rem !important;
-						width: auto !important;
-						filter: invert(46%) sepia(13%) saturate(5002%) hue-rotate(181deg)
-							brightness(92%) contrast(88%);
-					}
-				`}
 				onClick={() =>
 					setSearchParams({
 						[partKey]:
@@ -64,30 +41,30 @@ export default function StartEndOptions({
 				}
 			>
 				{which == null ? (
-					<Image
+					<ModeImage
 						src={'/walk-or-cycle.svg'}
 						alt="Icône de quelqu'un qui marche ou roule à vélo"
 						width="10"
 						height="10"
 					/>
 				) : which.startsWith('marchereduite') ? (
-					<Image
+					<ModeImage
 						src={'/wheelchair.svg'}
 						alt="Icône d'une personne en fauteuil roulant"
 						width="10"
 						height="10"
 					/>
 				) : which.startsWith('marche') ? (
-					<Image
+					<ModeImage
 						src={'/walking.svg'}
 						alt="Icône de quelqu'un qui marche"
 						width="10"
 						height="10"
 					/>
 				) : which.startsWith('voiture') ? (
-					<Image src={carIcon} alt="Icône d'une voiture" />
+					<ModeImage src={carIcon} alt="Icône d'une voiture" />
 				) : which.startsWith('vélo') ? (
-					<Image
+					<ModeImage
 						src={'/cycling.svg'}
 						alt="Icône d'un vélo"
 						width="10"
@@ -97,7 +74,7 @@ export default function StartEndOptions({
 					<span>quoi ?</span>
 				)}
 			</button>
-			<button
+			<ModeTimeButton
 				onClick={() =>
 					setSearchParams({
 						[partKey]:
@@ -112,44 +89,14 @@ export default function StartEndOptions({
 								: '5min'),
 					})
 				}
-				css={`
-					border: 2px solid var(--color);
-					color: var(--color);
-					border-radius: 3rem;
-					width: 1.4rem;
-					height: 1.4rem;
-					text-align: center;
-					font-size: 75%;
-					position: relative;
-					> div {
-						position: absolute;
-						top: 50%;
-						left: 52%;
-						transform: translate(-50%, -50%);
-						line-height: 1.1rem;
-						div,
-						small {
-							line-height: 0.65rem;
-						}
-					}
-				`}
 			>
-				<span
-					css={`
-						height: 4px;
-						width: 4px;
-						position: absolute;
-						top: -5px;
-						left: 42%;
-						background: var(--color);
-					`}
-				></span>
+				<span></span>
 				<div>
 					{time == null ? (
 						<span
-							css={`
-								font-size: 70%;
-							`}
+							style={{
+								fontSize: '70%',
+							}}
 						>
 							auto
 						</span>
@@ -159,7 +106,7 @@ export default function StartEndOptions({
 						</div>
 					)}
 				</div>
-			</button>
+			</ModeTimeButton>
 		</Button>
 	)
 }

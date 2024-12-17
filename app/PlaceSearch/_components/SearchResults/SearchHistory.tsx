@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import SearchResultsContainer from './SearchResultsContainer'
+import { css } from 'next-yak'
 
 export default ({
 	sideSheet,
@@ -10,7 +11,7 @@ export default ({
 	return (
 		<SearchResultsContainer $sideSheet={sideSheet}>
 			<div
-				css={`
+				css={css`
 					display: flex;
 					justify-content: center;
 					align-items: center;
@@ -30,7 +31,7 @@ export default ({
 				</button>
 			</div>
 			<ul
-				css={`
+				css={css`
 					li:not(:last-of-type) {
 						border-bottom: 1px solid var(--lightestColor);
 					}

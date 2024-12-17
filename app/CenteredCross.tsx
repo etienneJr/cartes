@@ -1,8 +1,10 @@
 import Image from 'next/image'
+import { css } from 'next-yak'
+
 export default function CenteredCross() {
 	return (
 		<div
-			css={`
+			css={css`
 				position: fixed;
 				left: 50%;
 				top: 50%;
