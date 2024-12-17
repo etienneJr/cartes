@@ -10,9 +10,9 @@ export default function ProfileChooser({
 			{profiles.map(({ key, name }) => (
 				<label
 					key={key}
-					css={css`
-						margin: 0 1rem;
-					`}
+					style={{
+						margin: '0 1rem',
+					}}
 				>
 					<input
 						type="radio"

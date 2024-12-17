@@ -12,7 +12,15 @@ export default function CircularIcon({
 }) {
 	const size = givenSize || defaultSize
 	return (
-		<Wrapper $size={size} $hasOnClick={rest.onClick}>
+		<Wrapper
+			{...{
+				$background: background,
+				$size: size,
+				$hasOnClick: rest.onClick != null,
+				$padding: padding,
+				$black: black,
+			}}
+		>
 			<div />
 			<img src={src} alt={alt} width="100" height="100" />
 		</Wrapper>
@@ -41,6 +49,6 @@ const Wrapper = styled.div`
 				: css`
 						filter: invert(1);
 				  `}
-		padding: ${(p) => (p.$padding ? padding : `0`)}
+		padding: ${(p) => (p.$padding ? p.$padding : `0`)}
 	}
 `

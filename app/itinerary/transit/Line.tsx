@@ -24,7 +24,7 @@ export const Line = ({
 
 	const animatedScrollRef = useRef()
 	return (
-		<div
+		<Wrapper
 			onClick={() =>
 				animatedScrollRef.current.scrollIntoView({
 					behavior: 'smooth',
@@ -32,28 +32,9 @@ export const Line = ({
 					block: 'center',
 				})
 			}
-			css={css`
-				height: 4rem;
-				width: calc(100% - 1rem);
-				padding: 0.4rem 0;
-				margin: 0;
-				margin-top: 0.3rem;
-				position: relative;
-				display: flex;
-				align-items: center;
-				background: white;
-			`}
 		>
 			<SizedLine ref={animatedScrollRef} $barWidth={barWidth} $left={left}>
-				<ul
-					css={css`
-						display: flex;
-						justify-content: space-evenly;
-						list-style-type: none;
-						align-items: center;
-						width: 100%;
-					`}
-				>
+				<ul>
 					{transports.map((transport) => (
 						<li
 							key={
@@ -72,34 +53,16 @@ export const Line = ({
 
 				{componentMode === 'transit' &&
 					((!choix && index === 0) || choix == index) && (
-						<div
-							css={css`
-								position: absolute;
-								right: -3rem;
-								top: 50%;
-								transform: translateY(-50%);
-								font-size: 200%;
-								a {
-									text-decoration: none;
-								}
-							`}
-						>
+						<DetailsButtonWrapper>
 							<DetailsButton
 								link={setSearchParams(
 									{ choix: choix || 0, details: 'oui' },
 									true
 								)}
 							/>
-						</div>
+						</DetailsButtonWrapper>
 					)}
-				<div
-					css={css`
-						margin-top: 0.1rem;
-						display: flex;
-						justify-content: space-between;
-						line-height: 1.2rem;
-					`}
-				>
+				<Duration>
 					<small>{formatMotis(from)}</small>
 					<small
 						css={css`
@@ -111,16 +74,51 @@ export const Line = ({
 							: ' - '}
 					</small>
 					<small>{formatMotis(to)}</small>
-				</div>
+				</Duration>
 			</SizedLine>
-		</div>
+		</Wrapper>
 	)
 }
 
+const Duration = styled.div`
+	margin-top: 0.1rem;
+	display: flex;
+	justify-content: space-between;
+	line-height: 1.2rem;
+`
+const DetailsButtonWrapper = styled.div`
+	position: absolute;
+	right: -3rem;
+	top: 50%;
+	transform: translateY(-50%);
+	font-size: 200%;
+	a {
+		text-decoration: none;
+	}
+`
+
+const Wrapper = styled.div`
+	height: 4rem;
+	width: calc(100% - 1rem);
+	padding: 0.4rem 0;
+	margin: 0;
+	margin-top: 0.3rem;
+	position: relative;
+	display: flex;
+	align-items: center;
+	background: white;
+`
 const SizedLine = styled.div`
 	position: absolute;
 	left: calc(0.6rem + ${(p) => p.$left}%);
 	width: calc(${(p) => p.$barWidth}% - 1rem);
 	top: 50%;
 	transform: translateY(-50%);
+	ul {
+		display: flex;
+		justify-content: space-evenly;
+		list-style-type: none;
+		align-items: center;
+		width: 100%;
+	}
 `

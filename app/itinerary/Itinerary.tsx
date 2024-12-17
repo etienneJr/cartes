@@ -1,5 +1,6 @@
 import CircularIcon from '@/components/CircularIcon'
 import useSetSearchParams from '@/components/useSetSearchParams'
+import { styled } from 'next-yak'
 import Link from 'next/link'
 import { useEffect } from 'react'
 import { ContentSection } from '../ContentUI'
@@ -9,7 +10,6 @@ import ClickItineraryInstruction from './ClickItineraryInstruction'
 import Steps from './Steps'
 import Timeline from './Timeline'
 import Transit from './transit/Transit'
-import { css } from 'next-yak'
 
 export const modes = [
 	['cycling', { label: 'Vélo', query: 'velo' }],
@@ -43,11 +43,7 @@ export default function Itinerary({
 	if (!itinerary.isItineraryMode) return null
 
 	return (
-		<ContentSection
-			css={css`
-				margin-bottom: 1rem;
-			`}
-		>
+		<Wrapper>
 			<h1>Itinéraire</h1>
 			<ModalCloseButton title="Fermer l'encart itinéraire" onClick={close} />
 			<Steps
@@ -61,22 +57,7 @@ export default function Itinerary({
 				<ClickItineraryInstruction state={state} />
 			) : (
 				<div>
-					<ol
-						css={css`
-							margin-top: 0.1rem;
-							margin-left: 0;
-							padding-left: 0;
-							list-style-type: none;
-							display: flex;
-							align-items: center;
-							justify-content: start;
-							gap: 1rem;
-							width: 80%;
-							li {
-								margin: 0 0.4rem;
-							}
-						`}
-					>
+					<ol>
 						{[
 							[
 								undefined,
@@ -123,6 +104,24 @@ export default function Itinerary({
 					)}
 				</div>
 			)}
-		</ContentSection>
+		</Wrapper>
 	)
 }
+
+const Wrapper = styled(ContentSection)`
+	margin-bottom: 1rem;
+	ol {
+		margin-top: 0.1rem;
+		margin-left: 0;
+		padding-left: 0;
+		list-style-type: none;
+		display: flex;
+		align-items: center;
+		justify-content: start;
+		gap: 1rem;
+		width: 80%;
+		li {
+			margin: 0 0.4rem;
+		}
+	}
+`
