@@ -48,7 +48,7 @@ const Wrapper = styled.span`
 	}
 	img::first-child {
 		filter: ${(p) =>
-			p.$textColor ? isWhiteColor(p.$textColor) && `invert(1)` : ''};
+			p.$textColor && isWhiteColor(p.$textColor) ? `invert(1)` : ''};
 	}
 	strong {
 		background: ${(p) => p.$background};

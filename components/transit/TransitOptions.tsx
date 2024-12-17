@@ -1,5 +1,4 @@
 import useSetSearchParams from '@/components/useSetSearchParams'
-import { css, styled } from 'next-yak'
 import correspondanceIcon from '@/public/correspondance.svg'
 import tortoiseIcon from '@/public/tortoise.svg'
 import Image from 'next/image'
@@ -7,6 +6,13 @@ import Image from 'next/image'
 import StartEndOptions from './StartEndOptions'
 import { Button } from './UI'
 import { StepIcon } from '@/app/itinerary/Steps'
+import {
+	Correspondances,
+	Infinite,
+	NotInfinite,
+	Section,
+	TortoiseImage,
+} from './TransitOptionsUI'
 
 export default function TransitOptions({ searchParams }) {
 	const { correspondances, tortue } = searchParams
@@ -15,21 +21,7 @@ export default function TransitOptions({ searchParams }) {
 	const setSearchParams = useSetSearchParams()
 
 	return (
-		<section
-			css={css`
-				margin: 0.8rem 0.4rem;
-				img {
-					width: 1.4rem;
-					height: auto;
-				}
-				ol {
-					list-style-type: none;
-					display: flex;
-					align-items: center;
-					justify-content: center;
-				}
-			`}
-		>
+		<Section>
 			<ol>
 				<StepIcon>A</StepIcon>
 
@@ -37,10 +29,10 @@ export default function TransitOptions({ searchParams }) {
 					{...{ partKey: 'debut', searchParams, setSearchParams }}
 				/>
 				<Button
-					css={css`
-						cursor: pointer;
-						position: relative;
-					`}
+					style={{
+						cursor: 'pointer',
+						position: 'relative',
+					}}
 					onClick={() =>
 						setSearchParams({
 							correspondances:
@@ -55,52 +47,26 @@ export default function TransitOptions({ searchParams }) {
 					<Image
 						src={correspondanceIcon}
 						alt="Icône de correspondance de transport en commun"
-						css={css`
-							width: 2.6rem !important;
-						`}
+						style={{
+							width: '2.3rem',
+						}}
 					/>
-					<span
-						css={css`
-							position: absolute;
-							left: 50%;
-							top: 50%;
-							transform: translate(-50%, -50%);
-							color: white;
-							font-size: 70%;
-							font-weight: bold;
-						`}
-					>
+					<Correspondances>
 						{correspondances == 0 ? (
 							'direct'
 						) : (
 							<div>
 								<div>
 									{correspondances == null ? (
-										<div
-											css={css`
-												font-size: 140%;
-												max-height: 0.8rem;
-												line-height: 0.6rem;
-											`}
-										>
-											∞
-										</div>
+										<Infinite>∞</Infinite>
 									) : (
-										<span
-											css={css`
-												font-size: 100%;
-												line-height: 0.8rem;
-												white-space: nowrap;
-											`}
-										>
-											{+correspondances + 1} max
-										</span>
+										<NotInfinite>{+correspondances + 1} max</NotInfinite>
 									)}
 								</div>
 								{false && <small>corresp.</small>}
 							</div>
 						)}
-					</span>
+					</Correspondances>
 				</Button>
 				<TortoiseImage
 					src={tortoiseIcon}
@@ -113,13 +79,6 @@ export default function TransitOptions({ searchParams }) {
 				/>
 				<StepIcon>B</StepIcon>
 			</ol>
-		</section>
+		</Section>
 	)
 }
-
-const TortoiseImage = styled(Image)`
-	margin-right: 0.3rem;
-	width: 1rem;
-	cursor: pointer;
-	opacity: ${({ $tortue }) => ($tortue ? 1 : 0.3)};
-`

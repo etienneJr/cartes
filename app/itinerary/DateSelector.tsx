@@ -1,5 +1,3 @@
-'use client'
-
 import useSetSearchParams from '@/components/useSetSearchParams'
 import calendarIcon from '@/public/calendar.svg'
 import Image from 'next/image'
@@ -9,7 +7,13 @@ import { useInterval } from 'usehooks-ts'
 import { DialogButton } from '../UI'
 import { nowStamp, stamp } from './transit/utils'
 import longueVueIcon from '@/public/longuevue.svg'
-import { css, styled } from 'next-yak'
+import { styled } from 'next-yak'
+import {
+	DateInput,
+	NowButton,
+	QuickDateWardButton,
+	Wrapper,
+} from '../itinerary/DateSelectorUI'
 
 export const initialDate = (type = 'date', givenDate) => {
 	const stringDate = (
@@ -48,14 +52,7 @@ export default function DateSelector({ date, type = 'date', planification }) {
 	}
 	const isFuture = !isDateNow(date, 9)
 	return (
-		<div
-			css={css`
-				margin-top: 0.2rem;
-				display: flex;
-				align-items: center;
-				justify-content: end;
-			`}
-		>
+		<Wrapper>
 			{isFuture && (
 				<QuickDateWard
 					{...{
@@ -66,46 +63,18 @@ export default function DateSelector({ date, type = 'date', planification }) {
 				/>
 			)}
 			{!shouldShowDateInput ? (
-				<span
-					css={css`
-						display: flex;
-						align-items: center;
-						button {
-							margin: 0;
-							padding: 0;
-						}
-					`}
-				>
+				<NowButton>
 					Maintenant{' '}
 					<button
 						onClick={() => setForceShowDateInput(true)}
 						title="Changer le moment du départ "
 					>
-						<Image
-							src={calendarIcon}
-							alt="Icône d'un agenda"
-							css={css`
-								width: 1.6rem;
-								height: auto;
-								vertical-align: sub;
-								margin-left: 0.2rem;
-							`}
-						/>
+						<Image src={calendarIcon} alt="Icône d'un agenda" />
 					</button>
-				</span>
+				</NowButton>
 			) : (
 				<>
-					<input
-						css={css`
-							margin-right: 0.4rem !important;
-							margin-left: 0.4rem !important;
-							font-size: 110%;
-							height: 1.4rem;
-							padding: 0 0.2rem;
-							color: var(--darkerColor);
-							border: 2px solid var(--darkColor);
-							border-radius: 0.15rem;
-						`}
+					<DateInput
 						type={type === 'date' ? 'datetime-local' : 'date'}
 						id="date"
 						name="date"
@@ -126,9 +95,9 @@ export default function DateSelector({ date, type = 'date', planification }) {
 										: { day: encodeDate(localDate) }
 								)
 							}
-							css={css`
-								font-size: 100%;
-							`}
+							style={{
+								fontSize: '100%',
+							}}
 						>
 							OK
 						</DialogButton>
@@ -146,7 +115,7 @@ export default function DateSelector({ date, type = 'date', planification }) {
 				}}
 			/>
 			<PreTripMode {...{ setSearchParams, planification }} />
-		</div>
+		</Wrapper>
 	)
 }
 
@@ -190,22 +159,24 @@ const UpdateDate = ({ date, updateDate }) => {
 	if (!isOutdated) return null
 	return (
 		<Link href={updateDate(initialDate())}>
-			<Image
+			<UpdateDateImage
 				src={'/invertIcon.svg'}
 				alt="Rafraichir l'heure de départ"
 				width="10"
 				height="10"
-				css={css`
-					width: 1.5rem;
-					height: auto;
-					vertical-align: middle;
-					margin-left: 0.2rem;
-					margin-bottom: 0.2rem;
-				`}
 			/>
 		</Link>
 	)
 }
+
+const UpdateDateImage = styled(Image)`
+	width: 1.5rem;
+	height: auto;
+	vertical-align: middle;
+	margin-left: 0.2rem;
+	margin-bottom: 0.2rem;
+`
+
 export const encodeDate = (date) => date?.replace(/:/, 'h')
 export const decodeDate = (date) => date?.replace(/h/, ':')
 function addMinutes(date, minutes) {
@@ -221,26 +192,13 @@ const QuickDateWard = ({ date, updateDate, backOrForth = 'forth' }) => {
 	)
 	console.log('indigo date', date, nextDate)
 	return (
-		<button
-			onClick={() => updateDate(nextDate, false)}
-			css={css`
-				padding: 0;
-				margin: 0;
-				margin-left: 0.2rem;
-				margin-bottom: 0.2rem;
-			`}
-		>
+		<QuickDateWardButton onClick={() => updateDate(nextDate, false)}>
 			<Image
 				src={backOrForth === 'back' ? '/backward-10.svg' : '/forward-10.svg'}
 				alt="Partir 10 minutes plus tôt"
 				width="10"
 				height="10"
-				css={css`
-					width: 1.5rem;
-					height: auto;
-					vertical-align: middle;
-				`}
 			/>
-		</button>
+		</QuickDateWardButton>
 	)
 }
