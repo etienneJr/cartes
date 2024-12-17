@@ -25,7 +25,7 @@ I started implementing this map in november 2023 as a kind of personal useful ad
 The app is based on :
 
 -   data : OSM (of course), Wikimedia commons (for the images), Wikidata, Wikipedia
--   code : nextjs, maplibre, styled-components
+-   code : nextjs, maplibre, next-yak pour le CSS
 -   hosting : maptiler for the vector map tiles, vercel for JS deployment, Photon API by Komoot.
 
 To set it up on your local computer, just run :
