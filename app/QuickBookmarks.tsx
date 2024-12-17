@@ -1,6 +1,8 @@
-import useSetSearchParams from '@/components/useSetSearchParams'
 import { AddressDisc, AddressDiscContainer } from '@/components/Address'
 import { SoloTags, processTags } from '@/components/Tags'
+import { buildAddress } from '@/components/osm/buildAddress'
+import useSetSearchParams from '@/components/useSetSearchParams'
+import { styled } from 'next-yak'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useLocalStorage } from 'usehooks-ts'
@@ -8,7 +10,6 @@ import { pointHash } from './BookmarkButton'
 import { geoFeatureToDestination } from './SetDestination'
 import { DialogButton } from './UI'
 import getName from './osm/getName'
-import { buildAddress } from '@/components/osm/buildAddress'
 
 export default function QuickBookmarks({ oldAllez }) {
 	const [bookmarks] = useLocalStorage('bookmarks', [])
@@ -50,24 +51,7 @@ export default function QuickBookmarks({ oldAllez }) {
 		)
 	if (bookmarks?.length)
 		return (
-			<section
-				css={css`
-					h3 {
-						font-size: 90%;
-						color: #666;
-						font-weight: 500;
-						margin: 0.2rem 0;
-					}
-					h3 + p {
-						margin-left: 1rem;
-					}
-					header {
-						display: flex;
-						justify-content: space-between;
-						align-items: center;
-					}
-				`}
-			>
+			<Section>
 				<header>
 					<h2>Mes favoris</h2>
 					<Link href={bookmarksUrl}>Modifier</Link>
@@ -75,18 +59,7 @@ export default function QuickBookmarks({ oldAllez }) {
 
 				<section>
 					<h3>Adresses</h3>
-					<ul
-						css={css`
-							padding-left: 0.6rem;
-							display: flex;
-							align-items: center;
-							> li {
-								display: flex;
-								align-items: center;
-								margin: 0 0.4rem;
-							}
-						`}
-					>
+					<ul>
 						{bookmarks.map((bookmark) => (
 							<QuickBookmark
 								key={pointHash(bookmark)}
@@ -100,9 +73,36 @@ export default function QuickBookmarks({ oldAllez }) {
 						<small>À venir.</small>
 					</p>
 				</section>
-			</section>
+			</Section>
 		)
 }
+
+const Section = styled.section`
+	h3 {
+		font-size: 90%;
+		color: #666;
+		font-weight: 500;
+		margin: 0.2rem 0;
+	}
+	h3 + p {
+		margin-left: 1rem;
+	}
+	header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+	ul {
+		padding-left: 0.6rem;
+		display: flex;
+		align-items: center;
+		> li {
+			display: flex;
+			align-items: center;
+			margin: 0 0.4rem;
+		}
+	}
+`
 
 const QuickBookmark = ({ bookmark, oldAllez }) => {
 	const photonAddress = buildAddress(bookmark.properties, true),
@@ -119,19 +119,7 @@ const QuickBookmark = ({ bookmark, oldAllez }) => {
 		? destination + oldAllez
 		: destination
 	return (
-		<li
-			key={pointHash(bookmark)}
-			css={css`
-				display: flex;
-				justify-content: space-between;
-				align-items: center;
-				padding: 0.3rem 0;
-				margin-bottom: 0.4rem;
-				a {
-					text-decoration: none;
-				}
-			`}
-		>
+		<Li key={pointHash(bookmark)}>
 			<Link href={setSearchParams({ allez }, true)}>
 				{name ? (
 					<AddressDiscContainer>
@@ -152,6 +140,16 @@ const QuickBookmark = ({ bookmark, oldAllez }) => {
 					</div>
 				)}
 			</Link>
-		</li>
+		</Li>
 	)
 }
+const Li = styled.li`
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0.3rem 0;
+	margin-bottom: 0.4rem;
+	a {
+		text-decoration: none;
+	}
+`

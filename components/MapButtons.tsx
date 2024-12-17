@@ -1,5 +1,3 @@
-'use client'
-
 import useMeasureDistance from '@/app/useMeasureDistance'
 import Emoji from '@/components/Emoji'
 import useSetSearchParams from '@/components/useSetSearchParams'
@@ -8,6 +6,11 @@ import { css, styled } from 'next-yak'
 import Link from 'next/link'
 import ItineraryButton, { ResetIcon } from './itinerary/ItineraryButton'
 
+const ResetDistanceButton = styled.button`
+	position: absolute;
+	bottom: -0.5rem;
+	right: -1.7rem;
+`
 export const mapButtonSize = '2.15rem'
 export const MapButtonsWrapper = styled.div`
 	position: fixed;
@@ -128,16 +131,9 @@ export default function MapButtons({
 					{distanceMode ? <small>{distance}</small> : null}
 				</button>
 				{distanceMode && (
-					<button
-						onClick={() => resetDistance()}
-						css={css`
-							position: absolute;
-							bottom: -0.5rem;
-							right: -1.7rem;
-						`}
-					>
+					<ResetDistanceButton onClick={() => resetDistance()}>
 						<ResetIcon />
-					</button>
+					</ResetDistanceButton>
 				)}
 			</MapButton>
 			<ItineraryButton {...itinerary} />
@@ -155,9 +151,9 @@ export default function MapButtons({
 				>
 					<img
 						src={'/star.svg'}
-						css={css`
-							filter: none !important;
-						`}
+						style={{
+							filter: 'none',
+						}}
 					/>
 				</Link>
 			</MapButton>
