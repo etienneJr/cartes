@@ -1,14 +1,15 @@
 import { isOverflowX } from '@/components/css/utils'
-import DetailsButton from '@/components/transit/DetailsButton'
 import TransitInstructions from '@/components/transit/TransitInstructions'
 import TransitOptions from '@/components/transit/TransitOptions'
 import useSetSearchParams from '@/components/useSetSearchParams'
+import { css, styled } from 'next-yak'
 import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
 import { useResizeObserver } from 'usehooks-ts'
 import DateSelector from '../DateSelector'
 import BestConnection from './BestConnection'
 import { LateWarning } from './LateWarning'
+import { Line } from './Line'
 import {
 	NoMoreTransitToday,
 	NoTransit,
@@ -21,11 +22,8 @@ import {
 	connectionEnd,
 	connectionStart,
 	filterNextConnections,
-	formatMotis,
 	humanDuration,
 } from './utils'
-import { css, styled } from 'next-yak'
-import { Line } from './Line'
 
 /* This is a megacomponent. Don't worry, it'll stay like this until the UX
  * decisions are stabilized. We don't have many users yet */
@@ -36,24 +34,24 @@ export default function Transit({ itinerary, searchParams }) {
 	console.log('indigo transit yo', itinerary)
 
 	return (
-		<div
-			css={css`
-				margin-top: 0.4rem;
-				ul {
-					list-style-type: none;
-				}
-				input {
-					margin: 0 0 0 auto;
-					display: block;
-				}
-			`}
-		>
+		<TransitWrapper>
 			<DateSelector date={date} planification={searchParams.planification} />
 			<TransitOptions searchParams={searchParams} />
 			<TransitContent {...{ itinerary, searchParams, date }} />
-		</div>
+		</TransitWrapper>
 	)
 }
+
+const TransitWrapper = styled.div`
+	margin-top: 0.4rem;
+	ul {
+		list-style-type: none;
+	}
+	input {
+		margin: 0 0 0 auto;
+		display: block;
+	}
+`
 
 const TransitContent = ({ itinerary, searchParams, date }) => {
 	const data = itinerary.routes.transit
@@ -294,42 +292,31 @@ export const TimelineTransportBlock = ({ transport }) => {
 				<TransportMoveBlock transport={transport} />
 			) : transport.move_type === 'Walk' &&
 			  transport.move?.mumo_type === 'car' ? (
-				<Image
+				<MoveBlockImage
 					src={'/car.svg'}
 					alt="Icône d'une voiture"
 					width="100"
 					height="100"
-					css={css`
-						height: 1.4rem !important;
-
-						margin: 0 !important;
-					`}
+					$transport="driving"
 				/>
 			) : transport.move_type === 'Cycle' ||
 			  (transport.move_type === 'Walk' &&
 					transport.move?.mumo_type === 'bike') ? (
-				<Image
+				<MoveBlockImage
 					src={'/cycling.svg'}
 					alt="Icône d'un vélo"
 					width="100"
 					height="100"
-					css={css`
-						height: 1.6rem !important;
-						margin: -0.1rem 0 0 0 !important;
-						filter: invert(1);
-					`}
+					$transport="cycling"
 				/>
 			) : transport.move_type === 'Walk' ||
 			  transport.move?.mumo_type === 'foot' ? (
-				<Image
+				<MoveBlockImage
 					src={'/walking.svg'}
 					alt="Icône d'une personne qui marche"
 					width="100"
 					height="100"
-					css={css`
-						height: 1.4rem !important;
-						margin: -0.1rem 0 0 0 !important;
-					`}
+					$transport="walking"
 				/>
 			) : (
 				correspondance[transport.move_type]
@@ -337,3 +324,22 @@ export const TimelineTransportBlock = ({ transport }) => {
 		</TimelineTransportBlockWrapper>
 	)
 }
+
+const MoveBlockImage = styled(Image)`
+	${(p) =>
+		p.$transport === 'cycling'
+			? css`
+					height: 1.6rem !important;
+					margin: -0.1rem 0 0 0 !important;
+					filter: invert(1);
+			  `
+			: p.$transport === 'walking'
+			? css`
+					height: 1.4rem !important;
+					margin: -0.1rem 0 0 0 !important;
+			  `
+			: css`
+					height: 1.4rem !important;
+					margin: 0 !important;
+			  `}
+`
