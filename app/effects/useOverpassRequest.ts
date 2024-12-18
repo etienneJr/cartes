@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { enrichOsmFeatureWithPolyon } from '../osmRequest'
+import computeBboxArea from '@/components/utils/computeBboxArea'
 
 export const buildOverpassRequest = (queryCore) => `
 [out:json];
@@ -19,6 +20,9 @@ export default function useOverpassRequest(bbox, categories) {
 
 	useEffect(() => {
 		if (!bbox || !categories) return
+
+		const surface = computeBboxArea(bbox)
+		if (surface / 1000000 > 1000) return
 
 		const fetchCategory = async (category) => {
 			const queries =
