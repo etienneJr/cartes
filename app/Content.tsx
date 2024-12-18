@@ -31,6 +31,10 @@ import TransportMap from './transport/TransportMap'
 import useOgImageFetcher from './useOgImageFetcher'
 import PaymentBlock from '@/components/PaymentBlock'
 import { css } from 'next-yak'
+import dynamic from 'next/dynamic'
+const Analytics = dynamic(() => import('@/components/analytics/Analytics'), {
+	ssr: false,
+})
 
 export default function Content(props) {
 	const {
@@ -199,6 +203,7 @@ export default function Content(props) {
 				>
 					OK
 				</DialogButton>
+				<Analytics />
 			</ExplanationWrapper>
 		)
 
