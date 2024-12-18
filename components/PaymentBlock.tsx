@@ -4,19 +4,13 @@ import { ContentSection } from '@/app/ContentUI'
 import { ModalCloseButton } from '@/app/UI'
 import { css, styled } from 'next-yak'
 import { useEffect, useState } from 'react'
-import { useLocalStorage } from 'usehooks-ts'
+import useUUID from './useUUID'
 
 export default function PaymentBlock({ setSearchParams, openSheet }) {
 	const [choice, setChoice] = useState(false)
 	const [message, setMessage] = useState(null)
-	const [uuid, setUuid] = useLocalStorage('uuid', null, {
-		initializeWithValue: false,
-	})
 
-	useEffect(() => {
-		if (uuid) return
-		setUuid(crypto.randomUUID())
-	}, [uuid, setUuid])
+	const uuid = useUUID()
 
 	useEffect(() => {
 		if (!uuid) return
