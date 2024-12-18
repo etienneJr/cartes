@@ -86,18 +86,7 @@ export const OpeningHours = ({ opening_hours }) => {
 
 	console.log(ohPerDay)
 	return (
-		<div
-			css={css`
-				margin: 0.2rem 0;
-				display: flex;
-				align-items: center;
-				summary {
-					list-style-type: none;
-					display: flex;
-					align-items: center;
-				}
-			`}
-		>
+		<Wrapper>
 			<details open={false}>
 				<summary title="Voir tous les horaires">
 					<OpenIndicator isOpen={isOpen === 'error' ? false : isOpen} />{' '}
@@ -112,26 +101,7 @@ export const OpeningHours = ({ opening_hours }) => {
 				</summary>
 
 				{intervals != null && !ohPerDay.error ? (
-					<ul
-						css={css`
-							padding-left: 2rem;
-							width: 100%;
-							> li {
-								display: flex;
-								justify-content: space-between;
-								> span {
-									margin-right: 2rem;
-								}
-							}
-							> li > ul {
-								display: flex;
-								list-style-type: none;
-								li {
-									margin: 0 0.4rem;
-								}
-							}
-						`}
-					>
+					<ul>
 						{Object.entries(ohPerDay).map(
 							([day, ranges]) =>
 								day !== 'error' && (
@@ -142,9 +112,9 @@ export const OpeningHours = ({ opening_hours }) => {
 												ranges.map((hour) => <li key={hour}>{hour}</li>)
 											) : (
 												<span
-													css={css`
-														margin-right: 0.4rem;
-													`}
+													style={{
+														marginRight: '0.4rem',
+													}}
 												>
 													Fermé
 												</span>
@@ -158,9 +128,38 @@ export const OpeningHours = ({ opening_hours }) => {
 					opening_hours
 				)}
 			</details>
-		</div>
+		</Wrapper>
 	)
 }
+const Wrapper = styled.div`
+	margin: 0.2rem 0;
+	display: flex;
+	align-items: center;
+	summary {
+		list-style-type: none;
+		display: flex;
+		align-items: center;
+	}
+	ul {
+		padding-left: 2rem;
+		width: 100%;
+		> li {
+			display: flex;
+			justify-content: space-between;
+			> span {
+				margin-right: 2rem;
+				width: 7rem;
+			}
+		}
+		> li > ul {
+			display: flex;
+			list-style-type: none;
+			li {
+				margin: 0 0.4rem;
+			}
+		}
+	}
+`
 
 export const OpenIndicator = ({ isOpen }) => (
 	<OpenIndicatorContainer
