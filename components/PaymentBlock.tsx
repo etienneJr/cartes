@@ -5,6 +5,7 @@ import { ModalCloseButton } from '@/app/UI'
 import { css, styled } from 'next-yak'
 import { useEffect, useState } from 'react'
 import useUUID from '@/components/analytics/useUUID'
+import { analyticsUrl } from '@/app/serverUrls'
 
 export default function PaymentBlock({ setSearchParams, openSheet }) {
 	const [choice, setChoice] = useState(false)
@@ -20,11 +21,11 @@ export default function PaymentBlock({ setSearchParams, openSheet }) {
 				// For now we don't collect votes
 
 				if (!choice) {
-					const traceUrl = `https://bright-ant-40.deno.dev/sondage-paiement/${uuid}/vu`
+					const traceUrl = `${analyticsUrl}/sondage-paiement/${uuid}/vu`
 					const traceRequest = await fetch(traceUrl)
 					const traceText = await traceRequest.text()
 				} else {
-					const url = `https://bright-ant-40.deno.dev/sondage-paiement/${uuid}/${choice}`
+					const url = `${analyticsUrl}/sondage-paiement/${uuid}/${choice}`
 					const request = await fetch(url)
 					const text = await request.text()
 					setMessage(text)

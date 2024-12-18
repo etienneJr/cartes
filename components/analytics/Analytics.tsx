@@ -1,3 +1,4 @@
+import { analyticsUrl } from '@/app/serverUrls'
 import { styled } from 'next-yak'
 import { useEffect, useState } from 'react'
 
@@ -11,7 +12,7 @@ export default function Analytics() {
 			try {
 				// For now we don't collect votes
 
-				const traceUrl = `https://bright-ant-40.deno.dev/compte`
+				const traceUrl = `${analyticsUrl}/compte`
 				const traceRequest = await fetch(traceUrl)
 				const json = await traceRequest.json()
 				setData(json)

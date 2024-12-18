@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import useUUID from './useUUID'
+import { analyticsUrl } from '@/app/serverUrls'
 
 export default function useTrackUser() {
 	const uuid = useUUID()
@@ -11,7 +12,7 @@ export default function useTrackUser() {
 			try {
 				// For now we don't collect votes
 
-				const traceUrl = `https://bright-ant-40.deno.dev/compte/${uuid}`
+				const traceUrl = `${analyticsUrl}/compte/${uuid}`
 				const traceRequest = await fetch(traceUrl)
 				const traceText = await traceRequest.text()
 				console.log('Green analytics', traceText)

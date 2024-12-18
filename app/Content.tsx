@@ -242,7 +242,7 @@ export default function Content(props) {
 			)}
 			{showIntroductionLink && (
 				<Link href={setSearchParams({ intro: true }, true)}>
-					À propos de Cartes 🇫🇷
+					À propos de Cartes
 				</Link>
 			)}
 

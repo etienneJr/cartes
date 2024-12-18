@@ -32,3 +32,5 @@ export const getFetchUrlBase = () => {
 }
 
 export const isServer = typeof window === 'undefined'
+
+export const analyticsUrl = 'https://cartes.deno.dev'
