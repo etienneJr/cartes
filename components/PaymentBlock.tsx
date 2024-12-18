@@ -4,7 +4,7 @@ import { ContentSection } from '@/app/ContentUI'
 import { ModalCloseButton } from '@/app/UI'
 import { css, styled } from 'next-yak'
 import { useEffect, useState } from 'react'
-import useUUID from './useUUID'
+import useUUID from '@/components/analytics/useUUID'
 
 export default function PaymentBlock({ setSearchParams, openSheet }) {
 	const [choice, setChoice] = useState(false)
