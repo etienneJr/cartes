@@ -1,8 +1,8 @@
 import Image from 'next/image'
 import { TimelineTransportBlock } from './Transit'
-import { routeTypeName } from './transportIcon'
-import { capitalise0 } from '@/components/utils/utils'
 import { nextDeparturesSentence } from './findBestConnection'
+import { routeTypeName } from './transportIcon'
+import { css, styled } from 'next-yak'
 
 export default function BestConnection({ bestConnection }) {
 	console.log('prune best', bestConnection)
@@ -11,26 +11,7 @@ export default function BestConnection({ bestConnection }) {
 
 	const transportType = routeTypeName(transport.route_type)
 	return (
-		<div
-			css={css`
-				background: white;
-				margin: 0.6rem 0;
-				border: 2px solid gold;
-				border-radius: 0.8rem;
-
-				padding: 0 0.4rem;
-				display: flex;
-				align-items: center;
-				> img {
-					margin: 1rem;
-					width: 1.8rem;
-					height: auto;
-				}
-				p {
-					line-height: 1.4rem;
-				}
-			`}
-		>
+		<Wrapper>
 			<Image
 				src="/star-full-gold.svg"
 				alt="Icône d'étoile couleur or pour le trajet optimal"
@@ -41,13 +22,7 @@ export default function BestConnection({ bestConnection }) {
 				<small>Il y a un {transportType} optimal !</small>
 				<p>
 					Le direct
-					<span
-						css={css`
-							display: inline-block;
-							width: 4rem;
-							margin: 0 0.4rem;
-						`}
-					>
+					<span>
 						<TimelineTransportBlock transport={transport} />
 					</span>
 					passe {bestConnection.interval} à l'arrêt{' '}
@@ -66,6 +41,30 @@ export default function BestConnection({ bestConnection }) {
 					</small>
 				</p>
 			</div>
-		</div>
+		</Wrapper>
 	)
 }
+
+const Wrapper = styled.section`
+	background: white;
+	margin: 0.6rem 0;
+	border: 2px solid gold;
+	border-radius: 0.8rem;
+
+	padding: 0 0.4rem;
+	display: flex;
+	align-items: center;
+	> img {
+		margin: 1rem;
+		width: 1.8rem;
+		height: auto;
+	}
+	p {
+		line-height: 1.4rem;
+	}
+	> div > p > span {
+		display: inline-block;
+		width: 4rem;
+		margin: 0 0.4rem;
+	}
+`
