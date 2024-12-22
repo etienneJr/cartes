@@ -1,3 +1,4 @@
+import { styled } from 'next-yak'
 import {
 	computeHumanDistance,
 	daysHoursMinutesFromSeconds,
@@ -36,20 +37,20 @@ export default function ({ data }) {
 				</strong>{' '}
 				<small>(arrivée à {humanArrivalTime})</small>.
 			</p>
-			<p
-				css={css`
-					margin-top: 0.6rem;
-					background: #67063d;
-					color: white;
-					padding: 0.4rem 0.6rem;
-					border-radius: 0.4rem;
-					font-size: 85%;
-				`}
-			>
+			<CarWarningP>
 				⚠️ La voiture détruit les conditions de vie sur notre planète et pourrit
 				nos villes. Remplissez-là 👥👥 au maximum et privilégiez les voitures de
 				location ⚡️ électriques.
-			</p>
+			</CarWarningP>
 		</div>
 	)
 }
+
+const CarWarningP = styled.p`
+	margin-top: 0.6rem;
+	background: #67063d;
+	color: white;
+	padding: 0.4rem 0.6rem;
+	border-radius: 0.4rem;
+	font-size: 85%;
+`
