@@ -289,3 +289,9 @@ export function handleColor(rawColor, defaultColor) {
 	return defaultColor
 }
 export { stamp }
+
+const notTransitType = ['Walk', 'Cycle', 'Car']
+export const isNotTransitConnection = (connection) =>
+	connection.transports.every((transport) =>
+		notTransitType.includes(transport.move_type)
+	)

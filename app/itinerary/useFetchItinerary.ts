@@ -1,4 +1,7 @@
-import { computeMotisTrip } from '@/app/itinerary/transit/motisRequest'
+import {
+	computeMotisTrip,
+	isNotTransitConnection,
+} from '@/app/itinerary/transit/motisRequest'
 import distance from '@turf/distance'
 import { useCallback, useEffect, useState } from 'react'
 import { useMemoPointsFromState } from './useDrawItinerary'
@@ -170,13 +173,7 @@ export default function useFetchItinerary(searchParams, state, allez) {
 			if (json.state === 'error') return json
 
 			if (!json?.content) return null
-			const notTransitType = ['Walk', 'Cycle', 'Car']
 			const { connections } = json.content
-
-			const isNotTransitConnection = (connection) =>
-				connection.transports.every((transport) =>
-					notTransitType.includes(transport.move_type)
-				)
 
 			const transitConnections = connections.filter(
 				(connection) => !isNotTransitConnection(connection)
