@@ -90,14 +90,15 @@ export const styles = {
 		emoji: '⛄️',
 		hasTerrain: true,
 	},
-	cassini: { 
-		url: cassini(key), 
-		name: 'Cassini', 
-		attribution: '<a href="https://www.ign.fr/institut/espace-presse/une-nouvelle-version-interactive-de-la-carte-de-cassini-sur-le-geoportail" target="_blank">IGN + BNF</a>',
+	cassini: {
+		url: cassini(key),
+		name: 'Cassini',
+		attribution:
+			'<a href="https://www.ign.fr/institut/espace-presse/une-nouvelle-version-interactive-de-la-carte-de-cassini-sur-le-geoportail" target="_blank">IGN + BNF</a>',
 		emoji: '🐎',
 		secondary: true,
 		artistic: true,
-		description: "Carte de Cassini, 18e siècle. Source IGN et BNF.",
+		description: 'Carte de Cassini, 18e siècle. Source IGN et BNF.',
 	},
 	'street-complete': {
 		// Taken from MapTiler's dataviz style
@@ -111,6 +112,7 @@ export const styles = {
 		name: 'Élections',
 		emoji: '🗳️',
 		secondary: true,
+		unlisted: true,
 	},
 }
 

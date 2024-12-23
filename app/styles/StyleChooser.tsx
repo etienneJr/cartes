@@ -44,7 +44,7 @@ export default function StyleChooser({
 				/>
 			</StyleOptions>
 			<Styles
-				styleList={styleList.filter(([, el]) => !el.secondary)}
+				styleList={styleList.filter(([, el]) => !el.secondary && !el.unlisted)}
 				setSearchParams={setSearchParams}
 				searchParams={searchParams}
 				style={style}
@@ -52,7 +52,7 @@ export default function StyleChooser({
 			<details>
 				<summary>Autres styles</summary>
 				<Styles
-					styleList={styleList.filter(([, el]) => el.secondary)}
+					styleList={styleList.filter(([, el]) => el.secondary && !el.unlisted)}
 					setSearchParams={setSearchParams}
 					style={style}
 					searchParams={searchParams}
