@@ -48,15 +48,18 @@ const quickSearchElementStyle = css`
 
 	${(p) =>
 		p.$clicked &&
-		`border-color: var(--darkColor) !important;
+		css`
+			border-color: var(--darkColor) !important;
 
-	img {
-	${(p) =>
-		p.$filter ||
-		`
-		filter: invert(23%) sepia(100%) saturate(1940%) hue-rotate(206deg)
-			brightness(89%) contrast(84%)`};
-	}`}
+			img {
+				${(p) =>
+					p.$filter ||
+					css`
+						filter: invert(23%) sepia(100%) saturate(1940%) hue-rotate(206deg)
+							brightness(89%) contrast(84%);
+					`};
+			}
+		`}
 
 	${(p) => p.$setGoldCladding && goldCladding}
 `
@@ -112,9 +115,10 @@ export const FeatureList = styled.ul`
 	align-items: center;
 	${(p) =>
 		p.$showMore &&
-		`
-							flex-wrap: wrap;
-							li {margin-bottom: .3rem}
-
-							`}
+		css`
+			flex-wrap: wrap;
+			li {
+				margin-bottom: 0.3rem;
+			}
+		`}
 `
