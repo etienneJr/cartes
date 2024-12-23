@@ -1,5 +1,4 @@
-'use client'
-import {styled} from 'next-yak'
+import { styled } from 'next-yak'
 
 export const ElectionFilterLabel = styled.label`
 	background: white;

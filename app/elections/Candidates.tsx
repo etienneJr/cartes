@@ -1,5 +1,4 @@
-import { findContrastedTextColor } from '@/components/utils/colors'
-import Image from 'next/image'
+import { styled } from 'next-yak'
 import { partyColors } from '../effects/useDrawElectionCluserResults'
 
 export default function Candidates({ data }) {
@@ -22,19 +21,7 @@ export default function Candidates({ data }) {
 	if (data === 'Error')
 		return <p>Candidats non trouvés. Ils seront ajoutés prochainement.</p>
 	return (
-		<section
-			css={css`
-				h3 {
-					margin-bottom: 0;
-				}
-				header {
-					margin-bottom: 1rem;
-				}
-				ul {
-					list-style-type: none;
-				}
-			`}
-		>
+		<Wrapper>
 			<header>
 				<h3>Vos candidates et candidats</h3>
 				<small>1er tour des législatives du 30 juin 2024</small>
@@ -46,14 +33,7 @@ export default function Candidates({ data }) {
 						console.log('couleur', Couleur)
 
 						return (
-							<li
-								key={PrenomPsn + NomPsn}
-								css={css`
-									margin: 0.8rem 0 0.8rem 0;
-									display: flex;
-									align-items: center;
-								`}
-							>
+							<li key={PrenomPsn + NomPsn}>
 								<div
 									css={css`
 										background: ${safeColor};
@@ -64,16 +44,7 @@ export default function Candidates({ data }) {
 									`}
 								></div>
 								<div>
-									<div
-										css={css`
-											text-decoration: underline;
-											text-decoration-color: #bbb;
-											margin-right: 0.6rem;
-											line-height: 1.2rem;
-											min-width: 6rem;
-											margin-bottom: 0.2rem;
-											width: 16rem;
-										`}
+									<Parti
 										title={
 											LibNuaCand
 												? 'Le parti sous lequel ce candidat ou cette candidate se présente'
@@ -81,8 +52,8 @@ export default function Candidates({ data }) {
 										}
 									>
 										{LibNuaCand || ' ? '}
-									</div>
-									<div css={css``}>
+									</Parti>
+									<div>
 										{PrenomPsn} {NomPsn}
 									</div>
 									<div>
@@ -94,29 +65,53 @@ export default function Candidates({ data }) {
 					}
 				)}
 			</ul>
-			<a
-				href="https://github.com/f3reg/lg2024/"
-				target="_blank"
-				css={css`
-					text-decoration: none;
-					color: gray;
-					margin-bottom: 0.6rem;
-					display: block;
-					small {
-						text-align: right;
-						display: block;
-						margin-top: 1rem;
-						img {
-							width: 4rem;
-							height: auto;
-							vertical-align: text-top;
-							margin-left: 0.3rem;
-						}
-					}
-				`}
-			>
+			<a href="https://github.com/f3reg/lg2024/" target="_blank">
 				<small>Source : Ministère de l'Intérieur</small>
 			</a>
-		</section>
+		</Wrapper>
 	)
 }
+
+const Wrapper = styled.div`
+	h3 {
+		margin-bottom: 0;
+	}
+	header {
+		margin-bottom: 1rem;
+	}
+	ul {
+		list-style-type: none;
+		li {
+			margin: 0.8rem 0 0.8rem 0;
+			display: flex;
+			align-items: center;
+		}
+	}
+	> a {
+		text-decoration: none;
+		color: gray;
+		margin-bottom: 0.6rem;
+		display: block;
+		small {
+			text-align: right;
+			display: block;
+			margin-top: 1rem;
+			img {
+				width: 4rem;
+				height: auto;
+				vertical-align: text-top;
+				margin-left: 0.3rem;
+			}
+		}
+	}
+`
+
+const Parti = styled.div`
+	text-decoration: underline;
+	text-decoration-color: #bbb;
+	margin-right: 0.6rem;
+	line-height: 1.2rem;
+	min-width: 6rem;
+	margin-bottom: 0.2rem;
+	width: 16rem;
+`
