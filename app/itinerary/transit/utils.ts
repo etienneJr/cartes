@@ -69,3 +69,32 @@ export const defaultRouteColor = '#d3b2ee'
 
 export const hours = (num) => num * 60 * 60,
 	minutes = (num) => num * 60
+
+export const initialDate = (type = 'date', givenDate) => {
+	const stringDate = (
+		givenDate ? new Date(givenDate) : new Date()
+	).toLocaleString('fr')
+	const [date, hour] = stringDate.split(' ')
+
+	const day = date.split('/').reverse().join('-')
+	if (type === 'day') return day
+
+	return day + 'T' + hour.slice(0, -3)
+}
+
+export const isDateNow = (date, diff = 5) => {
+	const now = nowStamp()
+	const dateStamp = stamp(date)
+
+	const difference = dateStamp - now
+
+	console.log('lightgreen diff in minutes', difference / 60)
+	return difference < 60 * diff // 5 minutes
+}
+export const newTimestamp = () => new Date().getTime() / 1000
+
+export const encodeDate = (date) => date?.replace(/:/, 'h')
+export const decodeDate = (date) => date?.replace(/h/, ':')
+export function addMinutes(date, minutes) {
+	return new Date(date.getTime() + minutes * 60000)
+}

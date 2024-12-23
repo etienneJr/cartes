@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { useInterval } from 'usehooks-ts'
 import { DialogButton } from '../UI'
-import { nowStamp, stamp } from './transit/utils'
 import longueVueIcon from '@/public/longuevue.svg'
 import { styled } from 'next-yak'
 import {
@@ -14,28 +13,13 @@ import {
 	QuickDateWardButton,
 	Wrapper,
 } from '../itinerary/DateSelectorUI'
-
-export const initialDate = (type = 'date', givenDate) => {
-	const stringDate = (
-		givenDate ? new Date(givenDate) : new Date()
-	).toLocaleString('fr')
-	const [date, hour] = stringDate.split(' ')
-
-	const day = date.split('/').reverse().join('-')
-	if (type === 'day') return day
-
-	return day + 'T' + hour.slice(0, -3)
-}
-
-export const isDateNow = (date, diff = 5) => {
-	const now = nowStamp()
-	const dateStamp = stamp(date)
-
-	const difference = dateStamp - now
-
-	console.log('lightgreen diff in minutes', difference / 60)
-	return difference < 60 * diff // 5 minutes
-}
+import {
+	addMinutes,
+	encodeDate,
+	initialDate,
+	isDateNow,
+	newTimestamp,
+} from './transit/utils'
 
 // Can be type date (day + hour) or type day
 export default function DateSelector({ date, type = 'date', planification }) {
@@ -143,8 +127,6 @@ const PreTripModeImage = styled(Image)`
 	opacity: ${(p) => (p.$planification === 'oui' ? 1 : 0.3)};
 `
 
-const newTimestamp = () => new Date().getTime() / 1000
-
 const UpdateDate = ({ date, updateDate }) => {
 	const [now, setNow] = useState(newTimestamp())
 
@@ -176,12 +158,6 @@ const UpdateDateImage = styled(Image)`
 	margin-left: 0.2rem;
 	margin-bottom: 0.2rem;
 `
-
-export const encodeDate = (date) => date?.replace(/:/, 'h')
-export const decodeDate = (date) => date?.replace(/h/, ':')
-function addMinutes(date, minutes) {
-	return new Date(date.getTime() + minutes * 60000)
-}
 
 // TODO enable the user to click this button twice or thrice and update only
 // once. setTimeout gogo !

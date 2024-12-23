@@ -52,6 +52,7 @@ import { getStyle } from './styles/styles'
 import useTransportStopData from './transport/useTransportStopData'
 import useWikidata from './useWikidata'
 import { computeCenterFromBbox } from './utils'
+import splitAllez from '@/components/itinerary/splitAllez'
 
 // We don't want to redraw <Content instantaneously on map zoom or drag
 const contentDebounceDelay = 500
@@ -144,7 +145,8 @@ export default function Container(props) {
 	console.log('lightgreen state', state)
 
 	const allez = useMemo(() => {
-		return searchParams.allez ? searchParams.allez.split('->') : []
+		const encoded = searchParams.allez
+		return splitAllez(encoded)
 	}, [searchParams.allez])
 
 	const itinerary = useFetchItinerary(searchParams, state, allez)
@@ -158,6 +160,8 @@ export default function Container(props) {
 		[choice]
 	)
 
+	// transforms the allez search param encoded state object to a lively state
+	// object enriched with OSM data
 	useOsmRequest(allez, state, setState)
 
 	const osmFeature = vers?.osmFeature

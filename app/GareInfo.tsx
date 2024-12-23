@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { initialDate } from './itinerary/DateSelector'
 import { styled } from 'next-yak'
+import { initialDate } from './itinerary/transit/utils'
 
 export default function GareInfo({ nom, uic8 }) {
 	const [date, setDate] = useState(initialDate())

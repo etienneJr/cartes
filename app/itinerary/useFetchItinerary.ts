@@ -1,7 +1,6 @@
 import { computeMotisTrip } from '@/app/itinerary/transit/motisRequest'
 import distance from '@turf/distance'
 import { useCallback, useEffect, useState } from 'react'
-import { decodeDate, initialDate } from './DateSelector'
 import { useMemoPointsFromState } from './useDrawItinerary'
 import { modeKeyFromQuery } from './Itinerary'
 import useSetSearchParams from '@/components/useSetSearchParams'
@@ -9,6 +8,7 @@ import fetchValhalla from './fetchValhalla'
 import computeSafeRatio from '@/components/cycling/computeSafeRatio'
 import brouterResultToSegments from '@/components/cycling/brouterResultToSegments'
 import useSetItineraryModeFromUrl from './useSetItineraryModeFromUrl'
+import { decodeDate, initialDate } from './transit/utils'
 
 export default function useFetchItinerary(searchParams, state, allez) {
 	const setSearchParams = useSetSearchParams()

@@ -104,7 +104,7 @@ export const computeMotisTrip = async (
 	start,
 	destination,
 	date,
-	searchParams
+	searchParams = {}
 ) => {
 	const body = buildRequestBody(start, destination, date, searchParams)
 	console.log('indigo motis', body)
