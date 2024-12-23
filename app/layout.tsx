@@ -1,6 +1,7 @@
 import { ThemeColorsProvider } from '@/components/utils/colors'
 import { Metadata } from 'next'
 import '../globals.css'
+import Script from 'next/script'
 
 const title = `Cartes`
 export const description =
@@ -41,6 +42,11 @@ export default function ({ children }) {
 			<body>
 				<ThemeColorsProvider>{children}</ThemeColorsProvider>
 			</body>
+			<Script
+				async
+				src="https://stats.cartes.app/script.js"
+				data-website-id="26107100-7061-4aa3-9f03-889718387c1b"
+			></Script>
 		</html>
 	)
 }
