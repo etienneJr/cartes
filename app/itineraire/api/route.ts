@@ -2,9 +2,9 @@ import splitAllez from '@/components/itinerary/splitAllez'
 import {
 	computeMotisTrip,
 	isNotTransitConnection,
-} from '../itinerary/transit/motisRequest'
-import { initialDate } from '../itinerary/transit/utils'
-import { stepOsmRequest } from '../stepOsmRequest'
+} from '@/app/itinerary/transit/motisRequest'
+import { initialDate } from '@/app/itinerary/transit/utils'
+import { stepOsmRequest } from '@/app/stepOsmRequest'
 
 export async function GET(request: { url: string | URL }) {
 	const requestUrl = new URL(request.url),
