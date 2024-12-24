@@ -1,6 +1,6 @@
 import Logo from '@/public/logo.svg'
 import WebIcon from '@/public/web.svg'
-import { css } from 'next-yak'
+import { css, styled } from 'next-yak'
 import Image from 'next/image'
 import Link from 'next/link'
 import CTA from './CTA'
@@ -140,9 +140,9 @@ export default function Page() {
 				propose en premier lieu des moyens de transport écologiques :
 			</p>
 			<ul
-				css={css`
-					padding-left: 1rem;
-				`}
+				style={{
+					paddingLeft: '1rem',
+				}}
 			>
 				<li>
 					transports en commun (bus, tram, métro, TER, train de nuit, TGV)
@@ -205,23 +205,9 @@ export default function Page() {
 				sans envoyer les données de vos utilisateurs à Google.
 			</p>
 			<p>Voici un exemple sur un commerce à Rennes :</p>
-			<blockquote
-				css={css`
-					line-height: 1rem;
-					margin-bottom: 1rem;
-					border: 1px dashed var(--color);
-					padding: 0.4rem;
-					font-size: 80%;
-					border-radius: 0.2rem;
-				`}
-			>
-				{iframeCode}
-			</blockquote>
+			<Blockquote>{iframeCode}</Blockquote>
 
-			<iframe
-				src="https://cartes.app/?allez=Little+Beetles|n5352517991|-1.6826|48.1118"
-				css={css(iframeStyle)}
-			/>
+			<Iframe src="https://cartes.app/?allez=Little+Beetles|n5352517991|-1.6826|48.1118" />
 			<p>
 				Pour intégrer <strong>votre lieu</strong>, remplacez simplement le
 				contenu de l'attribut source ci-dessus par l'URL de votre lieu sur
@@ -252,3 +238,24 @@ export default function Page() {
 		</PresentationWrapper>
 	)
 }
+
+const Blockquote = styled.blockquote`
+	line-height: 1rem;
+	margin-bottom: 1rem;
+	border: 1px dashed var(--color);
+	padding: 0.4rem;
+	font-size: 80%;
+	border-radius: 0.2rem;
+`
+
+const Iframe = styled.iframe`
+	width: 20rem;
+	height: 36rem;
+	margin: 0 auto;
+	margin-bottom: 5vh;
+	display: block;
+	border-radius: 1rem;
+	border: 3px solid var(--darkColor);
+	box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 25px -5px,
+		rgba(0, 0, 0, 0.04) 0px 10px 10px -5px;
+`

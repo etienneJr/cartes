@@ -1,6 +1,4 @@
-'use client'
-
-import {styled} from 'next-yak'
+import { styled } from 'next-yak'
 
 export const PresentationWrapper = styled.div`
 	max-width: 700px;
