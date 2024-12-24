@@ -164,7 +164,7 @@ export default function useDrawQuickSearchFeatures(
 		}
 
 		return cleanup
-	}, [map, category, baseId, setSources])
+	}, [map, category, baseId, setSources, setOsmFeature])
 
 	useEffect(() => {
 		if (!map) return
