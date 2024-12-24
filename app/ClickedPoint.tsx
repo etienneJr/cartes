@@ -22,9 +22,9 @@ export default function ClickedPoint({
 	if (isAddress)
 		return (
 			<div
-				css={css`
-					margin: 1rem 0;
-				`}
+				style={{
+					margin: '1rem 0',
+				}}
 			>
 				<strong>Adresse</strong>
 				<Address tags={item} noPrefix={true} />
@@ -46,9 +46,9 @@ export default function ClickedPoint({
 */
 	return (
 		<div
-			css={css`
-				margin: 1rem 0;
-			`}
+			style={{
+				margin: '1rem 0',
+			}}
 		>
 			{origin && (
 				<>
@@ -96,14 +96,14 @@ const Distance = ({ destination, origin }) => {
 	)
 }
 const LatLong = ({ latitude, longitude }) => (
-	<div
-		css={css`
-			small {
-				color: #666;
-			}
-		`}
-	>
-		<small>latitude</small>
+	<div>
+		<small
+			style={{
+				color: '#666',
+			}}
+		>
+			latitude
+		</small>
 		&nbsp;{latitude.toFixed(4)} <small>longitude</small>&nbsp;
 		{longitude.toFixed(4)}
 	</div>

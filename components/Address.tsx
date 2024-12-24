@@ -1,6 +1,6 @@
 // Inspired by https://github.com/zbycz/osmapp/blob/master/src/services/helpers.ts#L107
 
-import { css, styled } from 'next-yak'
+import { styled } from 'next-yak'
 import { buildAddress } from './osm/buildAddress'
 
 export const addressKeys = [

@@ -13,7 +13,7 @@ export default function BookmarkButton({ geocodedClickedPoint, osmFeature }) {
 			initializeWithValue: false,
 		}
 	)
-	if (!osmFeature.lon) return null
+	if (!osmFeature || !osmFeature.lon) return null
 	const properties = geocodedClickedPoint
 		? geocodedClickedPoint.data?.features?.length > 0 &&
 		  geocodedClickedPoint.data.features[0].properties
