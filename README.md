@@ -57,3 +57,6 @@ This app makes full use of a multiple of open source libraries.
 Including code inspired or directly taken from [OSMApp](https://github.com/zbycz/osmapp).
 
 Icons are [OSMAnd](https://github.com/osmandapp/OsmAnd-resources/)'s.
+
+
+Availability of servers is [here](https://cava.cartes.app/status/cartes)
