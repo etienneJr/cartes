@@ -1,23 +1,23 @@
-import { css, styled } from 'next-yak'
-import DateSelector from '../DateSelector'
 import noTransports from '@/public/no-transports.svg'
+import { styled } from 'next-yak'
 import Image from 'next/image'
+import DateSelector from '../DateSelector'
+
+const MessageBlockWrapper = styled.section`
+	margin-top: 2rem;
+	line-height: 1.3rem;
+	display: flex;
+	align-items: center;
+	img {
+		width: 2rem;
+		height: auto;
+		margin-right: 0.8rem;
+		margin-left: 0.4rem;
+	}
+`
 
 const MessageBlock = ({ message, solution }) => (
-	<section
-		css={css`
-			margin-top: 2rem;
-			line-height: 1.3rem;
-			display: flex;
-			align-items: center;
-			img {
-				width: 2rem;
-				height: auto;
-				margin-right: 0.8rem;
-				margin-left: 0.4rem;
-			}
-		`}
-	>
+	<MessageBlockWrapper>
 		<Image
 			src={noTransports}
 			alt="Icône d'erreur du calcul de transport en commun"
@@ -26,7 +26,7 @@ const MessageBlock = ({ message, solution }) => (
 			<p>{message}</p>
 			{solution && <p>👉️ {solution}</p>}
 		</div>
-	</section>
+	</MessageBlockWrapper>
 )
 
 export const NoTransit = ({ reason, solution }) => {

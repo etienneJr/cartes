@@ -1,8 +1,8 @@
+import DetailsButton from '@/components/transit/DetailsButton'
 import useSetSearchParams from '@/components/useSetSearchParams'
-import { css, styled } from 'next-yak'
+import { styled } from 'next-yak'
 import { useRef } from 'react'
 import { TimelineTransportBlock } from './Transit'
-import DetailsButton from '@/components/transit/DetailsButton'
 import { formatMotis, humanDuration } from './utils'
 
 export const Line = ({
@@ -65,9 +65,9 @@ export const Line = ({
 				<Duration>
 					<small>{formatMotis(from)}</small>
 					<small
-						css={css`
-							color: #555;
-						`}
+						style={{
+							color: '#555',
+						}}
 					>
 						{to - from > 25 * 60 // 10 minutes TODO this should be calculated : does it fit ?? show '-' and title=
 							? humanDuration(connection.seconds).single

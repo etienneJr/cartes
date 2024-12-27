@@ -12,9 +12,9 @@ export default function GlobalError({
 		<html>
 			<body>
 				<h1
-					css={css`
-						background: blue;
-					`}
+					style={{
+						background: 'blue',
+					}}
 				>
 					Oups, une erreur est survenue :(
 				</h1>

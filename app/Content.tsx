@@ -1,7 +1,9 @@
-import { Loader } from '@/components/loader'
+import PaymentBlock from '@/components/PaymentBlock'
+import { ContentLoaderWrapper, Loader } from '@/components/loader'
 import useSetSearchParams from '@/components/useSetSearchParams'
 import { useWhatChanged } from '@/components/utils/useWhatChanged'
 import { getThumb } from '@/components/wikidata'
+import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { useLocalStorage } from 'usehooks-ts'
@@ -29,9 +31,6 @@ import { defaultAgencyFilter } from './transport/AgencyFilter'
 import { defaultTransitFilter } from './transport/TransitFilter'
 import TransportMap from './transport/TransportMap'
 import useOgImageFetcher from './useOgImageFetcher'
-import PaymentBlock from '@/components/PaymentBlock'
-import { css } from 'next-yak'
-import dynamic from 'next/dynamic'
 const Analytics = dynamic(() => import('@/components/analytics/Analytics'), {
 	ssr: false,
 })
@@ -308,21 +307,13 @@ export default function Content(props) {
 							</PlaceButtonList>
 						)}
 						{searchParams.chargement && (
-							<div
-								css={css`
-									margin: 1rem 0;
-									p {
-										text-align: center;
-										line-height: 1.3rem;
-									}
-								`}
-							>
+							<ContentLoaderWrapper>
 								<Loader flexDirection="column">
 									<p>
 										Chargement de <strong>{searchParams.chargement}</strong>
 									</p>
 								</Loader>
-							</div>
+							</ContentLoaderWrapper>
 						)}
 						{osmFeature ? (
 							<OsmFeature
@@ -346,9 +337,9 @@ export default function Content(props) {
 							!clickTipRead && (
 								<div>
 									<p
-										css={css`
-											max-width: 20rem;
-										`}
+										style={{
+											maxWidth: '20rem',
+										}}
 									>
 										Cliquez sur un point d'intérêt ou saisissez une destination
 										puis explorez les gares autour.

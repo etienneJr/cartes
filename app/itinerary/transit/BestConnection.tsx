@@ -1,8 +1,8 @@
+import { styled } from 'next-yak'
 import Image from 'next/image'
 import { TimelineTransportBlock } from './Transit'
 import { nextDeparturesSentence } from './findBestConnection'
 import { routeTypeName } from './transportIcon'
-import { css, styled } from 'next-yak'
 
 export default function BestConnection({ bestConnection }) {
 	console.log('prune best', bestConnection)
@@ -27,9 +27,9 @@ export default function BestConnection({ bestConnection }) {
 					</span>
 					passe {bestConnection.interval} à l'arrêt{' '}
 					<em
-						css={css`
-							white-space: nowrap;
-						`}
+						style={{
+							whiteSpace: 'nowrap',
+						}}
 					>
 						{stop}
 					</em>

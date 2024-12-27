@@ -40,3 +40,11 @@ const Container = styled.div`
 		}
 	}
 `
+
+export const ContentLoaderWrapper = styled.div`
+	margin: 1rem 0;
+	p {
+		text-align: center;
+		line-height: 1.3rem;
+	}
+`

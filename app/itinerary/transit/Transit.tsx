@@ -86,13 +86,7 @@ const TransitContent = ({ itinerary, searchParams, date }) => {
 	const chosen = searchParams.details === 'oui' && searchParams.choix
 	return (
 		<section>
-			<div
-				css={css`
-					p {
-						text-align: right;
-					}
-				`}
-			>
+			<div>
 				<LateWarning firstDate={firstDate} date={data.date} />
 			</div>
 			{!chosen ? (

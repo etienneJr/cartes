@@ -251,31 +251,30 @@ export const StepIcon = styled.span`
 	border-radius: 2rem;
 `
 
+const DotsWrapper = styled.span`
+	cursor: pointer;
+	display: inline-flex;
+	width: 1.4rem;
+	height: 1.2rem;
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	span {
+		display: block;
+		background: var(--color);
+		width: 5px;
+		border-radius: 5px;
+		height: 5px;
+		margin: 1px;
+	}
+	opacity: 0.8;
+`
 const Dots = () => (
-	<span
-		css={css`
-			cursor: pointer;
-			display: inline-flex;
-			width: 1.4rem;
-			height: 1.2rem;
-			display: flex;
-			align-items: center;
-			flex-wrap: wrap;
-			span {
-				display: block;
-				background: var(--color);
-				width: 5px;
-				border-radius: 5px;
-				height: 5px;
-				margin: 1px;
-			}
-			opacity: 0.8;
-		`}
-	>
+	<DotsWrapper>
 		{[...new Array(9)].map((_, index) => (
 			<span key={index}></span>
 		))}
-	</span>
+	</DotsWrapper>
 )
 
 const StepName = styled.span`

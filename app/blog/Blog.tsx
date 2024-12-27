@@ -1,5 +1,5 @@
 import Logo from '@/public/logo.svg'
-import { css } from 'next-yak'
+import { styled } from 'next-yak'
 import Image from 'next/image'
 import Link from 'next/link'
 import { List } from './UI'
@@ -8,30 +8,24 @@ import { dateCool } from './utils'
 export const description =
 	"Découvrez l'histoire, les nouveautés et le futur de Cartes.app"
 
+const Nav = styled.nav`
+	margin-top: 1rem;
+	a img {
+		width: 2rem;
+		height: auto;
+		margin-right: 0.6rem;
+		vertical-align: middle;
+	}
+`
 export default function Blog({ articles }) {
 	return (
 		<main>
-			<nav
-				css={css`
-					margin-top: 1rem;
-				`}
-			>
+			<Nav>
 				<Link href="/">
-					<Image
-						src={Logo}
-						alt="Logo de Cartes.app"
-						width="100"
-						height="100"
-						css={css`
-							width: 2rem;
-							height: auto;
-							margin-right: 0.6rem;
-							vertical-align: middle;
-						`}
-					/>
+					<Image src={Logo} alt="Logo de Cartes.app" width="100" height="100" />
 					Revenir sur la carte
 				</Link>
-			</nav>
+			</Nav>
 			<h1>Le blog de Cartes.app</h1>
 			<p>{description}</p>
 			<p>
