@@ -8,6 +8,10 @@ export default function useDrawSearchResults(map, state, setOsmFeature) {
 	const [features, setFeatures] = useState([])
 	const vers = state.slice(-1)[0]
 	const results = vers?.results
+
+	const resultsHash = results?.map((el) => el.osmId)
+
+	console.log('cyan debug D', results)
 	useEffect(() => {
 		if (!map) return
 
@@ -31,7 +35,7 @@ export default function useDrawSearchResults(map, state, setOsmFeature) {
 		return () => {
 			setFeatures([])
 		}
-	}, [map, setFeatures, results])
+	}, [map, setFeatures, resultsHash])
 
 	useDrawQuickSearchFeatures(map, features, false, category, setOsmFeature)
 }

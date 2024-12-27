@@ -1,7 +1,7 @@
 'use client'
 import maplibregl from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { sortGares } from './gares'
 
 import MapButtons, { mapButtonSize } from '@/components/MapButtons'
@@ -83,6 +83,7 @@ export default function Map(props) {
 		setLastGeolocation,
 		geolocation,
 	} = props
+
 	useWhatChanged(props, 'Render component Map')
 
 	const mapContainerRef = useRef(null)
@@ -194,10 +195,13 @@ export default function Map(props) {
 		itinerary.date
 	)
 
-	const onSearchResultClick = (feature) => {
-		setState([...state.slice(0, -1), defaultState.vers])
-		//setOsmFeature(feature) old function, this call seems useless now
-	}
+	const onSearchResultClick = useCallback(
+		(feature) => {
+			setState([...state.slice(0, -1), defaultState.vers])
+			//setOsmFeature(feature) old function, this call seems useless now
+		},
+		[state]
+	)
 
 	//TODO this hook should be used easily with some tweaks to draw the borders of
 	// the clicked feature, and an icon

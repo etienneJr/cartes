@@ -25,6 +25,7 @@ export default function useDrawQuickSearchFeatures(
 
 	useEffect(() => {
 		if (!map) return
+		console.log('cyan debug', features, category, safeStyleKey)
 		const imageUrl = categoryIconUrl(category)
 
 		const imageFilename = category.icon

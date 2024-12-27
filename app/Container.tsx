@@ -30,6 +30,7 @@ import ModalSwitch from './ModalSwitch'
 import { ContentWrapper, MapContainer } from './UI'
 import { useZoneImages } from './ZoneImages'
 
+import splitAllez from '@/components/itinerary/splitAllez'
 import { mapLibreBboxToOverpass } from '@/components/mapUtils'
 import useSetSearchParams from '@/components/useSetSearchParams'
 import { useDebounce } from '@/components/utils'
@@ -52,7 +53,6 @@ import { getStyle } from './styles/styles'
 import useTransportStopData from './transport/useTransportStopData'
 import useWikidata from './useWikidata'
 import { computeCenterFromBbox } from './utils'
-import splitAllez from '@/components/itinerary/splitAllez'
 
 // We don't want to redraw <Content instantaneously on map zoom or drag
 const contentDebounceDelay = 500
