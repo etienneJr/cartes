@@ -1,7 +1,7 @@
-import { AppBskyFeedDefs, BskyAgent } from '@atproto/api'
-const agent = new BskyAgent({ service: 'https://public.api.bsky.app' })
 import Comment from '@/components/BlueskyComment'
-import { css } from 'next-yak'
+import { AppBskyFeedDefs, BskyAgent } from '@atproto/api'
+import { styled } from 'next-yak'
+const agent = new BskyAgent({ service: 'https://public.api.bsky.app' })
 
 export default async function BlueskyComments({ uri }) {
 	const part = uri.split('app.bsky.feed.post/')[1]
@@ -21,28 +21,27 @@ export default async function BlueskyComments({ uri }) {
 	const noReplies = !thread.replies || thread.replies.length === 0
 
 	return (
-		<div
-			css={css`
-				max-width: 700px;
-				margin: 0 auto 2rem auto;
-			`}
-		>
+		<Wrapper>
 			<h2>Commentaires</h2>
 			<p>
 				Commentez <a href={url}>cet article</a> sur Bluesky, vos commentaires
 				apparaitront ici :)
 			</p>
 			{noReplies ? null : (
-				<ol
-					css={css`
-						list-style-type: none;
-					`}
-				>
+				<ol>
 					{thread.replies.map((data) => {
 						return <Comment key={data.post.uri} data={data} />
 					})}
 				</ol>
 			)}
-		</div>
+		</Wrapper>
 	)
 }
+
+const Wrapper = styled.section`
+	max-width: 700px;
+	margin: 0 auto 2rem auto;
+	ol {
+		list-style-type: none;
+	}
+`
