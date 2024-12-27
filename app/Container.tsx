@@ -124,12 +124,13 @@ export default function Container(props) {
 	const [localStorageStyleKey, setLocalStorageStyleKey] = useState(null)
 	useEffect(() => {
 		try {
-			const style = localStorage.getItem('style')
+			const style = searchParams.style || localStorage.getItem('style')
 			setLocalStorageStyleKey(style)
 		} catch (e) {}
-	}, [setLocalStorageStyleKey])
+	}, [setLocalStorageStyleKey, searchParams.style])
 
 	const styleKey = searchParams.style || localStorageStyleKey || 'france'
+
 	const style = useMemo(() => getStyle(styleKey), [styleKey])
 
 	const styleChooser = searchParams['choix du style'] === 'oui',
