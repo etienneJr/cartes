@@ -2,6 +2,26 @@ import issues from '@/public/github-issues.json'
 import Issue from '../Issue'
 import { micromark } from 'micromark'
 import { gfmHtml, gfm } from 'micromark-extension-gfm'
+import { description } from '../metadata'
+
+export async function generateMetadata(
+	{ params, searchParams }: Props,
+	parent: ResolvingMetadata
+): Promise<Metadata> {
+	// read route params
+	const { number } = await params
+
+	const issue = issues.find((issue) => issue.number == number)
+	if (!issue) return null
+
+	const { body } = issue
+	const description = body && body.split(' ').slice(0, 50).join(' ')
+
+	return {
+		title: issue.title,
+		description,
+	}
+}
 
 const Page = async ({ params }) => {
 	const { number } = await params
