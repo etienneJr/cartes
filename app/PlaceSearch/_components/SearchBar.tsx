@@ -24,15 +24,23 @@ export default ({
 }: IProps) => {
 	return (
 		<InputStyle $stateBeingSearched={getHasStepBeingSearched(state)}>
-			<input
-				type="text"
-				value={value || ''}
-				onBlur={() => setIsMyInputFocused(false)}
-				onFocus={() => setIsMyInputFocused(true)}
-				autoFocus={autofocus}
-				onClick={(e) => {
-					setSnap(0, 'PlaceSearch')
-					/*
+			<form
+				action="/"
+				method="GET"
+				role="search"
+				onKeyDown={(e) => {
+					e.key === 'Enter' && e.preventDefault()
+				}}
+			>
+				<input
+					type="text"
+					value={value || ''}
+					onBlur={() => setIsMyInputFocused(false)}
+					onFocus={() => setIsMyInputFocused(true)}
+					autoFocus={autofocus}
+					onClick={(e) => {
+						setSnap(0, 'PlaceSearch')
+						/*
 				// Old comment :
 				// --------------
 				// Combining two calls hits the sweet spot between chrome and
@@ -54,10 +62,11 @@ export default ({
 					e.target.focus()
 				}, 600)
 				*/
-				}}
-				placeholder={placeholder || 'Saint-Malo, Nancy, Café du Port...'}
-				onChange={({ target: { value } }) => onDestinationChange(value)}
-			/>
+					}}
+					placeholder={placeholder || 'Saint-Malo, Nancy, Café du Port...'}
+					onChange={({ target: { value } }) => onDestinationChange(value)}
+				/>
+			</form>
 			{value && (
 				<button
 					onClick={() => onDestinationChange(null)}
