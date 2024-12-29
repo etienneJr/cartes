@@ -67,8 +67,8 @@ const Comment = ({ user, markdown }) => (
 		<header>
 			<Image
 				src={user.avatar_url}
-				width="10"
-				height="10"
+				width="40"
+				height="40"
 				alt={'Avatar github de ' + user.login}
 			/>
 			<a href={user.html_url}>{user.login}</a>
@@ -93,15 +93,21 @@ const CommentWrapper = styled.div`
 			text-decoration: none;
 		}
 		img {
-			width: 2rem;
-			height: auto;
+			width: 2rem !important;
+			height: 2rem !important;
+			object-fit: cover;
 			border-radius: 1rem;
 			margin: 0;
 		}
+	}
+	img {
+		max-width: 90% !important;
+		margin: 0.6rem 0;
 	}
 	h1 {
 		font-size: 160%;
 		margin: 1rem 0 0.4rem;
 		text-align: left;
 	}
+	overflow: hidden;
 `
