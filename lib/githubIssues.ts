@@ -3,6 +3,7 @@ import { Octokit } from '@octokit/rest'
 
 import { micromark } from 'micromark'
 import { gfmHtml, gfm } from 'micromark-extension-gfm'
+import { convertIssueLinksToInternal } from '@/app/documentation/tickets/[number]/page'
 
 const octokit = new Octokit({ auth: process.env.GITHUB_CLASSIC_TOKEN })
 
@@ -27,10 +28,12 @@ export async function downloadIssues() {
 			const { body } = issue
 
 			if (!body) return issue
-			const markdownBody = micromark(issue.body, {
-				extensions: [gfm()],
-				htmlExtensions: [gfmHtml()],
-			})
+			const markdownBody = convertIssueLinksToInternal(
+				micromark(issue.body, {
+					extensions: [gfm()],
+					htmlExtensions: [gfmHtml()],
+				})
+			)
 
 			return {
 				...issue,
@@ -41,6 +44,8 @@ export async function downloadIssues() {
 
 	writeFileSync('./public/github-issues.json', JSON.stringify(withMarkdown))
 	console.log('💡 Github issues written in ./public/')
+
+	return withMarkdown
 }
 
-downloadIssues()
+//downloadIssues()

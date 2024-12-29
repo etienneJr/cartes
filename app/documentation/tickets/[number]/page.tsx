@@ -13,7 +13,11 @@ const Page = async ({ params }) => {
 	const request = await fetch(
 		`https://api.github.com/repos/cartesapp/cartes/issues/${number}/comments`
 	)
+	if (!request.ok) return <Issue issue={issue} />
+
 	const json = await request.json()
+
+	if (!json || !json.length) return <Issue issue={issue} />
 
 	const comments = json.map((comment) => {
 		const markdownBody = convertIssueLinksToInternal(

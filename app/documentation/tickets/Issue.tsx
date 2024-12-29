@@ -31,13 +31,18 @@ export default function Issue({ issue, comments }) {
 					</small>
 					<br />
 					<Comment markdown={issue.markdownBody} user={issue.user} />
-					<Comments>
-						{comments.map((comment) => (
-							<li key={comment.id}>
-								<Comment markdown={comment.markdownBody} user={comment.user} />
-							</li>
-						))}
-					</Comments>
+					{comments && (
+						<Comments>
+							{comments.map((comment) => (
+								<li key={comment.id}>
+									<Comment
+										markdown={comment.markdownBody}
+										user={comment.user}
+									/>
+								</li>
+							))}
+						</Comments>
+					)}
 					<hr />
 				</header>
 				<Contribution
