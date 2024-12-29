@@ -4,9 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { List } from './UI'
 import { dateCool } from './utils'
-
-export const description =
-	"Découvrez l'histoire, les nouveautés et le futur de Cartes.app"
+import { description } from './page'
 
 const Nav = styled.nav`
 	margin-top: 1rem;

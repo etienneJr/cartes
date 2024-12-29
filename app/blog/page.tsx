@@ -3,10 +3,12 @@ import { blogArticles } from './blogArticles'
 import Blog from './Blog'
 
 const title = `Le blog - Cartes`
+export const description =
+	"Découvrez l'histoire, les nouveautés et le futur de Cartes.app"
 
 export const metadata: metadata = {
 	title,
-	description: 'yoyo',
+	description,
 }
 
 const Page = () => {
