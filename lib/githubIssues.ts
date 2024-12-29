@@ -12,15 +12,17 @@ const octokit = new Octokit({ auth: process.env.GITHUB_CLASSIC_TOKEN })
 const domain = 'https://cartes.app'
 
 export async function downloadIssues() {
-	const response = await octokit.request('GET /repos/{owner}/{repo}/issues', {
+	const response = await octokit.paginate('GET /repos/{owner}/{repo}/issues', {
 		owner: 'cartesapp',
 		repo: 'cartes',
+		per_page: 100,
 		headers: {
 			'X-GitHub-Api-Version': '2022-11-28',
 		},
 	})
 
-	const withMarkdown = response.data
+	console.log(response)
+	const withMarkdown = response
 		.map((issue) => {
 			const { body } = issue
 
@@ -39,7 +41,7 @@ export async function downloadIssues() {
 
 	writeFileSync(
 		'./.next/static/github-issues.json',
-		JSON.stringify({ ...response, data: withMarkdown })
+		JSON.stringify(withMarkdown)
 	)
 	console.log('💡 Github issues written in .next/static/')
 }

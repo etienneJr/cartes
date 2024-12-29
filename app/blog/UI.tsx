@@ -89,3 +89,12 @@ export const Badge = styled.span`
 	width: -moz-fit-content;
 	width: fit-content;
 `
+export const Nav = styled.nav`
+	margin-top: 1rem;
+	a img {
+		width: 2rem;
+		height: auto;
+		margin-right: 0.6rem;
+		vertical-align: middle;
+	}
+`

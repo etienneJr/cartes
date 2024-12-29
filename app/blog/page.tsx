@@ -1,10 +1,7 @@
 import { compareDesc } from 'date-fns'
 import { blogArticles } from './blogArticles'
 import Blog from './Blog'
-
-const title = `Le blog - Cartes`
-export const description =
-	"Découvrez l'histoire, les nouveautés et le futur de Cartes.app"
+import { description, title } from './metadata'
 
 export const metadata: metadata = {
 	title,

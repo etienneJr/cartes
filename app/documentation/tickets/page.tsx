@@ -1,21 +1,19 @@
-import issuesResponse from '@/.next/static/github-issues.json'
+import issues from '@/.next/static/github-issues.json'
 import { sortBy } from '@/components/utils/utils'
 import Issues from './Issues'
-
-const issues = issuesResponse.data
-
-const title = `La documenation - Cartes`,
-	description = `Plongez dans la fabrique de Cartes`
+import { description, title } from './metadata'
 
 export const metadata: metadata = {
 	title,
 	description,
 }
 
-const sortIssues = (attribute = 'created_at') =>
-	sortBy((issue) => issue && issue[attribute])(issues).filter(Boolean)
-
-//compareDesc(new Date(a.date), new Date(b.date))
+const sortIssues = (attribute = 'created_at') => {
+	const sorted = sortBy((issue) => issue && issue[attribute])(issues).filter(
+		Boolean
+	)
+	return [...sorted].reverse()
+}
 
 const Page = () => {
 	const articles = sortIssues()
