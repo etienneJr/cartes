@@ -1,12 +1,20 @@
 import { styled } from 'next-yak'
 import Link from 'next/link'
 
-export default function Contribution({ slug }) {
+export default function Contribution({
+	slug,
+	issueNumber,
+	text = '✏️ Signaler une erreur',
+}) {
 	return (
 		<ContributionLink
-			href={`https://github.com/cartesapp/cartes/edit/master/articles/${slug}.mdx`}
+			href={
+				slug
+					? `https://github.com/cartesapp/cartes/edit/master/articles/${slug}.mdx`
+					: `https://github.com/cartesapp/cartes/issues/${issueNumber}`
+			}
 		>
-			✏️ Signaler une erreur
+			{text}
 		</ContributionLink>
 	)
 }
