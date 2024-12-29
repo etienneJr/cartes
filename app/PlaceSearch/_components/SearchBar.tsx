@@ -24,7 +24,14 @@ export default ({
 }: IProps) => {
 	return (
 		<InputStyle $stateBeingSearched={getHasStepBeingSearched(state)}>
-			<form action="/" method="GET" role="search">
+			<form
+				action="/"
+				method="GET"
+				role="search"
+				onKeyDown={(e) => {
+					e.key === 'Enter' && e.preventDefault()
+				}}
+			>
 				<input
 					type="text"
 					value={value || ''}
