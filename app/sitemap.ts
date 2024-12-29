@@ -3,6 +3,7 @@ import { getRecentInterestingNodes } from '@/components/watchOsmPlaces.ts'
 import { gtfsServerUrl } from './serverUrls'
 import { getLastEdit } from './blog/utils'
 import { generateFeed } from '@/lib/rss'
+import { downloadIssues } from '@/lib/githubIssues'
 import { blogArticles } from './blog/blogArticles'
 
 export const domain = 'https://cartes.app'
@@ -16,6 +17,7 @@ const basePaths = [
 	'/itineraire',
 	'/transport-en-commun',
 	'/a-propos',
+	'/documentation/tickets',
 ]
 
 const generateAgencies = async () => {
@@ -55,6 +57,7 @@ export default async function sitemap(): MetadataRoute.Sitemap {
 	)
 	console.log('PLOP2')
 	const agencies = await generateAgencies()
+	const issues = await downloadIssues()
 	const entries = [
 		...basePaths.map((path) => ({
 			url: escapeXml(domain + path),
@@ -65,6 +68,10 @@ export default async function sitemap(): MetadataRoute.Sitemap {
 			}))
 		),
 		...blogEntries,
+		...issues.map((issue) => ({
+			url: domain + '/documentation/tickets/' + issue.number,
+			lastModified: new Date(issue.updated_at),
+		})),
 		...forceUpdate(newNodes),
 	]
 

@@ -1,12 +1,11 @@
 import { compareDesc } from 'date-fns'
 import { blogArticles } from './blogArticles'
 import Blog from './Blog'
-
-const title = `Le blog - Cartes`
+import { description, title } from './metadata'
 
 export const metadata: metadata = {
 	title,
-	description: 'yoyo',
+	description,
 }
 
 const Page = () => {

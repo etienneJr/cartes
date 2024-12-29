@@ -1,22 +1,10 @@
 import Logo from '@/public/logo.svg'
-import { styled } from 'next-yak'
 import Image from 'next/image'
 import Link from 'next/link'
-import { List } from './UI'
+import { List, Nav } from './UI'
+import { description } from './metadata'
 import { dateCool } from './utils'
 
-export const description =
-	"Découvrez l'histoire, les nouveautés et le futur de Cartes.app"
-
-const Nav = styled.nav`
-	margin-top: 1rem;
-	a img {
-		width: 2rem;
-		height: auto;
-		margin-right: 0.6rem;
-		vertical-align: middle;
-	}
-`
 export default function Blog({ articles }) {
 	return (
 		<main>

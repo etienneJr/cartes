@@ -16,6 +16,14 @@ const nextConfig = {
 	experimental: {
 		reactCompiler: true,
 	},
+	images: {
+		remotePatterns: [
+			{
+				protocol: 'https',
+				hostname: 'avatars.githubusercontent.com',
+			},
+		],
+	},
 	/*
 	compilerOptions: {
 		baseUrl: '.',
