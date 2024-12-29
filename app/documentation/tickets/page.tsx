@@ -1,4 +1,4 @@
-import issues from '@/.next/static/github-issues.json'
+import issues from '@/public/github-issues.json'
 import { sortBy } from '@/components/utils/utils'
 import Issues from './Issues'
 import { description, title } from './metadata'

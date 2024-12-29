@@ -39,11 +39,8 @@ export async function downloadIssues() {
 		})
 		.filter(Boolean)
 
-	writeFileSync(
-		'./.next/static/github-issues.json',
-		JSON.stringify(withMarkdown)
-	)
-	console.log('💡 Github issues written in .next/static/')
+	writeFileSync('./public/github-issues.json', JSON.stringify(withMarkdown))
+	console.log('💡 Github issues written in ./public/')
 }
 
 downloadIssues()
