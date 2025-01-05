@@ -1,16 +1,14 @@
-import { writeFileSync } from 'fs'
 import { Octokit } from '@octokit/rest'
-
-import { micromark } from 'micromark'
-import { gfmHtml, gfm } from 'micromark-extension-gfm'
+import { writeFileSync } from 'fs'
 import { convertIssueLinksToInternal } from '@/app/documentation/tickets/[number]/page'
+import { micromark } from 'micromark'
+import { gfm, gfmHtml } from 'micromark-extension-gfm'
 
 const octokit = new Octokit({ auth: process.env.GITHUB_CLASSIC_TOKEN })
 
 // Credits :
 // https://notebook.lachlanjc.com/2022-08-18_set_up_rss_with_contentlayer_and_mdx
 //
-const domain = 'https://cartes.app'
 
 export async function downloadIssues() {
 	const response = await octokit.paginate('GET /repos/{owner}/{repo}/issues', {
