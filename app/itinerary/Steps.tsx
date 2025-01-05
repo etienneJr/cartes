@@ -3,11 +3,10 @@ import { replaceArrayIndex } from '@/components/utils/utils'
 import addIcon from '@/public/add-circle-stroke.svg'
 import closeIcon from '@/public/remove-circle-stroke.svg'
 import { Reorder, useDragControls } from 'framer-motion'
+import { css, styled } from 'next-yak'
 import Image from 'next/image'
-import Link from 'next/link'
 import { useState } from 'react'
 import { removeStatePart } from '../SetDestination'
-import { css, styled } from 'next-yak'
 import { StepList } from '../itineraire/StepsUI'
 
 export default function Steps({
@@ -34,7 +33,7 @@ export default function Steps({
 	return (
 		<section>
 			<AddStepButton
-				url={setSearchParams({ allez: '->' + allez }, true)}
+				onClick={() => setSearchParams({ allez: '->' + allez })}
 				title={'Ajouter un point comme départ'}
 			/>
 			<StepList
@@ -63,7 +62,7 @@ export default function Steps({
 				))}
 			</StepList>
 			<AddStepButton
-				url={setSearchParams({ allez: allez + '->' }, true)}
+				onClick={() => setSearchParams({ allez: allez + '->' })}
 				title={'Ajouter un point comme destination'}
 			/>
 		</section>
@@ -83,22 +82,23 @@ const AddStepButtonWrapper = styled.div`
 		opacity: 0.4;
 	}
 `
-const AddStepButton = ({ url, title, $between }) => (
+const AddStepButton = ({ onClick, title, $between }) => (
 	<AddStepButtonWrapper>
-		<StepLink href={url} title={title} $between={$between}>
+		<StepLink onClick={onClick} title={title} $between={$between}>
 			<Image src={addIcon} alt="Supprimer cette étape" />
 		</StepLink>
 	</AddStepButtonWrapper>
 )
 
-const StepLink = styled(Link)`
+const StepLink = styled.button`
 	text-decoration: none;
 	margin: 0rem 0.7rem;
 	display: inline-block;
+	padding: 0;
 	${(p) =>
 		p.$between
 			? css`
-					top: 1rem;
+					top: 0.7rem;
 					position: absolute;
 					right: 1.1rem;
 					background: var(--lightestColor);
@@ -181,7 +181,9 @@ const Item = ({
 			<ItemButtons>
 				{index < state.length - 1 && (
 					<AddStepButton
-						url={setSearchParams({ allez: allez.replace('->', '->->') }, true)}
+						onClick={() =>
+							setSearchParams({ allez: allez.replace('->', '->->') })
+						}
 						title={'Ajouter un point intermédiaire'}
 						$between={true}
 					/>
@@ -219,14 +221,16 @@ const RemoveStepLink = ({ setSearchParams, stepKey, state }) => {
 
 	return (
 		<RemoveStepLinkWrapper
-			href={setSearchParams({ allez: removeStatePart(stepKey, state) }, true)}
+			onClick={() =>
+				setSearchParams({ allez: removeStatePart(stepKey, state) })
+			}
 		>
 			<Image src={closeIcon} alt="Supprimer cette étape" />
 		</RemoveStepLinkWrapper>
 	)
 }
 
-const RemoveStepLinkWrapper = styled(Link)`
+const RemoveStepLinkWrapper = styled.button`
 	position: absolute;
 	right: -1.6rem;
 	top: 0.15rem;
