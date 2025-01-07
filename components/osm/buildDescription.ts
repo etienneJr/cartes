@@ -11,7 +11,11 @@ export default function buildOsmFeatureDescription(osmFeature) {
 	const [, soloTags] = processTags(tags) // processTags should get filteredRest as input, but see OsmFeature.tsx's TODO
 
 	const mainTags = soloTags.map(([raw, tag]) => tag)
-	return [mainTags.join(' '), descriptionTag, "à l'adresse " + address]
+	return [
+		mainTags.join(' '),
+		descriptionTag,
+		...(address ? [". À l'adresse " + address] : []),
+	]
 		.filter(Boolean)
 		.join(' - ')
 }

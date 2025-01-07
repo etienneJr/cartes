@@ -1,5 +1,3 @@
-'use client'
-
 import { css, styled } from 'next-yak'
 
 export const FeatureImage = styled.img`
