@@ -63,6 +63,10 @@ export default function Page() {
 				cuisine, photo : en deux clics, ajoutez ces informations sur{' '}
 				<a href="https://www.openstreetmap.fr/contribuer/">OpenStreetMap</a>.
 			</p>
+			<h3>Intégrer une vue satellite</h3>
+			<h3>Intégrer un itinéraire</h3>
+			<h3>Intégrer une vue de rue</h3>
+			<p>Panoramax.</p>
 			<h2>Un projet entièrement gratuit, libre et open-source</h2>
 			<p>
 				Tout le code de Cartes est ouvert sur la plateforme{' '}
