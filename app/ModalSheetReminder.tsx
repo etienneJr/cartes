@@ -14,7 +14,7 @@ export default function ModalSheetReminder({ setOpen }) {
 }
 
 const ReminderWrapper = styled.div`
-	background: red;
+	z-index: 11;
 	position: fixed;
 	bottom: -${popSize / 2}rem;
 	left: -${popSize / 2}rem;
