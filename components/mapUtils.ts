@@ -1,6 +1,7 @@
 import { useMediaQuery } from 'usehooks-ts'
 import { useDimensions } from './react-modal-sheet/hooks'
 import { snapPoints } from '@/app/ModalSheet'
+import { mediaThreshold } from '@/app/ModalSwitch'
 
 export const goodIconSize = (zoom, factor) => {
 	const size = Math.max(0, (factor || 1) * 3.5 * zoom - 16) // I have a doctorate in zoom to icon size study
@@ -16,10 +17,11 @@ export const mapLibreBboxToOverpass = (bbox) => [
 
 export const useComputeMapPadding = (trackedSnap, searchParams) => {
 	const { height } = useDimensions()
-	const isMobile = useMediaQuery('(max-width: 800px)')
-	const sideSheetProbablySmall = !isMobile && !Object.keys(searchParams).length
+	const isSideSheet = useMediaQuery(mediaThreshold)
+	const sideSheetProbablySmall =
+		isSideSheet && !Object.keys(searchParams).length
 
-	if (isMobile) {
+	if (!isSideSheet) {
 		const snapValue = snapPoints[trackedSnap],
 			bottom =
 				snapValue < 0
@@ -34,6 +36,7 @@ export const useComputeMapPadding = (trackedSnap, searchParams) => {
 			left: sideSheetProbablySmall ? 0 : 400, //  rough estimate of the footprint in pixel of the left sheet on desktop; should be made dynamic if it ever gets resizable (a good idea)
 		}
 
+		console.log('indigo padding', padding)
 		return padding
 	}
 }
