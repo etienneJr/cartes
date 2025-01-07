@@ -3,8 +3,6 @@ import { centerOfMass } from '@turf/turf'
 import osmToGeojson from 'osmtogeojson'
 import { isServer } from './serverUrls'
 
-const apiUrlBase = `https://api.openstreetmap.org/api/0.6`
-
 const buildOverpassUrl = (
 	featureType: 'node' | 'way' | 'relation',
 	id: string,
