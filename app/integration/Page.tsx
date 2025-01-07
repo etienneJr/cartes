@@ -1,25 +1,12 @@
+import Privacy from '@/articles/vie-privée.mdx'
 import Logo from '@/public/logo.svg'
-import WebIcon from '@/public/web.svg'
 import { styled } from 'next-yak'
 import Image from 'next/image'
-import Link from 'next/link'
-import Privacy from '@/articles/vie-privée.mdx'
 import CTA from './CTA'
-import { PresentationWrapper } from './UI.tsx'
+import { PresentationWrapper, iframeStyle } from './UI.tsx'
 
 export const title = 'Intégrer une carte sur votre site Web'
 
-const iframeStyle = `
-					width: 20rem;
-					height: 36rem;
-					margin: 0 auto;
-					margin-bottom: 5vh;
-					display: block;
-					border-radius: 1rem;
-					border: 3px solid var(--darkColor);
-					box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 25px -5px,
-						rgba(0, 0, 0, 0.04) 0px 10px 10px -5px;
-`
 const iframeCode = `
 				<iframe
 					src="https://cartes.app/?allez=Little+Beetles|n5352517991|-1.6826|48.1118"

@@ -83,3 +83,14 @@ export const Screens = styled.div`
 		}
 	}
 `
+export const iframeStyle = `
+					width: 20rem;
+					height: 36rem;
+					margin: 0 auto;
+					margin-bottom: 5vh;
+					display: block;
+					border-radius: 1rem;
+					border: 3px solid var(--darkColor);
+					box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 25px -5px,
+						rgba(0, 0, 0, 0.04) 0px 10px 10px -5px;
+`
