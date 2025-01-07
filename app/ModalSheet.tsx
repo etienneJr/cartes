@@ -137,21 +137,12 @@ const SheetContentWrapper = styled.div`
 	padding: 0rem 0.6rem;
 `
 const CustomSheet = styled(Sheet)`
-	.react-modal-sheet-backdrop {
+	:global(.react-modal-sheet-backdrop) {
 		background-color: unset !important;
 	}
-	.react-modal-sheet-container {
-		/* custom styles */
-	}
-	.react-modal-sheet-header {
+	:global(.react-modal-sheet-header) {
 		/* custom styles */
 		height: 1.2rem !important;
-	}
-	.react-modal-sheet-drag-indicator {
-		/* custom styles */
-	}
-	.react-modal-sheet-content {
-		/* custom styles */
 	}
 	color: var(--darkestColor);
 `
