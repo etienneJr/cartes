@@ -1,6 +1,6 @@
 import Privacy from '@/articles/vie-privée.mdx'
 import Logo from '@/public/logo.svg'
-import { styled } from 'next-yak'
+import { css, styled } from 'next-yak'
 import Image from 'next/image'
 import CTA from './CTA'
 import { PresentationWrapper, iframeStyle } from './UI.tsx'
@@ -50,10 +50,23 @@ export default function Page() {
 				cuisine, photo : en deux clics, ajoutez ces informations sur{' '}
 				<a href="https://www.openstreetmap.fr/contribuer/">OpenStreetMap</a>.
 			</p>
+			<h3>Intégrer un encart large</h3>
+
+			<Iframe
+				src="https://cartes.app/?allez=Little+Beetles|n5352517991|-1.6826|48.1118"
+				$width="40rem"
+				$height="30rem"
+			/>
 			<h3>Intégrer une vue satellite</h3>
+			<Iframe
+				src="https://cartes.app/?style=satellite&allez=Little+Beetles|n5352517991|-1.6826|48.1118"
+				$width="40rem"
+				$height="30rem"
+			/>
 			<h3>Intégrer un itinéraire</h3>
+			<p>À venir</p>
 			<h3>Intégrer une vue de rue</h3>
-			<p>Panoramax.</p>
+			<p>À venir, la démo de Panoramax.</p>
 			<h2>Un projet entièrement gratuit, libre et open-source</h2>
 			<p>
 				Tout le code de Cartes est ouvert sur la plateforme{' '}
@@ -86,8 +99,10 @@ const Blockquote = styled.blockquote`
 `
 
 const Iframe = styled.iframe`
-	width: 20rem;
-	height: 36rem;
+	${(p) => css`
+		width: ${p.$width || '20rem'};
+		height: ${p.$height || '36rem'};
+	`}
 	margin: 0 auto;
 	margin-bottom: 5vh;
 	display: block;
