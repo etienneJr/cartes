@@ -23,7 +23,7 @@ export default function Blog({ articles }) {
 				attendez-vous à quelques bugs.
 			</p>
 			<List>
-				{articles.map(({ url, date, titre }) => (
+				{articles.map(({ url, date, titre, lang }) => (
 					<li key={url}>
 						<div>
 							<Link
@@ -32,6 +32,14 @@ export default function Blog({ articles }) {
 							/>
 						</div>
 						<small>publié le {dateCool(date)}</small>
+						{lang && lang === 'en' && (
+							<span
+								style={{ marginLeft: '.4rem' }}
+								title="This article is written in english"
+							>
+								🇬🇧
+							</span>
+						)}
 					</li>
 				))}
 			</List>

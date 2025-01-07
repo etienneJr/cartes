@@ -1,0 +1,68 @@
+---
+titre: Cartes, a free european alternative to Google Maps
+date: '2025-01-07'
+image: /blog-images/france-horizon-us.png
+lang: en
+description: |
+  We're building an free alternative to Google Maps, based on OpenStreetMap. It's a French project, aiming at a wide usage in France before going international.
+
+# bluesky: 'at://did:plc:eypg6v3q62jkpoxbgicirvjs/app.bsky.feed.post/3l47jooa6ep2j'
+---
+
+import CTA from '../app/presentation/CTA'
+
+In France, most people use the first two letters of "GAFAM" (Google Apple Facebook Amazon Microsoft) for most map purposes : Google and Apple Maps. OpenStreetMap, despite its very detailed map database covering Europe and France, is largely missing from the French citizens' daily map usage, mostly because OSM's interfaces are missing lots of features compared to the commercial solutions.
+
+Vector tiles, pictures of places, modern mobile UX, state of the art transit and transport calculation, street view alternative, etc : all these features are missing from openstreetmap.org. They are not to be found either in Organic Maps or Osmand, the most well-known OpenStreetMap interfaces. This lack of visibility makes it hard to convince shops to update e.g. their open hours : why bother if no one around me uses an app based on OSM ?
+
+## We need a modern Web alternative to Google Maps
+
+Cartes means "map" in French. The project began lat 2023 ith the aim to provide a French alternative to Google Maps. Cartes.app is a Web-only map app. No time is spent validating the app on the stores and their obscure rules that make Organic Maps disappear randomly, be it Google's store but also on F-droid. The Organic Maps team is now recommanding the use of Obtainium, among other commercial stores like Huawei's. We believe this is ridiculous, the Web is the universal Web store, no installation step required, and it is modern enough to offer most modern map services to users. Including an arrow showing the direction of the device, a Web-first done in a few hours of development : our guess is that no one believed it possible before.
+
+## A planet-friendly map of our only planet
+
+In parallel, and that is the second motivation to build Cartes, most maps incite one to use cars : Google, Apple Maps (default view) but also the french leaders Mappy and Viamichelin. The only transportation infrastructure visible at high zoom is the network of car roads, while rails aren't even visible at high zoom.
+
+What if 100 % of the developing resources of a modern map application was put on the other means of transport ? Walking, cycling on secure bike paths, full national transit cover, multimodality (e.g. bike -> subway parking -> subway -> car sharing) ? Well, we're not crazy, cars are here to stay, but we'll make it sure shared, filled, and electric cars are incentivized.
+
+As I explain in this founding [blog post (French)](https://cartes.app/blog/un-beau-voyage), people in France who want to measure and reduce their carbon footprint are now able to do so with a multitude of free and good resources that we've been building in the last five to ten years. The challenge is now to bring sustainable modes of living _to the user_, by rebuilding good alternatives to the everyday assistants that are digital maps, for the "mobility" scope.
+
+## Who builds Cartes ?
+
+Cartes is actively developed by Mael Thomas since january 2024 as a very serious benevolent side project, and helped by a community of dozens of people on github.com/cartesapp/cartes and OSM France's forum https://forum.openstreetmap.fr/t/presentation-de-cartes-app/20566. It is fully AGPL open source, both the typescript Web app and the two servers serving tiles, transit data, the search engine, and transit calculation.
+
+## Start small
+
+Its scope is limited to France, on purpose : we don't want to build a mediocre application (on Apple Maps's standards) for the world, nor an average application for Europe. Even in France, we're starting from the western regions, eating our own dog food, using it daily. Transit data, localisation, and tile generation are the main hurdles. We're aiming at a 1.0 version in the beginning of 2025, when we'll then be able to talk about [internationalisation](https://cartes.app/documentation/tickets/574).
+
+## Why should you trust us ?
+
+I've been building 100 % open source projects for the French public digital services (BetaGouv) for almost 10 years now, building the official pay check and social contributions simulator mon-entreprise.urssaf.fr with (1 million monthly visits), followed by the official carbon footprint calculator nosgestesclimat.fr (2 million simulations), both based on a new programming language dedicated to public rules-as-code models, publi.codes actively used and developed in 2024.
+
+Open source map and mobility technologies have evolved so much that we think what was not possible in 2010 is now feasible. Maplibre, MapTiler, PMtiles, Web sensors, Europe's transit open data directive, BRouter, Valhalla, Motis, are all awesome technologies that are missing state of the art UIs.
+
+As a good example of using new technologies, see [Cartes's integration of the French public Street View alternative](https://cartes.app/?rue=oui&panoramax=663def1f-517f-4a9e-bbcf-1fc45e944710#15.62/47.213967/-1.534933), Panoramax. We explain this collaboration in French in this [blog post](https://cartes.app/blog/street-view-france).
+
+While we were releasing the 0.2 and 0.3 versions of Cartes this spring, the French map administration "IGN" released their new mobile app, also 100 % open source (the law makes it mandatory). Their app is mobile only, and lacks bike and transit itineraries, but we've already talked about working together, as we have with Android distributions. We've also built the export of itineraries to GPX to let the user freely use Organic Maps or Osmand offline on their phone, and we'd like to talk with them in the beginning of the next year.
+
+## Is this project funded ?
+
+The project has no funding sources yet, except for the funds of the Menoz company that I own to let me exercise my job of Web developer as freelance.
+
+The Menoz company is paying the servers, which aren't free : 20 € / month for Vercel (the Web app host), 50 € / month for a Scaleway server, 50 € / month for the additional base layers for MapTiler (we're managed to build and serve our own base tiles to reduce this cost from 150 to 50 € 🙂 ).
+
+Cartes can be seen as a 100 % open source project funded by this company, with no commercial pretentions. Doing side consulting as an expert digital map developer is a solid long-terme funding, but seeing the warm welcome from the OpenStreetMap community, we'd also like to solicit dedicated funding for Cartes.
+
+We've started surveying our ~ 5 000 monthly users (as of january 2025) about their willingness to pay a small premium or support subscription of 1 € / month.
+
+Carte's backlog is already full of [incredible ideas](https://cartes.app/documentation/tickets), but we're focusing for the next months on building a v2 of our transit calculator.
+
+One way of seing this backlog is to build a better UI for the european Motis project (state of the art transit calculator server). We've had the help of a benevolent designer to bring new UI ideas to this chapter.
+
+No legal entity dedicated to Cartes has been created yet, foundation or association. For the present time, we're attached to spending 99 % of our time on building the product first to a v1, before building a stronger legal base that will need time working on paper stuff and long meetings (a necessary step for later in 2025, we know !).
+
+## How does Cartes compare to other map projects ?
+
+One can view Cartes as OrganicMaps' or OsmAnd's effort, but for the Web. It aims to be the interface that lots of OSM contributors are dreaming of for OSM, complementary to the bare bones openstreetmap.org interface that was never really built for anything else that _contributing_ to OSM, not using it.
+
+<CTA>Try Cartes.app</CTA>
