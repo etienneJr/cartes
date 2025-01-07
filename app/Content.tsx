@@ -116,6 +116,7 @@ export default function Content(props) {
 		geocodedClickedPoint,
 		searchParams.gare,
 		searchParams.abonnement,
+		searchParams.chargement,
 	]
 
 	const hasContent = content.some(

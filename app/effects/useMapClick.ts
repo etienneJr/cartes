@@ -131,6 +131,7 @@ export default function useMapClick(
 			console.log('clicked name ', name)
 
 			setSearchParams({ chargement: name })
+			console.log('clicked name did set chargement', name)
 
 			const noDisambiguation = hasNwr
 			const [element, realFeatureType] = await disambiguateWayRelation(
