@@ -122,14 +122,18 @@ export default function Map(props) {
 	const [distanceMode, setDistanceMode] = useState(false)
 
 	const padding = useComputeMapPadding(trackedSnap, searchParams)
+	console.log({ trackedSnap, padding })
 
 	useGeolocationAutofocus(map, itinerary?.isItineraryMode, geolocation, padding)
 
+	const paddingHash = Object.entries(padding).join('')
 	useEffect(() => {
 		if (!map) return
 
-		map.flyTo({ padding })
-	}, [map, padding])
+		setTimeout(() => {
+			map.flyTo({ padding })
+		}, 100)
+	}, [map, paddingHash])
 
 	const wikidataPicture = wikidata?.pictureUrl
 
