@@ -130,9 +130,7 @@ export default function Map(props) {
 	useEffect(() => {
 		if (!map) return
 
-		setTimeout(() => {
-			map.flyTo({ padding })
-		}, 100)
+		map.flyTo({ padding })
 	}, [map, paddingHash])
 
 	const wikidataPicture = wikidata?.pictureUrl
@@ -339,6 +337,7 @@ export default function Map(props) {
 				// speed and maxDuration could let us zoom less quickly between shops,
 				// but then the animation from town to town wouldn't take place anymore.
 				// This animation lets the user understand the direction of the move.
+				padding,
 			})
 		}
 	}, [
@@ -348,6 +347,7 @@ export default function Map(props) {
 		stepsLength,
 		autoPitchPreferenceIsNo,
 		setAutoPitchPreference,
+		paddingHash,
 	])
 
 	/* TODO Transform this to handle the last itinery point if alone (just a POI url),
