@@ -3,17 +3,61 @@ import { centerOfMass } from '@turf/turf'
 import osmToGeojson from 'osmtogeojson'
 import { isServer } from './serverUrls'
 
+const overpassRequestSuffix = 'https://overpass-api.de/api/interpreter?data='
+
 const buildOverpassUrl = (
 	featureType: 'node' | 'way' | 'relation',
 	id: string,
 	full = false,
 	relations = false
 ) =>
-	`https://overpass-api.de/api/interpreter?data=${encodeURIComponent(
+	`${overpassRequestSuffix}${encodeURIComponent(
 		`[out:json];${featureType}(id:${id});${
 			full ? '(._;>;);' : relations ? '<;' : ''
 		}out body meta;`
 	)}`
+
+export const combinedOsmRequest = async (queries) => {
+	const requestBody = queries
+		.map((result) => {
+			const { osmId, featureType, latitude, longitude } = result
+
+			return `${featureType}(id:${osmId}); out body meta; `
+		})
+		.join('')
+
+	const requestString = `[out:json];${requestBody}`
+	const request = await fetch(
+		overpassRequestSuffix + encodeURIComponent(requestString)
+	)
+
+	const json = await request.json()
+
+	const { elements } = json
+
+	const results = queries
+		.map((query) => {
+			const found = elements.find(
+				(element) =>
+					query.osmId === element.id && query.featureType === element.type
+			)
+
+			if (!found) return false
+			const geoElement = {
+				...found,
+				lat: query.latitude,
+				lon: query.longitude,
+			}
+			return geoElement
+		})
+		.filter(Boolean)
+	console.log('requestString', requestString, results)
+
+	//TODO we don't handle housenumbers like in osmRequest, not sure we need this
+	//in this combinedOsmRequest function that is used to enrich photon search
+	//results with OSM tags
+	return results
+}
 
 export const osmRequest = async (featureType, id, full) => {
 	console.log('lightgreen will make OSM request', featureType, id, full)

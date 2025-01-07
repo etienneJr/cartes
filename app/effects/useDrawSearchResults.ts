@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { osmRequest } from '../osmRequest'
+import { combinedOsmRequest, osmRequest } from '../osmRequest'
 import useDrawQuickSearchFeatures from './useDrawQuickSearchFeatures'
 
 export default function useDrawSearchResults(map, state, setOsmFeature) {
@@ -18,17 +18,7 @@ export default function useDrawSearchResults(map, state, setOsmFeature) {
 		if (!results) return
 
 		const doFetch = async () => {
-			const newFeatures = await Promise.all(
-				results.map(async (result) => {
-					const { osmId, featureType, latitude, longitude } = result
-					const elements = await osmRequest(featureType, osmId, false)
-					if (!elements) return
-					const element = elements[0]
-					// osmRequest lacks lat lon
-					const geoElement = { ...element, lat: latitude, lon: longitude }
-					return geoElement
-				})
-			)
+			const newFeatures = await combinedOsmRequest(results)
 			setFeatures(newFeatures)
 		}
 		doFetch()
