@@ -27,7 +27,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { getCategories } from '@/components/categories'
 import ModalSwitch from './ModalSwitch'
-import { ContentWrapper, MapContainer } from './UI'
+import { MapContainer } from './UI'
 import { useZoneImages } from './ZoneImages'
 
 import splitAllez from '@/components/itinerary/splitAllez'
@@ -244,45 +244,43 @@ export default function Container(props) {
 	return (
 		<div ref={containerRef}>
 			<MapContainer $isMapLoaded={isMapLoaded}>
-				<ContentWrapper>
-					<ModalSwitch
-						{...{
-							setState,
-							state,
-							latLngClicked,
-							zoneImages,
-							panoramaxImages,
-							resetZoneImages,
-							zoom: debouncedZoom,
-							setZoom,
-							searchParams,
-							style,
-							styleKey,
-							styleChooser,
-							setStyleChooser,
-							itinerary,
-							transportStopData: clickedStopData[1],
-							geocodedClickedPoint,
-							resetClickedPoint,
-							transportsData,
-							agencyAreas,
-							geolocation,
-							bboxImages,
-							bbox: debouncedBbox,
-							focusImage,
-							vers,
-							osmFeature,
-							quickSearchFeaturesMap,
-							containerRef,
-							trackedSnap,
-							setTrackedSnap,
-							geocodedClickedPoint,
-							wikidata,
-							setLatLngClicked,
-							center: debouncedCenter,
-						}}
-					/>
-				</ContentWrapper>
+				<ModalSwitch
+					{...{
+						setState,
+						state,
+						latLngClicked,
+						zoneImages,
+						panoramaxImages,
+						resetZoneImages,
+						zoom: debouncedZoom,
+						setZoom,
+						searchParams,
+						style,
+						styleKey,
+						styleChooser,
+						setStyleChooser,
+						itinerary,
+						transportStopData: clickedStopData[1],
+						geocodedClickedPoint,
+						resetClickedPoint,
+						transportsData,
+						agencyAreas,
+						geolocation,
+						bboxImages,
+						bbox: debouncedBbox,
+						focusImage,
+						vers,
+						osmFeature,
+						quickSearchFeaturesMap,
+						containerRef,
+						trackedSnap,
+						setTrackedSnap,
+						geocodedClickedPoint,
+						wikidata,
+						setLatLngClicked,
+						center: debouncedCenter,
+					}}
+				/>
 				<Meteo coordinates={debouncedApproximateCenter} />
 				{focusedImage && <FocusedImage {...{ focusedImage, focusImage }} />}
 				{searchParams.panoramax && (

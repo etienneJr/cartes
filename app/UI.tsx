@@ -31,13 +31,6 @@ export const MapContainer = styled.div`
 	color: var(--darkestColor);
 `
 
-export const ContentWrapper = styled.div`
-	position: absolute;
-	top: min(1.5vh, 0.5rem);
-	left: min(3vw, 1.5rem);
-	z-index: 10;
-`
-
 export const ModalCloseButton = (props) => (
 	<ModalCloseButtonButton {...props}>
 		<Image src={closeIcon} alt="Fermer" />

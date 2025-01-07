@@ -10,12 +10,16 @@ export default function SideSheet(props) {
 }
 
 const SideSheetWrapper = styled.div`
+	position: absolute;
+	top: 2vh;
+	left: 1vw;
+	z-index: 10;
 	background-color: var(--lightestColor2) !important;
 	width: 26rem;
-	margin-top: 1rem;
 	padding: 0.4rem 0.6rem;
 	border-radius: 0.6rem;
-	max-height: 90vh;
+	max-height: 80vh;
+	max-width: 45vh;
 	overflow: scroll;
 	--shadow-color: 217deg 49% 38%;
 	--shadow-elevation-medium: 0.3px 0.5px 0.7px hsl(var(--shadow-color) / 0.29),

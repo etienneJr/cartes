@@ -189,7 +189,7 @@ const MeteoWrapper = styled.section`
 		margin: 0 0.2rem;
 		display: inline-block;
 	}
-	z-index: 10;
+	z-index: 9;
 	filter: drop-shadow(0 0 0.75rem white);
 
 	background: #ffffff85;
