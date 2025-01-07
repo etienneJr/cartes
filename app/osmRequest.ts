@@ -4,20 +4,30 @@ import osmToGeojson from 'osmtogeojson'
 import { isServer } from './serverUrls'
 
 const apiUrlBase = `https://api.openstreetmap.org/api/0.6`
+
+const buildOverpassUrl = (
+	featureType: 'node' | 'way' | 'relation',
+	id: string,
+	full = false,
+	relations = false
+) =>
+	`https://overpass-api.de/api/interpreter?data=${encodeURIComponent(
+		`[out:json];${featureType}(id:${id});${
+			full ? '(._;>;);' : relations ? '<;' : ''
+		}out body meta;`
+	)}`
+
 export const osmRequest = async (featureType, id, full) => {
 	console.log('lightgreen will make OSM request', featureType, id, full)
-	const request = await fetch(
-		`${apiUrlBase}/${featureType}/${id}${full ? '/full' : ''}.json`,
-		{
-			...(isServer
-				? {
-						headers: {
-							'User-Agent': 'Cartes.app',
-						},
-				  }
-				: {}),
-		}
-	)
+	const request = await fetch(buildOverpassUrl(featureType, id, full), {
+		...(isServer
+			? {
+					headers: {
+						'User-Agent': 'Cartes.app',
+					},
+			  }
+			: {}),
+	})
 	if (!request.ok) {
 		console.log('lightgreen request not ok', request)
 
@@ -34,7 +44,7 @@ export const osmRequest = async (featureType, id, full) => {
 			// example : https://www.openstreetmap.org/node/3663795073
 			if (tags['addr:housenumber'] && !tags['addr:street']) {
 				const relationRequest = await fetch(
-					`${apiUrlBase}/node/${id}/relations.json`
+					buildOverpassUrl(featureType, id, false, true)
 				)
 				const json = await relationRequest.json()
 				const {
