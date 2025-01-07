@@ -16,7 +16,7 @@ export const mapLibreBboxToOverpass = (bbox) => [
 ]
 
 export const useComputeMapPadding = (trackedSnap, searchParams) => {
-	const { height } = useDimensions()
+	const { height, width } = useDimensions()
 	const isSideSheet = useMediaQuery(mediaThreshold)
 	const sideSheetProbablySmall =
 		isSideSheet && !Object.keys(searchParams).length
@@ -29,11 +29,16 @@ export const useComputeMapPadding = (trackedSnap, searchParams) => {
 					: snapValue < 1
 					? height * snapValue
 					: snapValue
-		const padding = { bottom }
+		const padding = { bottom, left: 0 }
 		return padding
 	} else {
 		const padding = {
-			left: sideSheetProbablySmall ? 0 : 400, //  rough estimate of the footprint in pixel of the left sheet on desktop; should be made dynamic if it ever gets resizable (a good idea)
+			bottom: 0,
+			left: sideSheetProbablySmall
+				? 0
+				: width > 1000
+				? 400
+				: (45 / 100) * width, //  rough estimate of the footprint in pixel of the left sheet on desktop; should be made dynamic if it ever gets resizable (a good idea)
 		}
 
 		console.log('indigo padding', padding)
