@@ -8,6 +8,9 @@ export const OsmFeatureHeader = styled.header`
 		margin-bottom: 0.3rem;
 		font-size: 140%;
 		line-height: 1.3rem;
+		@media (max-width: 800px) {
+			font-size: 120%;
+		}
 	}
 	details {
 		margin-top: -2rem;

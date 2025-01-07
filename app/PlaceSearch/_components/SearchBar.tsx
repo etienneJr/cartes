@@ -1,5 +1,5 @@
 import { getHasStepBeingSearched } from '@/app/itinerary/Steps'
-import { InputStyle } from '@/components/InputStyle'
+import { InputStyle, Form } from '@/components/InputStyle'
 import { close } from '@/components/icons/close'
 import { css } from 'next-yak'
 
@@ -24,7 +24,7 @@ export default ({
 }: IProps) => {
 	return (
 		<InputStyle $stateBeingSearched={getHasStepBeingSearched(state)}>
-			<form
+			<Form
 				action="/"
 				method="GET"
 				role="search"
@@ -66,7 +66,7 @@ export default ({
 					placeholder={placeholder || 'Saint-Malo, Nancy, Café du Port...'}
 					onChange={({ target: { value } }) => onDestinationChange(value)}
 				/>
-			</form>
+			</Form>
 			{value && (
 				<button
 					onClick={() => onDestinationChange(null)}

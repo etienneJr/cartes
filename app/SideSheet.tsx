@@ -19,7 +19,7 @@ const SideSheetWrapper = styled.div`
 	padding: 0.4rem 0.6rem;
 	border-radius: 0.6rem;
 	max-height: 80vh;
-	max-width: 45vh;
+	max-width: 45vw;
 	overflow: scroll;
 	--shadow-color: 217deg 49% 38%;
 	--shadow-elevation-medium: 0.3px 0.5px 0.7px hsl(var(--shadow-color) / 0.29),

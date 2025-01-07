@@ -361,7 +361,7 @@ export default function PlaceSearch({
 
 const LogoWrapper = styled.div`
 	display: flex;
-	justify-content: center;
+	justify-content: start;
 	align-items: center;
 	margin-bottom: 0.4rem;
 

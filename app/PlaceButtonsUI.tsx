@@ -1,6 +1,6 @@
 'use client'
 
-import {styled} from 'next-yak'
+import { styled } from 'next-yak'
 
 export const PlaceButtonList = styled.ul`
 	padding: 0;
@@ -8,6 +8,8 @@ export const PlaceButtonList = styled.ul`
 	margin: 1vh auto;
 	display: flex;
 	align-items: center;
+	white-space: nowrap;
+	overflow: scroll;
 `
 
 export const PlaceButton = styled.li`

@@ -1,6 +1,6 @@
 import { styled } from 'next-yak'
 
-export const InputStyle = styled.span`
+export const InputStyle = styled.div`
 	input,
 	textarea,
 	select {
@@ -55,7 +55,7 @@ export const InputStyle = styled.span`
 	color: white;
 	input {
 		max-width: 22rem;
-		width: 83vw;
+		max-width: calc(100% - 2.5rem);
 		background: var(--lightestColor);
 		color: var(--darkColor);
 		border: none;
@@ -64,4 +64,10 @@ export const InputStyle = styled.span`
 			${(p) => (p.stateBeingSearched ? 'yellow' : 'var(--lightColor)')} !important;
 	}
 	position: relative;
+width: 100%;
+`
+
+export const Form = styled.form`
+	width: fit-content;
+	max-width: 100%;
 `
