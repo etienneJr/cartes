@@ -6,7 +6,6 @@ import natureStyle from './nature'
 import railStyle from './railStyle'
 import satellite from './satellite'
 import testStreetComplete from './test-street-complete'
-import transit from './transit'
 import voyageStyle from './voyage'
 
 const key = process.env.NEXT_PUBLIC_MAPTILER

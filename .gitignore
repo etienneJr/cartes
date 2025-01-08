@@ -31,3 +31,8 @@ source/data
 !.yarn/versions
 .vercel
 .aider*
+
+.placeMapDir/*
+!.placeMapDir/.gitkeep
+
+cache.sqlite*

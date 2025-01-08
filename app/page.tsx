@@ -12,6 +12,7 @@ import PaymentBanner from './PaymentBanner'
 import getName from './osm/getName'
 import getUrl from './osm/getUrl'
 import { stepOsmRequest } from './stepOsmRequest'
+import { getFetchUrlBase } from './serverUrls'
 
 export async function generateMetadata(
 	props: Props,
@@ -54,11 +55,12 @@ export async function generateMetadata(
 	const image = tags.image || (await fetchOgImage(getUrl(tags)))
 
 	const searchParamsString = new URLSearchParams(searchParams).toString()
+	const placeMap = `${getFetchUrlBase()}/placeMap/?lat=48.1&lon=-1.68`
 	const metadata = {
 		title: title,
 		description,
 		openGraph: {
-			images: image ? [image] : undefined,
+			images: image ? [image] : [placeMap],
 			modifiedTime,
 			type: 'article',
 			// TODO next doesn't understand this link with only searchParams. Could be

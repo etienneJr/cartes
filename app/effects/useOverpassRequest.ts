@@ -60,8 +60,6 @@ export default function useOverpassRequest(bbox, categories) {
 		bbox && bbox.join('|'),
 	])
 
-	useEffect(() => {})
-
 	return [features]
 }
 
