@@ -32,7 +32,7 @@ source/data
 .vercel
 .aider*
 
-.placeMapDir/*
-!.placeMapDir/.gitkeep
+.placeMapImages/*
+!.placeMapImages/.gitkeep
 
 cache.sqlite*

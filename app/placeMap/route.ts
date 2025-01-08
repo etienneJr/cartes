@@ -8,7 +8,7 @@ const path = require('path')
 // TODO use local style to avoid a download every time
 // const style = franceStyle(true)
 
-const placeMapDir = './placeMapImages/'
+const placeMapDir = '.placeMapImages/'
 
 export async function GET(request) {
 	const requestUrl = new URL(request.url),
