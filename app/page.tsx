@@ -47,6 +47,8 @@ export async function generateMetadata(
 	if (!step) return null
 
 	const osmFeature = step.osmFeature
+	const { lat, lon } = osmFeature
+
 	const tags = osmFeature?.tags || {}
 	const modifiedTime = osmFeature?.timestamp
 	const title = step.name || getName(tags),
@@ -55,7 +57,7 @@ export async function generateMetadata(
 	const image = tags.image || (await fetchOgImage(getUrl(tags)))
 
 	const searchParamsString = new URLSearchParams(searchParams).toString()
-	const placeMap = `${getFetchUrlBase()}/placeMap/?lat=48.1&lon=-1.68`
+	const placeMap = `${getFetchUrlBase()}/placeMap/?lat=${lat}&lon=${lon}&zoom=13`
 	const metadata = {
 		title: title,
 		description,
