@@ -203,7 +203,9 @@ export default function Content(props) {
 				>
 					OK
 				</DialogButton>
+				{/*
 				<Analytics />
+			*/}
 			</ExplanationWrapper>
 		)
 

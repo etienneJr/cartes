@@ -10,8 +10,6 @@ export default function useTrackUser() {
 
 		const doFetch = async () => {
 			try {
-				// For now we don't collect votes
-
 				const traceUrl = `${analyticsUrl}/compte/${uuid}`
 				const traceRequest = await fetch(traceUrl)
 				const traceText = await traceRequest.text()
@@ -20,6 +18,7 @@ export default function useTrackUser() {
 				console.log('Erreur dans le sondage de paiement', e)
 			}
 		}
-		doFetch()
+		//doFetch() analytics deactivated, we've successfully used Deno kv for this
+		//but don't want to pay yet, since Umami does the job on our server
 	}, [uuid])
 }
