@@ -45,7 +45,7 @@ export default function ({ children }) {
 			<Script
 				async
 				src="https://stats.cartes.app/script.js"
-				data-website-id="7effb708-9642-409d-acc3-b9d52106698f"
+				data-website-id="1135c966-cb6e-4678-8d4c-6926dd994456"
 			></Script>
 		</html>
 	)
