@@ -31,7 +31,7 @@ const Page = async ({ params }) => {
 
 	const pr = issue.pull_request
 
-	if (issue.comments === 0) return <Issue issue={issue} />
+	if (issue.comments === 0) return <Issue issue={issue} pr={pr} />
 
 	const request = await fetch(
 		`https://api.github.com/repos/cartesapp/cartes/issues/${number}/comments`
@@ -40,7 +40,7 @@ const Page = async ({ params }) => {
 
 	const json = await request.json()
 
-	if (!json || !json.length) return <Issue issue={issue} />
+	if (!json || !json.length) return <Issue issue={issue} pr={pr} />
 
 	const comments = json.map((comment) => {
 		const markdownBody = convertIssueLinksToInternal(
