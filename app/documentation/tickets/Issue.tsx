@@ -73,7 +73,13 @@ const Comment = ({ user, markdown }) => (
 			/>
 			<a href={user.html_url}>{user.login}</a>
 		</header>
-		<div dangerouslySetInnerHTML={{ __html: markdown }} />
+		<div
+			dangerouslySetInnerHTML={{
+				__html:
+					markdown ||
+					'<small style="color: gray; font-style: italic">commentaire vide</small>',
+			}}
+		/>
 
 		{}
 	</CommentWrapper>

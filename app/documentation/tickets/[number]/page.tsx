@@ -1,8 +1,7 @@
 import issues from '@/public/github-issues.json'
-import Issue from '../Issue'
 import { micromark } from 'micromark'
-import { gfmHtml, gfm } from 'micromark-extension-gfm'
-import { description } from '../metadata'
+import { gfm, gfmHtml } from 'micromark-extension-gfm'
+import Issue from '../Issue'
 
 export async function generateMetadata(
 	{ params, searchParams }: Props,
