@@ -62,6 +62,19 @@ const Comments = styled.ol`
 	padding-left: 0;
 `
 
+const issueHashesToLinks = (markdown) => {
+	const match = markdown.match(/\#(\d+)/g)
+
+	if (!match) return markdown
+	console.log('indigo', match)
+	const number = match[0].split('#')[1]
+
+	return markdown.replace(
+		number,
+		`<a href="/documentation/tickets/${number}">${number}</a>`
+	)
+}
+
 const Comment = ({ user, markdown }) => (
 	<CommentWrapper>
 		<header>
@@ -75,9 +88,9 @@ const Comment = ({ user, markdown }) => (
 		</header>
 		<div
 			dangerouslySetInnerHTML={{
-				__html:
-					markdown ||
-					'<small style="color: gray; font-style: italic">commentaire vide</small>',
+				__html: markdown
+					? issueHashesToLinks(markdown)
+					: '<small style="color: gray; font-style: italic">commentaire vide</small>',
 			}}
 		/>
 
