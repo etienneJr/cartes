@@ -57,12 +57,13 @@ export async function generateMetadata(
 	const image = tags.image || (await fetchOgImage(getUrl(tags)))
 
 	const searchParamsString = new URLSearchParams(searchParams).toString()
-	const placeMap = `${gtfsServerUrl}/placeMap/?lat=${lat}&lon=${lon}&zoom=13`
+	const placeMap =
+		lat && lon && `${gtfsServerUrl}/placeMap/?lat=${lat}&lon=${lon}&zoom=13`
 	const metadata = {
 		title: title,
 		description,
 		openGraph: {
-			images: image ? [image] : [placeMap],
+			images: image ? [image] : placeMap ? [placeMap] : [],
 			modifiedTime,
 			type: 'article',
 			// TODO next doesn't understand this link with only searchParams. Could be
