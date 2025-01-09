@@ -27,6 +27,10 @@ const Page = async ({ params }) => {
 
 	const issue = issues.find((issue) => issue.number == number)
 
+	console.log('indigo', issue)
+
+	const pr = issue.pull_request
+
 	if (issue.comments === 0) return <Issue issue={issue} />
 
 	const request = await fetch(
@@ -48,7 +52,7 @@ const Page = async ({ params }) => {
 		return { ...comment, markdownBody }
 	})
 
-	return <Issue issue={issue} comments={comments} />
+	return <Issue issue={issue} comments={comments} pr={pr} />
 }
 
 export const convertIssueLinksToInternal = (body) =>

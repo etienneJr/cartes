@@ -4,7 +4,7 @@ import ArticleWrapper, { BackToBlogLink } from '@/components/ArticleUI'
 import { styled } from 'next-yak'
 import Image from 'next/image'
 
-export default function Issue({ issue, comments }) {
+export default function Issue({ issue, comments, pr }) {
 	return (
 		<div>
 			<ArticleWrapper>
@@ -30,6 +30,16 @@ export default function Issue({ issue, comments }) {
 						)}
 					</small>
 					<br />
+					{pr && (
+						<section>
+							<p>⚙️ Ceci est une proposition de changement de code.</p>
+							<p>
+								{' '}
+								Rendez-vous sur <a href={pr.html_url}>sa page Github</a> pour
+								l'osculter.
+							</p>
+						</section>
+					)}
 					<Comment markdown={issue.markdownBody} user={issue.user} />
 					{comments && (
 						<Comments>
