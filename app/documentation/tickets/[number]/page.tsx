@@ -2,6 +2,8 @@ import issues from '@/public/github-issues.json'
 import { micromark } from 'micromark'
 import { gfm, gfmHtml } from 'micromark-extension-gfm'
 import Issue from '../Issue'
+import ArticleWrapper, { BackToBlogLink } from '@/components/ArticleUI'
+import Contribution from '@/app/blog/Contribution'
 
 export async function generateMetadata(
 	{ params, searchParams }: Props,
@@ -29,6 +31,18 @@ const Page = async ({ params }) => {
 
 	console.log('indigo', issue)
 
+	if (!issue)
+		return (
+			<ArticleWrapper>
+				<BackToBlogLink href="/documentation/tickets/">
+					← Retour aux issues
+				</BackToBlogLink>
+				<section>
+					<p>Ce ticket ne semble pas exister. Il a peut-être été fermée. </p>
+					<Contribution issueNumber={number} text="✏️ Voir sur Github" />
+				</section>
+			</ArticleWrapper>
+		)
 	const pr = issue.pull_request
 
 	if (issue.comments === 0) return <Issue issue={issue} pr={pr} />

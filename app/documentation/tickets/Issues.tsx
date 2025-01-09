@@ -8,10 +8,6 @@ import { styled } from 'next-yak'
 import { findContrastedTextColor } from '@/components/utils/colors'
 
 export default function Issues({ issues }) {
-	console.log(
-		'indigo',
-		issues.filter((issue) => issue.labels.length)
-	)
 	return (
 		<main>
 			<Nav>
