@@ -12,7 +12,7 @@ import PaymentBanner from './PaymentBanner'
 import getName from './osm/getName'
 import getUrl from './osm/getUrl'
 import { stepOsmRequest } from './stepOsmRequest'
-import { getFetchUrlBase } from './serverUrls'
+import { getFetchUrlBase, gtfsServerUrl } from './serverUrls'
 
 export async function generateMetadata(
 	props: Props,
@@ -57,7 +57,7 @@ export async function generateMetadata(
 	const image = tags.image || (await fetchOgImage(getUrl(tags)))
 
 	const searchParamsString = new URLSearchParams(searchParams).toString()
-	const placeMap = `${getFetchUrlBase()}/placeMap/?lat=${lat}&lon=${lon}&zoom=13`
+	const placeMap = `${gtfsServerUrl}/placeMap/?lat=${lat}&lon=${lon}&zoom=13`
 	const metadata = {
 		title: title,
 		description,
