@@ -8,7 +8,7 @@ const path = require('path')
 // TODO use local style to avoid a download every time
 // const style = franceStyle(true)
 
-const placeMapDir = '.placeMapImages/'
+const placeMapDir = '/home/ubuntu/.placeMapImages/'
 
 export async function GET(request) {
 	const requestUrl = new URL(request.url),
@@ -22,16 +22,16 @@ export async function GET(request) {
 
 	const hash = placeMapDir + [zoom, lat, lon, bearing, pitch].join('-') + '.png'
 	try {
-		const file = fs.readFileSync('/home/laem/cartes/' + hash)
+		const file = fs.readFileSync(hash)
 		if (file)
 			return new Response(file, { headers: { 'content-type': 'image/png' } })
 	} catch (e) {}
 
 	const { stdout, stderr } = await exec(
-		`~/maplibre-native/build/bin/mbgl-render --style http://localhost:8080/api/styles --output ${hash} -z ${zoom} -x ${lon} -y ${lat} -b ${bearing} -p ${pitch}` // && xdg-open out.png`
+		`xvfb-run -a ./home/ubuntu/mbgl-render --style http://cartes.app/api/styles --output ${hash} -z ${zoom} -x ${lon} -y ${lat} -b ${bearing} -p ${pitch}` // && xdg-open out.png`
 	)
 
-	const newFile = fs.readFileSync('/home/laem/cartes/' + hash)
+	const newFile = fs.readFileSync(hash)
 
 	console.log('-------------------------------')
 	console.log('maplibre place map generation')
