@@ -34,6 +34,7 @@ export default ({
 			>
 				<input
 					type="text"
+					name="q"
 					value={value || ''}
 					onBlur={() => setIsMyInputFocused(false)}
 					onFocus={() => setIsMyInputFocused(true)}
