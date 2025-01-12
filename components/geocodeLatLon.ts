@@ -18,7 +18,7 @@ export async function geocodeLatLon(latitude, longitude) {
 	return result
 }
 
-export async function geocodeGetAddress(latitude, longitude, id) {
+export async function geocodeGetAddress(latitude, longitude) {
 	const candidates = await geocodeLatLon(latitude, longitude)
 
 	console.log(candidates)
@@ -38,7 +38,6 @@ export async function geocodeGetAddress(latitude, longitude, id) {
 	)
 	*/
 
-	console.log('FF', feature, id)
 	const address = feature && buildPhotonAddress(feature)
 
 	return [address, feature]
