@@ -128,7 +128,9 @@ export const stepOsmRequest = async (point, state = [], geocode = false) => {
 		osmFeature,
 		key: point,
 	}
+
 	if (!geocode) return result
+	if (!osmFeature) return result
 
 	const [photonAddress, photonFeature] = await geocodeGetAddress(
 		result.latitude,

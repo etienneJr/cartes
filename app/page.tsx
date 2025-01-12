@@ -48,7 +48,7 @@ export async function generateMetadata(
 	if (!step) return null
 
 	const osmFeature = step.osmFeature
-	const { lat, lon } = osmFeature
+	const { lat, lon } = osmFeature || {}
 
 	const tags = osmFeature?.tags || {}
 	const modifiedTime = osmFeature?.timestamp
@@ -65,7 +65,6 @@ export async function generateMetadata(
 	const description = address
 		? descriptionFromOsm + '. ' + address
 		: descriptionFromOsm
-	console.log('PLACE', address, description)
 
 	const metadata = {
 		title: title,
