@@ -43,7 +43,7 @@ export async function generateMetadata(
 
 	if (!allez?.length) return null
 	const vers = allez[allez.length - 1]
-	const step = await stepOsmRequest(vers)
+	const step = await stepOsmRequest(vers, undefined, true)
 
 	if (!step) return null
 
@@ -61,8 +61,10 @@ export async function generateMetadata(
 	const placeMap =
 		lat && lon && `${gtfsServerUrl}/placeMap/?lat=${lat}&lon=${lon}&zoom=13`
 
-	const address = await geocodeGetAddress(lat, lon, osmFeature.id)
-	const description = descriptionFromOsm + '. ' + address
+	const address = step.photonAddress
+	const description = address
+		? descriptionFromOsm + '. ' + address
+		: descriptionFromOsm
 	console.log('PLACE', address, description)
 
 	const metadata = {
@@ -85,7 +87,7 @@ const Page = async (props) => {
 	const searchParams = await props.searchParams
 	const allez = searchParams.allez ? searchParams.allez.split('->') : []
 
-	const newPoints = allez.map((point) => stepOsmRequest(point))
+	const newPoints = allez.map((point) => stepOsmRequest(point, undefined, true))
 	const state = await Promise.all(newPoints).catch((error) => {
 		console.log('Error fetching osm nodes from "allez" searchParam ', allez)
 		console.log(error)

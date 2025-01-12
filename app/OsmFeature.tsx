@@ -1,4 +1,4 @@
-import Address, { addressKeys } from '@/components/Address'
+import Address, { AddressElement, addressKeys } from '@/components/Address'
 import ContactAndSocial from '@/components/ContactAndSocial'
 import Emoji from '@/components/Emoji'
 import OsmLinks from '@/components/OsmLinks'
@@ -22,7 +22,7 @@ import { computeSncfUicControlDigit } from './utils'
 import { css } from 'next-yak'
 import { OsmFeatureHeader, OsmFeatureWrapper } from './OsmFeatureUI'
 
-export default function OsmFeature({ data, transportStopData }) {
+export default function OsmFeature({ data, transportStopData, photonAddress }) {
 	if (!data.tags) return null
 	const { tags } = data
 
@@ -139,6 +139,7 @@ export default function OsmFeature({ data, transportStopData }) {
 				</div>
 			)}
 			<Address tags={tags} />
+			{photonAddress && <AddressElement>{photonAddress}</AddressElement>}
 			{tags.uic_ref && (
 				<GareInfo
 					{...{

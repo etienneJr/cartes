@@ -2,8 +2,9 @@ import { centerOfMass } from '@turf/turf'
 import { enrichOsmFeatureWithPolyon, osmRequest } from './osmRequest'
 import { decodePlace } from './utils'
 import { isServer } from './serverUrls'
+import { geocodeGetAddress } from '@/components/geocodeLatLon'
 
-export const stepOsmRequest = async (point, state = []) => {
+export const stepOsmRequest = async (point, state = [], geocode = false) => {
 	if (!point || point === '') return null
 	const [name, osmCode, longitude, latitude] = point.split('|')
 
@@ -119,7 +120,7 @@ export const stepOsmRequest = async (point, state = []) => {
 	}
 	const osmFeature = await request()
 
-	return {
+	const result = {
 		osmCode,
 		longitude: longitude || osmFeature.lon,
 		latitude: latitude || osmFeature.lat,
@@ -127,4 +128,12 @@ export const stepOsmRequest = async (point, state = []) => {
 		osmFeature,
 		key: point,
 	}
+	if (!geocode) return result
+
+	const [photonAddress, photonFeature] = await geocodeGetAddress(
+		result.latitude,
+		result.longitude,
+		osmFeature.id
+	)
+	return { ...result, photonAddress, photonFeature }
 }

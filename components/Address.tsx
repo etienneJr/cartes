@@ -19,7 +19,7 @@ export const addressKeys = [
 export default function Address({ tags, noPrefix }) {
 	return <AddressElement>{buildAddress(tags, noPrefix)}</AddressElement>
 }
-const AddressElement = styled.address`
+export const AddressElement = styled.address`
 	line-height: 1.4rem;
 	font-size: 90%;
 	font-style: normal;
