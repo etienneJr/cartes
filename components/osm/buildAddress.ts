@@ -15,3 +15,11 @@ export const buildAddress = (t: object, noPrefix = false) => {
 	if (address.trim() === '') return null
 	return address
 }
+
+export function buildPhotonAddress(geocoded) {
+	const p = geocoded.properties
+
+	const address = p.city + ', ' + p.state + ', ' + p.country
+
+	return address
+}

@@ -1,5 +1,6 @@
 // Server components here
 import fetchOgImage from '@/components/fetchOgImage'
+import { geocodeGetAddress } from '@/components/geocodeLatLon'
 import buildDescription from '@/components/osm/buildDescription'
 import fetchAgency, {
 	buildAgencyMeta,
@@ -11,8 +12,8 @@ import Container from './Container'
 import PaymentBanner from './PaymentBanner'
 import getName from './osm/getName'
 import getUrl from './osm/getUrl'
+import { gtfsServerUrl } from './serverUrls'
 import { stepOsmRequest } from './stepOsmRequest'
-import { getFetchUrlBase, gtfsServerUrl } from './serverUrls'
 
 export async function generateMetadata(
 	props: Props,
@@ -52,13 +53,18 @@ export async function generateMetadata(
 	const tags = osmFeature?.tags || {}
 	const modifiedTime = osmFeature?.timestamp
 	const title = step.name || getName(tags),
-		description = buildDescription(step.osmFeature)
+		descriptionFromOsm = buildDescription(step.osmFeature)
 
 	const image = tags.image || (await fetchOgImage(getUrl(tags)))
 
 	const searchParamsString = new URLSearchParams(searchParams).toString()
 	const placeMap =
 		lat && lon && `${gtfsServerUrl}/placeMap/?lat=${lat}&lon=${lon}&zoom=13`
+
+	const address = await geocodeGetAddress(lat, lon, osmFeature.id)
+	const description = descriptionFromOsm + '. ' + address
+	console.log('PLACE', address, description)
+
 	const metadata = {
 		title: title,
 		description,
