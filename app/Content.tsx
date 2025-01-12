@@ -322,6 +322,8 @@ export default function Content(props) {
 							<OsmFeature
 								data={osmFeature}
 								transportStopData={transportStopData}
+								photonAddress={vers.photonAddress}
+								photonFeature={vers.photonFeature}
 							/>
 						) : geocodedClickedPoint ? (
 							<>

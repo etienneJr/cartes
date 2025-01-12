@@ -1,5 +1,6 @@
 // Server components here
 import fetchOgImage from '@/components/fetchOgImage'
+import { geocodeGetAddress } from '@/components/geocodeLatLon'
 import buildDescription from '@/components/osm/buildDescription'
 import fetchAgency, {
 	buildAgencyMeta,
@@ -11,8 +12,8 @@ import Container from './Container'
 import PaymentBanner from './PaymentBanner'
 import getName from './osm/getName'
 import getUrl from './osm/getUrl'
+import { gtfsServerUrl } from './serverUrls'
 import { stepOsmRequest } from './stepOsmRequest'
-import { getFetchUrlBase, gtfsServerUrl } from './serverUrls'
 
 export async function generateMetadata(
 	props: Props,
@@ -42,7 +43,7 @@ export async function generateMetadata(
 
 	if (!allez?.length) return null
 	const vers = allez[allez.length - 1]
-	const step = await stepOsmRequest(vers)
+	const step = await stepOsmRequest(vers, undefined, true)
 
 	if (!step) return null
 
@@ -52,13 +53,20 @@ export async function generateMetadata(
 	const tags = osmFeature?.tags || {}
 	const modifiedTime = osmFeature?.timestamp
 	const title = step.name || getName(tags),
-		description = buildDescription(step.osmFeature)
+		descriptionFromOsm = buildDescription(step.osmFeature)
 
 	const image = tags.image || (await fetchOgImage(getUrl(tags)))
 
 	const searchParamsString = new URLSearchParams(searchParams).toString()
 	const placeMap =
 		lat && lon && `${gtfsServerUrl}/placeMap/?lat=${lat}&lon=${lon}&zoom=13`
+
+	const address = step.photonAddress
+	const description = address
+		? descriptionFromOsm + '. ' + address
+		: descriptionFromOsm
+	console.log('PLACE', address, description)
+
 	const metadata = {
 		title: title,
 		description,
@@ -79,7 +87,7 @@ const Page = async (props) => {
 	const searchParams = await props.searchParams
 	const allez = searchParams.allez ? searchParams.allez.split('->') : []
 
-	const newPoints = allez.map((point) => stepOsmRequest(point))
+	const newPoints = allez.map((point) => stepOsmRequest(point, undefined, true))
 	const state = await Promise.all(newPoints).catch((error) => {
 		console.log('Error fetching osm nodes from "allez" searchParam ', allez)
 		console.log(error)
