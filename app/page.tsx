@@ -12,6 +12,7 @@ import PaymentBanner from './PaymentBanner'
 import getName from './osm/getName'
 import getUrl from './osm/getUrl'
 import { stepOsmRequest } from './stepOsmRequest'
+import { getFetchUrlBase, gtfsServerUrl } from './serverUrls'
 
 export async function generateMetadata(
 	props: Props,
@@ -46,6 +47,8 @@ export async function generateMetadata(
 	if (!step) return null
 
 	const osmFeature = step.osmFeature
+	const { lat, lon } = osmFeature
+
 	const tags = osmFeature?.tags || {}
 	const modifiedTime = osmFeature?.timestamp
 	const title = step.name || getName(tags),
@@ -54,11 +57,13 @@ export async function generateMetadata(
 	const image = tags.image || (await fetchOgImage(getUrl(tags)))
 
 	const searchParamsString = new URLSearchParams(searchParams).toString()
+	const placeMap =
+		lat && lon && `${gtfsServerUrl}/placeMap/?lat=${lat}&lon=${lon}&zoom=13`
 	const metadata = {
 		title: title,
 		description,
 		openGraph: {
-			images: image ? [image] : undefined,
+			images: image ? [image] : placeMap ? [placeMap] : [],
 			modifiedTime,
 			type: 'article',
 			// TODO next doesn't understand this link with only searchParams. Could be
