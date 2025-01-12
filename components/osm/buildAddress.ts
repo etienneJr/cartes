@@ -18,9 +18,36 @@ export const buildAddress = (t: object, noPrefix = false) => {
 
 export function buildPhotonAddress(geocoded) {
 	console.log('PLACE will build photon address with ', geocoded)
-	const p = geocoded.properties
+	const p = geocoded.properties || geocoded
+	if (!p) return null
 
-	const address = p.city + ', ' + p.state + ', ' + p.country
+	const selection = [p.city, p.state, p.country].filter(Boolean)
+	const address = selection.join(', ')
 
 	return address
+}
+
+export const deduplicatePhotonAddress = (osmAddress, geocoded) => {
+	const test = osmAddress ? osmAddress.toLowerCase() : ''
+	if (!geocoded) return null
+	const p = geocoded.properties
+
+	const entries = Object.entries(p)
+
+	const dedupEntries = entries
+		.map(([k, v]) => {
+			if (!v) return false
+
+			if (test.includes(('' + v).toLowerCase())) return false
+			return [k, v]
+		})
+		.filter(Boolean)
+
+	if (!dedupEntries.length) return null
+
+	const dedup = Object.fromEntries(dedupEntries)
+
+	const photonAddress = buildPhotonAddress(dedup)
+
+	return photonAddress
 }

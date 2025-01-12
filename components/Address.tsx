@@ -1,7 +1,7 @@
 // Inspired by https://github.com/zbycz/osmapp/blob/master/src/services/helpers.ts#L107
 
 import { styled } from 'next-yak'
-import { buildAddress } from './osm/buildAddress'
+import { buildAddress, deduplicatePhotonAddress } from './osm/buildAddress'
 
 export const addressKeys = [
 	'addr:place',
@@ -16,8 +16,19 @@ export const addressKeys = [
 	'contact:street',
 ]
 
-export default function Address({ tags, noPrefix }) {
-	return <AddressElement>{buildAddress(tags, noPrefix)}</AddressElement>
+export default function Address({ tags, noPrefix, photonFeature }) {
+	const osmAddress = buildAddress(tags, noPrefix)
+	const noDuplicatePhotonAddress =
+		deduplicatePhotonAddress(osmAddress, photonFeature) || ''
+
+	return (
+		<>
+			<AddressElement>{osmAddress}</AddressElement>
+			{noDuplicatePhotonAddress && (
+				<AddressElement>{noDuplicatePhotonAddress}</AddressElement>
+			)}
+		</>
+	)
 }
 export const AddressElement = styled.address`
 	line-height: 1.4rem;

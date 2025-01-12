@@ -22,7 +22,12 @@ import { computeSncfUicControlDigit } from './utils'
 import { css } from 'next-yak'
 import { OsmFeatureHeader, OsmFeatureWrapper } from './OsmFeatureUI'
 
-export default function OsmFeature({ data, transportStopData, photonAddress }) {
+export default function OsmFeature({
+	data,
+	transportStopData,
+	photonAddress,
+	photonFeature,
+}) {
 	if (!data.tags) return null
 	const { tags } = data
 
@@ -138,8 +143,7 @@ export default function OsmFeature({ data, transportStopData, photonAddress }) {
 					<span>Niveau administratif : {adminLevel}</span>
 				</div>
 			)}
-			<Address tags={tags} />
-			{photonAddress && <AddressElement>{photonAddress}</AddressElement>}
+			<Address tags={tags} photonFeature={photonFeature} />
 			{tags.uic_ref && (
 				<GareInfo
 					{...{
