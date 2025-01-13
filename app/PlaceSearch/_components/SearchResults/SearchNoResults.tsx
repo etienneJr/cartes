@@ -1,11 +1,13 @@
+import { styled } from 'next-yak'
+
 export default ({ value }) => (
-	<div
-		css={css`
-			text-align: center;
-			font-size: 90%;
-			margin: 20px 0;
-		`}
-	>
+	<Section>
 		<i>Aucun résultat pour la recherche “{value}”</i>.
-	</div>
+	</Section>
 )
+
+const Section = styled.section`
+	text-align: center;
+	font-size: 90%;
+	margin: 20px 0;
+`
