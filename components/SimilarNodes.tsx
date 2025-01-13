@@ -1,62 +1,22 @@
 import { computeHumanDistance } from '@/app/RouteRésumé'
-import categories from '@/app/categories.yaml'
 import useOverpassRequest from '@/app/effects/useOverpassRequest'
-import moreCategories from '@/app/moreCategories.yaml'
 import { OpenIndicator, getOh } from '@/app/osm/OpeningHours'
 import { bearing } from '@turf/bearing'
 import turfDistance from '@turf/distance'
-import { css, styled } from 'next-yak'
+import { styled } from 'next-yak'
 import FeatureLink from './FeatureLink'
 import categoryIconUrl from './categoryIconUrl'
 import { capitalise0, sortBy } from './utils/utils'
-
-// This is very scientific haha
-const latDifferenceOfRennes = 0.07,
-	lonDifferenceOfRennes = 0.15,
-	latDiff = latDifferenceOfRennes / 2,
-	lonDiff = lonDifferenceOfRennes / 2
-// 48.07729814876498,-1.7461581764997334,48.148123804291316,-1.5894174840209132
-/* compute km2 to check
-	const earthRadius = 6371008.8
-	const [south, west, north, east] = bbox
-
-	const surface =
-		(earthRadius *
-			earthRadius *
-			Math.PI *
-			Math.abs(Math.sin(rad(south)) - Math.sin(rad(north))) *
-			(east - west)) /
-		180
-
-	// rad is:
-	function rad(num) {
-		return (num * Math.PI) / 180
-	}
-	*/
-
-const allCategories = [...categories, ...moreCategories]
+import { computeBbox, findCategory } from '@/app/effects/fetchOverpassRequest'
 
 export default function SimilarNodes({ node }) {
 	const { tags } = node
 
-	const category = allCategories.find(({ query: queryRaw }) => {
-		const query = Array.isArray(queryRaw) ? queryRaw : [queryRaw]
-
-		return query.every((queryLine) => {
-			return Object.entries(tags).find(
-				([k, v]) => queryLine.includes(k) && queryLine.includes(v)
-			)
-		})
-	})
+	const category = findCategory(tags)
 
 	const { lat, lon } = node
-	const bbox = [
-		lat - latDiff / 2,
-		lon - lonDiff / 2,
-		lat + latDiff / 2,
-		lon + lonDiff / 2,
-	]
 
+	const bbox = computeBbox(node)
 	const [quickSearchFeaturesMap] = useOverpassRequest(
 		bbox,
 		category ? [category] : []

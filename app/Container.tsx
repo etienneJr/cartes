@@ -46,7 +46,9 @@ import useFetchTransportMap, {
 } from './effects/useFetchTransportMap'
 import useGeocodeRightClick from './effects/useGeocodeRightClick'
 import useOsmRequest from './effects/useOsmRequest'
-import useOverpassRequest from './effects/useOverpassRequest'
+import useOverpassRequest, {
+	useFetchSimilarNodes,
+} from './effects/useOverpassRequest'
 import useFetchItinerary from './itinerary/useFetchItinerary'
 import Meteo from './meteo/Meteo'
 import { getStyle } from './styles/styles'
@@ -58,7 +60,11 @@ import { computeCenterFromBbox } from './utils'
 const contentDebounceDelay = 500
 
 export default function Container(props) {
-	const { state: givenState, agencyEntry } = props
+	const {
+		state: givenState,
+		agencyEntry,
+		similarNodes: givenSimilarNodes,
+	} = props
 
 	const setSearchParams = useSetSearchParams()
 	const clientSearchParams = useSearchParams()
@@ -166,6 +172,10 @@ export default function Container(props) {
 	useOsmRequest(allez, state, setState)
 
 	const osmFeature = vers?.osmFeature
+
+	const similarNodes = useFetchSimilarNodes(osmFeature, givenSimilarNodes)
+
+	console.log('similarNodes', similarNodes)
 
 	const wikidata = useWikidata(osmFeature, state)
 

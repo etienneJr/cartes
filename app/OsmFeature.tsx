@@ -9,10 +9,12 @@ import Tags, {
 	processTags,
 } from '@/components/Tags'
 import Wikipedia from '@/components/Wikipedia'
+import { Loader } from '@/components/loader'
 import { omit } from '@/components/utils/utils'
 import languageIcon from '@/public/language.svg'
 import { css } from 'next-yak'
 import Image from 'next/image'
+import { Suspense } from 'react'
 import GareInfo from './GareInfo'
 import { OsmFeatureHeader, OsmFeatureWrapper } from './OsmFeatureUI'
 import Heritage from './osm/Heritage'
@@ -21,10 +23,9 @@ import getName, { getNameKeys, getNames } from './osm/getName'
 import Brand, { Wikidata } from './tags/Brand'
 import Stop, { isNotTransportStop, transportKeys } from './transport/stop/Stop'
 import { computeSncfUicControlDigit } from './utils'
-import { Suspense } from 'react'
-import { Loader } from '@/components/loader'
 
-export default function OsmFeature({ data, transportStopData, photonFeature }) {
+export default function OsmFeature(props) {
+	const { data, transportStopData, photonFeature } = props
 	if (!data.tags) return null
 	const { tags } = data
 
