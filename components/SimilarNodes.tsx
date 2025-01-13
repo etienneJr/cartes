@@ -1,14 +1,12 @@
 import { computeHumanDistance } from '@/app/RouteRésumé'
-import { buildAllezPart } from '@/app/SetDestination'
 import categories from '@/app/categories.yaml'
-import { fetchOverpassRequest } from '@/app/effects/fetchOverpassRequest'
+import useOverpassRequest from '@/app/effects/useOverpassRequest'
 import moreCategories from '@/app/moreCategories.yaml'
 import { OpenIndicator, getOh } from '@/app/osm/OpeningHours'
-import { encodePlace } from '@/app/utils'
 import { bearing } from '@turf/bearing'
 import turfDistance from '@turf/distance'
 import { css, styled } from 'next-yak'
-import Link from 'next/link'
+import FeatureLink from './FeatureLink'
 import categoryIconUrl from './categoryIconUrl'
 import { capitalise0, sortBy } from './utils/utils'
 
@@ -38,9 +36,8 @@ const latDifferenceOfRennes = 0.07,
 
 const allCategories = [...categories, ...moreCategories]
 
-export default async function SimilarNodes({ node }) {
+export default function SimilarNodes({ node }) {
 	const { tags } = node
-	console.log('render node')
 
 	const category = allCategories.find(({ query: queryRaw }) => {
 		const query = Array.isArray(queryRaw) ? queryRaw : [queryRaw]
@@ -60,9 +57,14 @@ export default async function SimilarNodes({ node }) {
 		lon + lonDiff / 2,
 	]
 
-	if (!category) return null
+	const [quickSearchFeaturesMap] = useOverpassRequest(
+		bbox,
+		category ? [category] : []
+	)
 
-	const features = await fetchOverpassRequest(bbox, category)
+	const features = category && quickSearchFeaturesMap[category.name]
+
+	if (!category || !features?.length) return null
 
 	if (!features?.length) return
 
@@ -134,15 +136,8 @@ const Wrapper = styled.section`
 `
 
 const NodeList = ({ nodes, isOpenByDefault }) => {
-	//const setSearchParams = useSetSearchParams()
-	const setSearchParams = () => '#'
 	return (
-		<ul
-			css={css`
-				margin-left: 0.2rem;
-				list-style-type: none;
-			`}
-		>
+		<NodeListWrapper>
 			{nodes.map((f) => {
 				const humanDistance = computeHumanDistance(f.distance * 1000)
 				const oh = f.tags.opening_hours
@@ -157,30 +152,21 @@ const NodeList = ({ nodes, isOpenByDefault }) => {
 							) : (
 								<OpenIndicator isOpen={isOpen === 'error' ? false : isOpen} />
 							))}
-						<Link
-							href={setSearchParams(
-								{
-									allez: buildAllezPart(
-										f.tags.name,
-										encodePlace(f.type, f.id),
-										f.lon,
-										f.lat
-									),
-								},
-								true
-							)}
-						>
-							{f.tags.name}
-						</Link>{' '}
+						<FeatureLink feature={f} />{' '}
 						<small>
 							à {humanDistance[0]} {humanDistance[1]} vers {roseDirection}
 						</small>
 					</li>
 				)
 			})}
-		</ul>
+		</NodeListWrapper>
 	)
 }
+
+const NodeListWrapper = styled.ul`
+	margin-left: 0.2rem;
+	list-style-type: none;
+`
 
 const OpenIndicatorPlaceholder = styled.span`
 	display: inline-block;

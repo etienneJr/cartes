@@ -278,8 +278,6 @@ export default function Container(props) {
 						wikidata,
 						setLatLngClicked,
 						center: debouncedCenter,
-						serverOsmFeature: props.serverOsmFeature,
-						newClientState: state !== givenState,
 					}}
 				/>
 				<Meteo coordinates={debouncedApproximateCenter} />

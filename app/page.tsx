@@ -115,7 +115,6 @@ const Page = async (props) => {
 					searchParams={searchParams}
 					state={state}
 					agencyEntry={agencyEntry}
-					serverOsmFeature={<OsmFeature data={osmFeature} />}
 				/>
 			</Suspense>
 		</main>
