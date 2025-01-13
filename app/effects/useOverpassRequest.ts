@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react'
-import { fetchOverpassRequest } from './fetchOverpassRequest'
+import { fetchOverpassRequest, fetchSimilarNodes } from './fetchOverpassRequest'
 
 export default function useOverpassRequest(bbox, categories) {
 	const [features, setFeatures] = useState({})
-	console.log('purple data', features)
 
 	useEffect(() => {
 		if (!bbox || !categories) return
@@ -22,4 +21,20 @@ export default function useOverpassRequest(bbox, categories) {
 	])
 
 	return [features]
+}
+
+export function useFetchSimilarNodes(osmFeature, givenSimilarNodes) {
+	const [similarNodes, setSimilarNodes] = useState(givenSimilarNodes)
+
+	useEffect(() => {
+		const doFetch = async () => {
+			if (!osmFeature?.id) return
+			const features = await fetchSimilarNodes(osmFeature)
+			setSimilarNodes(features)
+		}
+
+		doFetch()
+	}, [osmFeature?.id])
+
+	return similarNodes
 }

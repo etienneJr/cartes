@@ -1,4 +1,6 @@
 import computeBboxArea from '@/components/utils/computeBboxArea'
+import categories from '@/app/categories.yaml'
+import moreCategories from '@/app/moreCategories.yaml'
 import { enrichOsmFeatureWithPolyon } from '@/app/osmRequest'
 
 export async function fetchOverpassRequest(bbox, category) {
@@ -62,3 +64,60 @@ out body;
 out skel qt;
 
 `
+
+// This is very scientific haha
+const latDifferenceOfRennes = 0.07,
+	lonDifferenceOfRennes = 0.15,
+	latDiff = latDifferenceOfRennes / 2,
+	lonDiff = lonDifferenceOfRennes / 2
+// 48.07729814876498,-1.7461581764997334,48.148123804291316,-1.5894174840209132
+/* compute km2 to check
+	const earthRadius = 6371008.8
+	const [south, west, north, east] = bbox
+
+	const surface =
+		(earthRadius *
+			earthRadius *
+			Math.PI *
+			Math.abs(Math.sin(rad(south)) - Math.sin(rad(north))) *
+			(east - west)) /
+		180
+
+	// rad is:
+	function rad(num) {
+		return (num * Math.PI) / 180
+	}
+	*/
+export const computeBbox = ({ lat, lon }) => [
+	lat - latDiff / 2,
+	lon - lonDiff / 2,
+	lat + latDiff / 2,
+	lon + lonDiff / 2,
+]
+export const findCategory = (tags) => {
+	const category = allCategories.find(({ query: queryRaw }) => {
+		const query = Array.isArray(queryRaw) ? queryRaw : [queryRaw]
+
+		return query.every((queryLine) => {
+			return Object.entries(tags).find(
+				([k, v]) => queryLine.includes(k) && queryLine.includes(v)
+			)
+		})
+	})
+
+	return category
+}
+
+const allCategories = [...categories, ...moreCategories]
+
+export const fetchSimilarNodes = async (osmFeature) => {
+	const tags = osmFeature && osmFeature.tags
+	const category = tags && findCategory(tags)
+
+	if (!category) return null
+
+	const bbox = computeBbox(osmFeature)
+	const similarNodes = await fetchOverpassRequest(bbox, category)
+
+	return similarNodes
+}
