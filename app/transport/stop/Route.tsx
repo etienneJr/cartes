@@ -7,6 +7,7 @@ import { handleColor } from '../../itinerary/transit/motisRequest'
 import { transportTypeIcon } from '../../itinerary/transit/transportIcon'
 import DayView from '../DayView'
 import Calendar from './Calendar'
+import { RouteLi, RouteNameSpan } from './RouteUI'
 
 export function addMinutes(date, minutes) {
 	return new Date(date.getTime() + minutes * 60000)
@@ -118,23 +119,10 @@ export default function Route({ route, stops = [] }) {
 			: rawName
 
 	return (
-		<li
-			css={css`
-				margin-top: 0.8rem;
-				margin-bottom: 1.4rem;
-			`}
-		>
+		<RouteLi>
 			<RouteName route={route} name={name} />
 			{route.route_type === 3 && hasMultipleTripDirections && (
-				<div
-					css={css`
-						display: flex;
-						align-items: center;
-						small {
-							line-height: 1rem;
-						}
-					`}
-				>
+				<div>
 					<Emoji e="⚠️" />{' '}
 					<small>
 						Attention, plusieurs directions d'une même ligne de bus s'arrêtent à
@@ -142,24 +130,7 @@ export default function Route({ route, stops = [] }) {
 					</small>
 				</div>
 			)}
-			<ul
-				css={css`
-					display: flex;
-					justify-content: end;
-					list-style-type: none;
-					li {
-						margin-right: 0.6rem;
-						border-right: 2px solid var(--lighterColor);
-						padding-right: 0.6rem;
-						line-height: 1rem;
-						display: flex;
-						align-items: center;
-					}
-					li:last-child {
-						border-right: none;
-					}
-				`}
-			>
+			<ul>
 				{stopSelection.map((stop, i) => (
 					<li key={stop.trip_id}>
 						<small>{humanDepartureTime(stop.arrivalDate, i === 0)}</small>
@@ -171,7 +142,7 @@ export default function Route({ route, stops = [] }) {
 			</ul>
 			{calendarOpen && <Calendar data={augmentedStops} />}
 			<DayView data={stopsToday} />
-		</li>
+		</RouteLi>
 	)
 }
 
@@ -186,54 +157,18 @@ export const RouteName = ({ route, name = undefined }) => {
 			? givenShortName.toUpperCase()
 			: givenShortName
 	return (
-		<span
-			css={css`
-				display: flex;
-				align-items: center;
-				justify-content: start;
-				img {
-					height: 1.2rem;
-					width: auto;
-					margin-right: 0.2rem;
-					opacity: 0.6;
-				}
-			`}
-		>
+		<RouteNameSpan $backgroundColor={backgroundColor} $color={color}>
 			<Image
 				src={transportTypeIcon(route.route_type, route)}
 				alt="Icône d'un bus"
 				width="100"
 				height="100"
 			/>
-			<small
-				css={css`
-					strong {
-						background: ${backgroundColor};
-						padding: 0 0.25rem;
-						border-radius: 0.3rem;
-						color: ${color};
-					}
-					span {
-						text-decoration: underline;
-						text-decoration-color: ${backgroundColor};
-						text-decoration-thickness: 2px;
-					}
-
-					white-space: nowrap;
-					width: 100%;
-					overflow: scroll;
-					touch-action: pan-x;
-					height: fit-content;
-					&::-webkit-scrollbar {
-						display: none;
-					}
-					scrollbar-width: none;
-				`}
-			>
+			<small>
 				<strong>{shortName}</strong>{' '}
 				<span>{name || route.route_long_name}</span>
 			</small>
-		</span>
+		</RouteNameSpan>
 	)
 }
 

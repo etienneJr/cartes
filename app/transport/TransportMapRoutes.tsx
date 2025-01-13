@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { ModalCloseButton } from '../UI'
 import { RouteName } from './stop/Route'
+import { css, styled } from 'next-yak'
 
 export default function Routes({
 	routes,
@@ -9,13 +10,7 @@ export default function Routes({
 	routesParam,
 }) {
 	return (
-		<section
-			css={css`
-				position: relative;
-				margin-top: 0.6rem;
-				padding-top: 0.4rem;
-			`}
-		>
+		<Section>
 			{routesParam ? (
 				<ModalCloseButton
 					title="Réinitialiser la sélection de lignes"
@@ -25,45 +20,25 @@ export default function Routes({
 				'👉️ Cliquez pour explorer les lignes'
 			)}
 
-			<ol
-				css={css`
-					margin: 1rem 0;
-					list-style-type: none;
-					> li {
-						margin: 0.6rem 0;
-					}
-				`}
-			>
+			<ol>
 				{routes.map((route) => {
 					const stopList = route.properties.stopList
 					return (
-						<li
-							key={route.properties.route_id}
-							css={css`
-								a {
-									text-decoration: none;
-									color: inherit;
-								}
-							`}
-						>
+						<li key={route.properties.route_id} css={css``}>
 							<Link href={setRoutes(route.properties.route_id)}>
 								<RouteName route={route.properties} />
 							</Link>
 							{route.properties.isNight && <div>🌜️ Bus de nuit</div>}
 							{route.properties.isSchool && <div>🎒 Bus scolaire</div>}
-							<span
-								css={css`
-									margin-right: 1rem;
-								`}
-							>
+							<span style={{ marginRight: '1rem' }}>
 								{stopList.length ? (
 									<small>
 										<details open={routes.length === 1}>
 											<summary>Arrêts</summary>
 											<ol
-												css={css`
-													margin-left: 2rem;
-												`}
+												style={{
+													marginLeft: '2rem',
+												}}
 											>
 												{stopList.map((stop, index) => (
 													<li key={index}>
@@ -78,10 +53,10 @@ export default function Routes({
 								)}
 							</span>
 							<small
-								css={css`
-									text-align: right;
-									color: gray;
-								`}
+								style={{
+									textAlign: 'right',
+									color: 'gray',
+								}}
 							>
 								Voyages par jour : {Math.round(route.properties.perDay / 2)}.
 								Par heure : {Math.round(route.properties.perDay / 10 / 2)}
@@ -90,6 +65,23 @@ export default function Routes({
 					)
 				})}
 			</ol>
-		</section>
+		</Section>
 	)
 }
+
+const Section = styled.section`
+	position: relative;
+	margin-top: 0.6rem;
+	padding-top: 0.4rem;
+	ol {
+		margin: 1rem 0;
+		list-style-type: none;
+		> li {
+			margin: 0.6rem 0;
+			a {
+				text-decoration: none;
+				color: inherit;
+			}
+		}
+	}
+`
