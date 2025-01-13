@@ -12,6 +12,7 @@ import { OpenIndicator, getOh } from '@/app/osm/OpeningHours'
 import { categoryIconUrl } from '@/app/QuickFeatureSearch'
 import { bearing } from '@turf/bearing'
 import { css, styled } from 'next-yak'
+import { fetchOverpassRequest } from '@/app/effects/fetchOverpassRequest'
 
 // This is very scientific haha
 const latDifferenceOfRennes = 0.07,
@@ -39,10 +40,9 @@ const latDifferenceOfRennes = 0.07,
 
 const allCategories = [...categories, ...moreCategories]
 
-export default function SimilarNodes({ node }) {
+export default async function SimilarNodes({ node }) {
 	const { tags } = node
-
-	const setSearchParams = useSetSearchParams()
+	console.log('render node')
 
 	const category = allCategories.find(({ query: queryRaw }) => {
 		const query = Array.isArray(queryRaw) ? queryRaw : [queryRaw]
@@ -62,13 +62,11 @@ export default function SimilarNodes({ node }) {
 		lon + lonDiff / 2,
 	]
 
-	const [quickSearchFeaturesMap] = useOverpassRequest(
-		bbox,
-		category ? [category] : []
-	)
-	const features = category && quickSearchFeaturesMap[category.name]
+	if (!category) return null
 
-	if (!category || !features?.length) return
+	const features = await fetchOverpassRequest(bbox, category)
+
+	if (!features?.length) return
 
 	const reference = [lon, lat]
 	const featuresWithDistance =
@@ -107,14 +105,12 @@ export default function SimilarNodes({ node }) {
 					<h3>{title} proches :</h3>
 					<NodeList
 						nodes={closestFeatures.slice(0, 10)}
-						setSearchParams={setSearchParams}
 						isOpenByDefault={isOpenByDefault}
 					/>
 					<details>
 						<summary>Tous les {title} proches</summary>
 						<NodeList
 							nodes={closestFeatures.slice(10)}
-							setSearchParams={setSearchParams}
 							isOpenByDefault={isOpenByDefault}
 						/>
 					</details>
@@ -139,50 +135,54 @@ const Wrapper = styled.section`
 	}
 `
 
-const NodeList = ({ nodes, setSearchParams, isOpenByDefault }) => (
-	<ul
-		css={css`
-			margin-left: 0.2rem;
-			list-style-type: none;
-		`}
-	>
-		{nodes.map((f) => {
-			const humanDistance = computeHumanDistance(f.distance * 1000)
-			const oh = f.tags.opening_hours
-			const { isOpen } = oh ? getOh(oh) : {}
+const NodeList = ({ nodes, isOpenByDefault }) => {
+	//const setSearchParams = useSetSearchParams()
+	const setSearchParams = () => '#'
+	return (
+		<ul
+			css={css`
+				margin-left: 0.2rem;
+				list-style-type: none;
+			`}
+		>
+			{nodes.map((f) => {
+				const humanDistance = computeHumanDistance(f.distance * 1000)
+				const oh = f.tags.opening_hours
+				const { isOpen } = oh ? getOh(oh) : {}
 
-			const roseDirection = computeRoseDirection(f.bearing)
-			return (
-				<li key={f.id}>
-					{!isOpenByDefault &&
-						(oh == null ? (
-							<OpenIndicatorPlaceholder />
-						) : (
-							<OpenIndicator isOpen={isOpen === 'error' ? false : isOpen} />
-						))}
-					<Link
-						href={setSearchParams(
-							{
-								allez: buildAllezPart(
-									f.tags.name,
-									encodePlace(f.type, f.id),
-									f.lon,
-									f.lat
-								),
-							},
-							true
-						)}
-					>
-						{f.tags.name}
-					</Link>{' '}
-					<small>
-						à {humanDistance[0]} {humanDistance[1]} vers {roseDirection}
-					</small>
-				</li>
-			)
-		})}
-	</ul>
-)
+				const roseDirection = computeRoseDirection(f.bearing)
+				return (
+					<li key={f.id}>
+						{!isOpenByDefault &&
+							(oh == null ? (
+								<OpenIndicatorPlaceholder />
+							) : (
+								<OpenIndicator isOpen={isOpen === 'error' ? false : isOpen} />
+							))}
+						<Link
+							href={setSearchParams(
+								{
+									allez: buildAllezPart(
+										f.tags.name,
+										encodePlace(f.type, f.id),
+										f.lon,
+										f.lat
+									),
+								},
+								true
+							)}
+						>
+							{f.tags.name}
+						</Link>{' '}
+						<small>
+							à {humanDistance[0]} {humanDistance[1]} vers {roseDirection}
+						</small>
+					</li>
+				)
+			})}
+		</ul>
+	)
+}
 
 const OpenIndicatorPlaceholder = styled.span`
 	display: inline-block;

@@ -23,6 +23,6 @@ export default async (url) => {
 
 		return fullImage
 	} catch (error) {
-		console.error('Error fetching OG image :', error)
+		console.log('Error fetching OG image :', error)
 	}
 }

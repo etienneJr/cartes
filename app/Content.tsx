@@ -3,7 +3,6 @@ import { ContentLoaderWrapper, Loader } from '@/components/loader'
 import useSetSearchParams from '@/components/useSetSearchParams'
 import { useWhatChanged } from '@/components/utils/useWhatChanged'
 import { getThumb } from '@/components/wikidata'
-import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { useLocalStorage } from 'usehooks-ts'
@@ -31,9 +30,6 @@ import { defaultAgencyFilter } from './transport/AgencyFilter'
 import { defaultTransitFilter } from './transport/TransitFilter'
 import TransportMap from './transport/TransportMap'
 import useOgImageFetcher from './useOgImageFetcher'
-const Analytics = dynamic(() => import('@/components/analytics/Analytics'), {
-	ssr: false,
-})
 
 export default function Content(props) {
 	const {
@@ -322,7 +318,6 @@ export default function Content(props) {
 							<OsmFeature
 								data={osmFeature}
 								transportStopData={transportStopData}
-								photonAddress={vers.photonAddress}
 								photonFeature={vers.photonFeature}
 							/>
 						) : geocodedClickedPoint ? (
