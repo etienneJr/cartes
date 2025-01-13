@@ -275,13 +275,13 @@ export default function Container(props) {
 						containerRef,
 						trackedSnap,
 						setTrackedSnap,
-						geocodedClickedPoint,
 						wikidata,
 						setLatLngClicked,
 						center: debouncedCenter,
+						serverOsmFeature: props.serverOsmFeature,
+						newClientState: state !== givenState,
 					}}
 				/>
-				{props.serverOsmFeature}
 				<Meteo coordinates={debouncedApproximateCenter} />
 				{focusedImage && <FocusedImage {...{ focusedImage, focusImage }} />}
 				{searchParams.panoramax && (
