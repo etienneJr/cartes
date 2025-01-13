@@ -1,5 +1,4 @@
 import parseOpeningHours from 'opening_hours'
-import { categoryIconUrl } from '../QuickFeatureSearch'
 import { useEffect, useState } from 'react'
 import buildSvgImage from './buildSvgImage'
 import useSetSearchParams from '@/components/useSetSearchParams'
@@ -7,6 +6,7 @@ import { encodePlace } from '../utils'
 import { buildAllezPart } from '../SetDestination'
 import { safeRemove } from './utils'
 import { colors } from '@/components/utils/colors'
+import categoryIconUrl from '@/components/categoryIconUrl'
 
 export default function useDrawQuickSearchFeatures(
 	map,

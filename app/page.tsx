@@ -14,6 +14,7 @@ import getName from './osm/getName'
 import getUrl from './osm/getUrl'
 import { gtfsServerUrl } from './serverUrls'
 import { stepOsmRequest } from './stepOsmRequest'
+import OsmFeature from './OsmFeature'
 
 export async function generateMetadata(
 	props: Props,
@@ -97,6 +98,9 @@ const Page = async (props) => {
 	const agencyEntry = await fetchAgency(searchParams)
 
 	// can't use next-yak for RSC where there is generateMetadata https://github.com/jantimon/next-yak/issues/112#issuecomment-2217800543
+
+	const vers = state?.slice(-1)[0]
+	const osmFeature = vers?.osmFeature
 	return (
 		<main
 			style={{
@@ -111,6 +115,7 @@ const Page = async (props) => {
 					searchParams={searchParams}
 					state={state}
 					agencyEntry={agencyEntry}
+					serverOsmFeature={<OsmFeature data={osmFeature} />}
 				/>
 			</Suspense>
 		</main>
