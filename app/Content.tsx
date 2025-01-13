@@ -40,7 +40,6 @@ export default function Content(props) {
 		panoramaxImages,
 		resetZoneImages,
 		state,
-		newClientState,
 		setState,
 		zoom,
 		setZoom,
@@ -66,7 +65,6 @@ export default function Content(props) {
 		setDisableDrag,
 		wikidata,
 		center,
-		serverOsmFeature,
 	} = props
 
 	useWhatChanged(props, 'Render component Content')
@@ -317,15 +315,11 @@ export default function Content(props) {
 							</ContentLoaderWrapper>
 						)}
 						{osmFeature ? (
-							!newClientState ? (
-								serverOsmFeature
-							) : (
-								<OsmFeature
-									data={osmFeature}
-									transportStopData={transportStopData}
-									photonFeature={vers.photonFeature}
-								/>
-							)
+							<OsmFeature
+								data={osmFeature}
+								transportStopData={transportStopData}
+								photonFeature={vers.photonFeature}
+							/>
 						) : geocodedClickedPoint ? (
 							<>
 								<ModalCloseButton
