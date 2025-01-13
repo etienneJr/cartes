@@ -1,6 +1,7 @@
+'use client'
 import dynamic from 'next/dynamic'
 import { Suspense, useState } from 'react'
-import {styled} from 'next-yak'
+import { styled } from 'next-yak'
 
 const DownloadGPX = dynamic(() => import('./DownloadGPX'), {
 	ssr: false,

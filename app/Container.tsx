@@ -281,6 +281,7 @@ export default function Container(props) {
 						center: debouncedCenter,
 					}}
 				/>
+				{props.serverOsmFeature}
 				<Meteo coordinates={debouncedApproximateCenter} />
 				{focusedImage && <FocusedImage {...{ focusedImage, focusImage }} />}
 				{searchParams.panoramax && (

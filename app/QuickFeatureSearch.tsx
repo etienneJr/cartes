@@ -1,3 +1,4 @@
+'use client'
 import { categorySeparator, getCategories } from '@/components/categories'
 import CategoryResults from '@/components/categories/CategoryResults'
 import useSetSearchParams from '@/components/useSetSearchParams'
@@ -17,17 +18,7 @@ import {
 } from './QuickFeatureSearchUI'
 import categories from './categories.yaml'
 import moreCategories from './moreCategories.yaml'
-
-export const categoryIconUrl = (category) => {
-	if (!category.icon)
-		throw new Error(
-			'Chaque catégorie doit fournir une icône au format suivant (voir le code)'
-		)
-	const url = category.icon.startsWith('http')
-		? category.icon
-		: '/icons/' + category.icon + '.svg'
-	return url
-}
+import categoryIconUrl from '@/components/categoryIconUrl'
 
 export function initializeFuse(categories) {
 	return new Fuse(categories, {

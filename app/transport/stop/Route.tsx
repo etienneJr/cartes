@@ -1,3 +1,4 @@
+'use client'
 import Emoji from '@/components/Emoji'
 import { findContrastedTextColor } from '@/components/utils/colors'
 import { omit } from '@/components/utils/utils'
