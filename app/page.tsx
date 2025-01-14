@@ -1,4 +1,5 @@
 // Server components here
+import buildPlaceJsonLd from '@/buildPlaceJsonLd'
 import fetchOgImage from '@/components/fetchOgImage'
 import buildDescription from '@/components/osm/buildDescription'
 import fetchAgency, {
@@ -9,21 +10,12 @@ import { Props } from 'next/script'
 import { Suspense } from 'react'
 import Container from './Container'
 import PaymentBanner from './PaymentBanner'
-import {
-	computeBbox,
-	fetchOverpassRequest,
-	fetchSimilarNodes,
-	findCategory,
-} from './effects/fetchOverpassRequest'
+import { buildAllezPartFromOsmFeature } from './SetDestination'
+import { fetchSimilarNodes } from './effects/fetchOverpassRequest'
 import getName from './osm/getName'
 import getUrl from './osm/getUrl'
 import { getFetchUrlBase, gtfsServerUrl } from './serverUrls'
 import { stepOsmRequest } from './stepOsmRequest'
-import buildPlaceJsonLd from '@/buildPlaceJsonLd'
-import {
-	buildAllezPartFromOsmFeature,
-	geoFeatureToDestination,
-} from './SetDestination'
 
 export async function generateMetadata(
 	props: Props,
@@ -70,8 +62,7 @@ export async function generateMetadata(
 	const image = tags.image || (await fetchOgImage(getUrl(tags)))
 	console.log('⏳️ TIME og', new Date().getTime() - dateOg.getTime())
 
-	const placeMap =
-		lat && lon && `${gtfsServerUrl}/placeMap/?lat=${lat}&lon=${lon}&zoom=13`
+	const placeMap = buildPlaceMap(lat, lon)
 
 	const address = step.photonAddress
 	const description = address
@@ -149,3 +140,9 @@ const Page = async (props) => {
 }
 
 export default Page
+
+export function buildPlaceMap(lat, lon) {
+	return (
+		lat && lon && `${gtfsServerUrl}/placeMap/?lat=${lat}&lon=${lon}&zoom=13`
+	)
+}
