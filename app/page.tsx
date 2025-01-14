@@ -63,7 +63,7 @@ export async function generateMetadata(
 
 	const image = tags.image || (await fetchOgImage(getUrl(tags)))
 
-	const searchParamsString = new URLSearchParams(searchParams).toString()
+	//	const searchParamsString = new URLSearchParams(searchParams).toString()
 	const placeMap =
 		lat && lon && `${gtfsServerUrl}/placeMap/?lat=${lat}&lon=${lon}&zoom=13`
 
@@ -109,7 +109,7 @@ const Page = async (props) => {
 
 	const similarNodes = await fetchSimilarNodes(osmFeature)
 
-	const jsonLd = osmFeature && buildPlaceJsonLd(osmFeature)
+	const jsonLd = osmFeature && (await buildPlaceJsonLd(osmFeature, vers))
 	return (
 		<main
 			style={{

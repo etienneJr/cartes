@@ -1,4 +1,15 @@
-export default function buildPlaceJsonLd(osmFeature) {
+import getUrl from './app/osm/getUrl'
+import fetchOgImage from './components/fetchOgImage'
+
+export default async function buildPlaceJsonLd(osmFeature, step) {
+	const { tags = {} } = osmFeature
+	const image = tags.image || (await fetchOgImage(getUrl(tags)))
+
+	const { photonFeature } = step
+	const addressProperties = photonFeature && photonFeature.properties
+
+	console.log('ADD', addressProperties)
+
 	return {
 		'@context': 'https://schema.org',
 		'@type': 'Place', //TODO make this more precise with categories.yaml
@@ -9,9 +20,7 @@ export default function buildPlaceJsonLd(osmFeature) {
 		//TODO put all tags not used as additionalProperty https://schema.org/additionalProperty
 		//
 		//
-		image: [
-			'https://media.greengo.voyage/pictures/hosting_establishment/ordered_images/43529020-0c7c-4367-8a4f-324e72c826d9.webp',
-		],
+		image: image ? [image] : undefined,
 		//TODO duplicate of image ?
 		photo: {
 			'@type': 'ImageObject',
@@ -22,12 +31,13 @@ export default function buildPlaceJsonLd(osmFeature) {
 		name: 'L&apos;Escale de Pont Chéan',
 		description: 'Maison au calme en bord de Vilaine',
 		url: 'https://www.greengo.voyage/hote/l-escale-de-pont-chean',
+
 		address: {
 			'@type': 'PostalAddress',
-			addressLocality: 'La Chapelle-de-Brain',
-			postalCode: '35660',
-			addressRegion: 'Ille-et-Vilaine',
-			addressCountry: 'FR',
+			addressLocality: addressProperties.city,
+			postalCode: addressProperties.postcode,
+			addressRegion: addressProperties.state,
+			addressCountry: addressProperties.countrycode,
 		},
 		/* TODO Cartes.app ?
 		brand: {
