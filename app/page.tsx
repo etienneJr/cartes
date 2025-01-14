@@ -54,7 +54,7 @@ export async function generateMetadata(
 	const vers = allez[allez.length - 1]
 	const date = new Date()
 	const step = await stepOsmRequest(vers, undefined, true)
-	console.log('overpass', new Date().getTime() - date.getTime())
+	console.log('⏳️ TIME overpass', new Date().getTime() - date.getTime())
 
 	if (!step) return null
 
@@ -66,8 +66,9 @@ export async function generateMetadata(
 	const title = step.name || getName(tags),
 		descriptionFromOsm = buildDescription(step.osmFeature)
 
+	const dateOg = new Date()
 	const image = tags.image || (await fetchOgImage(getUrl(tags)))
-	console.log('og', new Date().getTime() - date.getTime())
+	console.log('⏳️ TIME og', new Date().getTime() - dateOg.getTime())
 
 	const placeMap =
 		lat && lon && `${gtfsServerUrl}/placeMap/?lat=${lat}&lon=${lon}&zoom=13`

@@ -177,7 +177,6 @@ export default function Container(props) {
 
 	const wikidata = useWikidata(osmFeature, state)
 
-	console.log('wikidata3', wikidata, osmFeature)
 
 	const panoramaxOsmTag = osmFeature?.tags?.panoramax
 

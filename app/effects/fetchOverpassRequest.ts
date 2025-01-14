@@ -23,7 +23,7 @@ export async function fetchOverpassRequest(bbox, category) {
 		overpassRequest
 	)}`
 	console.log(url)
-	const request = await fetch(url)
+	const request = await fetch(url, { cache: 'force-cache' })
 	const json = await request.json()
 
 	const nodeElements = overpassResultsToGeojson(json).map((element) => ({
