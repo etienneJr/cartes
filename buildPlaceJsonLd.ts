@@ -15,7 +15,7 @@ export default async function buildPlaceJsonLd(osmFeature, step) {
 		'/?allez=' +
 		encodeURIComponent(buildAllezPartFromOsmFeature(osmFeature))
 
-	return {
+	const result = {
 		'@context': 'https://schema.org',
 		'@type': 'Place', //TODO make this more precise with categories.yaml
 		//TODO read this list of properties to see which we can fill
@@ -53,7 +53,17 @@ export default async function buildPlaceJsonLd(osmFeature, step) {
 			longitude: osmFeature.lon,
 		},
 		hasMap: 'https://cartes.app/',
+		telephone: tags['phone'] || tags['contact:phone'] || tags['contact:mobile'],
+		alternateName: tags['alt_name'],
 		//TODO
 		//isAccessibleForFree
+		//for opening hours we'll need the work of someone else
+		//openingHoursSpecification
 	}
+
+	return Object.fromEntries(
+		Object.entries(result)
+			.map(([k, v]) => v != null && [k, v])
+			.filter(Boolean)
+	)
 }
