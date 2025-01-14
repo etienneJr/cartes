@@ -1,4 +1,4 @@
-export default function buildPlaceJsonLd() {
+export default function buildPlaceJsonLd(osmFeature) {
 	return {
 		'@context': 'https://schema.org',
 		'@type': 'Place', //TODO make this more precise with categories.yaml

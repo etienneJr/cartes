@@ -19,6 +19,7 @@ import getName from './osm/getName'
 import getUrl from './osm/getUrl'
 import { gtfsServerUrl } from './serverUrls'
 import { stepOsmRequest } from './stepOsmRequest'
+import buildPlaceJsonLd from '@/buildPlaceJsonLd'
 
 export async function generateMetadata(
 	props: Props,
@@ -108,6 +109,7 @@ const Page = async (props) => {
 
 	const similarNodes = await fetchSimilarNodes(osmFeature)
 
+	const jsonLd = osmFeature && buildPlaceJsonLd(osmFeature)
 	return (
 		<main
 			style={{
@@ -115,6 +117,12 @@ const Page = async (props) => {
 				minHeight: '100vh',
 			}}
 		>
+			{jsonLd && (
+				<script
+					type="application/ld+json"
+					dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+				/>
+			)}
 			<Suspense>
 				<PaymentBanner parameter={searchParams.abonnement} />
 

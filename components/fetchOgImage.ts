@@ -7,7 +7,10 @@ export default async (url) => {
 		const urlBase = getFetchUrlBase()
 
 		const response = await fetch(
-			urlBase + '/getOgImage?url=' + encodeURIComponent(url)
+			urlBase + '/getOgImage?url=' + encodeURIComponent(url),
+			{
+				cache: 'force-cache',
+			}
 		)
 		const { ogImageContent = null } = await response.json()
 		console.log('OOOO', ogImageContent)
