@@ -17,9 +17,13 @@ import {
 } from './effects/fetchOverpassRequest'
 import getName from './osm/getName'
 import getUrl from './osm/getUrl'
-import { gtfsServerUrl } from './serverUrls'
+import { getFetchUrlBase, gtfsServerUrl } from './serverUrls'
 import { stepOsmRequest } from './stepOsmRequest'
 import buildPlaceJsonLd from '@/buildPlaceJsonLd'
+import {
+	buildAllezPartFromOsmFeature,
+	geoFeatureToDestination,
+} from './SetDestination'
 
 export async function generateMetadata(
 	props: Props,
@@ -63,7 +67,6 @@ export async function generateMetadata(
 
 	const image = tags.image || (await fetchOgImage(getUrl(tags)))
 
-	//	const searchParamsString = new URLSearchParams(searchParams).toString()
 	const placeMap =
 		lat && lon && `${gtfsServerUrl}/placeMap/?lat=${lat}&lon=${lon}&zoom=13`
 
@@ -71,6 +74,13 @@ export async function generateMetadata(
 	const description = address
 		? descriptionFromOsm + '. ' + address
 		: descriptionFromOsm
+
+	const url = osmFeature
+		? getFetchUrlBase() +
+		  '/?allez=' +
+		  encodeURIComponent(buildAllezPartFromOsmFeature(osmFeature))
+		: undefined
+	console.log('SEARCHP', url)
 
 	const metadata = {
 		title: title,
@@ -82,7 +92,7 @@ export async function generateMetadata(
 			// TODO next doesn't understand this link with only searchParams. Could be
 			// symtomatic of a bad choice we made : the id / name should be in the
 			// path, not the searchParams ? Could it lead to RSC generation ?
-			//url: '/?' + searchParamsString,
+			url,
 		},
 	}
 	return metadata

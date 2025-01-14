@@ -1,4 +1,6 @@
+import { buildAllezPartFromOsmFeature } from './app/SetDestination'
 import getUrl from './app/osm/getUrl'
+import { getFetchUrlBase } from './app/serverUrls'
 import fetchOgImage from './components/fetchOgImage'
 
 export default async function buildPlaceJsonLd(osmFeature, step) {
@@ -8,7 +10,10 @@ export default async function buildPlaceJsonLd(osmFeature, step) {
 	const { photonFeature } = step
 	const addressProperties = photonFeature && photonFeature.properties
 
-	console.log('ADD', addressProperties)
+	const url =
+		getFetchUrlBase() +
+		'/?allez=' +
+		encodeURIComponent(buildAllezPartFromOsmFeature(osmFeature))
 
 	return {
 		'@context': 'https://schema.org',
@@ -22,15 +27,18 @@ export default async function buildPlaceJsonLd(osmFeature, step) {
 		//
 		image: image ? [image] : undefined,
 		//TODO duplicate of image ?
-		photo: {
-			'@type': 'ImageObject',
-			contentUrl:
-				'https://media.greengo.voyage/pictures/hosting_establishment/ordered_images/43529020-0c7c-4367-8a4f-324e72c826d9.webp',
-			name: 'L&apos;Escale de Pont Chéan',
-		},
-		name: 'L&apos;Escale de Pont Chéan',
-		description: 'Maison au calme en bord de Vilaine',
-		url: 'https://www.greengo.voyage/hote/l-escale-de-pont-chean',
+		...(image
+			? {
+					photo: {
+						'@type': 'ImageObject',
+						contentUrl: image,
+						name: osmFeature.name,
+					},
+			  }
+			: {}),
+		name: osmFeature.name,
+		description: osmFeature.description,
+		url,
 
 		address: {
 			'@type': 'PostalAddress',
@@ -39,18 +47,13 @@ export default async function buildPlaceJsonLd(osmFeature, step) {
 			addressRegion: addressProperties.state,
 			addressCountry: addressProperties.countrycode,
 		},
-		/* TODO Cartes.app ?
-		brand: {
-			'@type': 'Brand',
-			logo: 'https://www.greengo.voyage/images/greengo-logo-square.svg',
-			slogan: 'Des séjours écoresponsables qui font du bien',
-		},
-		*/
 		geo: {
 			'@type': 'GeoCoordinates',
-			latitude: 47.6866835,
-			longitude: -1.938247,
+			latitude: osmFeature.lat,
+			longitude: osmFeature.lon,
 		},
-		memberOf: ['Accueil Vélo'],
+		hasMap: 'https://cartes.app/',
+		//TODO
+		//isAccessibleForFree
 	}
 }
