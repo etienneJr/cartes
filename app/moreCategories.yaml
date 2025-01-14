@@ -251,7 +251,9 @@
     - musée
     - place
     - pont
-  query: '[tourism=attraction]'
+  query:
+    - '[tourism=attraction]'
+    - '[tourism=museum]'
   icon: attraction
 
 - name: Information
