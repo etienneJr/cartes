@@ -68,7 +68,6 @@ export const stepOsmRequest = async (point, state = [], geocode = false) => {
 					},
 				})),
 			}
-			console.log('centerofmass', fc)
 			return fc
 		}
 
