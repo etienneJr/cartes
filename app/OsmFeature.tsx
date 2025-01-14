@@ -25,7 +25,7 @@ import Stop, { isNotTransportStop, transportKeys } from './transport/stop/Stop'
 import { computeSncfUicControlDigit } from './utils'
 
 export default function OsmFeature(props) {
-	const { data, transportStopData, photonFeature } = props
+	const { data, transportStopData, photonFeature, similarNodes } = props
 	if (!data.tags) return null
 	const { tags } = data
 
@@ -244,7 +244,7 @@ export default function OsmFeature(props) {
 					</Loader>
 				}
 			>
-				<SimilarNodes node={data} />
+				<SimilarNodes node={data} similarNodes={similarNodes} />
 			</Suspense>
 			<OsmLinks data={data} />
 		</OsmFeatureWrapper>

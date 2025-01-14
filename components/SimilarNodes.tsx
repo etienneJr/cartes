@@ -4,12 +4,13 @@ import { OpenIndicator, getOh } from '@/app/osm/OpeningHours'
 import { bearing } from '@turf/bearing'
 import turfDistance from '@turf/distance'
 import { styled } from 'next-yak'
-import FeatureLink from './FeatureLink'
+import FeatureLink, { DynamicSearchLink } from './FeatureLink'
 import categoryIconUrl from './categoryIconUrl'
 import { capitalise0, sortBy } from './utils/utils'
 import { computeBbox, findCategory } from '@/app/effects/fetchOverpassRequest'
+import Link from 'next/link'
 
-export default function SimilarNodes({ node }) {
+export default function SimilarNodes({ node, similarNodes: features }) {
 	const { tags } = node
 
 	const category = findCategory(tags)
@@ -22,12 +23,7 @@ export default function SimilarNodes({ node }) {
 		category ? [category] : []
 	)
 
-	const features = category && quickSearchFeaturesMap[category.name]
-	console.log('Did look for similar nodes for ', node, category, features)
-
-	if (!category || !features?.length) return null
-
-	if (!features?.length) return
+	if (!category) return null
 
 	const reference = [lon, lat]
 	const featuresWithDistance =
@@ -61,21 +57,33 @@ export default function SimilarNodes({ node }) {
 	const imageUrl = categoryIconUrl(category)
 	return (
 		<Wrapper>
-			{closestFeatures && (
+			{closestFeatures?.length ? (
 				<>
-					<h3>{title} proches :</h3>
+					<h3>{title} proches</h3>
 					<NodeList
 						nodes={closestFeatures.slice(0, 10)}
 						isOpenByDefault={isOpenByDefault}
 					/>
-					<details>
-						<summary>Tous les {title} proches</summary>
-						<NodeList
-							nodes={closestFeatures.slice(10)}
-							isOpenByDefault={isOpenByDefault}
-						/>
-					</details>
+					{closestFeatures.length > 10 && (
+						<details>
+							<summary>Tous les {title} proches</summary>
+							<NodeList
+								nodes={closestFeatures.slice(10)}
+								isOpenByDefault={isOpenByDefault}
+							/>
+						</details>
+					)}
 				</>
+			) : (
+				<section>
+					<h3>{title} proches</h3>
+					<p>
+						<small>
+							Rien trouvé. Essayez une <DynamicSearchLink category={category} />{' '}
+							sur la carte.
+						</small>
+					</p>
+				</section>
 			)}
 		</Wrapper>
 	)
@@ -86,7 +94,7 @@ const Wrapper = styled.section`
 	background: white;
 	border: 1px solid var(--lightestColor);
 	border-radius: 0.4rem;
-	padding: 0.3rem 0.8rem;
+	padding: 0.3rem 0.8rem 0.8rem;
 	h3 {
 		margin-top: 0.4rem;
 	}
