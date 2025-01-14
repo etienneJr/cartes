@@ -81,7 +81,6 @@ export async function generateMetadata(
 		  encodeURIComponent(buildAllezPartFromOsmFeature(osmFeature))
 		: undefined
 
-
 	const metadata = {
 		title: title,
 		description,
