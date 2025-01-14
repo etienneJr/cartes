@@ -7,6 +7,8 @@ export default function buildPlaceJsonLd() {
 		//additionalType: ['http://www.productontology.org/id/G%C3%AEte'], //TODO
 		//this too if useful
 		//TODO put all tags not used as additionalProperty https://schema.org/additionalProperty
+		//
+		//
 		image: [
 			'https://media.greengo.voyage/pictures/hosting_establishment/ordered_images/43529020-0c7c-4367-8a4f-324e72c826d9.webp',
 		],
