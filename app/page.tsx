@@ -1,6 +1,5 @@
 // Server components here
 import fetchOgImage from '@/components/fetchOgImage'
-import { geocodeGetAddress } from '@/components/geocodeLatLon'
 import buildDescription from '@/components/osm/buildDescription'
 import fetchAgency, {
 	buildAgencyMeta,
@@ -10,6 +9,12 @@ import { Props } from 'next/script'
 import { Suspense } from 'react'
 import Container from './Container'
 import PaymentBanner from './PaymentBanner'
+import {
+	computeBbox,
+	fetchOverpassRequest,
+	fetchSimilarNodes,
+	findCategory,
+} from './effects/fetchOverpassRequest'
 import getName from './osm/getName'
 import getUrl from './osm/getUrl'
 import { gtfsServerUrl } from './serverUrls'
@@ -97,6 +102,12 @@ const Page = async (props) => {
 	const agencyEntry = await fetchAgency(searchParams)
 
 	// can't use next-yak for RSC where there is generateMetadata https://github.com/jantimon/next-yak/issues/112#issuecomment-2217800543
+
+	const vers = state && state.length === 1 && state[0]
+	const osmFeature = vers?.osmFeature
+
+	const similarNodes = await fetchSimilarNodes(osmFeature)
+
 	return (
 		<main
 			style={{
@@ -111,6 +122,7 @@ const Page = async (props) => {
 					searchParams={searchParams}
 					state={state}
 					agencyEntry={agencyEntry}
+					similarNodes={similarNodes}
 				/>
 			</Suspense>
 		</main>

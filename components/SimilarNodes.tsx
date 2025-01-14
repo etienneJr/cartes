@@ -1,74 +1,29 @@
 import { computeHumanDistance } from '@/app/RouteRésumé'
-import { buildAllezPart } from '@/app/SetDestination'
-import categories from '@/app/categories.yaml'
-import moreCategories from '@/app/moreCategories.yaml'
 import useOverpassRequest from '@/app/effects/useOverpassRequest'
-import { encodePlace } from '@/app/utils'
-import turfDistance from '@turf/distance'
-import Link from 'next/link'
-import useSetSearchParams from './useSetSearchParams'
-import { capitalise0, sortBy } from './utils/utils'
 import { OpenIndicator, getOh } from '@/app/osm/OpeningHours'
-import { categoryIconUrl } from '@/app/QuickFeatureSearch'
 import { bearing } from '@turf/bearing'
-import { css, styled } from 'next-yak'
+import turfDistance from '@turf/distance'
+import { styled } from 'next-yak'
+import FeatureLink, { DynamicSearchLink } from './FeatureLink'
+import categoryIconUrl from './categoryIconUrl'
+import { capitalise0, sortBy } from './utils/utils'
+import { computeBbox, findCategory } from '@/app/effects/fetchOverpassRequest'
+import Link from 'next/link'
 
-// This is very scientific haha
-const latDifferenceOfRennes = 0.07,
-	lonDifferenceOfRennes = 0.15,
-	latDiff = latDifferenceOfRennes / 2,
-	lonDiff = lonDifferenceOfRennes / 2
-// 48.07729814876498,-1.7461581764997334,48.148123804291316,-1.5894174840209132
-/* compute km2 to check
-	const earthRadius = 6371008.8
-	const [south, west, north, east] = bbox
-
-	const surface =
-		(earthRadius *
-			earthRadius *
-			Math.PI *
-			Math.abs(Math.sin(rad(south)) - Math.sin(rad(north))) *
-			(east - west)) /
-		180
-
-	// rad is:
-	function rad(num) {
-		return (num * Math.PI) / 180
-	}
-	*/
-
-const allCategories = [...categories, ...moreCategories]
-
-export default function SimilarNodes({ node }) {
+export default function SimilarNodes({ node, similarNodes: features }) {
 	const { tags } = node
 
-	const setSearchParams = useSetSearchParams()
-
-	const category = allCategories.find(({ query: queryRaw }) => {
-		const query = Array.isArray(queryRaw) ? queryRaw : [queryRaw]
-
-		return query.every((queryLine) => {
-			return Object.entries(tags).find(
-				([k, v]) => queryLine.includes(k) && queryLine.includes(v)
-			)
-		})
-	})
+	const category = findCategory(tags)
 
 	const { lat, lon } = node
-	const bbox = [
-		lat - latDiff / 2,
-		lon - lonDiff / 2,
-		lat + latDiff / 2,
-		lon + lonDiff / 2,
-	]
 
+	const bbox = computeBbox(node)
 	const [quickSearchFeaturesMap] = useOverpassRequest(
 		bbox,
 		category ? [category] : []
 	)
-	const features = category && quickSearchFeaturesMap[category.name]
 
-	if (!category || !features?.length) return
+	if (!category) return null
 
 	const reference = [lon, lat]
 	const featuresWithDistance =
@@ -102,23 +57,33 @@ export default function SimilarNodes({ node }) {
 	const imageUrl = categoryIconUrl(category)
 	return (
 		<Wrapper>
-			{closestFeatures && (
+			{closestFeatures?.length ? (
 				<>
-					<h3>{title} proches :</h3>
+					<h3>{title} proches</h3>
 					<NodeList
 						nodes={closestFeatures.slice(0, 10)}
-						setSearchParams={setSearchParams}
 						isOpenByDefault={isOpenByDefault}
 					/>
-					<details>
-						<summary>Tous les {title} proches</summary>
-						<NodeList
-							nodes={closestFeatures.slice(10)}
-							setSearchParams={setSearchParams}
-							isOpenByDefault={isOpenByDefault}
-						/>
-					</details>
+					{closestFeatures.length > 10 && (
+						<details>
+							<summary>Tous les {title} proches</summary>
+							<NodeList
+								nodes={closestFeatures.slice(10)}
+								isOpenByDefault={isOpenByDefault}
+							/>
+						</details>
+					)}
 				</>
+			) : (
+				<section>
+					<h3>{title} proches</h3>
+					<p>
+						<small>
+							Rien trouvé. Essayez une <DynamicSearchLink category={category} />{' '}
+							sur la carte.
+						</small>
+					</p>
+				</section>
 			)}
 		</Wrapper>
 	)
@@ -129,7 +94,7 @@ const Wrapper = styled.section`
 	background: white;
 	border: 1px solid var(--lightestColor);
 	border-radius: 0.4rem;
-	padding: 0.3rem 0.8rem;
+	padding: 0.3rem 0.8rem 0.8rem;
 	h3 {
 		margin-top: 0.4rem;
 	}
@@ -139,50 +104,38 @@ const Wrapper = styled.section`
 	}
 `
 
-const NodeList = ({ nodes, setSearchParams, isOpenByDefault }) => (
-	<ul
-		css={css`
-			margin-left: 0.2rem;
-			list-style-type: none;
-		`}
-	>
-		{nodes.map((f) => {
-			const humanDistance = computeHumanDistance(f.distance * 1000)
-			const oh = f.tags.opening_hours
-			const { isOpen } = oh ? getOh(oh) : {}
+const NodeList = ({ nodes, isOpenByDefault }) => {
+	return (
+		<NodeListWrapper>
+			{nodes.map((f) => {
+				const humanDistance = computeHumanDistance(f.distance * 1000)
+				const oh = f.tags.opening_hours
+				const { isOpen } = oh ? getOh(oh) : {}
 
-			const roseDirection = computeRoseDirection(f.bearing)
-			return (
-				<li key={f.id}>
-					{!isOpenByDefault &&
-						(oh == null ? (
-							<OpenIndicatorPlaceholder />
-						) : (
-							<OpenIndicator isOpen={isOpen === 'error' ? false : isOpen} />
-						))}
-					<Link
-						href={setSearchParams(
-							{
-								allez: buildAllezPart(
-									f.tags.name,
-									encodePlace(f.type, f.id),
-									f.lon,
-									f.lat
-								),
-							},
-							true
-						)}
-					>
-						{f.tags.name}
-					</Link>{' '}
-					<small>
-						à {humanDistance[0]} {humanDistance[1]} vers {roseDirection}
-					</small>
-				</li>
-			)
-		})}
-	</ul>
-)
+				const roseDirection = computeRoseDirection(f.bearing)
+				return (
+					<li key={f.id}>
+						{!isOpenByDefault &&
+							(oh == null ? (
+								<OpenIndicatorPlaceholder />
+							) : (
+								<OpenIndicator isOpen={isOpen === 'error' ? false : isOpen} />
+							))}
+						<FeatureLink feature={f} />{' '}
+						<small>
+							à {humanDistance[0]} {humanDistance[1]} vers {roseDirection}
+						</small>
+					</li>
+				)
+			})}
+		</NodeListWrapper>
+	)
+}
+
+const NodeListWrapper = styled.ul`
+	margin-left: 0.2rem;
+	list-style-type: none;
+`
 
 const OpenIndicatorPlaceholder = styled.span`
 	display: inline-block;

@@ -1,7 +1,5 @@
-import { overpassResultsToGeojson } from '@/app/effects/useOverpassRequest'
 import { safeRemove } from '@/app/effects/utils'
 import { useEffect, useState } from 'react'
-import { colors } from '../utils/colors'
 import jsonExample from './cycleHighwaysOverpassExample.json'
 import osmToGeojson from 'osmtogeojson'
 

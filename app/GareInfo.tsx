@@ -1,3 +1,4 @@
+'use client'
 import { useState } from 'react'
 import { styled } from 'next-yak'
 import { initialDate } from './itinerary/transit/utils'

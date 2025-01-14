@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import useDrawQuickSearchFeatures from '../effects/useDrawQuickSearchFeatures'
-import { buildOverpassRequest } from '../effects/useOverpassRequest'
+import { buildOverpassRequest } from '../effects/fetchOverpassRequest'
 
 const category = {
 	name: 'Arceaux vélo',
