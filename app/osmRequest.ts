@@ -3,7 +3,8 @@ import { centerOfMass } from '@turf/turf'
 import osmToGeojson from 'osmtogeojson'
 import { isServer } from './serverUrls'
 
-const overpassRequestSuffix = 'https://overpass-api.de/api/interpreter?data='
+export const overpassRequestSuffix =
+	'https://overpass-api.de/api/interpreter?data='
 
 const buildOverpassUrl = (
 	featureType: 'node' | 'way' | 'relation',
@@ -27,9 +28,11 @@ export const combinedOsmRequest = async (queries) => {
 		.join('')
 
 	const requestString = `[out:json];${requestBody}`
-	const request = await fetch(
-		overpassRequestSuffix + encodeURIComponent(requestString)
-	)
+	const url = overpassRequestSuffix + encodeURIComponent(requestString)
+	console.log('OVERPASS1', url)
+	const request = await fetch(url, {
+		next: { revalidate: 5 * 60 },
+	})
 
 	const json = await request.json()
 
@@ -67,12 +70,15 @@ export const osmRequest = async (featureType, id, full) => {
 		'full : ',
 		full
 	)
-	const request = await fetch(buildOverpassUrl(featureType, id, full), {
+	const url = buildOverpassUrl(featureType, id, full)
+	console.log('OVERPASS3', url)
+	const request = await fetch(url, {
 		...(isServer
 			? {
 					headers: {
 						'User-Agent': 'Cartes.app',
 					},
+					next: { revalidate: 5 * 60 },
 			  }
 			: {}),
 	})

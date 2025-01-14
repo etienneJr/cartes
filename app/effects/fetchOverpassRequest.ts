@@ -1,6 +1,9 @@
 import categories from '@/app/categories.yaml'
 import moreCategories from '@/app/moreCategories.yaml'
-import { enrichOsmFeatureWithPolyon } from '@/app/osmRequest'
+import {
+	enrichOsmFeatureWithPolyon,
+	overpassRequestSuffix,
+} from '@/app/osmRequest'
 import computeBboxArea from '@/components/utils/computeBboxArea'
 
 export async function fetchOverpassRequest(bbox, category) {
@@ -18,12 +21,11 @@ export async function fetchOverpassRequest(bbox, category) {
 	// TODO we're missing the "r" in "nwr" for "relations"
 	const overpassRequest = buildOverpassRequest(queryCore)
 
-	console.log('overpass', overpassRequest)
-	const url = `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(
-		overpassRequest
-	)}`
-	console.log(url)
-	const request = await fetch(url, { cache: 'force-cache' })
+	const url = `${overpassRequestSuffix}${encodeURIComponent(overpassRequest)}`
+	console.log('OVERPASS2', url)
+	const request = await fetch(url, {
+		next: { revalidate: 5 * 60 },
+	})
 	const json = await request.json()
 
 	const nodeElements = overpassResultsToGeojson(json).map((element) => ({

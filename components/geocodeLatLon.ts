@@ -5,7 +5,7 @@ export async function geocodeLatLon(latitude, longitude) {
 	const request = await fetch(
 		`${photonServerUrl}/reverse?lon=${longitude}&lat=${latitude}`,
 		{
-			cache: 'force-cache',
+			next: { revalidate: 24 * 60 * 60 },
 		}
 	)
 	const json = await request.json()
