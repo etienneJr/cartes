@@ -23,6 +23,7 @@ export default function SimilarNodes({ node }) {
 	)
 
 	const features = category && quickSearchFeaturesMap[category.name]
+	console.log('Did look for similar nodes for ', node, category, features)
 
 	if (!category || !features?.length) return null
 

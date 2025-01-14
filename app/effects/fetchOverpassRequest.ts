@@ -98,14 +98,31 @@ export const findCategory = (tags) => {
 	const category = allCategories.find(({ query: queryRaw }) => {
 		const query = Array.isArray(queryRaw) ? queryRaw : [queryRaw]
 
-		return query.every((queryLine) => {
-			return Object.entries(tags).find(
-				([k, v]) => queryLine.includes(k) && queryLine.includes(v)
-			)
+		const test = query.some((queryLine) => {
+			const andConditions = extractOverpassQueryLineAndCondition(queryLine)
+			return andConditions.every((condition) => {
+				return Object.entries(tags).find(
+					([k, v]) => condition.includes(k) && condition.includes(v)
+				)
+			})
 		})
+		return test
 	})
 
 	return category
+}
+
+const pattern = /\[([^\]]+)\]/g
+const extractOverpassQueryLineAndCondition = (queryLine) => {
+	let match
+	const patterns = []
+
+	while ((match = pattern.exec(queryLine)) !== null) {
+		patterns.push(match[1])
+	}
+	if (!patterns.length)
+		throw new Error('Any overpass query should have a [] pattern')
+	return patterns
 }
 
 const allCategories = [...categories, ...moreCategories]
