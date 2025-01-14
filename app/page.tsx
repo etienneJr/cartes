@@ -80,7 +80,7 @@ export async function generateMetadata(
 		  '/?allez=' +
 		  encodeURIComponent(buildAllezPartFromOsmFeature(osmFeature))
 		: undefined
-	console.log('SEARCHP', url)
+
 
 	const metadata = {
 		title: title,

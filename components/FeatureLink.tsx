@@ -1,7 +1,9 @@
 'use client'
-import { buildAllezPartFromOsmFeature } from '@/app/SetDestination'
+
 import Link from 'next/link'
 import useSetSearchParams from './useSetSearchParams'
+import { buildAllezPartFromOsmFeature } from '@/app/SetDestination'
+import { encodePlace } from '@/app/utils'
 
 export default function FeatureLink({ feature: osmFeature }) {
 	const setSearchParams = useSetSearchParams()
@@ -10,6 +12,7 @@ export default function FeatureLink({ feature: osmFeature }) {
 			href={setSearchParams(
 				{
 					allez: buildAllezPartFromOsmFeature(osmFeature),
+
 				},
 				true
 			)}
