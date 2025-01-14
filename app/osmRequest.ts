@@ -60,7 +60,13 @@ export const combinedOsmRequest = async (queries) => {
 }
 
 export const osmRequest = async (featureType, id, full) => {
-	console.log('lightgreen will make OSM request', featureType, id, full)
+	console.log(
+		'lightgreen will make OSM request',
+		featureType,
+		id,
+		'full : ',
+		full
+	)
 	const request = await fetch(buildOverpassUrl(featureType, id, full), {
 		...(isServer
 			? {

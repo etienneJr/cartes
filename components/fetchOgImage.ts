@@ -13,7 +13,7 @@ export default async (url) => {
 			}
 		)
 		const { ogImageContent = null } = await response.json()
-		console.log('OOOO', ogImageContent)
+		console.log('og:image fetched -> ', ogImageContent)
 
 		if (ogImageContent == null) return null
 		const fullImage = ogImageContent?.match(/https?:\/\//g)

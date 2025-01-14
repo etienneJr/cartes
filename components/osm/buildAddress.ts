@@ -17,7 +17,6 @@ export const buildAddress = (t: object, noPrefix = false) => {
 }
 
 export function buildPhotonAddress(geocoded) {
-	console.log('PLACE will build photon address with ', geocoded)
 	const p = geocoded.properties || geocoded
 	if (!p) return null
 

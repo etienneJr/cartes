@@ -29,7 +29,6 @@ export async function generateMetadata(
 	props: Props,
 	parent: ResolvingMetadata
 ): Promise<Metadata> {
-	console.log('Rendering server side app/page')
 	const searchParams = await props.searchParams
 
 	if (searchParams.style === 'elections')
@@ -110,7 +109,6 @@ const Page = async (props) => {
 		console.log(error)
 		return [] // fallback to client side
 	})
-	console.log('lightgreen state from ssr rendering of osm node', state)
 
 	const agencyEntry = await fetchAgency(searchParams)
 
