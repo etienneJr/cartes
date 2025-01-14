@@ -7,10 +7,13 @@ export default async (url) => {
 		const urlBase = getFetchUrlBase()
 
 		const response = await fetch(
-			urlBase + '/getOgImage?url=' + encodeURIComponent(url)
+			urlBase + '/getOgImage?url=' + encodeURIComponent(url),
+			{
+				cache: 'force-cache',
+			}
 		)
 		const { ogImageContent = null } = await response.json()
-		console.log('OOOO', ogImageContent)
+		console.log('og:image fetched -> ', ogImageContent)
 
 		if (ogImageContent == null) return null
 		const fullImage = ogImageContent?.match(/https?:\/\//g)

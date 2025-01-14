@@ -1,7 +1,7 @@
-import computeBboxArea from '@/components/utils/computeBboxArea'
 import categories from '@/app/categories.yaml'
 import moreCategories from '@/app/moreCategories.yaml'
 import { enrichOsmFeatureWithPolyon } from '@/app/osmRequest'
+import computeBboxArea from '@/components/utils/computeBboxArea'
 
 export async function fetchOverpassRequest(bbox, category) {
 	const surface = computeBboxArea(bbox)

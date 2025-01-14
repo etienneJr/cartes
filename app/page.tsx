@@ -17,14 +17,18 @@ import {
 } from './effects/fetchOverpassRequest'
 import getName from './osm/getName'
 import getUrl from './osm/getUrl'
-import { gtfsServerUrl } from './serverUrls'
+import { getFetchUrlBase, gtfsServerUrl } from './serverUrls'
 import { stepOsmRequest } from './stepOsmRequest'
+import buildPlaceJsonLd from '@/buildPlaceJsonLd'
+import {
+	buildAllezPartFromOsmFeature,
+	geoFeatureToDestination,
+} from './SetDestination'
 
 export async function generateMetadata(
 	props: Props,
 	parent: ResolvingMetadata
 ): Promise<Metadata> {
-	console.log('Rendering server side app/page')
 	const searchParams = await props.searchParams
 
 	if (searchParams.style === 'elections')
@@ -48,7 +52,9 @@ export async function generateMetadata(
 
 	if (!allez?.length) return null
 	const vers = allez[allez.length - 1]
+	const date = new Date()
 	const step = await stepOsmRequest(vers, undefined, true)
+	console.log('overpass', new Date().getTime() - date.getTime())
 
 	if (!step) return null
 
@@ -61,8 +67,8 @@ export async function generateMetadata(
 		descriptionFromOsm = buildDescription(step.osmFeature)
 
 	const image = tags.image || (await fetchOgImage(getUrl(tags)))
+	console.log('og', new Date().getTime() - date.getTime())
 
-	const searchParamsString = new URLSearchParams(searchParams).toString()
 	const placeMap =
 		lat && lon && `${gtfsServerUrl}/placeMap/?lat=${lat}&lon=${lon}&zoom=13`
 
@@ -70,6 +76,12 @@ export async function generateMetadata(
 	const description = address
 		? descriptionFromOsm + '. ' + address
 		: descriptionFromOsm
+
+	const url = osmFeature
+		? getFetchUrlBase() +
+		  '/?allez=' +
+		  encodeURIComponent(buildAllezPartFromOsmFeature(osmFeature))
+		: undefined
 
 	const metadata = {
 		title: title,
@@ -81,7 +93,7 @@ export async function generateMetadata(
 			// TODO next doesn't understand this link with only searchParams. Could be
 			// symtomatic of a bad choice we made : the id / name should be in the
 			// path, not the searchParams ? Could it lead to RSC generation ?
-			//url: '/?' + searchParamsString,
+			url,
 		},
 	}
 	return metadata
@@ -97,7 +109,6 @@ const Page = async (props) => {
 		console.log(error)
 		return [] // fallback to client side
 	})
-	console.log('lightgreen state from ssr rendering of osm node', state)
 
 	const agencyEntry = await fetchAgency(searchParams)
 
@@ -108,6 +119,7 @@ const Page = async (props) => {
 
 	const similarNodes = await fetchSimilarNodes(osmFeature)
 
+	const jsonLd = osmFeature && (await buildPlaceJsonLd(osmFeature, vers))
 	return (
 		<main
 			style={{
@@ -115,6 +127,12 @@ const Page = async (props) => {
 				minHeight: '100vh',
 			}}
 		>
+			{jsonLd && (
+				<script
+					type="application/ld+json"
+					dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+				/>
+			)}
 			<Suspense>
 				<PaymentBanner parameter={searchParams.abonnement} />
 

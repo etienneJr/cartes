@@ -1,4 +1,5 @@
 import { computeHumanDistance } from '@/app/RouteRésumé'
+import { computeBbox, findCategory } from '@/app/effects/fetchOverpassRequest'
 import useOverpassRequest from '@/app/effects/useOverpassRequest'
 import { OpenIndicator, getOh } from '@/app/osm/OpeningHours'
 import { bearing } from '@turf/bearing'
@@ -7,8 +8,6 @@ import { styled } from 'next-yak'
 import FeatureLink, { DynamicSearchLink } from './FeatureLink'
 import categoryIconUrl from './categoryIconUrl'
 import { capitalise0, sortBy } from './utils/utils'
-import { computeBbox, findCategory } from '@/app/effects/fetchOverpassRequest'
-import Link from 'next/link'
 
 export default function SimilarNodes({ node, similarNodes: features }) {
 	const { tags } = node
