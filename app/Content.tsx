@@ -61,6 +61,7 @@ export default function Content(props) {
 		focusImage,
 		vers,
 		osmFeature,
+		similarNodes,
 		quickSearchFeaturesMap,
 		setDisableDrag,
 		wikidata,
@@ -319,6 +320,7 @@ export default function Content(props) {
 								data={osmFeature}
 								transportStopData={transportStopData}
 								photonFeature={vers.photonFeature}
+								similarNodes={similarNodes}
 							/>
 						) : geocodedClickedPoint ? (
 							<>

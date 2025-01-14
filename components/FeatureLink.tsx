@@ -24,3 +24,14 @@ export default function FeatureLink({ feature: f }) {
 		</Link>
 	)
 }
+export function DynamicSearchLink({ category }) {
+	const setSearchParams = useSetSearchParams()
+	return (
+		<Link
+			href={setSearchParams({ cat: category.name }, true)}
+			title="Faire une recherche de catégorie et se déplacer sur la carte pour explorer les résultats"
+		>
+			recherche dynamique
+		</Link>
+	)
+}

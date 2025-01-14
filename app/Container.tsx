@@ -175,8 +175,6 @@ export default function Container(props) {
 
 	const similarNodes = useFetchSimilarNodes(osmFeature, givenSimilarNodes)
 
-	console.log('similarNodes', similarNodes)
-
 	const wikidata = useWikidata(osmFeature, state)
 
 	console.log('wikidata3', wikidata, osmFeature)
@@ -281,6 +279,7 @@ export default function Container(props) {
 						focusImage,
 						vers,
 						osmFeature,
+						similarNodes,
 						quickSearchFeaturesMap,
 						containerRef,
 						trackedSnap,
