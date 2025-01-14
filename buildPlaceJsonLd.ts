@@ -32,12 +32,12 @@ export default async function buildPlaceJsonLd(osmFeature, step) {
 					photo: {
 						'@type': 'ImageObject',
 						contentUrl: image,
-						name: osmFeature.name,
+						name: tags.name,
 					},
 			  }
 			: {}),
-		name: osmFeature.name,
-		description: osmFeature.description,
+		name: tags.name,
+		description: tags.description,
 		url,
 
 		address: {
