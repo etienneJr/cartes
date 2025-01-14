@@ -1,11 +1,12 @@
 import { buildAllezPartFromOsmFeature } from './app/SetDestination'
 import getUrl from './app/osm/getUrl'
+import { buildPlaceMap } from './app/page'
 import { getFetchUrlBase } from './app/serverUrls'
 import fetchOgImage from './components/fetchOgImage'
 
 export default async function buildPlaceJsonLd(osmFeature, step) {
 	const { tags = {} } = osmFeature
-	const image = tags.image || (await fetchOgImage(getUrl(tags)))
+	const osmImage = tags.image || (await fetchOgImage(getUrl(tags)))
 
 	const { photonFeature } = step
 	const addressProperties = photonFeature && photonFeature.properties
@@ -14,6 +15,8 @@ export default async function buildPlaceJsonLd(osmFeature, step) {
 		getFetchUrlBase() +
 		'/?allez=' +
 		encodeURIComponent(buildAllezPartFromOsmFeature(osmFeature))
+
+	const image = osmImage || buildPlaceMap(osmFeature.lat, osmFeature.lon)
 
 	const result = {
 		'@context': 'https://schema.org',
