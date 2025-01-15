@@ -9,6 +9,7 @@ import { Protocol as CartesProtocol } from '@/components/map/CartesProtocol.ts'
 import useEffectDebugger from '@/components/useEffectDebugger'
 import { isLocalStorageAvailable } from '@/components/utils/utils'
 import IndoorEqual from 'maplibre-gl-indoorequal'
+import indoorequalLayers from '@/app/styles/indoorequal-layers'
 import 'maplibre-gl-indoorequal/maplibre-gl-indoorequal.css'
 
 /*
@@ -240,20 +241,7 @@ export default function useAddMap(
 		const indoorEqual = new IndoorEqual(map, {
 			apiKey: process.env.NEXT_PUBLIC_INDOOREQUAL,
 			heatmap: true,
-		})
-
-		const indoorLayerIds = map
-			.getLayersOrder()
-			.filter((id) => id.startsWith('indoor-'))
-
-		indoorLayerIds.forEach((id) => {
-			const layer = map.getLayer(id)
-			console.log('layer', layer)
-
-			if (layer.type === 'symbol')
-				map.setLayoutProperty(id, 'text-font', [
-					'RobotoRegular-NotoSansRegular',
-				])
+			layers: indoorequalLayers,
 		})
 
 		//TODO using indoor's sprites makes the map ugly anywhere with a different
