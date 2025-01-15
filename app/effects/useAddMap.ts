@@ -1,6 +1,6 @@
 import maplibregl, { ScaleControl } from 'maplibre-gl'
 import { useEffect, useMemo, useState } from 'react'
-import { useLocalStorage, useMediaQuery } from 'usehooks-ts'
+import { useLocalStorage, useMediaQuery, useTimeout } from 'usehooks-ts'
 import { styles } from '../styles/styles'
 import { Protocol as ProtomapsProtocol } from 'pmtiles'
 import useGeolocation from './useGeolocation'
@@ -8,6 +8,9 @@ import frenchMaplibreLocale from '@/components/map/frenchMaplibreLocale.ts'
 import { Protocol as CartesProtocol } from '@/components/map/CartesProtocol.ts'
 import useEffectDebugger from '@/components/useEffectDebugger'
 import { isLocalStorageAvailable } from '@/components/utils/utils'
+import IndoorEqual from 'maplibre-gl-indoorequal'
+import indoorequalLayers from '@/app/styles/indoorequal-layers'
+import 'maplibre-gl-indoorequal/maplibre-gl-indoorequal.css'
 
 /*
  *
@@ -232,12 +235,31 @@ export default function useAddMap(
 			unit: 'metric',
 		})
 		map.addControl(scale)
+
+		// Add indoor plugin
+		console.log('go indoor')
+		const indoorEqual = new IndoorEqual(map, {
+			apiKey: process.env.NEXT_PUBLIC_INDOOREQUAL,
+			heatmap: true,
+			layers: indoorequalLayers,
+		})
+
+		//TODO using indoor's sprites makes the map ugly anywhere with a different
+		//set of sprites
+		// But using ours lets some things like elevators without icons, which is a big
+		// we'll add them later
+		// see indoorequalLayers
+		//indoorEqual.loadSprite('sprite/sprite')
+		//indoorEqual.loadSprite('indoorequal/indoorequal')
+		map.addControl(indoorEqual)
+
 		return () => {
 			if (!map || !scale) return
 			try {
 				map.removeControl(scale)
 				map.removeControl(navigationControl)
 				map.removeControl(geolocate)
+				map.removeControl(indoorEqual)
 			} catch (e) {
 				console.log('Error removing scale')
 			}
