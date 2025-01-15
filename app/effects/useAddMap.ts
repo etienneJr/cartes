@@ -238,7 +238,7 @@ export default function useAddMap(
 		setTimeout(() => {
 			console.log('go indoor')
 			const indoorEqual = new IndoorEqual(map, {
-				apiKey: 'iek_G0wnbIs9qAsMBmXzk0ZNpq0pF75n',
+				apiKey: process.env.NEXT_PUBLIC_INDOOREQUAL,
 			})
 
 			indoorEqual.loadSprite('indoorequal/indoorequal')
