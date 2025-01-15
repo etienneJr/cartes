@@ -472,4 +472,8 @@ const MapContainer = styled.div`
 		width: ${(p) => p.$mapButtonSize};
 		height: ${(p) => p.$mapButtonSize};
 	}
+	:global(.maplibregl-ctrl-indoorequal) {
+		position: absolute;
+		top: 26rem;
+	}
 `
