@@ -25,6 +25,8 @@ export async function generateMetadata(
 			images: [image],
 			type: 'article',
 			publishedTime: '2024-05-10T00:00:00.000Z',
+			url: 'https://cartes.app',
+			siteName: 'Cartes',
 		},
 	}
 }
