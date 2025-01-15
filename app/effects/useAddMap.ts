@@ -235,29 +235,34 @@ export default function useAddMap(
 		})
 		map.addControl(scale)
 
-		setTimeout(() => {
-			console.log('go indoor')
-			const indoorEqual = new IndoorEqual(map, {
-				apiKey: process.env.NEXT_PUBLIC_INDOOREQUAL,
-			})
+		// Add indoor plugin
+		console.log('go indoor')
+		const indoorEqual = new IndoorEqual(map, {
+			apiKey: process.env.NEXT_PUBLIC_INDOOREQUAL,
+			heatmap: true,
+		})
 
-			const indoorLayerIds = map
-				.getLayersOrder()
-				.filter((id) => id.startsWith('indoor-'))
+		const indoorLayerIds = map
+			.getLayersOrder()
+			.filter((id) => id.startsWith('indoor-'))
 
-			indoorLayerIds.forEach((id) => {
-				const layer = map.getLayer(id)
-				console.log('layer', layer)
+		indoorLayerIds.forEach((id) => {
+			const layer = map.getLayer(id)
+			console.log('layer', layer)
 
-				if (layer.type === 'symbol')
-					map.setLayoutProperty(id, 'text-font', [
-						'RobotoRegular-NotoSansRegular',
-					])
-			})
+			if (layer.type === 'symbol')
+				map.setLayoutProperty(id, 'text-font', [
+					'RobotoRegular-NotoSansRegular',
+				])
+		})
 
-			indoorEqual.loadSprite('indoorequal/indoorequal')
-			map.addControl(indoorEqual)
-		}, 2000)
+		//TODO using indoor's sprites makes the map ugly anywhere with a different
+		//set of sprites
+		// But using ours lets things like elevators without icons, which is a big
+		// bummer for this indoor feature
+		//indoorEqual.loadSprite('sprite/sprite')
+		indoorEqual.loadSprite('indoorequal/indoorequal')
+		map.addControl(indoorEqual)
 
 		return () => {
 			if (!map || !scale) return
