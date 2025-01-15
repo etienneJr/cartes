@@ -241,9 +241,23 @@ export default function useAddMap(
 				apiKey: process.env.NEXT_PUBLIC_INDOOREQUAL,
 			})
 
+			const indoorLayerIds = map
+				.getLayersOrder()
+				.filter((id) => id.startsWith('indoor-'))
+
+			indoorLayerIds.forEach((id) => {
+				const layer = map.getLayer(id)
+				console.log('layer', layer)
+
+				if (layer.type === 'symbol')
+					map.setLayoutProperty(id, 'text-font', [
+						'RobotoRegular-NotoSansRegular',
+					])
+			})
+
 			indoorEqual.loadSprite('indoorequal/indoorequal')
 			map.addControl(indoorEqual)
-		}, 4000)
+		}, 2000)
 
 		return () => {
 			if (!map || !scale) return
