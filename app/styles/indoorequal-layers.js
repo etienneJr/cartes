@@ -1,11 +1,13 @@
+const imagePrefix = '' // by default, 'indoorequal-'
+
 const commonPoi = {
 	type: 'symbol',
 	'source-layer': 'poi',
 	layout: {
 		'icon-image': [
 			'coalesce',
-			['image', ['concat', ['literal', 'indoorequal-'], ['get', 'subclass']]],
-			['image', ['concat', ['literal', 'indoorequal-'], ['get', 'class']]],
+			['image', ['concat', ['literal', imagePrefix], ['get', 'subclass']]],
+			['image', ['concat', ['literal', imagePrefix], ['get', 'class']]],
 		],
 		'text-anchor': 'top',
 		'text-field': [
@@ -146,8 +148,8 @@ const rawLayers = [
 			'icon-image': [
 				'case',
 				['has', 'conveying'],
-				'indoorequal-escalator',
-				['concat', ['literal', 'indoorequal-'], ['get', 'class']],
+				imagePrefix + 'escalator',
+				['concat', ['literal', imagePrefix], ['get', 'class']],
 			],
 			'symbol-placement': 'line-center',
 			'icon-rotation-alignment': 'viewport',
@@ -193,7 +195,17 @@ const rawLayers = [
 				40,
 			],
 			'heatmap-intensity': 1,
-			'heatmap-opacity': ['interpolate', ['linear'], ['zoom'], 16, 1, 17.1, 0],
+			'heatmap-opacity': [
+				'interpolate',
+				['linear'],
+				['zoom'],
+				1,
+				0,
+				16,
+				0.1,
+				17.1,
+				0,
+			],
 		},
 	},
 	{

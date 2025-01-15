@@ -246,10 +246,11 @@ export default function useAddMap(
 
 		//TODO using indoor's sprites makes the map ugly anywhere with a different
 		//set of sprites
-		// But using ours lets things like elevators without icons, which is a big
-		// bummer for this indoor feature
+		// But using ours lets some things like elevators without icons, which is a big
+		// we'll add them later
+		// see indoorequalLayers
 		//indoorEqual.loadSprite('sprite/sprite')
-		indoorEqual.loadSprite('indoorequal/indoorequal')
+		//indoorEqual.loadSprite('indoorequal/indoorequal')
 		map.addControl(indoorEqual)
 
 		return () => {
