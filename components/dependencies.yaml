@@ -43,6 +43,9 @@
 - img: /photon.png
   text: Komoot Photon
   url: photon.komoot.io
+- img: https://indoorequal.com/images/indoorequal-3e28db1985ca697475dbab2cc4dd6e93.svg
+  text: Indoorequal
+  url: https://indoorequal.com
 - img: /three-dots.svg
   text: Le vôtre ?
   url: github.com/cartesapp/cartes/issues
