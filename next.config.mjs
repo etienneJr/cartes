@@ -43,7 +43,10 @@ const nextConfig = {
 		ignoreBuildErrors: true,
 	},
 	async rewrites() {
-		return [{ source: '/feed.xml', destination: '/_next/static/feed.xml' }]
+		return [
+			{ source: '/feed.xml', destination: '/_next/static/feed.xml' },
+			{ source: '/lieu', destination: '/' },
+		]
 	},
 	async redirects() {
 		return [

@@ -2,6 +2,7 @@ import { ThemeColorsProvider } from '@/components/utils/colors'
 import { Metadata } from 'next'
 import '../globals.css'
 import Script from 'next/script'
+import { getFetchUrlBase } from './serverUrls'
 
 const title = `Cartes`
 export const description =
@@ -20,7 +21,7 @@ export async function generateMetadata(
 	return {
 		title,
 		description,
-		metadataBase: new URL('https://cartes.app'),
+		metadataBase: new URL(getFetchUrlBase()),
 		openGraph: {
 			images: [image],
 			type: 'article',

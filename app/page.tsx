@@ -40,8 +40,11 @@ export async function generateMetadata(
 	if (agencyMeta) return agencyMeta
 
 	/* Now the indexation of places, the second main goal */
-	const allez = searchParams.allez?.split('->')
+	const allez = searchParams.allez
+		?.split('->')
+		.filter((part) => part && part !== '')
 
+	console.log('ALLEZ', allez)
 	if (!allez?.length) return null
 	const vers = allez[allez.length - 1]
 	const date = new Date()
@@ -51,6 +54,7 @@ export async function generateMetadata(
 	if (!step) return null
 
 	const osmFeature = step.osmFeature
+	console.log('OSMFEATURE', osmFeature)
 	const { lat, lon } = osmFeature || {}
 
 	const tags = osmFeature?.tags || {}
@@ -71,11 +75,11 @@ export async function generateMetadata(
 
 	const url = osmFeature
 		? getFetchUrlBase() +
-		  '/?allez=' +
+		  '/lieu?allez=' +
 		  encodeURIComponent(buildAllezPartFromOsmFeature(osmFeature))
 		: undefined
 
-	console.log('URL', url)
+	console.log('URL meta', url)
 	const metadata = {
 		title: title,
 		description,
@@ -89,6 +93,9 @@ export async function generateMetadata(
 			// TODO next doesn't understand this link with only searchParams. Could be
 			// symtomatic of a bad choice we made : the id / name should be in the
 			// path, not the searchParams ? Could it lead to RSC generation ?
+			// https://github.com/vercel/next.js/issues/74689
+			// Fixed temporarily with rewrites
+			//
 			url,
 		},
 	}
