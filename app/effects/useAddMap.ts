@@ -238,6 +238,8 @@ export default function useAddMap(
 
 		// Add indoor plugin
 		console.log('go indoor')
+		const indoorSource = map.getSource('indoorequal')
+		if (indoorSource) return
 		const indoorEqual = new IndoorEqual(map, {
 			apiKey: process.env.NEXT_PUBLIC_INDOOREQUAL,
 			heatmap: true,
