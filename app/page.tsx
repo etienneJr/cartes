@@ -75,9 +75,13 @@ export async function generateMetadata(
 		  encodeURIComponent(buildAllezPartFromOsmFeature(osmFeature))
 		: undefined
 
+	console.log('URL', url)
 	const metadata = {
 		title: title,
 		description,
+		alternates: {
+			canonical: url,
+		},
 		openGraph: {
 			images: image ? [image] : placeMap ? [placeMap] : [],
 			modifiedTime,
