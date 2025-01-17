@@ -27,10 +27,10 @@ const nextConfig = {
 		],
 	},
 	/*
-				compilerOptions: {
-								baseUrl: '.',
-				},
-				*/
+																compilerOptions: {
+																																baseUrl: '.',
+																},
+																*/
 	eslint: {
 		// Warning: This allows production builds to successfully complete even if
 		// your project has ESLint errors.
@@ -118,13 +118,13 @@ const withMDX = createMDX({ options: mdxOptions })
 
 export default withSentryConfig(
 	withYak(withContentlayer(withMDX(nextConfig))),
+
 	{
 		// For all available options, see:
 		// https://github.com/getsentry/sentry-webpack-plugin#options
 
-		org: 'cartes',
-		project: 'cartesweb',
-		sentryUrl: 'https://pb.cartes.app/',
+		org: 'cartes-nh',
+		project: 'javascript-nextjs',
 
 		// Only print logs for uploading source maps in CI
 		silent: !process.env.CI,
@@ -146,5 +146,12 @@ export default withSentryConfig(
 
 		// Automatically tree-shake Sentry logger statements to reduce bundle size
 		disableLogger: true,
+
+		// Enables automatic instrumentation of Vercel Cron Monitors. (Does not yet work with App Router route handlers.)
+		// See the following for more information:
+		// https://docs.sentry.io/product/crons/
+		// https://vercel.com/docs/cron-jobs
+		automaticVercelMonitors: true,
 	}
 )
+

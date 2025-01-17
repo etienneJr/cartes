@@ -20,7 +20,6 @@ export async function downloadIssues() {
 		},
 	})
 
-	console.log(response)
 	const withMarkdown = response
 		.map((issue) => {
 			const { body } = issue
