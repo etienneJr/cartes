@@ -37,3 +37,6 @@ source/data
 
 cache.sqlite*
 public/indoorequal/
+
+# Sentry Config File
+.env.sentry-build-plugin
