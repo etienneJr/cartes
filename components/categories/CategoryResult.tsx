@@ -7,6 +7,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { computeRoseDirection } from '../SimilarNodes'
 import { css, styled } from 'next-yak'
+import { capitalise0 } from '../utils/utils'
 
 export default function CategoryResult({
 	result,
@@ -14,7 +15,7 @@ export default function CategoryResult({
 	annuaireMode,
 }) {
 	const {
-		tags: { name, description, opening_hours: oh },
+		tags: { name: rawName, description, opening_hours: oh },
 		category,
 		type: featureType,
 		id,
@@ -23,6 +24,8 @@ export default function CategoryResult({
 		distance,
 		bearing,
 	} = result
+
+	const name = rawName || capitalise0(category.name) + ' sans nom'
 
 	const allez = buildAllezPart(name, encodePlace(featureType, id), lon, lat)
 	const url = annuaireMode

@@ -27,13 +27,13 @@ export default async function Page({ params, searchParams }) {
 	const [categoryNames, categories] = getCategories(searchParams)
 	const bbox = computeBbox(lonLatObject)
 
-	console.log('CAT', categories, bbox)
 	const results = categories?.length
 		? await Promise.all(
 				categories.map((category) => fetchOverpassRequest(bbox, category))
 		  )
 		: []
 
+	console.log('CAT', categories, bbox)
 	const quickSearchFeaturesMap = Object.fromEntries(
 		results.map((categoryResults, i) => [categoryNames[i], categoryResults])
 	)

@@ -43,6 +43,7 @@ export default function QuickFeatureSearch({
 	annuaireMode = false,
 }) {
 	const [categoriesSet] = getCategories(searchParams)
+
 	const [showMore, setShowMore] = useState(false)
 	const hasLieu = searchParams.allez
 	const setSearchParams = useSetSearchParams()

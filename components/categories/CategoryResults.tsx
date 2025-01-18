@@ -23,7 +23,7 @@ export default function CategoryResults({
 				}))
 			)
 			.flat()
-			.filter((feature) => feature.tags.name)
+			//			.filter((feature) => feature.tags.name)
 			.map((feature) => {
 				const { lon: lon2, lat: lat2 } = feature
 				return {
