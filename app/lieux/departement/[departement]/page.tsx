@@ -3,6 +3,7 @@ import removeAccents from 'remove-accents'
 import { fetchDepartementCommunes } from '../fetchCommunes'
 import { Metadata } from 'next'
 import Link from 'next/link'
+import removeAccent from 'remove-accents'
 
 export const metadata: Metadata = {
 	title: '',
@@ -22,6 +23,11 @@ export default async function (props) {
 
 	return (
 		<main>
+			<Link
+				href={`/lieux/region/${removeAccent(found.nom_region).toLowerCase()}`}
+			>
+				⭠ Revenir à la région {found.nom_region}
+			</Link>
 			<h1>
 				Communes du département {found.nom} {found.code}
 			</h1>
