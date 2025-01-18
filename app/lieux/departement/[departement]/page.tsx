@@ -10,9 +10,20 @@ import Link from 'next/link'
 import removeAccent from 'remove-accents'
 import { slugify } from '../../region/[region]/page'
 
-export const metadata: Metadata = {
-	title: '',
-	description: '',
+export async function generateMetadata(
+	{ params, searchParams }: Props,
+	parent: ResolvingMetadata
+): Promise<Metadata> {
+	// read route params
+	const departement = (await params).departement
+
+	// fetch data
+
+	const name = decodeURIComponent(departement)
+	return {
+		title: `Département ${name} - Cartes`,
+		description: `Parcourez les communes de la région ${name}, et les lieux et commerces présents dans chacune.`,
+	}
 }
 
 export default async function (props) {

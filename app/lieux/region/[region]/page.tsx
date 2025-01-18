@@ -4,10 +4,22 @@ import { default as removeAccents } from 'remove-accents'
 import départements from '../../departement/départements.yaml'
 import { communesLimit, populationLimit } from '../../departement/fetchCommunes'
 import { fetchRegionCommunes } from '../fetchCommunes'
+import { capitalise0 } from '@/components/utils/utils'
 
-export const metadata: Metadata = {
-	title: '',
-	description: '',
+export async function generateMetadata(
+	{ params, searchParams }: Props,
+	parent: ResolvingMetadata
+): Promise<Metadata> {
+	// read route params
+	const region = (await params).region
+
+	// fetch data
+
+	const name = capitalise0(decodeURIComponent(region))
+	return {
+		title: `Région ${name} - Cartes`,
+		description: `Parcourez les départements et les communes de la région ${name}, et les lieux et commerces présents dans chacune.`,
+	}
 }
 
 export const slugify = (name) => removeAccents(name).toLowerCase()

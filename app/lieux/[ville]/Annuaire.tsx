@@ -23,7 +23,6 @@ export default async function Page({ params, searchParams }) {
 	const [lon, lat] = ville.centre.coordinates
 	const lonLatObject = { lat, lon }
 
-	const categoryName = searchParams.cat
 	const [categoryNames, categories] = getCategories(searchParams)
 	const bbox = computeBbox(lonLatObject)
 
