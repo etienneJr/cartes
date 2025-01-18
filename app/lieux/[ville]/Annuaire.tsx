@@ -6,15 +6,25 @@ import { capitalise0 } from '@/components/utils/utils'
 import { styled } from 'next-yak'
 import Image from 'next/image'
 import Results from './Results'
-import { computeBbox, findCategory } from '@/app/effects/fetchOverpassRequest'
+import {
+	computeBbox,
+	fetchOverpassRequest,
+	findCategory,
+} from '@/app/effects/fetchOverpassRequest'
 import { getCategories } from '@/components/categories'
 
 const description = ''
-export default function Page({ ville, searchParams }) {
+const lonLatObject = { lat: 48.6818519, lon: -1.9678375 }
+export default async function Page({ ville, searchParams }) {
 	const categoryName = searchParams.cat
 	const [categoryNames, [category]] = getCategories(searchParams)
 	console.log(category)
-	const bbox = computeBbox({ lat: 48.6818519, lon: -1.9678375 })
+	const bbox = computeBbox(lonLatObject)
+	const results = category ? await fetchOverpassRequest(bbox, category) : []
+
+	const quickSearchFeaturesMap = { [categoryNames[0]]: results }
+
+	console.log(quickSearchFeaturesMap)
 
 	return (
 		<PresentationWrapper>
@@ -30,9 +40,13 @@ export default function Page({ ville, searchParams }) {
 				/>
 			</header>
 			<QuickFeatureSearch
-				{...{ quickSearchFeaturesMap: {}, searchParams, noPhotos: true }}
+				{...{
+					quickSearchFeaturesMap,
+					searchParams,
+					noPhotos: true,
+					center: [lonLatObject.lon, lonLatObject.lat],
+				}}
 			/>
-			{category && <Results category={category} bbox={bbox} />}
 		</PresentationWrapper>
 	)
 }
