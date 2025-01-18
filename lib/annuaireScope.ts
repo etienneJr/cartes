@@ -2,7 +2,7 @@ import fs from 'fs'
 
 const doFetch = async (departementCode = 35) => {
 	const request = await fetch(
-		`https://geo.api.gouv.fr/departements/${departementCode}/communes`
+		`https://geo.api.gouv.fr/departements/${departementCode}/communes?fields=code,nom,population,centre,codeRegion,codeDepartement,codesPostaux`
 	)
 	const json = await request.json()
 

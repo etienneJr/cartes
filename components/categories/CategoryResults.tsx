@@ -12,7 +12,7 @@ import CategoryResult from './CategoryResult'
 export default function CategoryResults({
 	resultsEntries,
 	center,
-	centerIndication,
+	annuaireMode,
 }) {
 	const setSearchParams = useSetSearchParams()
 	const resultsWithoutOrder = resultsEntries
@@ -56,7 +56,7 @@ export default function CategoryResults({
 			<ol>
 				{results.map((result) => (
 					<CategoryResult
-						centerIndication={centerIndication}
+						annuaireMode={annuaireMode}
 						key={result.id}
 						result={result}
 						setSearchParams={setSearchParams}

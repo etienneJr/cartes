@@ -12,14 +12,21 @@ import {
 	findCategory,
 } from '@/app/effects/fetchOverpassRequest'
 import { getCategories } from '@/components/categories'
+import communes from '@/public/communes-35.json'
 
 const description = ''
-const lonLatObject = { lat: 48.6818519, lon: -1.9678375 }
-export default async function Page({ ville, searchParams }) {
+export default async function Page({ ville: villeName, searchParams }) {
+	const ville = communes.find(
+		(commune) => commune.nom.toLowerCase() === villeName
+	)
+	const [lon, lat] = ville.centre.coordinates
+	const lonLatObject = { lat, lon }
+
 	const categoryName = searchParams.cat
 	const [categoryNames, categories] = getCategories(searchParams)
 	const bbox = computeBbox(lonLatObject)
-	console.log('CAT', categories)
+
+	console.log('CAT', categories, bbox)
 	const results = categories?.length
 		? await Promise.all(
 				categories.map((category) => fetchOverpassRequest(bbox, category))
@@ -36,7 +43,8 @@ export default async function Page({ ville, searchParams }) {
 		<PresentationWrapper>
 			<StaticPageHeader small={true} />
 			<header>
-				<h1>Annuaire des lieux de {capitalise0(ville)}</h1>
+				<h1>Annuaire des lieux de {ville.nom} </h1>
+				<small>({ville.codesPostaux.join(', ')})</small>
 				<p>{description}</p>
 				<PlaceImage
 					src={buildPlaceMap(48.1113404, -1.6793235)}
@@ -51,7 +59,7 @@ export default async function Page({ ville, searchParams }) {
 					searchParams,
 					noPhotos: true,
 					center: [lonLatObject.lon, lonLatObject.lat],
-					centerIndication: 'du centre ',
+					annuaireMode: true,
 				}}
 			/>
 		</PresentationWrapper>

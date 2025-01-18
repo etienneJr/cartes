@@ -11,7 +11,7 @@ import { css, styled } from 'next-yak'
 export default function CategoryResult({
 	result,
 	setSearchParams,
-	centerIndication,
+	annuaireMode,
 }) {
 	const {
 		tags: { name, description, opening_hours: oh },
@@ -24,12 +24,15 @@ export default function CategoryResult({
 		bearing,
 	} = result
 
-	const url = setSearchParams(
-		{
-			allez: buildAllezPart(name, encodePlace(featureType, id), lon, lat),
-		},
-		true
-	)
+	const allez = buildAllezPart(name, encodePlace(featureType, id), lon, lat)
+	const url = annuaireMode
+		? `/lieu?allez=${allez}`
+		: setSearchParams(
+				{
+					allez,
+				},
+				true
+		  )
 
 	const humanDistance = computeHumanDistance(distance * 1000)
 	const { isOpen } = oh ? getOh(oh) : {}
@@ -66,8 +69,8 @@ export default function CategoryResult({
 					textAlign: 'right',
 				}}
 			>
-				à {humanDistance[0]} {humanDistance[1]} {centerIndication}vers{' '}
-				{roseDirection}
+				à {humanDistance[0]} {humanDistance[1]}{' '}
+				{annuaireMode ? 'du centre ' : ''}vers {roseDirection}
 			</small>
 		</ResultLinkWrapper>
 	)
