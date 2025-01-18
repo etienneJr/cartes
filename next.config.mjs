@@ -24,13 +24,12 @@ const nextConfig = {
 				protocol: 'https',
 				hostname: 'avatars.githubusercontent.com',
 			},
+			{
+				protocol: 'https',
+				hostname: 'serveur.cartes.app',
+			},
 		],
 	},
-	/*
-																compilerOptions: {
-																																baseUrl: '.',
-																},
-																*/
 	eslint: {
 		// Warning: This allows production builds to successfully complete even if
 		// your project has ESLint errors.
@@ -154,4 +153,3 @@ export default withSentryConfig(
 		automaticVercelMonitors: true,
 	}
 )
-

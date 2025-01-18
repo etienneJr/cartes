@@ -16,6 +16,7 @@ import getName from './osm/getName'
 import getUrl from './osm/getUrl'
 import { getFetchUrlBase, gtfsServerUrl } from './serverUrls'
 import { stepOsmRequest } from './stepOsmRequest'
+import { buildPlaceMap } from '@/components/buildPlaceMap'
 
 export async function generateMetadata(
 	props: Props,
@@ -151,9 +152,3 @@ const Page = async (props) => {
 }
 
 export default Page
-
-export function buildPlaceMap(lat, lon) {
-	return (
-		lat && lon && `${gtfsServerUrl}/placeMap/?lat=${lat}&lon=${lon}&zoom=13`
-	)
-}

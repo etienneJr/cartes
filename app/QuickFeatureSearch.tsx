@@ -35,10 +35,11 @@ export const exactThreshold = 0.005
 export default function QuickFeatureSearch({
 	searchParams,
 	searchInput,
-	setSnap,
+	setSnap = () => null,
 	snap,
 	quickSearchFeaturesMap,
 	center,
+	noPhotos = false,
 }) {
 	const [categoriesSet] = getCategories(searchParams)
 	console.log('indigo t', categoriesSet)
@@ -97,7 +98,7 @@ export default function QuickFeatureSearch({
 			<div>
 				<FeatureListWrapper>
 					<FeatureList $showMore={showMore}>
-						{!doFilter && (
+						{!doFilter && !noPhotos && (
 							<>
 								<QuickSearchElement
 									key="photos"
