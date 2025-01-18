@@ -5,9 +5,17 @@ import { buildPlaceMap } from '@/components/buildPlaceMap'
 import { capitalise0 } from '@/components/utils/utils'
 import { styled } from 'next-yak'
 import Image from 'next/image'
+import Results from './Results'
+import { computeBbox, findCategory } from '@/app/effects/fetchOverpassRequest'
+import { getCategories } from '@/components/categories'
 
 const description = ''
 export default function Page({ ville, searchParams }) {
+	const categoryName = searchParams.cat
+	const [categoryNames, [category]] = getCategories(searchParams)
+	console.log(category)
+	const bbox = computeBbox({ lat: 48.6818519, lon: -1.9678375 })
+
 	return (
 		<PresentationWrapper>
 			<StaticPageHeader small={true} />
@@ -24,6 +32,7 @@ export default function Page({ ville, searchParams }) {
 			<QuickFeatureSearch
 				{...{ quickSearchFeaturesMap: {}, searchParams, noPhotos: true }}
 			/>
+			{category && <Results category={category} bbox={bbox} />}
 		</PresentationWrapper>
 	)
 }

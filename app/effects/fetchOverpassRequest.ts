@@ -8,7 +8,10 @@ import computeBboxArea from '@/components/utils/computeBboxArea'
 
 export async function fetchOverpassRequest(bbox, category) {
 	const surface = computeBboxArea(bbox)
-	if (surface / 1000000 > 1000) return
+
+	if (surface / 1000000 > 1000) {
+		return console.log('Surface considered too big for overpass API')
+	}
 
 	const queries =
 		typeof category.query === 'string' ? [category.query] : category.query

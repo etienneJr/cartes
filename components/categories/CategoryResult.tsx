@@ -9,7 +9,6 @@ import { computeRoseDirection } from '../SimilarNodes'
 import { css, styled } from 'next-yak'
 
 export default function CategoryResult({ result, setSearchParams }) {
-	console.log('indigo test', result)
 	const {
 		tags: { name, description, opening_hours: oh },
 		category,
