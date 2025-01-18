@@ -17,12 +17,18 @@ const description = ''
 const lonLatObject = { lat: 48.6818519, lon: -1.9678375 }
 export default async function Page({ ville, searchParams }) {
 	const categoryName = searchParams.cat
-	const [categoryNames, [category]] = getCategories(searchParams)
-	console.log(category)
+	const [categoryNames, categories] = getCategories(searchParams)
 	const bbox = computeBbox(lonLatObject)
-	const results = category ? await fetchOverpassRequest(bbox, category) : []
+	console.log('CAT', categories)
+	const results = categories?.length
+		? await Promise.all(
+				categories.map((category) => fetchOverpassRequest(bbox, category))
+		  )
+		: []
 
-	const quickSearchFeaturesMap = { [categoryNames[0]]: results }
+	const quickSearchFeaturesMap = Object.fromEntries(
+		results.map((categoryResults, i) => [categoryNames[i], categoryResults])
+	)
 
 	console.log(quickSearchFeaturesMap)
 
