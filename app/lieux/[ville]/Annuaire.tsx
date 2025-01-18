@@ -45,6 +45,7 @@ export default async function Page({ ville, searchParams }) {
 					searchParams,
 					noPhotos: true,
 					center: [lonLatObject.lon, lonLatObject.lat],
+					centerIndication: 'du centre ',
 				}}
 			/>
 		</PresentationWrapper>

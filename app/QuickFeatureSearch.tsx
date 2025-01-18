@@ -40,6 +40,7 @@ export default function QuickFeatureSearch({
 	quickSearchFeaturesMap,
 	center,
 	noPhotos = false,
+	centerIndication = '',
 }) {
 	const [categoriesSet] = getCategories(searchParams)
 	const [showMore, setShowMore] = useState(false)
@@ -182,6 +183,7 @@ export default function QuickFeatureSearch({
 			)}
 			<CategoryResults
 				center={center}
+				centerIndication={centerIndication}
 				resultsEntries={Object.entries(quickSearchFeaturesMap).filter(
 					([k, v]) => categoriesSet.includes(k)
 				)}

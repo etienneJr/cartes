@@ -8,7 +8,11 @@ import Link from 'next/link'
 import { computeRoseDirection } from '../SimilarNodes'
 import { css, styled } from 'next-yak'
 
-export default function CategoryResult({ result, setSearchParams }) {
+export default function CategoryResult({
+	result,
+	setSearchParams,
+	centerIndication,
+}) {
 	const {
 		tags: { name, description, opening_hours: oh },
 		category,
@@ -67,7 +71,8 @@ export default function CategoryResult({ result, setSearchParams }) {
 					text-align: right;
 				`}
 			>
-				à {humanDistance[0]} {humanDistance[1]} vers {roseDirection}
+				à {humanDistance[0]} {humanDistance[1]} {centerIndication}vers{' '}
+				{roseDirection}
 			</small>
 		</ResultLinkWrapper>
 	)

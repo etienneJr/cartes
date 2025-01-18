@@ -9,7 +9,11 @@ import useSetSearchParams from '../useSetSearchParams'
 import { sortBy } from '../utils/utils'
 import CategoryResult from './CategoryResult'
 
-export default function CategoryResults({ resultsEntries, center }) {
+export default function CategoryResults({
+	resultsEntries,
+	center,
+	centerIndication,
+}) {
 	const setSearchParams = useSetSearchParams()
 	const resultsWithoutOrder = resultsEntries
 			.map(([k, list]) =>
@@ -52,6 +56,7 @@ export default function CategoryResults({ resultsEntries, center }) {
 			<ol>
 				{results.map((result) => (
 					<CategoryResult
+						centerIndication={centerIndication}
 						key={result.id}
 						result={result}
 						setSearchParams={setSearchParams}
