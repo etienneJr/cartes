@@ -1,18 +1,15 @@
 import QuickFeatureSearch from '@/app/QuickFeatureSearch'
-import { PresentationWrapper } from '@/app/presentation/UI'
-import StaticPageHeader from '@/components/StaticPageHeader'
-import { buildPlaceMap } from '@/components/buildPlaceMap'
-import { capitalise0 } from '@/components/utils/utils'
-import { styled } from 'next-yak'
-import Image from 'next/image'
-import Results from './Results'
 import {
 	computeBbox,
 	fetchOverpassRequest,
-	findCategory,
 } from '@/app/effects/fetchOverpassRequest'
+import { PresentationWrapper } from '@/app/presentation/UI'
+import StaticPageHeader from '@/components/StaticPageHeader'
+import { buildPlaceMap } from '@/components/buildPlaceMap'
 import { getCategories } from '@/components/categories'
 import communes from '@/public/communes-35.json'
+import { styled } from 'next-yak'
+import Image from 'next/image'
 
 const description = ''
 export default async function Page({ ville: villeName, searchParams }) {
