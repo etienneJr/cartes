@@ -1,8 +1,9 @@
 import fs from 'fs'
 
-const doFetch = async (departementCode = 35) => {
+export const fetchDepartementCommunes = async (departementCode = 35) => {
 	const request = await fetch(
-		`https://geo.api.gouv.fr/departements/${departementCode}/communes?fields=code,nom,population,centre,codeRegion,codeDepartement,codesPostaux`
+		`https://geo.api.gouv.fr/departements/${departementCode}/communes?fields=code,nom,population,centre,codeRegion,codeDepartement,codesPostaux`,
+		{ cache: 'force-cache' }
 	)
 	const json = await request.json()
 
@@ -16,5 +17,3 @@ const doFetch = async (departementCode = 35) => {
 	)
 	return sorted
 }
-
-doFetch()

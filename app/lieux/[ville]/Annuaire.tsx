@@ -7,15 +7,19 @@ import { PresentationWrapper } from '@/app/presentation/UI'
 import StaticPageHeader from '@/components/StaticPageHeader'
 import { buildPlaceMap } from '@/components/buildPlaceMap'
 import { getCategories } from '@/components/categories'
-import communes from '@/public/communes-35.json'
 import { styled } from 'next-yak'
 import Image from 'next/image'
+import fetchVille from './fetchVille'
+import Link from 'next/link'
+import removeAccent from 'remove-accents'
 
 const description = ''
-export default async function Page({ ville: villeName, searchParams }) {
-	const ville = communes.find(
-		(commune) => commune.nom.toLowerCase() === villeName
-	)
+export default async function Page({ params, searchParams }) {
+	const { ville: villeName } = params
+
+	const ville = await fetchVille(villeName)
+	console.log('VILLE', ville)
+
 	const [lon, lat] = ville.centre.coordinates
 	const lonLatObject = { lat, lon }
 
@@ -39,6 +43,13 @@ export default async function Page({ ville: villeName, searchParams }) {
 	return (
 		<PresentationWrapper>
 			<StaticPageHeader small={true} />
+			<Link
+				href={`/lieux/departement/${removeAccent(
+					ville.departement.nom
+				).toLowerCase()}`}
+			>
+				⭠ Villes du département {ville.departement.nom}
+			</Link>
 			<header>
 				<h1>Annuaire des lieux de {ville.nom} </h1>
 				<small>({ville.codesPostaux.join(', ')})</small>
