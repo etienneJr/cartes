@@ -18,6 +18,7 @@ const basePaths = [
 	'/transport-en-commun',
 	'/a-propos',
 	'/documentation/tickets',
+	'/lieux',
 ]
 
 const generateAgencies = async () => {
