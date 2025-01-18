@@ -31,8 +31,6 @@ import {
 export default function Transit({ itinerary, searchParams }) {
 	const date = itinerary.date
 
-	console.log('indigo transit yo', itinerary)
-
 	return (
 		<TransitWrapper>
 			<DateSelector date={date} planification={searchParams.planification} />

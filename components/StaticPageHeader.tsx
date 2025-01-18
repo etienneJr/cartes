@@ -19,7 +19,7 @@ export default function ({ small }) {
 									font-size: 130%;
 									margin-bottom: 0.4rem;
 							  `
-							: ''
+							: css``
 					}
 				>
 					<Image src={Logo} alt="Logo de cartes.app" /> Cartes

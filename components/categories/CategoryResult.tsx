@@ -7,11 +7,15 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { computeRoseDirection } from '../SimilarNodes'
 import { css, styled } from 'next-yak'
+import { capitalise0 } from '../utils/utils'
 
-export default function CategoryResult({ result, setSearchParams }) {
-	console.log('indigo test', result)
+export default function CategoryResult({
+	result,
+	setSearchParams,
+	annuaireMode,
+}) {
 	const {
-		tags: { name, description, opening_hours: oh },
+		tags: { name: rawName, description, opening_hours: oh },
 		category,
 		type: featureType,
 		id,
@@ -21,12 +25,17 @@ export default function CategoryResult({ result, setSearchParams }) {
 		bearing,
 	} = result
 
-	const url = setSearchParams(
-		{
-			allez: buildAllezPart(name, encodePlace(featureType, id), lon, lat),
-		},
-		true
-	)
+	const name = rawName || capitalise0(category.name) + ' sans nom'
+
+	const allez = buildAllezPart(name, encodePlace(featureType, id), lon, lat)
+	const url = annuaireMode
+		? `/lieu?allez=${allez}`
+		: setSearchParams(
+				{
+					allez,
+				},
+				true
+		  )
 
 	const humanDistance = computeHumanDistance(distance * 1000)
 	const { isOpen } = oh ? getOh(oh) : {}
@@ -52,28 +61,28 @@ export default function CategoryResult({ result, setSearchParams }) {
 				</div>
 				{!isOpenByDefault &&
 					(oh == null ? (
-						<span
-							css={css`
-								display: inline-block;
-								width: 1.8rem;
-							`}
-						></span>
+						<NoOpenIndicator />
 					) : (
 						<OpenIndicator isOpen={isOpen === 'error' ? false : isOpen} />
 					))}
 			</header>
 			{description && <p>{description}</p>}
 			<small
-				css={css`
-					text-align: right;
-				`}
+				style={{
+					textAlign: 'right',
+				}}
 			>
-				à {humanDistance[0]} {humanDistance[1]} vers {roseDirection}
+				à {humanDistance[0]} {humanDistance[1]}{' '}
+				{annuaireMode ? 'du centre ' : ''}vers {roseDirection}
 			</small>
 		</ResultLinkWrapper>
 	)
 }
 
+const NoOpenIndicator = styled.span`
+	display: inline-block;
+	width: 1.8rem;
+`
 const ImageWrapper = styled.div`
 	background: ${(p) => p.$background};
 	border-radius: 2rem;
@@ -103,6 +112,7 @@ const ResultLinkWrapper = styled(Link)`
 			margin-left: 0.4rem;
 			font-weight: bold;
 			font-size: 90%;
+			line-height: 1.6rem;
 		}
 	}
 	header {

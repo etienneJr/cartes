@@ -1,7 +1,7 @@
 import { buildAllezPartFromOsmFeature } from './app/SetDestination'
 import getUrl from './app/osm/getUrl'
-import { buildPlaceMap } from './app/page'
 import { getFetchUrlBase } from './app/serverUrls'
+import { buildPlaceMap } from './components/buildPlaceMap'
 import fetchOgImage from './components/fetchOgImage'
 
 export default async function buildPlaceJsonLd(osmFeature, step) {

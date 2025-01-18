@@ -9,7 +9,11 @@ import useSetSearchParams from '../useSetSearchParams'
 import { sortBy } from '../utils/utils'
 import CategoryResult from './CategoryResult'
 
-export default function CategoryResults({ resultsEntries, center }) {
+export default function CategoryResults({
+	resultsEntries,
+	center,
+	annuaireMode,
+}) {
 	const setSearchParams = useSetSearchParams()
 	const resultsWithoutOrder = resultsEntries
 			.map(([k, list]) =>
@@ -19,7 +23,7 @@ export default function CategoryResults({ resultsEntries, center }) {
 				}))
 			)
 			.flat()
-			.filter((feature) => feature.tags.name)
+			//			.filter((feature) => feature.tags.name)
 			.map((feature) => {
 				const { lon: lon2, lat: lat2 } = feature
 				return {
@@ -52,6 +56,7 @@ export default function CategoryResults({ resultsEntries, center }) {
 			<ol>
 				{results.map((result) => (
 					<CategoryResult
+						annuaireMode={annuaireMode}
 						key={result.id}
 						result={result}
 						setSearchParams={setSearchParams}

@@ -35,13 +35,15 @@ export const exactThreshold = 0.005
 export default function QuickFeatureSearch({
 	searchParams,
 	searchInput,
-	setSnap,
+	setSnap = () => null,
 	snap,
 	quickSearchFeaturesMap,
 	center,
+	noPhotos = false,
+	annuaireMode = false,
 }) {
 	const [categoriesSet] = getCategories(searchParams)
-	console.log('indigo t', categoriesSet)
+
 	const [showMore, setShowMore] = useState(false)
 	const hasLieu = searchParams.allez
 	const setSearchParams = useSetSearchParams()
@@ -74,11 +76,13 @@ export default function QuickFeatureSearch({
 
 		[searchInput, hasLieu]
 	)
+	/*
 	console.log(
 		'cat score',
 		filteredCategories.map((el) => el.name + el.score),
 		filteredMoreCategories.map((el) => el.name + el.score)
 	)
+	*/
 
 	const getNewSearchParamsLink = buildGetNewSearchParams(
 		searchParams,
@@ -97,7 +101,7 @@ export default function QuickFeatureSearch({
 			<div>
 				<FeatureListWrapper>
 					<FeatureList $showMore={showMore}>
-						{!doFilter && (
+						{!doFilter && !noPhotos && (
 							<>
 								<QuickSearchElement
 									key="photos"
@@ -170,7 +174,9 @@ export default function QuickFeatureSearch({
 					</QuickSearchElementDiv>
 				)}
 			</div>
-			{(showMore || (doFilter && filteredMoreCategories.length > 0)) && (
+			{(showMore ||
+				(doFilter && filteredMoreCategories.length > 0) ||
+				(annuaireMode && !Object.keys(quickSearchFeaturesMap).length)) && (
 				<MoreCategories
 					getNewSearchParamsLink={getNewSearchParamsLink}
 					categoriesSet={categoriesSet}
@@ -180,6 +186,7 @@ export default function QuickFeatureSearch({
 			)}
 			<CategoryResults
 				center={center}
+				annuaireMode={annuaireMode}
 				resultsEntries={Object.entries(quickSearchFeaturesMap).filter(
 					([k, v]) => categoriesSet.includes(k)
 				)}
