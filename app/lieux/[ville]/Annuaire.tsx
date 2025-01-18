@@ -54,7 +54,7 @@ export default async function Page({ params, searchParams }) {
 				<small>({ville.codesPostaux.join(', ')})</small>
 				<p>{description}</p>
 				<PlaceImage
-					src={buildPlaceMap(48.1113404, -1.6793235)}
+					src={buildPlaceMap(lat, lon, 13)}
 					width="200"
 					height="200"
 					alt={'Miniature de la carte de ' + ville}
