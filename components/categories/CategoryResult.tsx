@@ -55,21 +55,16 @@ export default function CategoryResult({
 				</div>
 				{!isOpenByDefault &&
 					(oh == null ? (
-						<span
-							css={css`
-								display: inline-block;
-								width: 1.8rem;
-							`}
-						></span>
+						<NoOpenIndicator />
 					) : (
 						<OpenIndicator isOpen={isOpen === 'error' ? false : isOpen} />
 					))}
 			</header>
 			{description && <p>{description}</p>}
 			<small
-				css={css`
-					text-align: right;
-				`}
+				style={{
+					textAlign: 'right',
+				}}
 			>
 				à {humanDistance[0]} {humanDistance[1]} {centerIndication}vers{' '}
 				{roseDirection}
@@ -78,6 +73,10 @@ export default function CategoryResult({
 	)
 }
 
+const NoOpenIndicator = styled.span`
+	display: inline-block;
+	width: 1.8rem;
+`
 const ImageWrapper = styled.div`
 	background: ${(p) => p.$background};
 	border-radius: 2rem;
@@ -107,6 +106,7 @@ const ResultLinkWrapper = styled(Link)`
 			margin-left: 0.4rem;
 			font-weight: bold;
 			font-size: 90%;
+			line-height: 1.6rem;
 		}
 	}
 	header {
