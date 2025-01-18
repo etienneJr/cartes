@@ -27,7 +27,12 @@ export default function CategoryResult({
 
 	const name = rawName || capitalise0(category.name) + ' sans nom'
 
-	const allez = buildAllezPart(name, encodePlace(featureType, id), lon, lat)
+	const allez = buildAllezPart(
+		encodeURIComponent(name),
+		encodePlace(featureType, id),
+		lon,
+		lat
+	)
 	const url = annuaireMode
 		? `/lieu?allez=${allez}`
 		: setSearchParams(
