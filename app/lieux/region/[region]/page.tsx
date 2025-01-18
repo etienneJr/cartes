@@ -1,23 +1,24 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import {
-	default as removeAccent,
-	default as removeAccents,
-} from 'remove-accents'
+import { default as removeAccents } from 'remove-accents'
 import départements from '../../departement/départements.yaml'
+import { communesLimit, populationLimit } from '../../departement/fetchCommunes'
 import { fetchRegionCommunes } from '../fetchCommunes'
-import Régions from '../../Régions'
 
 export const metadata: Metadata = {
 	title: '',
 	description: '',
 }
 
+export const slugify = (name) => removeAccents(name).toLowerCase()
+
+console.log('SLUGIFY', `"${slugify('Centre-Val de Loire')}"`)
+
 export default async function (props) {
 	const { region } = await props.params
 
 	const departements = départements.filter(
-		(d) => removeAccents(d.nom_region.toLowerCase()) === region
+		(d) => slugify(d.nom_region) === decodeURIComponent(region)
 	)
 
 	if (!departements.length) return <p>Région non trouvée</p>
@@ -29,11 +30,7 @@ export default async function (props) {
 
 	return (
 		<main>
-			<Link
-				href={`/lieux/region/${removeAccent(found.nom_region).toLowerCase()}`}
-			>
-				⭠ Revenir à la région {found.nom_region}
-			</Link>
+			<Link href={`/lieux/`}>⭠ Revenir à la liste des régions</Link>
 			<h1>
 				Départements de la région {found.nom_region} {found.code_region}
 			</h1>
@@ -48,9 +45,11 @@ export default async function (props) {
 					</li>
 				))}
 			</ol>
-			<h1>
-				Communes de la région {found.nom_region} {found.code_region}
-			</h1>
+			<h1>Communes de la région {found.nom_region}</h1>
+			<p>
+				Sont affichées les {communesLimit} premières communes de plus de{' '}
+				{populationLimit} habitants.
+			</p>
 			<ol>
 				{communes.map((commune) => (
 					<li key={commune.code}>

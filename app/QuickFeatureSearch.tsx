@@ -173,7 +173,9 @@ export default function QuickFeatureSearch({
 					</QuickSearchElementDiv>
 				)}
 			</div>
-			{(showMore || (doFilter && filteredMoreCategories.length > 0)) && (
+			{(showMore ||
+				(doFilter && filteredMoreCategories.length > 0) ||
+				(annuaireMode && !Object.keys(quickSearchFeaturesMap).length)) && (
 				<MoreCategories
 					getNewSearchParamsLink={getNewSearchParamsLink}
 					categoriesSet={categoriesSet}

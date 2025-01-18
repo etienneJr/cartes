@@ -1,9 +1,14 @@
 import départements from '../départements.yaml'
 import removeAccents from 'remove-accents'
-import { fetchDepartementCommunes } from '../fetchCommunes'
+import {
+	communesLimit,
+	fetchDepartementCommunes,
+	populationLimit,
+} from '../fetchCommunes'
 import { Metadata } from 'next'
 import Link from 'next/link'
 import removeAccent from 'remove-accents'
+import { slugify } from '../../region/[region]/page'
 
 export const metadata: Metadata = {
 	title: '',
@@ -14,7 +19,7 @@ export default async function (props) {
 	const { departement } = await props.params
 
 	const found = départements.find(
-		(d) => removeAccents(d.nom.toLowerCase()) === departement
+		(d) => slugify(d.nom) === decodeURIComponent(departement)
 	)
 
 	if (!found) return <p>Département non trouvé</p>
@@ -29,8 +34,12 @@ export default async function (props) {
 				⭠ Revenir à la région {found.nom_region}
 			</Link>
 			<h1>
-				Communes du département {found.nom} {found.code}
+				Communes du département {found.nom} <small>({found.code})</small>
 			</h1>
+			<p>
+				Sont affichées les {communesLimit} premières communes de plus de{' '}
+				{populationLimit} habitants.
+			</p>
 			<ol>
 				{communes.map((commune) => (
 					<li key={commune.code}>

@@ -39,7 +39,7 @@
     - italien
     - pâtes
   query:
-    - '[amenity=restaurant][cuisine~italian|pizza]'
+    - '[amenity=restaurant][cuisine~"italian|pizza"]'
     - '[vending=pizza]'
     - '[food=pizza]'
     - '["food:pizza"=yes]'
