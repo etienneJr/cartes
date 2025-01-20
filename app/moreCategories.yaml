@@ -118,7 +118,7 @@
     - japonais
   query:
     - '[amenity=restaurant][cuisine~italian]'
-  icon: restaurant
+  icon: sushi
 
 - name: Végé
   category: Restaurants
@@ -135,6 +135,23 @@
     - végétalien
   query:
     - '["diet:vegetarian"~"yes|only"]'
+    - '["diet:vegan"~"yes|only"]'
+  icon: veg
+
+- name: Vegan
+  category: Restaurants
+  description: Repas et cafés végan
+  dictionary:
+    - resto
+    - emporter
+    - manger
+    - diner
+    - déjeuner
+    - végétarien
+    - végé
+    - vegan
+    - végétalien
+  query:
     - '["diet:vegan"~"yes|only"]'
   icon: veg
 
