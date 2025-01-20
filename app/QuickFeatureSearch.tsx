@@ -17,7 +17,8 @@ import {
 	SpinningDiscBorder,
 } from './QuickFeatureSearchUI'
 import categories from './categories.yaml'
-import moreCategories from './moreCategories.yaml'
+import { filteredMoreCategories } from '@/components/categories'
+const moreCategories = filteredMoreCategories
 import categoryIconUrl from '@/components/categoryIconUrl'
 
 export function initializeFuse(categories) {

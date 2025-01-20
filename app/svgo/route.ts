@@ -34,9 +34,21 @@ const fromSvgToImgSrc = (imageText, background) => {
 	})
 	*/
 
-	const svgSize = svg.getAttribute('width'), // Icons must be square !
-		xyr = svgSize / 2
+	let svgSize = svg.getAttribute('width') // Icons must be square !
 
+	if (!svgSize) {
+		const viewBox = svg.getAttribute('viewBox')
+		const dimensions = viewBox.split(' ')
+		const startsAtZero = dimensions[0] === dimensions[1] && dimensions[0] == 0
+		const sameExtend = dimensions[2] === dimensions[3]
+		if (!startsAtZero || !sameExtend)
+			throw new Error(
+				'The SVG should have width and height attributes and a corresponding viewBox'
+			)
+		svgSize = dimensions[2]
+	}
+
+	const xyr = svgSize / 2
 	const backgroundDisk = `<circle
      style="fill:${encodeURIComponent(background)};fill-rule:evenodd"
      cx="${xyr}"

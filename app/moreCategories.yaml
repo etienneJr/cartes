@@ -280,14 +280,14 @@
     - charcuterie
     - charcutier
   query: '[shop=butcher]'
-  icon: butcher
+  icon: meat
 
-- name: Café
+- name: Boutique de café
   category: Alimentation
   dictionary:
     - torréfacteur
   query: '[shop=coffee]'
-  icon: coffee
+  icon: cafe
 
 - name: Caviste
   category: Alimentation
@@ -295,7 +295,7 @@
     - vin
     - bouteille
   query: '[shop=wine]'
-  icon: wine
+  icon: bottle
 
 - name: Confiserie
   category: Alimentation
@@ -303,7 +303,7 @@
     - bonbon
     - sucrerie
   query: '[shop=confectionery]'
-  icon: confectionery
+  icon: candy
 
 - name: Chocolatier
   category: Alimentation
@@ -311,7 +311,7 @@
     - chocolat
     - tablette
   query: '[shop=chocolate]'
-  icon: mx_chocolate
+  icon: chocolate
 
 - name: Épicerie fine
   category: Alimentation
@@ -334,10 +334,11 @@
     - glace
     - sorbet
   query: '[shop=ice_cream]'
-  icon: ice_cream
+  icon: ice-cream
 
 - name: Miellerie
   category: Alimentation
+  inactive: Very specific; needs icon
   dictionary:
     - miel
     - propolis
@@ -361,7 +362,7 @@
     - crustacé
     - fruits de mer
   query: '[shop=seafood]'
-  icon: mx_shop_seafood
+  icon: fish
 
 - name: Primeur
   category: Alimentation
@@ -369,7 +370,7 @@
     - fruits
     - légumes
   query: '[shop=greengrocer]'
-  icon: greengrocer
+  icon: grapes
 
 - name: Produits de la ferme
   category: Alimentation

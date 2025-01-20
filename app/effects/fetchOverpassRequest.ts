@@ -1,5 +1,5 @@
 import categories from '@/app/categories.yaml'
-import moreCategories from '@/app/moreCategories.yaml'
+import { filteredMoreCategories as moreCategories } from '@/components/categories'
 import {
 	enrichOsmFeatureWithPolyon,
 	overpassRequestSuffix,

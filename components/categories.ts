@@ -1,7 +1,11 @@
 import baseCategories from '@/app/categories.yaml'
 import moreCategories from '@/app/moreCategories.yaml'
 
-export const categories = [...baseCategories, ...moreCategories]
+export const filteredMoreCategories = moreCategories.filter(
+	(cat) => !cat.inactive
+)
+
+export const categories = [...baseCategories, ...filteredMoreCategories]
 
 // use this to complete categoryColors.yaml
 
