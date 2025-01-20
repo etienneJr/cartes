@@ -25,7 +25,9 @@ export default async function Page({ params, searchParams }) {
 
 	const [categoryNames, categories] = getCategories(searchParams)
 	//const bbox2 = computeBbox(lonLatObject)
-	const bbox = ville.bbox.coordinates[0]
+	const geoJsonBbox = ville.bbox.coordinates[0]
+	const b = geoJsonBbox
+	const bbox = [b[0][1], b[0][0], b[2][1], b[1][0]]
 
 	const results = categories?.length
 		? await Promise.all(
