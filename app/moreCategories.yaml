@@ -200,7 +200,7 @@
     - narguilé
     - fumer
   query: '["amenity""=""hookah_lounge"]'
-  icon: hookah_lounge
+  icon: cigarette
 
 - name: Bar à vin
   category: Bars et boisson
