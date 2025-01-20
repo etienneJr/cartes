@@ -5,8 +5,7 @@ import { optimize } from 'svgo'
 export async function GET(request) {
 	const requestUrl = new URL(request.url),
 		svgFilename = requestUrl.searchParams.get('svgFilename'),
-		backgroundHex = requestUrl.searchParams.get('background'),
-		background = backgroundHex ? '#' + backgroundHex : null
+		background = requestUrl.searchParams.get('background')
 
 	const data = fs.readFileSync('./public/icons/' + svgFilename + '.svg', 'utf8')
 

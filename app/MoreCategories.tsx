@@ -120,6 +120,7 @@ const MapIcon = ({ category, color }) => {
 
 	const alt = 'Icône de la catégorie' + (category.title || category.name)
 	useEffect(() => {
+		console.log('color', color)
 		buildSvgImage(category.icon, (_, src) => setSrc(src), color)
 	}, [category.icon])
 
