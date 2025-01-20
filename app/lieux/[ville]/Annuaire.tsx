@@ -20,11 +20,12 @@ export default async function Page({ params, searchParams }) {
 	const ville = await fetchVille(villeName)
 	console.log('VILLE', ville)
 
-	const [lon, lat] = ville.centre.coordinates
+	const [lon, lat] = ville.mairie.coordinates
 	const lonLatObject = { lat, lon }
 
 	const [categoryNames, categories] = getCategories(searchParams)
-	const bbox = computeBbox(lonLatObject)
+	//const bbox2 = computeBbox(lonLatObject)
+	const bbox = ville.bbox.coordinates[0]
 
 	const results = categories?.length
 		? await Promise.all(

@@ -1,5 +1,5 @@
 export default async function fetchVille(name) {
-	const url = `https://geo.api.gouv.fr/communes?nom=${name}&fields=code,nom,population,centre,codeRegion,codeDepartement,codesPostaux,departement,region&boost=population`
+	const url = `https://geo.api.gouv.fr/communes?nom=${name}&fields=code,nom,population,mairie,bbox,codeRegion,codeDepartement,codesPostaux,departement,region&boost=population`
 	const request = await fetch(
 		url,
 
