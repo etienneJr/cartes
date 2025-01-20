@@ -1,5 +1,127 @@
-- name: végé
-  category: Manger et boire
+#######################
+# RESTAURANTS
+#######################
+
+- name: Chinois
+  category: Restaurants
+  dictionary:
+    - chinois
+    - nem
+    - vermicelle
+  query:
+    - '[amenity=restaurant][cuisine~chinese]'
+  icon: restaurant
+
+- name: Crêperie
+  category: Restaurants
+  dictionary:
+    - crêpes
+    - breton
+  query:
+    '[amenity=restaurant][cuisine~crepe]'
+    #icon: hermine ne marche pas :/
+  icon: hermine
+
+- name: Restaurant étoilé
+  category: Restaurants
+  dictionary:
+    - gastronomie
+    - gastronomique
+    - gastro
+    - michelin
+  query:
+    - '[amenity=restaurant][stars]'
+  icon: restaurant
+
+- name: Fast-food
+  category: Restaurants
+  dictionary:
+    - burger
+    - macdo
+    - kfc
+    - quick
+    - kebab
+  query: '[amenity=fast_food]'
+  icon: fastfood
+
+- name: Cuisine française
+  category: Restaurants
+  dictionary:
+    - français
+    - traditionnelle
+  query:
+    - '[amenity=restaurant][cuisine~french]'
+  icon: restaurant
+
+- name: Grec
+  category: Restaurants
+  dictionary:
+    - tzatziki
+    - dolmadakia
+    - moussaka
+    - pita
+    - papoutsakia
+  query:
+    - '[amenity=restaurant][cuisine~greek]'
+  icon: restaurant
+
+- name: Indien
+  category: Restaurants
+  dictionary:
+    - samoussa
+    - tandoori
+    - tika
+    - massala
+  query:
+    - '[amenity=restaurant][cuisine~indian]'
+  icon: restaurant
+
+- name: Italien
+  category: Restaurants
+  dictionary:
+    - italien
+    - pâtes
+  query:
+    - '[amenity=restaurant][cuisine~"italian|pizza"]'
+    - '[vending=pizza]'
+    - '[food=pizza]'
+    - '["food:pizza"=yes]'
+  icon: restaurant
+
+- name: Libanais
+  category: Restaurants
+  dictionary:
+    - falafel
+    - houmous
+    - sandwich
+  query: '[amenity=restaurant][cuisine~lebanese]'
+  icon: restaurant
+
+- name: Pizzeria
+  category: Restaurants
+  dictionary:
+    - pizza
+    - italien
+    - pâtes
+  query:
+    - '[amenity=restaurant][cuisine~pizza]'
+    - '[vending=pizza]'
+    - '[food=pizza]'
+    - '["food:pizza"=yes]'
+  icon: pizza
+
+- name: Sushis
+  category: Restaurants
+  dictionary:
+    - sushi
+    - maki
+    - japonais
+  query:
+    - '[amenity=restaurant][cuisine~italian]'
+  icon: sushi
+
+- name: Végé
+  category: Restaurants
   description: Repas et cafés végétarien ou végan
   dictionary:
     - resto
@@ -15,59 +137,83 @@
     - '["diet:vegetarian"~"yes|only"]'
     - '["diet:vegan"~"yes|only"]'
   icon: veg
-- name: pâtisserie
-  category: Manger et boire
+
+- name: Vegan
+  category: Restaurants
+  description: Repas et cafés végan
   dictionary:
-    - viennoiserie
-    - croissant
-    - patisserie
-  query: '[shop=pastry]'
-  icon: bakery
-- name: Crêperie
-  category: Manger et boire
-  dictionary:
-    - crêpes
-    - breton
+    - resto
+    - emporter
+    - manger
+    - diner
+    - déjeuner
+    - végétarien
+    - végé
+    - vegan
+    - végétalien
   query:
-    '[amenity=restaurant][cuisine~crepe]'
-    #icon: hermine ne marche pas :/
-  icon: hermine
-- name: Italien & Pizza
-  category: Manger et boire
+    - '["diet:vegan"~"yes|only"]'
+  icon: veg
+
+#######################
+# BARS & BOISSONS
+#######################
+
+- name: Bars
+  category: Bars et boisson
   dictionary:
-    - pizza
-    - italien
-    - pâtes
+    - boire
+    - alcool
+    - cocktail
   query:
-    - '[amenity=restaurant][cuisine~"italian|pizza"]'
-    - '[vending=pizza]'
-    - '[food=pizza]'
-    - '["food:pizza"=yes]'
-  icon: restaurant
-- name: Libanais
-  category: Manger et boire
+    - '["amenity"="bar"]'
+    - '["amenity"="cafe"]'
+    - '["amenity"="pub"]'
+  icon: beer
+
+- name: Bar à bière
+  category: Bars et boisson
   dictionary:
-    - falafel
-    - houmous
-    - sandwich
-  query: '[amenity=restaurant][cuisine~lebanese]'
-  icon: restaurant
-- name: Fast food
-  category: Manger et boire
+    - bière
+    - boire
+    - alcool
+    - binouze
+    - picon
+    - demi
+    - blonde
+    - brune
+  query:
+    - '[brewery]'
+    - '[drink:beer]'
+  icon: beer
+
+- name: Bar à chats
+  category: Bars et boisson
   dictionary:
-    - burger
-    - macdo
-  query: '[amenity=fast_food]'
-  icon: fastfood
-- name: Fromagerie
-  category: Manger et boire
+    - chat
+  query: '["theme"="cat"]'
+  icon: cat
+
+- name: Bar à chicha
+  category: Bars et boisson
   dictionary:
-    - fromage
-    - traiteur
-  query: '[shop=cheese]'
-  icon: cheese
-- name: Bubble tea
-  category: Manger et boire
+    - narguilé
+    - fumer
+  query: '["amenity""=""hookah_lounge"]'
+  icon: hookah_lounge
+
+- name: Bar à vin
+  category: Bars et boisson
+  dictionary:
+    - rosé
+    - rouge
+    - blanc
+    - sec
+  query: '[drink:wine]'
+  icon: bottle
+
+- name: Bubble Tea
+  category: Bars et boisson
   dictionary:
     - bubble tea
     - bubble
@@ -80,6 +226,173 @@
     - tapioca
   query: '[cuisine~bubble_tea]'
   icon: bubbletea
+
+- name: Café
+  category: Bars et boisson
+  dictionary:
+    - bar
+    - café
+    - brasserie
+    - terrasse
+  query:
+    - '["amenity"="bar"]'
+    - '["amenity"="cafe"]'
+  icon: cafe
+
+- name: Point d'eau
+  category: Bars et boisson
+  dictionary:
+    - boire
+    - fontaine
+    - eau potable
+    - robinet
+  query:
+    - '[amenity=drinking_water]'
+    - '[drinking_water=yes]'
+  icon: water
+
+- name: Salon de thé
+  category: Bars et boisson
+  dictionary:
+    - infusion
+  query: '["cuisine"="teahouse"]'
+  icon: tea
+
+#######################
+# COMMERCES DE BOUCHE
+#######################
+
+- name: Boulangerie
+  category: Alimentation
+  dictionary:
+    - pain
+    - viennoiserie
+    - croissant
+    - patisserie
+  #emoji: 🥖
+  query: '[shop=bakery]'
+  icon: bakery
+
+- name: Boucherie
+  category: Alimentation
+  dictionary:
+    - viande
+    - charcuterie
+    - charcutier
+  query: '[shop=butcher]'
+  icon: meat
+
+- name: Boutique de café
+  category: Alimentation
+  dictionary:
+    - torréfacteur
+  query: '[shop=coffee]'
+  icon: cafe
+
+- name: Caviste
+  category: Alimentation
+  dictionary:
+    - vin
+    - bouteille
+  query: '[shop=wine]'
+  icon: bottle
+
+- name: Confiserie
+  category: Alimentation
+  dictionary:
+    - bonbon
+    - sucrerie
+  query: '[shop=confectionery]'
+  icon: candy
+
+- name: Chocolatier
+  category: Alimentation
+  dictionary:
+    - chocolat
+    - tablette
+  query: '[shop=chocolate]'
+  icon: chocolate
+
+- name: Épicerie fine
+  category: Alimentation
+  dictionary:
+    - delicatessen
+  query: '[shop=deli]'
+  icon: deli
+
+- name: Fromagerie
+  category: Alimentation
+  dictionary:
+    - fromage
+    - traiteur
+  query: '[shop=cheese]'
+  icon: cheese
+
+- name: Glacier
+  category: Alimentation
+  dictionary:
+    - glace
+    - sorbet
+  query: '[shop=ice_cream]'
+  icon: ice-cream
+
+- name: Miellerie
+  category: Alimentation
+  inactive: Very specific; needs icon
+  dictionary:
+    - miel
+    - propolis
+    - abeille
+  query: '[shop=honey]'
+  icon: honey
+
+- name: Pâtisserie
+  category: Alimentation
+  dictionary:
+    - viennoiserie
+    - croissant
+    - patisserie
+  query: '[shop=pastry]'
+  icon: bakery
+
+- name: Poissonnerie
+  category: Alimentation
+  dictionary:
+    - poisson
+    - crustacé
+    - fruits de mer
+  query: '[shop=seafood]'
+  icon: fish
+
+- name: Primeur
+  category: Alimentation
+  dictionary:
+    - fruits
+    - légumes
+  query: '[shop=greengrocer]'
+  icon: grapes
+
+- name: Produits de la ferme
+  category: Alimentation
+  dictionary:
+    - producteur
+    - terroir
+    - viande
+    - œuf
+    - oeuf
+    - fromage
+    - lait
+    - bio
+  query: '[shop=farm]'
+  icon: farm
+
+- name: Thé
+  category: Alimentation
+  dictionary:
+    - infusion
+    - menthe
+  query: '[shop=tea]'
+  icon: tea
 
 ################################
 

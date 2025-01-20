@@ -17,7 +17,8 @@ import {
 	SpinningDiscBorder,
 } from './QuickFeatureSearchUI'
 import categories from './categories.yaml'
-import moreCategories from './moreCategories.yaml'
+import { filteredMoreCategories } from '@/components/categories'
+const moreCategories = filteredMoreCategories
 import categoryIconUrl from '@/components/categoryIconUrl'
 
 export function initializeFuse(categories) {
@@ -44,7 +45,7 @@ export default function QuickFeatureSearch({
 }) {
 	const [categoriesSet] = getCategories(searchParams)
 
-	const [showMore, setShowMore] = useState(false)
+	const showMore = searchParams['cat-plus']
 	const hasLieu = searchParams.allez
 	const setSearchParams = useSetSearchParams()
 	const doFilter = !hasLieu && searchInput?.length > 2
@@ -161,7 +162,10 @@ export default function QuickFeatureSearch({
 						<button
 							onClick={() => {
 								if (snap > 1) setSnap(1, 'QuickFeatureSearch')
-								setShowMore(!showMore)
+								setSearchParams({
+									'cat-plus':
+										searchParams['cat-plus'] === 'oui' ? undefined : 'oui',
+								})
 							}}
 						>
 							<Image
