@@ -318,7 +318,7 @@
   dictionary:
     - delicatessen
   query: '[shop=deli]'
-  icon: deli
+  icon: shop
 
 - name: Fromagerie
   category: Alimentation
