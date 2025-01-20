@@ -45,8 +45,14 @@ export default async function (props) {
 				⭠ Revenir à la région {found.nom_region}
 			</Link>
 			<h1>
-				Communes du département {found.nom} <small>({found.code})</small>
+				Annuaire des lieux et commerces du département {found.nom}{' '}
+				<small>({found.code})</small>
 			</h1>
+			<p>
+				Découvrez ville par ville les lieux et commerces du département{' '}
+				{found.nom}.
+			</p>
+			<h2>Par commune </h2>
 			<p>
 				Sont affichées les {communesLimit} premières communes de plus de{' '}
 				{populationLimit} habitants.
