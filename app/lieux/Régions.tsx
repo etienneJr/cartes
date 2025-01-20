@@ -15,6 +15,18 @@ export default function Régions() {
 	return (
 		<main>
 			<h1>Annuaire des régions de France</h1>
+			<p>
+				En complément de la vue cartographique, explorez les lieux de France
+				(sites naturels, services publics, commerces... ) région par région,
+				puis département par département.
+			</p>
+			<p>
+				Vous aurez ici accès à toute la richesse de la carte ouverte{' '}
+				<a href="openstreetmap.fr">OpenStreetMap</a>, une carte contributive où
+				chacun, du responsable d'un commerce au simple habitant d'un quartier
+				peut enrichir les horaires, la description et tous les attributs d'un
+				lieu.
+			</p>
 			<ol>
 				{entries.map(([code, list]) => {
 					const name = list[0].nom_region
