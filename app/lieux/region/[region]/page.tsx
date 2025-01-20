@@ -43,9 +43,15 @@ export default async function (props) {
 	return (
 		<main>
 			<Link href={`/lieux/`}>⭠ Revenir à la liste des régions</Link>
-			<h1>
+			<h1>Annuaire des lieux et commerces de {found.nom_region}</h1>
+			<p>
+				En naviguant département par département, ou ville par ville, découvrez
+				tous les lieux de {found.nom_region} répertoriés sur la carte
+				collaborative <a href="https://openstreetmap.fr">OpenStreetmap</a>.
+			</p>
+			<h2>
 				Départements de la région {found.nom_region} {found.code_region}
-			</h1>
+			</h2>
 			<ol>
 				{departements.map(({ code, nom }) => (
 					<li key={code}>
@@ -57,7 +63,7 @@ export default async function (props) {
 					</li>
 				))}
 			</ol>
-			<h1>Communes de la région {found.nom_region}</h1>
+			<h2>Communes de la région {found.nom_region}</h2>
 			<p>
 				Sont affichées les {communesLimit} premières communes de plus de{' '}
 				{populationLimit} habitants.
