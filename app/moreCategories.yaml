@@ -161,9 +161,8 @@
   category: Santé
   dictionary:
     - infirmière
-    - nurse
   query: '[healthcare=nurse]'
-  icon: https://cdn.jsdelivr.net/gh/osmandapp/OsmAnd-resources/icons/svg/health/nurse.svg
+  icon: nurse
 
 ################################
 
