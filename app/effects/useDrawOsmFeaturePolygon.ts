@@ -23,7 +23,7 @@ export default function useDrawOsmFeaturePolygon(
 		false,
 		category,
 		null,
-		null,
+		undefined,
 		invert,
 		safeStyleKey
 	)

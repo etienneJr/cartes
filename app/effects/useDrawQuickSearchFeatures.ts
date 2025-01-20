@@ -23,9 +23,16 @@ export default function useDrawQuickSearchFeatures(
 
 	const [sources, setSources] = useState(null)
 
+	console.log('cyan debug drawquick', backgroundColor)
 	useEffect(() => {
 		if (!map) return
-		console.log('cyan debug', features, category, safeStyleKey)
+		if (!features?.length) return
+		console.log(
+			'cyan debug drawquick first useEffect',
+			features,
+			category,
+			safeStyleKey
+		)
 		const imageUrl = categoryIconUrl(category)
 
 		const imageFilename = category.icon
@@ -35,6 +42,7 @@ export default function useDrawQuickSearchFeatures(
 			imageFilename,
 			(img) => {
 				const imageName = category.name + '-cartes' // avoid collisions
+				console.log('cyan debug will add to map image ' + imageName)
 				const mapImage = map.getImage(imageName)
 				if (!mapImage) map.addImage(imageName, img)
 

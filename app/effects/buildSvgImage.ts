@@ -1,12 +1,13 @@
-import { fromHTML } from '@/components/utils/htmlUtils'
-
 export default async function buildSvgImage(
 	imageFilename,
 	then,
 	backgroundColor
 ) {
 	const imageRequest = await fetch(
-		'/svgo/?svgFilename=' + imageFilename + '&background=' + backgroundColor
+		'/svgo?svgFilename=' +
+			imageFilename +
+			'&background=' +
+			backgroundColor.replace(/^\#/g, '')
 	)
 	const src = await imageRequest.text()
 

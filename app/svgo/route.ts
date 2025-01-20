@@ -5,7 +5,8 @@ import { optimize } from 'svgo'
 export async function GET(request) {
 	const requestUrl = new URL(request.url),
 		svgFilename = requestUrl.searchParams.get('svgFilename'),
-		background = requestUrl.searchParams.get('background')
+		backgroundHex = requestUrl.searchParams.get('background'),
+		background = backgroundHex ? '#' + backgroundHex : null
 
 	const data = fs.readFileSync('./public/icons/' + svgFilename + '.svg', 'utf8')
 
@@ -17,6 +18,7 @@ export async function GET(request) {
 }
 
 const fromSvgToImgSrc = (imageText, background) => {
+	console.log('SVGOSVGO', typeof background, background)
 	const svg = fromHTML(imageText)
 
 	/*
@@ -35,6 +37,7 @@ const fromSvgToImgSrc = (imageText, background) => {
 
 	const svgSize = svg.getAttribute('width'), // Icons must be square !
 		xyr = svgSize / 2
+
 	const backgroundDisk = `<circle
      style="fill:${encodeURIComponent(background)};fill-rule:evenodd"
      cx="${xyr}"
