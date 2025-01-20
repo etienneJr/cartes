@@ -39,6 +39,7 @@ export default async function Page({ params, searchParams }) {
 
 	console.log(quickSearchFeaturesMap)
 
+	const query = new URLSearchParams(searchParams).toString()
 	return (
 		<PresentationWrapper>
 			<StaticPageHeader small={true} />
@@ -53,12 +54,17 @@ export default async function Page({ params, searchParams }) {
 				<h1>Annuaire des lieux de {ville.nom} </h1>
 				<small>({ville.codesPostaux.join(', ')})</small>
 				<p>{description}</p>
-				<PlaceImage
-					src={buildPlaceMap(lat, lon, 13)}
-					width="200"
-					height="200"
-					alt={'Miniature de la carte de ' + ville}
-				/>
+				<Link
+					href={`/?${query}#13/${lat}/${lon}`}
+					title="Ouvrir la carte en plein écran"
+				>
+					<PlaceImage
+						src={buildPlaceMap(lat, lon, 13)}
+						width="200"
+						height="200"
+						alt={'Miniature de la carte de ' + ville}
+					/>
+				</Link>
 			</header>
 			<QuickFeatureSearch
 				{...{
