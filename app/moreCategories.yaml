@@ -163,6 +163,14 @@
     - infirmière
   query: '[healthcare=nurse]'
   icon: nurse
+- name: sage-femme
+  category: Santé
+  dictionary:
+    - sage femme
+    - accouchement
+    - bébé
+  query: '[healthcare=midwife]'
+  icon: nurse
 
 ################################
 
