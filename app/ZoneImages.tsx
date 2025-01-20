@@ -111,6 +111,7 @@ export function ZoneImages({
 	panoramaxImages,
 	focusImage,
 	allPhotos,
+	displayImages,
 }) {
 	const setSearchParams = useSetSearchParams()
 	const images =
@@ -163,24 +164,30 @@ export function ZoneImages({
 						})}
 				</ul>
 			)}
-			{zoneImages?.length > 0 && (
-				<div>
+
+			{displayImages && (
+				<div style={{ float: 'right', marginBottom: '1rem' }}>
+					{zoneImages?.length > 0 && (
+						<small>
+							{!allPhotos ? (
+								<span>Photos des articles Wikipedia du coin. </span>
+							) : (
+								<span>Photos collaboratives Wikimedia Commons. </span>
+							)}
+						</small>
+					)}
+
 					<small>
 						{!allPhotos ? (
-							<span>
-								Photos des articles Wikipedia du coin.{' '}
-								<Link href={setSearchParams({ photos: 'toutes' }, true)}>
-									Afficher toutes les photos
-								</Link>
-							</span>
+							<Link href={setSearchParams({ photos: 'toutes' }, true)}>
+								Afficher les photos de contributeurs
+							</Link>
 						) : (
-							<span>
-								Photos Wikimedia Commons du coin.{' '}
-								<Link href={setSearchParams({ photos: 'oui' }, true)}>
-									Afficher moins
-								</Link>
-							</span>
+							<Link href={setSearchParams({ photos: 'oui' }, true)}>
+								N'afficher que les photos Wikipedia
+							</Link>
 						)}
+						.
 					</small>
 				</div>
 			)}
@@ -190,6 +197,7 @@ export function ZoneImages({
 
 const Wrapper = styled.section`
 	margin-top: 1rem;
+	margin-bottom: 1rem;
 	overflow: scroll;
 	white-space: nowrap;
 	&::-webkit-scrollbar {
@@ -212,8 +220,14 @@ const Wrapper = styled.section`
 		}
 	}
 	small {
+		display: block;
 		color: #88aed4;
-		margin-bottom: 0.6rem;
+		text-align: right;
+		a {
+			color: inherit;
+			text-decoration: underline;
+			text-underline-offset: 1.2px;
+		}
 	}
 `
 const PanoramaxImageWrapper = styled.div`

@@ -279,6 +279,7 @@ export default function Content(props) {
 							<FeatureImage src={wikiFeatureImage} $isHeaderImage={true} />
 						)}
 						<ZoneImages
+							displayImages={searchParams.photos != null}
 							zoneImages={
 								searchParams.photos != null && bboxImages?.length > 0
 									? bboxImages
