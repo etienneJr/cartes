@@ -27,13 +27,6 @@ export default function useDrawQuickSearchFeatures(
 	useEffect(() => {
 		if (!map) return
 		if (!features?.length) return
-		console.log(
-			'cyan debug drawquick first useEffect',
-			features,
-			category,
-			safeStyleKey
-		)
-		const imageUrl = categoryIconUrl(category)
 
 		const imageFilename = category.icon
 		if (imageFilename.includes('http')) return
@@ -178,6 +171,7 @@ export default function useDrawQuickSearchFeatures(
 	useEffect(() => {
 		if (!map) return
 		if (!sources) return
+		if (!features?.length) return
 
 		const isOpenByDefault = category['open by default']
 		const featuresWithOpen = (features || []).map((f) => {
