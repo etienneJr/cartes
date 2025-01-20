@@ -108,7 +108,7 @@
     - '[vending=pizza]'
     - '[food=pizza]'
     - '["food:pizza"=yes]'
-  icon: restaurant
+  icon: pizza
 
 - name: Sushis
   category: Restaurants
@@ -175,7 +175,7 @@
   dictionary:
     - chat
   query: '["theme"="cat"]'
-  icon: pet
+  icon: cat
 
 - name: Bar à chicha
   category: Bars et boisson
