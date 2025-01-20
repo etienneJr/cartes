@@ -157,6 +157,20 @@
     - animaux
   query: '[amenity=veterinary]'
   icon: veterinary
+- name: infirmière
+  category: Santé
+  dictionary:
+    - infirmière
+  query: '[healthcare=nurse]'
+  icon: nurse
+- name: sage-femme
+  category: Santé
+  dictionary:
+    - sage femme
+    - accouchement
+    - bébé
+  query: '[healthcare=midwife]'
+  icon: nurse
 
 ################################
 

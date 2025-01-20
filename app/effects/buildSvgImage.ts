@@ -7,7 +7,7 @@ export default async function buildSvgImage(
 		'/svgo?svgFilename=' +
 			imageFilename +
 			'&background=' +
-			backgroundColor.replace(/^\#/g, '')
+			encodeURIComponent(backgroundColor)
 	)
 	const src = await imageRequest.text()
 
