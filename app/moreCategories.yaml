@@ -251,7 +251,7 @@
 #######################
 
 - name: Boulangerie
-  category: Commerces de bouche
+  category: Alimentation
   dictionary:
     - pain
     - viennoiserie
@@ -262,7 +262,7 @@
   icon: bakery
 
 - name: Boucherie
-  category: Commerces de bouche
+  category: Alimentation
   dictionary:
     - viande
     - charcuterie
@@ -271,14 +271,14 @@
   icon: butcher
 
 - name: Café
-  category: Commerces de bouche
+  category: Alimentation
   dictionary:
     - torréfacteur
   query: '[shop=coffee]'
   icon: coffee
 
 - name: Caviste
-  category: Commerces de bouche
+  category: Alimentation
   dictionary:
     - vin
     - bouteille
@@ -286,7 +286,7 @@
   icon: wine
 
 - name: Confiserie
-  category: Commerces de bouche
+  category: Alimentation
   dictionary:
     - bonbon
     - sucrerie
@@ -294,7 +294,7 @@
   icon: confectionery
 
 - name: Chocolatier
-  category: Commerces de bouche
+  category: Alimentation
   dictionary:
     - chocolat
     - tablette
@@ -302,14 +302,14 @@
   icon: mx_chocolate
 
 - name: Épicerie fine
-  category: Commerces de bouche
+  category: Alimentation
   dictionary:
     - delicatessen
   query: '[shop=deli]'
   icon: deli
 
 - name: Fromagerie
-  category: Commerces de bouche
+  category: Alimentation
   dictionary:
     - fromage
     - traiteur
@@ -317,7 +317,7 @@
   icon: cheese
 
 - name: Glacier
-  category: Commerces de bouche
+  category: Alimentation
   dictionary:
     - glace
     - sorbet
@@ -325,7 +325,7 @@
   icon: ice_cream
 
 - name: Miellerie
-  category: Commerces de bouche
+  category: Alimentation
   dictionary:
     - miel
     - propolis
@@ -334,7 +334,7 @@
   icon: honey
 
 - name: Pâtisserie
-  category: Commerces de bouche
+  category: Alimentation
   dictionary:
     - viennoiserie
     - croissant
@@ -343,7 +343,7 @@
   icon: bakery
 
 - name: Poissonnerie
-  category: Commerces de bouche
+  category: Alimentation
   dictionary:
     - poisson
     - crustacé
@@ -352,7 +352,7 @@
   icon: mx_shop_seafood
 
 - name: Primeur
-  category: Commerces de bouche
+  category: Alimentation
   dictionary:
     - fruits
     - légumes
@@ -360,7 +360,7 @@
   icon: greengrocer
 
 - name: Produits de la ferme
-  category: Commerces de bouche
+  category: Alimentation
   dictionary:
     - producteur
     - terroir
@@ -374,7 +374,7 @@
   icon: farm
 
 - name: Thé
-  category: Commerces de bouche
+  category: Alimentation
   dictionary:
     - infusion
     - menthe
