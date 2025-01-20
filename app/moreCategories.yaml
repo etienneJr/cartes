@@ -87,8 +87,6 @@
     - '[food=pizza]'
     - '["food:pizza"=yes]'
   icon: restaurant
-  icon: restaurant
-
 
 - name: Libanais
   category: Restaurants
@@ -98,7 +96,6 @@
     - sandwich
   query: '[amenity=restaurant][cuisine~lebanese]'
   icon: restaurant
-
 
 - name: Pizzeria
   category: Restaurants
@@ -123,7 +120,6 @@
     - '[amenity=restaurant][cuisine~italian]'
   icon: restaurant
 
-
 - name: Végé
   category: Restaurants
   description: Repas et cafés végétarien ou végan
@@ -141,7 +137,6 @@
     - '["diet:vegetarian"~"yes|only"]'
     - '["diet:vegan"~"yes|only"]'
   icon: veg
-
 
 #######################
 # BARS & BOISSONS
