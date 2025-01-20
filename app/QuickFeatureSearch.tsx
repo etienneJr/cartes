@@ -207,6 +207,7 @@ const buildGetNewSearchParams =
 			: [...categories, category.name]
 
 		const newSearchParams = {
+			'cat-plus': searchParams['cat-plus'],
 			cat: nextCategories.length
 				? nextCategories.join(categorySeparator)
 				: undefined,
