@@ -1,21 +1,32 @@
-import fs from 'fs'
-import glob from 'glob'
-import path from 'path'
+import { getFetchUrlBase } from '@/app/serverUrls'
 import spritezero from '@jutaz/spritezero'
+import fs from 'fs'
+import path from 'path'
 
 const pixelRatios = [1, 2]
+const sdf = true
 
-pixelRatios.forEach(function (pxRatio) {
-	var svgs = ['restaurant', 'cafe']
-		//		.sync(path.resolve(path.join(__dirname, 'input/*.svg')))
-		.map(function (id) {
-			return {
-				svg: fs.readFileSync(
-					path.resolve(path.join(__dirname, '../public/icons/' + id + '.svg'))
-				),
-				id,
-			}
-		})
+pixelRatios.forEach(async function (pxRatio) {
+	var svgs = await Promise.all(
+		['restaurant', 'cafe']
+			//		.sync(path.resolve(path.join(__dirname, 'input/*.svg')))
+			.map(async function (id) {
+				const url = `${getFetchUrlBase()}/svgo/?svgFilename=${id}&background=chartreuse&format=svg`
+				console.log(url)
+				const request = await fetch(url)
+
+				const svg = await request.text()
+				/*
+fs.readFileSync(
+						path.resolve(path.join(__dirname, '../public/icons/' + id + '.svg'))
+					)*/
+
+				return {
+					svg,
+					id,
+				}
+			})
+	)
 
 	var pngPath = path.resolve(
 		path.join(__dirname, '../public/sprite/sprite-cartes@' + pxRatio + '.png')
@@ -27,7 +38,7 @@ pixelRatios.forEach(function (pxRatio) {
 	// Pass `true` in the layout parameter to generate a data layout
 	// suitable for exporting to a JSON sprite manifest file.
 	spritezero.generateLayout(
-		{ imgs: svgs, pixelRatio: pxRatio, sdf: true, format: true },
+		{ imgs: svgs, pixelRatio: pxRatio, sdf, format: true },
 		function (err, dataLayout) {
 			if (err) return
 			fs.writeFileSync(jsonPath, JSON.stringify(dataLayout))
@@ -37,7 +48,7 @@ pixelRatios.forEach(function (pxRatio) {
 	// Pass `false` in the layout parameter to generate an image layout
 	// suitable for exporting to a PNG sprite image file.
 	spritezero.generateLayout(
-		{ imgs: svgs, pixelRatio: pxRatio, sdf: true, format: false },
+		{ imgs: svgs, pixelRatio: pxRatio, sdf, format: false },
 		function (err, imageLayout) {
 			spritezero.generateImage(imageLayout, function (err, image) {
 				if (err) return
