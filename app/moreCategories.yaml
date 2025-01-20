@@ -169,7 +169,7 @@
     - '["amenity"="bar"]'
     - '["amenity"="cafe"]'
     - '["amenity"="pub"]'
-  icon: bar
+  icon: beer
 
 - name: Bar à bière
   category: Bars et boisson
@@ -185,7 +185,7 @@
   query:
     - '[brewery]'
     - '[drink:beer]'
-  icon: brewery
+  icon: beer
 
 - name: Bar à chats
   category: Bars et boisson
@@ -210,7 +210,7 @@
     - blanc
     - sec
   query: '[drink:wine]'
-  icon: wine
+  icon: bottle
 
 - name: Bubble Tea
   category: Bars et boisson
