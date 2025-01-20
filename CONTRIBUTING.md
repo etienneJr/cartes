@@ -12,14 +12,14 @@ En conséquence, les instructions de ce guide de contribution ne couvrent qu'une
 
 Copiez-collez l'un des blocs dans [categories.yaml](https://github.com/cartesapp/cartes/blob/master/app/categories.yaml) ou [moreCategories.yaml](https://github.com/cartesapp/cartes/blob/master/app/moreCategories.yaml) (les "more" apparaissent seulement au clic sur le gros bouton plus) et changez les attributs.
 
-La partie la plus difficile, c'est l'icône : Maplibre n'accepte pas les icônes SVG, donc nous créons des PNG à la volée et ça implique quelques contraintes. Si vous galérez ou n'êtes pas dev, n'hésitez pas à proposer vos modifications même sans icônes, quelqu'un s'en chargera.
+La partie la plus difficile, c'est l'icône : Maplibre n'accepte pas les icônes SVG, donc nous créons des PNG à la volée et ça implique quelques contraintes. Si vous galérez ou n'êtes pas dev, n'hésitez pas à proposer vos modifications même sans icônes, quelqu'un s'en chargera. Mais ça pourra prendre des semaines à attendre, car c'est un travail important.
 
--   le format SVG Inkscape ne marchera pas, il est trop bardé d'attributs inutiles
--   le format Inkscape SVG _simple_ a plus de chances de marcher surtout en ayant converti les objets en chemins
--   encore plus de chances que ça marche en ayant converti les objets et les contours en chemins, et en ayant fusionné toutes les composantes connexes via l'outil de construction de forme booléen d'Inkscape
--   j'ai aussi remarqué que les attributs du style "fill=" dans un `<path` cassaient l'icône dans Cartes
+- cherchez d'abord si votre icône ou un icône proche existe dans `public/icons`
+- un bon icône est simple, limpide, compréhensible à très faible zoom
+- [Maki](https://github.com/mapbox/maki/tree/main/icons) et [Temaki](https://github.com/rapideditor/temaki/tree/main/icons) sont les meilleurs sources
+- d'autres sources comme [Osmand](https://github.com/osmandapp/OsmAnd-resources/blob/master/icons/svg) sont très complètes mais de moindre qualité générale
 
-### À propos de l'ordre des sous-catégories dans une
+### À propos de l'ordre des sous-catégories
 
 On essaie de classer les catégories par ordre d'utilité pour l'utilisateur.
 
