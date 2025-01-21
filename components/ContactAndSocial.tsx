@@ -5,6 +5,7 @@ import Image from 'next/image'
 // Credits for social network stylized icons : openmoji
 
 export default function ContactAndSocial({
+	mastodon,
 	email,
 	facebook,
 	instagram,
@@ -24,6 +25,22 @@ export default function ContactAndSocial({
 					<Image
 						src={'/icons/logos/mail.svg'}
 						alt="Icône représentant un mel"
+						width="10"
+						height="10"
+					/>
+				</a>
+			)}
+			{mastodon && (
+				<a
+					href={
+						mastodon //TODO : handle @pseudo@instance.org, rarer but possible
+					}
+					target="_blank"
+					title="Compte Mastodon"
+				>
+					<Image
+						src={'/icons/logos/mastodon.svg'}
+						alt="Icône du réseau social Mastodon"
 						width="10"
 						height="10"
 					/>
@@ -129,7 +146,7 @@ const EntrepriseLink = styled.a`
 `
 
 const Wrapper = styled.section`
-	margin-bottom: 0.6rem;
+	margin: 0.6rem 0;
 	img {
 		width: 2rem;
 		height: auto;

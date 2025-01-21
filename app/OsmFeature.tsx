@@ -62,6 +62,7 @@ export default function OsmFeature(props) {
 		website: website1,
 		'website:menu': menu,
 		'contact:website': website2,
+		'contact:mastodon': mastodon,
 		'contact:instagram': instagram,
 		'contact:facebook': facebook,
 		'contact:whatsapp': whatsapp,
@@ -214,6 +215,7 @@ export default function OsmFeature(props) {
 					youtube,
 					linkedin,
 					siret,
+					mastodon,
 				}}
 			/>
 			{!isNotTransportStop(tags) && (
