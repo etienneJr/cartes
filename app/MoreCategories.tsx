@@ -61,6 +61,9 @@ const Wrapper = styled.div`
 	ul {
 		list-style-type: none;
 	}
+	ol {
+		max-width: 100%;
+	}
 	ol > li > div {
 		overflow-x: scroll;
 		white-space: nowrap;

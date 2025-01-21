@@ -53,9 +53,10 @@ export const InputStyle = styled.div`
 		color: var(--lighterColor);
 	}
 	color: white;
+	max-width: calc(100% - 2.5rem);
 	input {
 		max-width: 22rem;
-		max-width: calc(100% - 2.5rem);
+		max-width: 100%;
 		background: var(--lightestColor);
 		color: var(--darkColor);
 		border: none;
@@ -64,7 +65,7 @@ export const InputStyle = styled.div`
 			${(p) => (p.stateBeingSearched ? 'yellow' : 'var(--lightColor)')} !important;
 	}
 	position: relative;
-width: 100%;
+	width: 100%;
 `
 
 export const Form = styled.form`
