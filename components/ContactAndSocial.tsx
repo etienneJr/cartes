@@ -169,4 +169,7 @@ const Wrapper = styled.section`
 		width: 2rem;
 		height: auto;
 	}
+	display: flex;
+	gap: 0.4rem;
+	align-items: center;
 `

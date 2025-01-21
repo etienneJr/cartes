@@ -217,6 +217,7 @@ export default function OsmFeature(props) {
 					linkedin,
 					siret,
 					mastodon,
+					bluesky,
 				}}
 			/>
 			{!isNotTransportStop(tags) && (
