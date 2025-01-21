@@ -1,5 +1,4 @@
 'use client'
-import Emoji from '@/components/Emoji'
 import { findContrastedTextColor } from '@/components/utils/colors'
 import { omit } from '@/components/utils/utils'
 import Image from 'next/image'
@@ -124,7 +123,7 @@ export default function Route({ route, stops = [] }) {
 			<RouteName route={route} name={name} />
 			{route.route_type === 3 && hasMultipleTripDirections && (
 				<div>
-					<Emoji e="⚠️" />{' '}
+					<span>⚠️</span>
 					<small>
 						Attention, plusieurs directions d'une même ligne de bus s'arrêtent à
 						cet arrêt.
@@ -138,7 +137,7 @@ export default function Route({ route, stops = [] }) {
 					</li>
 				))}
 				<button onClick={() => setCalendarOpen(!calendarOpen)}>
-					<Emoji e="🗓️" />
+					<span>🗓️</span>
 				</button>
 			</ul>
 			{calendarOpen && <Calendar data={augmentedStops} />}

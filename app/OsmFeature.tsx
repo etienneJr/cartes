@@ -1,6 +1,5 @@
 import Address, { addressKeys } from '@/components/Address'
 import ContactAndSocial from '@/components/ContactAndSocial'
-import Emoji from '@/components/Emoji'
 import OsmLinks from '@/components/OsmLinks'
 import SimilarNodes from '@/components/SimilarNodes'
 import Tags, {
@@ -130,8 +129,14 @@ export default function OsmFeature(props) {
 				</details>
 				{nameBrezhoneg && nameBrezhoneg !== name && (
 					<small>
-						<Emoji extra="1F3F4-E0066-E0072-E0062-E0072-E0065-E007F" />{' '}
-						{nameBrezhoneg}
+						<Image
+							src={'/bretagne.svg'}
+							alt="Drapeau de la Bretagne"
+							width="10"
+							height="10"
+							style={{ width: '2rem', height: 'auto', verticalAlign: 'middle' }}
+						/>{' '}
+						<span>{nameBrezhoneg}</span>
 					</small>
 				)}
 			</OsmFeatureHeader>
@@ -181,14 +186,21 @@ export default function OsmFeature(props) {
 						target="_blank"
 						title="Site Web"
 					>
-						<Emoji e="🌍️" /> <span>Site web</span>
+						<span style={{ fontSize: '130%' }}>🌍️</span> <span>Site web</span>
 					</a>
 				</div>
 			)}
 			{menu && (
 				<div>
 					<a href={menu} target="_blank" title="Menu">
-						<Emoji e="📋" /> <span>Menu</span>
+						<Image
+							style={{ width: '2rem', height: 'auto', verticalAlign: 'bottom' }}
+							src={'/menu-restaurant.svg'}
+							alt="Icône d'un téléphone"
+							width="10"
+							height="10"
+						/>{' '}
+						<span>Menu</span>
 					</a>
 				</div>
 			)}

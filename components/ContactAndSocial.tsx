@@ -5,13 +5,13 @@ import Image from 'next/image'
 // Credits for social network stylized icons : openmoji
 
 export default function ContactAndSocial({
-	email = 'oui',
-	facebook = 'oui',
-	instagram = 'oui',
-	whatsapp = 'oui',
-	youtube = 'oui',
-	linkedin = 'oui',
-	siret = 'oui',
+	email,
+	facebook,
+	instagram,
+	whatsapp,
+	youtube,
+	linkedin,
+	siret,
 }) {
 	return (
 		<Wrapper>
