@@ -62,6 +62,7 @@ export default function OsmFeature(props) {
 		website: website1,
 		'website:menu': menu,
 		'contact:website': website2,
+		'contact:bluesky': bluesky,
 		'contact:mastodon': mastodon,
 		'contact:instagram': instagram,
 		'contact:facebook': facebook,

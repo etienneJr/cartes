@@ -5,6 +5,7 @@ import Image from 'next/image'
 // Credits for social network stylized icons : openmoji
 
 export default function ContactAndSocial({
+	bluesky,
 	mastodon,
 	email,
 	facebook,
@@ -25,6 +26,20 @@ export default function ContactAndSocial({
 					<Image
 						src={'/icons/logos/mail.svg'}
 						alt="Icône représentant un mel"
+						width="10"
+						height="10"
+					/>
+				</a>
+			)}
+			{bluesky && (
+				<a
+					href={atOrUrl(bluesky, 'https://bsky.app')}
+					target="_blank"
+					title="Compte Bluesky"
+				>
+					<Image
+						src={'/icons/logos/bluesky.svg'}
+						alt="Icône du réseau social Bluesky"
 						width="10"
 						height="10"
 					/>
