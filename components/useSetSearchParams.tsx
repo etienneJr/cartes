@@ -32,6 +32,7 @@ export default function useSetSearchParams() {
 		const newUrl =
 			pathname + '?' + createQueryString(newSearchParams, clear) + hash
 		if (!noPush) {
+			console.log('forestgreen debug new URL', newUrl)
 			if (replace) window.history.replaceState(null, '', newUrl)
 			else window.history.pushState(null, '', newUrl)
 		} else return newUrl

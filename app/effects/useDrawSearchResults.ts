@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { combinedOsmRequest, osmRequest } from '../osmRequest'
+import { combinedOsmRequest } from '../osmRequest'
 import useDrawQuickSearchFeatures from './useDrawQuickSearchFeatures'
 
 export default function useDrawSearchResults(map, state, setOsmFeature) {
