@@ -5,8 +5,8 @@ import { disambiguateWayRelation } from '@/app/osmRequest'
 import { encodePlace } from '@/app/utils'
 import { replaceArrayIndex } from '@/components/utils/utils'
 import { useEffect } from 'react'
+import { nameExpression } from '../styles/france'
 import handleCirconscriptionsLegislativesClick from './handleCirconscriptionsLegislativesClick'
-import { name, nameExpression } from '../styles/france'
 
 export default function useMapClick(
 	map,

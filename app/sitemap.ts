@@ -33,13 +33,15 @@ const generateAgencies = async () => {
 		)
 	} catch (e) {
 		console.error('Error generating agency sitemap')
+		console.error(
+			'🔴🔴🔴 Attention, le serveur.cartes.app NPM est probablement cassé'
+		)
 		console.error(e)
 	}
 }
 
 export default async function sitemap(): MetadataRoute.Sitemap {
-	const isVercel = process.env.NEXT_PUBLIC_VERCEL_BRANCH_URL
-	const fetchNewNodes = true || isVercel
+	const fetchNewNodes = process.env.NEXT_SITEMAP_NO_DOWNLOAD ? false : true
 	let newNodes = []
 	if (fetchNewNodes) {
 		const recent = await getRecentInterestingNodes()
