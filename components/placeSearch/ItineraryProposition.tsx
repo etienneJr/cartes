@@ -1,7 +1,7 @@
 import { buildAllezPart } from '@/app/SetDestination'
 import { encodePlace } from '@/app/utils'
 import ItineraryIcon from '@/public/itinerary-circle-plain.svg'
-import { motion } from 'framer-motion'
+import { motion } from 'motion/react'
 import { styled } from 'next-yak'
 import Image from 'next/image'
 import Link from 'next/link'

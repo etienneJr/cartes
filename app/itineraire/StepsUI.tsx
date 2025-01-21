@@ -1,4 +1,4 @@
-import { Reorder } from 'framer-motion'
+import { Reorder } from 'motion/react'
 import { styled } from 'next-yak'
 export const StepList = styled(Reorder.Group)`
 	width: 100%;
