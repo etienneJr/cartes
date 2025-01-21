@@ -42,10 +42,10 @@ export default async function sitemap(): MetadataRoute.Sitemap {
 	const fetchNewNodes = true || isVercel
 	let newNodes = []
 	if (fetchNewNodes) {
-		newNodes = await getRecentInterestingNodes()
+		const recent = await getRecentInterestingNodes()
+		newNodes = recent
 	}
 
-	console.log('PLOP')
 	const blogEntries = await Promise.all(
 		blogArticles.map(async ({ url, date, _raw: { flattenedPath } }) => {
 			const lastEdit = await getLastEdit(flattenedPath)

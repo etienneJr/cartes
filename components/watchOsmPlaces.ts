@@ -48,23 +48,29 @@ const url = `https://overpass-api.de/api/interpreter?data=[out%3Ajson][timeout%3
 // pas réussi en premier essai
 
 export const getRecentInterestingNodes = async () => {
-	//console.log(url)
-	const request = await fetch(url)
-	const json = await request.json()
+	try {
+		const request = await fetch(url)
+		const json = await request.json()
 
-	const nodes = json.elements
-	//console.log('OVERPASS', nodes)
-	const entries = nodes.map((node) => {
-		const typePart = encodePlace(node.type, node.id)
-		return {
-			url: escapeXml(
-				domain +
-					`/?allez=${encodeURIComponent(node.tags.name)}|${typePart}|${
-						node.lon
-					}|${node.lat}`
-			),
-			lastModified: node.timestamp && new Date(node.timestamp),
-		}
-	})
-	return entries
+		const nodes = json.elements
+		//console.log('OVERPASS', nodes)
+		const entries = nodes.map((node) => {
+			const typePart = encodePlace(node.type, node.id)
+			return {
+				url: escapeXml(
+					domain +
+						`/?allez=${encodeURIComponent(node.tags.name)}|${typePart}|${
+							node.lon
+						}|${node.lat}`
+				),
+				lastModified: node.timestamp && new Date(node.timestamp),
+			}
+		})
+		return entries
+	} catch (e) {
+		console.error(
+			'Error generating latest places for sitemap. Overpass.de might be overcharged'
+		)
+		return []
+	}
 }
