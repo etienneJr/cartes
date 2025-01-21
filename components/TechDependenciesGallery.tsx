@@ -25,7 +25,6 @@ const Ul = styled.ul`
 	padding: 0 5%;
 	list-style-type: none;
 	gap: 1vw;
-	max-width: 72vw;
 
 	li a {
 		text-decoration: none;
