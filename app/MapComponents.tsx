@@ -60,7 +60,6 @@ function MapComponents({
 			{safeStyleKey === 'france' && (
 				<AddTerrain {...{ map, active: searchParams.relief }} />
 			)}
-			<MapContent map={map} />
 		</>
 	)
 }
