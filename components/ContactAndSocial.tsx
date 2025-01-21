@@ -30,22 +30,25 @@ export default function ContactAndSocial({
 					/>
 				</a>
 			)}
-			{mastodon && (
-				<a
-					href={
-						mastodon //TODO : handle @pseudo@instance.org, rarer but possible
-					}
-					target="_blank"
-					title="Compte Mastodon"
-				>
-					<Image
-						src={'/icons/logos/mastodon.svg'}
-						alt="Icône du réseau social Mastodon"
-						width="10"
-						height="10"
-					/>
-				</a>
-			)}
+			{mastodon &&
+				(mastodon.startsWith('https://') ? (
+					<a
+						href={
+							mastodon //TODO : handle @pseudo@instance.org, rarer but possible
+						}
+						target="_blank"
+						title="Compte Mastodon"
+					>
+						<Image
+							src={'/icons/logos/mastodon.svg'}
+							alt="Icône du réseau social Mastodon"
+							width="10"
+							height="10"
+						/>
+					</a>
+				) : (
+					<span>{mastodon}</span>
+				))}
 			{facebook && (
 				<a
 					href={atOrUrl(facebook, 'https://facebook.com')}
