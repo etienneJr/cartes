@@ -1,30 +1,32 @@
-import Emoji from './Emoji'
-import Image from 'next/image'
 import { atOrUrl } from '@/app/utils'
-import { css, styled } from 'next-yak'
+import { styled } from 'next-yak'
+import Image from 'next/image'
+
+// Credits for social network stylized icons : openmoji
 
 export default function ContactAndSocial({
-	email,
-	facebook,
-	instagram,
-	whatsapp,
-	youtube,
-	linkedin,
-	siret,
+	email = 'oui',
+	facebook = 'oui',
+	instagram = 'oui',
+	whatsapp = 'oui',
+	youtube = 'oui',
+	linkedin = 'oui',
+	siret = 'oui',
 }) {
 	return (
-		<div
-			css={css`
-				margin-bottom: 0.6rem;
-			`}
-		>
+		<Wrapper>
 			{email && (
 				<a
 					href={`mailto:${email}`}
 					target="_blank"
 					title="Contacter via courriel"
 				>
-					<Emoji e="📧" />
+					<Image
+						src={'/icons/logos/mail.svg'}
+						alt="Icône représentant un mel"
+						width="10"
+						height="10"
+					/>
 				</a>
 			)}
 			{facebook && (
@@ -33,7 +35,12 @@ export default function ContactAndSocial({
 					target="_blank"
 					title="Compte Facebook"
 				>
-					<Emoji extra="E042" />
+					<Image
+						src={'/icons/logos/facebook.svg'}
+						alt="Icône du réseau social Facebook"
+						width="10"
+						height="10"
+					/>
 				</a>
 			)}
 			{whatsapp && (
@@ -42,7 +49,12 @@ export default function ContactAndSocial({
 					target="_blank"
 					title="Discuter sur Whatsapp"
 				>
-					<Emoji extra="E248" />
+					<Image
+						src={'/icons/logos/whatsapp.svg'}
+						alt="Icône de l'application de discussion instanténée Whatsapp"
+						width="10"
+						height="10"
+					/>
 				</a>
 			)}
 			{instagram && (
@@ -51,7 +63,12 @@ export default function ContactAndSocial({
 					target="_blank"
 					title="Compte Instagram"
 				>
-					<Emoji extra="E043" />
+					<Image
+						src={'/icons/logos/instagram.svg'}
+						alt="Icône du réseau de partage d'images Instagram"
+						width="10"
+						height="10"
+					/>
 				</a>
 			)}
 			{youtube && (
@@ -60,7 +77,12 @@ export default function ContactAndSocial({
 					target="_blank"
 					title="Chaîne Youtube"
 				>
-					<Emoji extra="E044" />
+					<Image
+						src={'/icons/logos/youtube.svg'}
+						alt="Icône du réseau de partage de vidéos YouTube"
+						width="10"
+						height="10"
+					/>
 				</a>
 			)}
 			{linkedin && (
@@ -69,7 +91,12 @@ export default function ContactAndSocial({
 					target="_blank"
 					title="Compte LinkedIn"
 				>
-					<Emoji extra="E046" />
+					<Image
+						src={'/icons/logos/linkedin.svg'}
+						alt="Icône du réseau de profils professionnels LinkedIn"
+						width="10"
+						height="10"
+					/>
 				</a>
 			)}
 			{siret && (
@@ -87,7 +114,7 @@ export default function ContactAndSocial({
 					<span>fiche entreprise</span>
 				</EntrepriseLink>
 			)}
-		</div>
+		</Wrapper>
 	)
 }
 
@@ -97,6 +124,14 @@ const EntrepriseLink = styled.a`
 	img {
 		margin: 0 0.3rem 0 0.2rem;
 		width: 1.4rem;
+		height: auto;
+	}
+`
+
+const Wrapper = styled.section`
+	margin-bottom: 0.6rem;
+	img {
+		width: 2rem;
 		height: auto;
 	}
 `

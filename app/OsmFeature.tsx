@@ -163,7 +163,14 @@ export default function OsmFeature(props) {
 			{phone && (
 				<div>
 					<a href={`tel:${phone}`}>
-						<Emoji e="☎️" /> {phone}
+						<Image
+							style={{ width: '2rem', height: 'auto', verticalAlign: 'bottom' }}
+							src={'/phone.svg'}
+							alt="Icône d'un téléphone"
+							width="10"
+							height="10"
+						/>{' '}
+						<span>{phone}</span>
 					</a>
 				</div>
 			)}

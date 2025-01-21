@@ -1,4 +1,3 @@
-import Emoji from '@/components/Emoji'
 import useSetSearchParams from '@/components/useSetSearchParams'
 import { styled } from 'next-yak'
 import { useEffect } from 'react'
@@ -68,8 +67,7 @@ const NoCircoYet = ({ filter }) => {
 	return (
 		<NoCircoYetWrapper>
 			<section>
-				<Emoji e="🗳️" />
-
+				🗳️
 				<p>
 					Cliquez sur la carte pour voir les résultats de votre circonscription
 					au premier tour des élections législatives 2024.

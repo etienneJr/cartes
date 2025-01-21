@@ -1,5 +1,4 @@
 import useMeasureDistance from '@/app/useMeasureDistance'
-import Emoji from '@/components/Emoji'
 import useSetSearchParams from '@/components/useSetSearchParams'
 import { omit } from '@/components/utils/utils'
 import { css, styled } from 'next-yak'
@@ -108,7 +107,7 @@ export default function MapButtons({
 						}
 						title={'Montrer les circonscriptions législatives 2024'}
 					>
-						<Emoji e="🗳️" />
+						🗳️
 					</button>
 				</MapButton>
 			)}

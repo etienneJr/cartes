@@ -1,5 +1,7 @@
-import Emoji from '@/components/Emoji'
 import { css, styled } from 'next-yak'
+import Image from 'next/image'
+
+import loupe from '@/public/loupe.svg'
 
 export const modalSheetBoxShadow = css`
 	box-shadow: rgba(0, 0, 0, 0.3) 0px -2px 16px;
@@ -8,7 +10,7 @@ const popSize = 6
 export default function ModalSheetReminder({ setOpen }) {
 	return (
 		<ReminderWrapper onClick={() => setOpen(true)}>
-			<Emoji e="🔎" />
+			<Image src={loupe} width="10" height="10" alt="" />
 		</ReminderWrapper>
 	)
 }
@@ -29,5 +31,14 @@ const ReminderWrapper = styled.div`
 		position: absolute;
 		top: 0.9rem;
 		right: 0.9rem;
+	}
+
+	> img {
+		z-index: 12;
+		width: 2.6rem;
+		height: auto;
+		position: absolute;
+		top: 0.5rem;
+		right: 0.6rem;
 	}
 `
