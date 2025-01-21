@@ -654,10 +654,10 @@
   category: Déplacements
   title: Gare
   dictionary:
-    - réparation
-    - bicyclette
-    - équipements
-    - dépannage
+    - train
+    - ferroviaire
+    - SNCF
+    - TER
   query: '[public_transport=station][train=yes]'
   icon: train
 - name: magasin-velo
