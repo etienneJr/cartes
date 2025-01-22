@@ -83,7 +83,6 @@
     - pâtes
   query:
     - '[amenity=restaurant][cuisine~"italian|pizza"]'
-    - '[vending=pizza]'
     - '[food=pizza]'
     - '["food:pizza"=yes]'
   icon: restaurant
@@ -105,7 +104,6 @@
     - pâtes
   query:
     - '[amenity=restaurant][cuisine~pizza]'
-    - '[vending=pizza]'
     - '[food=pizza]'
     - '["food:pizza"=yes]'
   icon: pizza
@@ -117,7 +115,7 @@
     - maki
     - japonais
   query:
-    - '[amenity=restaurant][cuisine~italian]'
+    - '[amenity=restaurant][cuisine~sushi]'
   icon: sushi
 
 - name: Végé
