@@ -183,8 +183,8 @@
     - blonde
     - brune
   query:
-    - '[brewery]'
-    - '[drink:beer]'
+    - '["microbrewery"="yes"]'
+    - '["drink:beer"]'
   icon: beer
 
 - name: Bar à chats
@@ -199,7 +199,7 @@
   dictionary:
     - narguilé
     - fumer
-  query: '["amenity""=""hookah_lounge"]'
+  query: '["amenity"="hookah_lounge"]'
   icon: cigarette
 
 - name: Bar à vin
@@ -209,7 +209,7 @@
     - rouge
     - blanc
     - sec
-  query: '[drink:wine]'
+  query: '["drink:wine"]'
   icon: bottle
 
 - name: Bubble Tea
