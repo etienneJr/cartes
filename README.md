@@ -36,10 +36,11 @@ bun install # We're using bun because npm can't handle the experimental react 19
 bun dev # launch the web dev server
 ```
 
-You'll have to create your free MapTiler key and put it in a `.env.local` file at the root of the cartes folder:
+You'll have to create your free [MapTiler](https://www.maptiler.com/) key and your free [Indoor=](https://indoorequal.com/) key and put them in a `.env.local` file at the root of the cartes folder:
 
 ```
-NEXT_PUBLIC_MAPTILER=YOUR_KEY
+NEXT_PUBLIC_MAPTILER=YOUR_MAPTILER_KEY
+NEXT_PUBLIC_INDOOREQUAL=YOUR_INDOOREQUAL_KEY
 ```
 
 ## Contact
