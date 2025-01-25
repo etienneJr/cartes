@@ -1,5 +1,6 @@
 // Server components here
 import buildPlaceJsonLd from '@/buildPlaceJsonLd'
+import { buildPlaceMap } from '@/components/buildPlaceMap'
 import fetchOgImage from '@/components/fetchOgImage'
 import buildDescription from '@/components/osm/buildDescription'
 import fetchAgency, {
@@ -14,9 +15,8 @@ import { buildAllezPartFromOsmFeature } from './SetDestination'
 import { fetchSimilarNodes } from './effects/fetchOverpassRequest'
 import getName from './osm/getName'
 import getUrl from './osm/getUrl'
-import { getFetchUrlBase, gtfsServerUrl } from './serverUrls'
+import { getFetchUrlBase } from './serverUrls'
 import { stepOsmRequest } from './stepOsmRequest'
-import { buildPlaceMap } from '@/components/buildPlaceMap'
 
 export async function generateMetadata(
 	props: Props,
