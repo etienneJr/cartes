@@ -72,47 +72,52 @@ export const osmRequest = async (featureType, id, full) => {
 	)
 	const url = buildOverpassUrl(featureType, id, full)
 	console.log('OVERPASS3', url)
-	const request = await fetch(url, {
-		...(isServer
-			? {
-					headers: {
-						'User-Agent': 'Cartes.app',
-					},
-					next: { revalidate: 5 * 60 },
-			  }
-			: {}),
-	})
-	if (!request.ok) {
-		console.log('lightgreen request not ok', request)
+	try {
+		const request = await fetch(url, {
+			...(isServer
+				? {
+						headers: {
+							'User-Agent': 'Cartes.app',
+						},
+						next: { revalidate: 5 * 60 },
+				  }
+				: {}),
+		})
+		if (!request.ok) {
+			console.log('lightgreen request not ok', request)
 
+			return [{ id, failedServerOsmRequest: true, type: featureType }]
+		}
+		const json = await request.json()
+
+		const elements = json.elements
+
+		if (featureType === 'node' && elements.length === 1) {
+			try {
+				const tags = elements[0].tags || {}
+				// handle this use case https://wiki.openstreetmap.org/wiki/Relation:associatedStreet
+				// example : https://www.openstreetmap.org/node/3663795073
+				if (tags['addr:housenumber'] && !tags['addr:street']) {
+					const relationRequest = await fetch(
+						buildOverpassUrl(featureType, id, false, true)
+					)
+					const json = await relationRequest.json()
+					const {
+						tags: { name, type },
+					} = json.elements[0]
+					if (type === 'associatedStreet') {
+						return [{ ...elements[0], tags: { ...tags, 'addr:street': name } }]
+					}
+				}
+			} catch (e) {
+				return elements
+			}
+		}
+		return elements
+	} catch (e) {
+		console.error('Probably a network error fetching OSM feature via Overpass')
 		return [{ id, failedServerOsmRequest: true, type: featureType }]
 	}
-	const json = await request.json()
-
-	const elements = json.elements
-
-	if (featureType === 'node' && elements.length === 1) {
-		try {
-			const tags = elements[0].tags || {}
-			// handle this use case https://wiki.openstreetmap.org/wiki/Relation:associatedStreet
-			// example : https://www.openstreetmap.org/node/3663795073
-			if (tags['addr:housenumber'] && !tags['addr:street']) {
-				const relationRequest = await fetch(
-					buildOverpassUrl(featureType, id, false, true)
-				)
-				const json = await relationRequest.json()
-				const {
-					tags: { name, type },
-				} = json.elements[0]
-				if (type === 'associatedStreet') {
-					return [{ ...elements[0], tags: { ...tags, 'addr:street': name } }]
-				}
-			}
-		} catch (e) {
-			return elements
-		}
-	}
-	return elements
 }
 
 export const disambiguateWayRelation = async (

@@ -1,6 +1,6 @@
-import { css } from 'next-yak'
 import { useEffect, useRef, useState } from 'react'
 import { nowAsYYMMDD } from './Route'
+import { CalendarContent, CalendarInput, CalendarUl } from './CalendarUI'
 
 const now = new Date()
 export default function Calendar({ data }) {
@@ -38,57 +38,16 @@ export default function Calendar({ data }) {
 
 	return (
 		<div>
-			<input
+			<CalendarInput
 				type="date"
 				id="busStopTimesDate"
 				name="busStopTimesDate"
 				value={day}
 				min={today}
 				onChange={(e) => setDay(e.target.value)}
-				css={css`
-					cursor: pointer;
-					margin-top: 0.6rem;
-					display: block;
-					margin: auto 0 auto auto;
-				`}
 			/>
-			<div
-				css={css`
-					max-width: 100%;
-					white-space: nowrap;
-					overflow: scroll;
-				`}
-			>
-				<ul
-					css={css`
-						margin-top: 0.6rem;
-						display: flex;
-						width: auto;
-						scrollbar-width: none;
-						list-style-type: none;
-						text-align: center;
-						li {
-							padding: 0;
-						}
-						> li > strong {
-							font-size: 90%;
-							background: var(--darkColor);
-							color: var(--lightestColor);
-							width: 2.6rem;
-							display: block;
-							border-right: 2px solid var(--lighterColor);
-						}
-						> li:nth-child(even) {
-							background: var(--lighterColor);
-						}
-
-						ul {
-							display: flex;
-							list-style-type: none;
-							flex-direction: column;
-						}
-					`}
-				>
+			<CalendarContent>
+				<CalendarUl>
 					{Object.entries(stopByHour)
 						.sort(([h1], [h2]) => +h1 - +h2)
 						.map(
@@ -114,8 +73,8 @@ export default function Calendar({ data }) {
 									</li>
 								)
 						)}
-				</ul>
-			</div>
+				</CalendarUl>
+			</CalendarContent>
 		</div>
 	)
 }
