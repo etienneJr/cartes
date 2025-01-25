@@ -2903,7 +2903,6 @@ On n'est pas à l'abri d'effets secondaires ici.
 		metadata: {},
 		filter: [
 			'all',
-			hasNameExpression,
 			['!in', 'class', 'hospital', 'parking', 'railway', 'park'],
 		],
 	},

@@ -2602,7 +2602,6 @@ export default function voyageStyle(
 				metadata: {},
 				filter: [
 					'all',
-					['has', name],
 					['!in', 'class', 'hospital', 'parking', 'railway'],
 				],
 			},

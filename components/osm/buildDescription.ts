@@ -8,14 +8,22 @@ export default function buildOsmFeatureDescription(osmFeature) {
 
 	const address = tags && buildAddress(tags)
 
-	const [, soloTags] = processTags(tags) // processTags should get filteredRest as input, but see OsmFeature.tsx's TODO
+	const osmFeatureCategory = buildOsmFeatureCategory(osmFeature)
 
-	const mainTags = soloTags.map(([raw, tag]) => tag)
 	return [
-		mainTags.join(' '),
+		osmFeatureCategory,
 		descriptionTag,
 		...(address ? [". À l'adresse " + address] : []),
 	]
 		.filter(Boolean)
 		.join(' - ')
+}
+
+export const buildOsmFeatureCategory = (osmFeature) => {
+	if (!osmFeature.tags) return null
+	const [, soloTags] = processTags(osmFeature.tags) // processTags should get filteredRest as input, but see OsmFeature.tsx's TODO
+
+	if (!soloTags?.length) return null
+	const mainTags = soloTags.map(([raw, tag]) => tag)
+	return mainTags.join(' ')
 }

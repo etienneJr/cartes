@@ -7,6 +7,7 @@ import { replaceArrayIndex } from '@/components/utils/utils'
 import { useEffect } from 'react'
 import { nameExpression } from '../styles/france'
 import handleCirconscriptionsLegislativesClick from './handleCirconscriptionsLegislativesClick'
+import { buildOsmFeatureCategory } from '@/components/osm/buildDescription'
 
 export default function useMapClick(
 	map,
@@ -159,11 +160,12 @@ export default function useMapClick(
 					'merge'
 				)
 
+				const osmFeatureCategory = buildOsmFeatureCategory(element)
 				// We store longitude and latitude in order to, in some cases, avoid a
 				// subsequent fetch request on link share
 				setSearchParams({
 					allez: buildAllezPart(
-						element.tags?.name || 'sans nom',
+						element.tags?.name || osmFeatureCategory || 'sans nom',
 						encodePlace(realFeatureType, id),
 						longitude,
 						latitude
