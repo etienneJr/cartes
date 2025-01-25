@@ -1,14 +1,13 @@
-import { useEffect, useState } from 'react'
-import Route from './Route'
 import { sortBy } from '@/components/utils/utils'
+import Route from './Route'
 
 export const isNotTransportStop = (tags) => {
-	console.log('indigo stop tags', tags)
+	console.log('indigo stop tags is not', tags)
 	return !tags || !['platform', 'stop_position'].includes(tags.public_transport)
 }
 
 export const findStopId = (tags) => {
-	console.log('indigo stop tags', tags)
+	console.log('indigo stop tags will find', tags)
 	// ref:MobiBreizh = ILLENOO2:13602
 	// ref:STAR = 1320
 	// ref:bzh:IOAD = MARCHE
@@ -19,6 +18,7 @@ export const findStopId = (tags) => {
 	}
 
 	const ref = Object.entries(tags).find(([k, v]) => k.match(/ref(\:FR)?\:.+/g))
+	console.log('indigo stop ref', ref)
 	if (!ref) return null
 	if (ref[1].split(':').length === 2) return ref[1]
 	const splits = ref[0].split(':')
@@ -26,6 +26,14 @@ export const findStopId = (tags) => {
 	const stopId = ref[1].includes(network.toUpperCase())
 		? ref[1]
 		: network.toUpperCase() + ':' + ref[1]
+
+	/* We've got a problem here : on our GTFS server, we've prefixed the stop ids
+	 * with the GTFS file's id specific to cartes in input.yaml to avoid confusion (some agencies have id 0...).
+	 * In the OSM feature, we can't don't have the same agency Id.
+	 *
+	 * Hence the switch to using a query to find the ids at this coordinate, and
+	 * figure out the exact match or let the user select the surrounding ones
+	 * */
 	return stopId
 }
 export default function Stop({ tags, data }) {
@@ -35,9 +43,9 @@ export default function Stop({ tags, data }) {
 	return (
 		<div>
 			<ul
-				css={css`
-					list-style-type: none;
-				`}
+				style={{
+					listStyleType: 'none',
+				}}
 			>
 				{sortBy((route) => -route.tripsCount)(data.routes).map((route) => (
 					<Route

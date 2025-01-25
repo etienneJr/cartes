@@ -139,7 +139,9 @@ export default function useDrawItinerary(
 					: state.findIndex((step) => step == null || !step.key),
 			awaitingNewStep = stepIndexToEdit != null
 		const onClick = (e) => {
+			const distancePointsLayer = map.getLayer('distancePoints')
 			const features =
+				distancePointsLayer &&
 				points &&
 				map.queryRenderedFeatures(e.point, {
 					layers: ['distancePoints'],

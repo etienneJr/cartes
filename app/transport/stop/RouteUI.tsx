@@ -10,7 +10,7 @@ export const RouteLi = styled.li`
 			line-height: 1rem;
 		}
 	}
-	ul {
+	> ul {
 		display: flex;
 		justify-content: end;
 		list-style-type: none;

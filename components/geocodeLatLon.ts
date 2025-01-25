@@ -2,20 +2,24 @@ import { photonServerUrl } from '@/app/serverUrls'
 import { buildPhotonAddress } from './osm/buildAddress'
 
 export async function geocodeLatLon(latitude, longitude) {
-	const request = await fetch(
-		`${photonServerUrl}/reverse?lon=${longitude}&lat=${latitude}`,
-		{
-			next: { revalidate: 24 * 60 * 60 },
-		}
-	)
-	const json = await request.json()
+	try {
+		const request = await fetch(
+			`${photonServerUrl}/reverse?lon=${longitude}&lat=${latitude}`,
+			{
+				next: { revalidate: 24 * 60 * 60 },
+			}
+		)
+		const json = await request.json()
 
-	const result = {
-		latitude,
-		longitude,
-		data: json,
+		const result = {
+			latitude,
+			longitude,
+			data: json,
+		}
+		return result
+	} catch (e) {
+		console.error('Probably a network error geocoding location ', e)
 	}
-	return result
 }
 
 export async function geocodeGetAddress(latitude, longitude) {
