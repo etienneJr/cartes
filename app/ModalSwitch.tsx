@@ -7,7 +7,7 @@ import SideSheet from './SideSheet'
 export const mediaThreshold = '(min-aspect-ratio: 3/4)'
 
 export default function ModalSwitch(props) {
-	const [mode, setMode] = useState('mobile')
+	const [mode, setMode] = useState(null)
 	const test = useMediaQuery(mediaThreshold)
 
 	useEffect(() => {
@@ -16,7 +16,7 @@ export default function ModalSwitch(props) {
 
 	if (mode === 'desktop') return <SideSheet {...props} />
 
-	return <ModalSheet {...props} />
+	return <ModalSheet {...props} mediaMode={mode} />
 }
 
 /*

@@ -11,7 +11,7 @@ export const snapPoints = [-50, 0.5, 150, 100, 0],
 	initialSnap = 3
 
 export default function ModalSheet(props) {
-	const { osmFeature, styleChooser, searchParams } = props
+	const { osmFeature, styleChooser, searchParams, mediaMode } = props
 	const { trackedSnap, setTrackedSnap } = props
 
 	const [tutorials, setTutorials] = useLocalStorage(
@@ -80,7 +80,9 @@ export default function ModalSheet(props) {
 
 	return (
 		<>
-			{!isOpen && <ModalSheetReminder setOpen={setOpen} />}
+			{mediaMode === 'mobile' && !isOpen && (
+				<ModalSheetReminder setOpen={setOpen} />
+			)}
 			<CustomSheet
 				ref={ref}
 				isOpen={isOpen}
