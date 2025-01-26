@@ -61,13 +61,14 @@ export default function franceStyle(transportMode, noVariableTiles = false) {
 		//layers: layers.filter(({ id }) => id === 'Background' || id === 'Trees'),
 		glyphs: getFetchUrlBase() + '/fonts/glyphs/{fontstack}/{range}.pbf',
 		sprite: [
-			/*
+			{
+				id: 'cartes',
+				url: getFetchUrlBase() + '/sprite/cartes',
+			},
 			{
 				id: 'default',
 				url: getFetchUrlBase() + '/sprite/sprite',
-			},
-			*/
-			{ id: 'default', url: getFetchUrlBase() + '/sprite/cartes' },
+			}
 		],
 		bearing: 0,
 		pitch: 0,
@@ -2775,6 +2776,8 @@ On n'est pas à l'abri d'effets secondaires ici.
 			},
 			'icon-image': [
 				'coalesce',
+				['image', ['concat', 'cartes:', ['get', 'subclass']]],
+				['image', ['concat', 'cartes:', ['get', 'class']]],
 				['image', ['get', 'subclass']],
 				['image', ['get', 'class']],
 				['image', 'dot'],
