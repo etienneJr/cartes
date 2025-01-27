@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import length from '@turf/length'
+import { safeRemove } from './effects/utils'
 
 export default function useMeasureDistance(map, distanceMode) {
 	const [points, setPoints] = useState([])
@@ -75,50 +76,50 @@ export default function useMeasureDistance(map, distanceMode) {
 	}
 	useEffect(() => {
 		if (!map || !distanceMode) return
-		const source = map.getSource('measure-points')
-		if (source) {
-			source.setData(geojson)
-		} else {
-			map.addSource('measure-points', {
-				type: 'geojson',
-				data: geojson,
-			})
-			// Add styles to the map
-			map.addLayer({
-				id: 'measure-lines',
-				type: 'line',
-				source: 'measure-points',
-				layout: {
-					'line-cap': 'round',
-					'line-join': 'round',
-				},
-				paint: {
-					'line-color': '#57bff5',
-					'line-width': 4,
-				},
-				filter: ['in', '$type', 'LineString'],
-			})
-			map.addLayer({
-				id: 'measure-points',
-				type: 'circle',
-				source: 'measure-points',
-				paint: {
-					'circle-radius': 6,
-					'circle-color': '#2988e6',
-				},
-				filter: ['in', '$type', 'Point'],
-			})
+		try {
+			const source = map.getSource('measure-points')
+			if (source) {
+				source.setData(geojson)
+			} else {
+				map.addSource('measure-points', {
+					type: 'geojson',
+					data: geojson,
+				})
+				// Add styles to the map
+				map.addLayer({
+					id: 'measure-lines',
+					type: 'line',
+					source: 'measure-points',
+					layout: {
+						'line-cap': 'round',
+						'line-join': 'round',
+					},
+					paint: {
+						'line-color': '#57bff5',
+						'line-width': 4,
+					},
+					filter: ['in', '$type', 'LineString'],
+				})
+				map.addLayer({
+					id: 'measure-points',
+					type: 'circle',
+					source: 'measure-points',
+					paint: {
+						'circle-radius': 6,
+						'circle-color': '#2988e6',
+					},
+					filter: ['in', '$type', 'Point'],
+				})
+			}
+		} catch (e) {
+			console.log('Error in measure distance map draw, not really a problem', e)
 		}
 	}, [points, geojson, map, distanceMode])
 
 	useEffect(() => {
-		if (!map || distanceMode || map.getSource) return
-		const source = map.getSource('measure-points')
-		if (!source) return
+		if (!map || distanceMode) return
 
-		map.removeLayer('measure-lines')
-		map.removeLayer('measure-points')
-		map.removeSource('measure-points')
+		safeRemove(map)(['measure-lines', 'measure-points'], ['measure-points'])
 	}, [distanceMode, map, points])
 
 	const rawDistance = length(linestring),

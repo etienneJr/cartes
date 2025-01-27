@@ -130,6 +130,7 @@ export default function Container(props) {
 	const [geolocation, setGeolocation] = useState(null)
 
 	const [safeStyleKey, setSafeStyleKey] = useState(null)
+
 	const [localStorageStyleKey, setLocalStorageStyleKey] = useState(null)
 	useEffect(() => {
 		try {
