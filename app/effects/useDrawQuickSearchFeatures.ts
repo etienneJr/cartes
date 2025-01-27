@@ -153,12 +153,12 @@ export default function useDrawQuickSearchFeatures(
 					)
 					setOsmFeature(osmFeature)
 				})
-				map.on('mouseenter', 'features-points', () => {
+				map.on('mouseenter', baseId + 'points', () => {
 					map.getCanvas().style.cursor = 'pointer'
 				})
 				// Change it back to a pointer when it leaves.
-				map.on('mouseleave', 'features-points', () => {
-					map.getCanvas().style.cursor = 'auto'
+				map.on('mouseleave', baseId + 'points', () => {
+					map.getCanvas().style.cursor = ''
 				})
 			},
 			backgroundColor

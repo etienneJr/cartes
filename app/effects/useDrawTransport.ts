@@ -175,7 +175,7 @@ export default function useDrawTransport(
 			})
 			// Change it back to a pointer when it leaves.
 			map.on('mouseleave', linesId, () => {
-				map.getCanvas().style.cursor = 'auto'
+				map.getCanvas().style.cursor = ''
 			})
 		} catch (e) {
 			console.log('Caught error drawing useDrawTransport', e)
