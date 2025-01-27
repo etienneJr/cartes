@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { gtfsServerUrl } from '../serverUrls'
-import { findStopId, isNotTransportStop } from './stop/Stop'
 
 export default function useTransportStopData(osmFeature, gtfsStopIds) {
 	const [data, setData] = useState([])
@@ -13,8 +12,7 @@ export default function useTransportStopData(osmFeature, gtfsStopIds) {
 		const doFetch = async () => {
 			try {
 				const response = await fetch(
-					gtfsServerUrl +
-						`/getStopIdsAroundGPS/?longitude=${osmFeature.lon}&latitude=${osmFeature.lat}`,
+					gtfsServerUrl + `/geoStops/${osmFeature.lat}/${osmFeature.lon}/50`,
 					{
 						mode: 'cors',
 					}
@@ -22,9 +20,8 @@ export default function useTransportStopData(osmFeature, gtfsStopIds) {
 
 				const json = await response.json()
 
-				if (!json || !json.stopIds?.length) return
-				const { stopIds } = json
-				const firstMatchId = stopIds[0]
+				if (!json || !json.length) return
+				const firstMatchId = json[0].stop_id
 
 				const firstMatchResponse = await fetch(
 					gtfsServerUrl + `/stopTimes/${firstMatchId}`,
