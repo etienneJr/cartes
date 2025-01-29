@@ -23,15 +23,16 @@ export async function geocodeLatLon(latitude, longitude) {
 }
 
 export async function geocodeGetAddress(latitude, longitude) {
-	const candidates = await geocodeLatLon(latitude, longitude)
+	try {
+		const candidates = await geocodeLatLon(latitude, longitude)
 
-	console.log(candidates)
+		console.log(candidates)
 
-	const features = candidates?.data?.features
-	if (!features) return null
+		const features = candidates?.data?.features
+		if (!features) return null
 
-	const feature = features[0]
-	/* A gecode request can return a different OSM entity than the one with the
+		const feature = features[0]
+		/* A gecode request can return a different OSM entity than the one with the
 	 * initial lat lon. E.g. ?allez=Maxi Zoo|n12469510970|-1.2841246|47.0990106#15/47.09901/-1.28412/15/40
 	 *
 	 * We assume here that photon sorts them by proximity, and make the
@@ -42,7 +43,11 @@ export async function geocodeGetAddress(latitude, longitude) {
 	)
 	*/
 
-	const address = feature && buildPhotonAddress(feature)
+		const address = feature && buildPhotonAddress(feature)
 
-	return [address, feature]
+		return [address, feature]
+	} catch (e) {
+		console.error(`Erreur dans geocodeGetAddress`)
+		return null
+	}
 }
