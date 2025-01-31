@@ -1,4 +1,4 @@
-import maplibregl, { ScaleControl } from 'maplibre-gl'
+﻿import maplibregl, { ScaleControl } from 'maplibre-gl'
 import { useEffect, useMemo, useState } from 'react'
 import { useLocalStorage, useMediaQuery, useTimeout } from 'usehooks-ts'
 import { styles } from '../styles/styles'
@@ -11,6 +11,9 @@ import { isLocalStorageAvailable } from '@/components/utils/utils'
 import IndoorEqual from 'maplibre-gl-indoorequal'
 import indoorequalLayers from '@/app/styles/indoorequal-layers'
 import 'maplibre-gl-indoorequal/maplibre-gl-indoorequal.css'
+import buildSvgImage from './buildSvgImage'
+import { filteredMoreCategories } from '@/components/categories'
+import categoryColors from '@/app/categoryColors.yaml'
 
 /*
  *
@@ -193,6 +196,35 @@ export default function useAddMap(
 		newMap.on('moveend', (e) => {
 			setBbox(newMap.getBounds().toArray())
 		})
+
+		// AJOUT DES IMAGES SVG DANS LA CARTE POUR UTILISATION COMME SPRITE
+		// on prépare la listes des groupes de catégories
+		const groups = filteredMoreCategories.reduce((memo, next) => {
+			return {
+				...memo,
+				[next.category]: [...(memo[next.category] || []), next],
+			}
+		}, {})
+		// on parcourt les groupes
+		{Object.entries(groups).map(([group, categories]) => {
+			const groupColor = categoryColors[group]
+			// on parcourt les catégories
+			{categories.map((category) => {
+				const imageFilename = category.icon
+				//build svg image and add to map
+				buildSvgImage(
+					imageFilename,
+					(img) => {
+						img.height = '18'; // bonne taille pour être cohérent avec les sprites d'origine
+						img.width  = '18';
+						const imageName = 'cartesapp-' + imageFilename // avoid collisions
+						const mapImage = newMap.getImage(imageName)
+						if (!mapImage) newMap.addImage(imageName, img)
+					},
+					groupColor
+				)
+			})}
+		})}
 
 		return () => {
 			setMap(null)

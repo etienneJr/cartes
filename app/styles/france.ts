@@ -2767,6 +2767,10 @@ On n'est pas à l'abri d'effets secondaires ici.
 			},
 			'icon-image': [
 				'coalesce',
+				// on essaye les icones de cartes.app chargées dans la carte
+				['image', ['concat', 'cartesapp-', ['get', 'subclass']]],
+				['image', ['concat', 'cartesapp-', ['get', 'class']]],
+				// sinon on essaye les sprites standards du style d'origine
 				['image', ['get', 'subclass']],
 				['image', ['get', 'class']],
 				['image', 'dot'],

@@ -1,4 +1,4 @@
-const imagePrefix = '' // by default, 'indoorequal-'
+const imagePrefix = 'indoorequal-'
 
 const commonPoi = {
 	type: 'symbol',
@@ -6,8 +6,17 @@ const commonPoi = {
 	layout: {
 		'icon-image': [
 			'coalesce',
+			// on essaye les icones de cartes.app chargées dans la carte
+			['image', ['concat', 'cartesapp-', ['get', 'subclass']]],
+			['image', ['concat', 'cartesapp-', ['get', 'class']]],
+			// sinon on essaye les sprites standards du style d'origine (pour être homogène avec le reste)
+			['image', ['get', 'subclass']],
+			['image', ['get', 'class']],
+      // sinon on essaye les sprites fournis par indoorequal
 			['image', ['concat', ['literal', imagePrefix], ['get', 'subclass']]],
 			['image', ['concat', ['literal', imagePrefix], ['get', 'class']]],
+			// sinon on affiche un point
+			['image', 'dot'],
 		],
 		'text-anchor': 'top',
 		'text-field': [
