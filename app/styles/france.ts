@@ -1668,6 +1668,10 @@ On n'est pas à l'abri d'effets secondaires ici.
 				// living_street or other tags that remain to be found, as
 				// "medium"-friendly to pedestrians, cyclists and buses
 				'#99a6c3',
+				['==', ['get', 'maxspeed'], 'FR:rural'],
+				'#99a6c3',
+				['==', ['get', 'maxspeed'], 'FR:urban'],
+				'hsl(215,20%,80%)',
 				[
 					'any',
 					['==', ['get', 'maxspeed'], 'walk'],
@@ -2901,10 +2905,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 			'text-halo-width': 1,
 		},
 		metadata: {},
-		filter: [
-			'all',
-			['!in', 'class', 'hospital', 'parking', 'railway', 'park'],
-		],
+		filter: ['all', ['!in', 'class', 'hospital', 'parking', 'railway', 'park']],
 	},
 	// TODO this should be done way better. Should be areas with boundaries.
 	// Should include large areas like Parc naturel régional d'armorique
