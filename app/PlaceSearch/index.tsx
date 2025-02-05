@@ -248,15 +248,16 @@ export default function PlaceSearch({
 				/>
 			</LogoWrapper>
 			<div>
-				{state.length > 1 &&
-					stepIndex === 0 && // TODO for VIA geolocal, less prioritary
+				{(!value || value.length === 0) &&
+					state.length > 1 &&
 					(geolocation ? (
 						<FromHereLink
 							geolocation={geolocation}
 							searchParams={searchParams}
+							state={state}
 						/>
 					) : (
-						<Geolocate />
+						<Geolocate being={searchParams.geoloc} />
 					))}
 			</div>
 			{shouldShowHistory && (
