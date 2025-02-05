@@ -217,7 +217,7 @@ const Placeholder = styled.div`
 `
 
 const RemoveStepLink = ({ setSearchParams, stepKey, state }) => {
-	if (!stepKey) return null
+	//	if (!stepKey) return null // Empty steps should be possible to remove
 
 	return (
 		<RemoveStepLinkWrapper
