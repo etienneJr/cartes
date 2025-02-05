@@ -142,14 +142,14 @@ const Item = ({
 			<ItemContent>
 				<span
 					onClick={() => {
-						console.log('lightgreen allezpart', 'coucou')
 						step && setUndoValue(step)
-						setState(
-							state.map((step, mapIndex) => ({
-								...(step || {}),
-								stepBeingSearched: mapIndex === index ? true : false,
-							}))
-						)
+						const newState = state.map((step, mapIndex) => ({
+							...(step || {}),
+							stepBeingSearched: mapIndex === index ? true : false,
+						}))
+
+						console.log('lightgreen allezpart', state, newState, index)
+						setState(newState)
 					}}
 				>
 					<StepIcon>{letterFromIndex(index)}</StepIcon>{' '}
@@ -232,10 +232,12 @@ const RemoveStepLink = ({ setSearchParams, stepKey, state }) => {
 
 const RemoveStepLinkWrapper = styled.button`
 	position: absolute;
-	right: -1.6rem;
+	right: -1.2rem;
 	top: 0.15rem;
 	background: var(--lightestColor);
 	border-radius: 1rem;
+	height: 1rem;
+	padding: 0;
 	img {
 		width: 1rem;
 		height: auto;
