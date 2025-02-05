@@ -159,11 +159,10 @@ export default function useDrawItinerary(
 					e.lngLat.lng,
 					e.lngLat.lat
 				)
-				const allez = oldAllez
-					? oldAllez
-							.split('->')
-							.map((part, index) =>
-								index === stepIndexToEdit ? allezPart : part
+				const allez = state
+					? state
+							.map((step, index) =>
+								index === stepIndexToEdit ? allezPart : step.key
 							)
 							.join('->')
 					: allezPart + '->'

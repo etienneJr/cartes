@@ -8,6 +8,7 @@ import Image from 'next/image'
 import { useState } from 'react'
 import { removeStatePart } from '../SetDestination'
 import { StepList } from '../itineraire/StepsUI'
+import { useMediaQuery } from 'usehooks-ts'
 
 export default function Steps({
 	setState,
@@ -116,8 +117,10 @@ const Item = ({
 	setDisableDrag,
 	allez,
 }) => {
+	console.log('lightgreen allez state', state)
 	const controls = useDragControls()
 	const [undoValue, setUndoValue] = useState(null)
+	const isMobile = useMediaQuery('(max-width: 800px)')
 	const key = step?.key
 	const stepDefaultName =
 		index == 0
@@ -134,7 +137,7 @@ const Item = ({
 			style={
 				beingSearched
 					? {
-							background: 'yellow !important',
+							background: 'yellow',
 					  }
 					: {}
 			}
@@ -143,28 +146,30 @@ const Item = ({
 				<span
 					onClick={() => {
 						step && setUndoValue(step)
-						const newState = state.map((step, mapIndex) => ({
+						// when in base itinerary mode without steps added by the user, we
+						// need to initialize the itinerary with a state of more than 1 step
+						const itineraryState =
+							state.length === 1
+								? index === 0
+									? [...state, {}]
+									: [{}, ...state]
+								: state
+
+						const newState = itineraryState.map((step, mapIndex) => ({
 							...(step || {}),
 							stepBeingSearched: mapIndex === index ? true : false,
 						}))
 
-						// when in base itinerary mode without steps added by the user, we
-						// need to initialize the itinerary with a state of more than 1 step
-						const finalNewState =
-							newState.length === 1
-								? index === 0
-									? [...newState, {}]
-									: [{}, ...newState]
-								: newState
-
 						console.log('lightgreen allezpart', state, newState, index)
-						setState(finalNewState)
+						setState(newState)
 					}}
 				>
 					<StepIcon>{letterFromIndex(index)}</StepIcon>{' '}
 					<StepName $hasName={!step || !step.name}>
 						{beingSearched
-							? `Choisissez ${stepDefaultName}`
+							? isMobile
+								? stepDefaultName
+								: `Choisissez ${stepDefaultName}`
 							: step?.name || `Cliquez pour choisir ${stepDefaultName}`}
 					</StepName>
 				</span>
