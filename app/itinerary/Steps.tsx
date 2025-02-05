@@ -142,14 +142,23 @@ const Item = ({
 			<ItemContent>
 				<span
 					onClick={() => {
-						console.log('lightgreen allezpart', 'coucou')
 						step && setUndoValue(step)
-						setState(
-							state.map((step, mapIndex) => ({
-								...(step || {}),
-								stepBeingSearched: mapIndex === index ? true : false,
-							}))
-						)
+						const newState = state.map((step, mapIndex) => ({
+							...(step || {}),
+							stepBeingSearched: mapIndex === index ? true : false,
+						}))
+
+						// when in base itinerary mode without steps added by the user, we
+						// need to initialize the itinerary with a state of more than 1 step
+						const finalNewState =
+							newState.length === 1
+								? index === 0
+									? [...newState, {}]
+									: [{}, ...newState]
+								: newState
+
+						console.log('lightgreen allezpart', state, newState, index)
+						setState(finalNewState)
 					}}
 				>
 					<StepIcon>{letterFromIndex(index)}</StepIcon>{' '}
@@ -217,7 +226,7 @@ const Placeholder = styled.div`
 `
 
 const RemoveStepLink = ({ setSearchParams, stepKey, state }) => {
-	if (!stepKey) return null
+	//	if (!stepKey) return null // Empty steps should be possible to remove
 
 	return (
 		<RemoveStepLinkWrapper
@@ -232,10 +241,12 @@ const RemoveStepLink = ({ setSearchParams, stepKey, state }) => {
 
 const RemoveStepLinkWrapper = styled.button`
 	position: absolute;
-	right: -1.6rem;
+	right: -1.2rem;
 	top: 0.15rem;
 	background: var(--lightestColor);
 	border-radius: 1rem;
+	height: 1rem;
+	padding: 0;
 	img {
 		width: 1rem;
 		height: auto;
