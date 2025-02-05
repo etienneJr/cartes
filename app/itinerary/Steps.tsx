@@ -8,6 +8,7 @@ import Image from 'next/image'
 import { useState } from 'react'
 import { removeStatePart } from '../SetDestination'
 import { StepList } from '../itineraire/StepsUI'
+import { useMediaQuery } from 'usehooks-ts'
 
 export default function Steps({
 	setState,
@@ -118,6 +119,7 @@ const Item = ({
 }) => {
 	const controls = useDragControls()
 	const [undoValue, setUndoValue] = useState(null)
+	const isMobile = useMediaQuery('(max-width: 800px)')
 	const key = step?.key
 	const stepDefaultName =
 		index == 0
@@ -134,7 +136,7 @@ const Item = ({
 			style={
 				beingSearched
 					? {
-							background: 'yellow !important',
+							background: 'yellow',
 					  }
 					: {}
 			}
@@ -164,7 +166,9 @@ const Item = ({
 					<StepIcon>{letterFromIndex(index)}</StepIcon>{' '}
 					<StepName $hasName={!step || !step.name}>
 						{beingSearched
-							? `Choisissez ${stepDefaultName}`
+							? isMobile
+								? stepDefaultName
+								: `Choisissez ${stepDefaultName}`
 							: step?.name || `Cliquez pour choisir ${stepDefaultName}`}
 					</StepName>
 				</span>
