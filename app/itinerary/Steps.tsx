@@ -148,8 +148,17 @@ const Item = ({
 							stepBeingSearched: mapIndex === index ? true : false,
 						}))
 
+						// when in base itinerary mode without steps added by the user, we
+						// need to initialize the itinerary with a state of more than 1 step
+						const finalNewState =
+							newState.length === 1
+								? index === 0
+									? [...newState, {}]
+									: [{}, ...newState]
+								: newState
+
 						console.log('lightgreen allezpart', state, newState, index)
-						setState(newState)
+						setState(finalNewState)
 					}}
 				>
 					<StepIcon>{letterFromIndex(index)}</StepIcon>{' '}
