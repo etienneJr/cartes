@@ -1670,6 +1670,10 @@ On n'est pas à l'abri d'effets secondaires ici.
 				// living_street or other tags that remain to be found, as
 				// "medium"-friendly to pedestrians, cyclists and buses
 				'#99a6c3',
+				['==', ['get', 'maxspeed'], 'FR:rural'],
+				'#99a6c3',
+				['==', ['get', 'maxspeed'], 'FR:urban'],
+				'hsl(215,20%,80%)',
 				[
 					'any',
 					['==', ['get', 'maxspeed'], 'walk'],
