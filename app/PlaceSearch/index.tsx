@@ -224,7 +224,10 @@ export default function PlaceSearch({
 	}, [urlSearchQuery, onDestinationChange, value])
 
 	const shouldShowHistory =
-		step.inputValue === '' && isMyInputFocused && searchHistory.length > 0
+		(step.inputValue == null || step.inputValue === '') &&
+		isMyInputFocused &&
+		searchHistory.length > 0
+	console.log('PLOP s', searchHistory, step.inputValue, isMyInputFocused)
 
 	const shouldShowResults =
 		step.inputValue !== '' &&

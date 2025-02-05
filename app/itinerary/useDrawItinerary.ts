@@ -159,21 +159,20 @@ export default function useDrawItinerary(
 					e.lngLat.lng,
 					e.lngLat.lat
 				)
-				const allez = state
-					? state
-							.map((step, index) =>
-								index === stepIndexToEdit ? allezPart : step.key
-							)
-							.join('->')
-					: allezPart + '->'
-				console.log('lightgreen new allez', allez, {
-					state,
-					beingSearchedIndex,
-					stepIndexToEdit,
-					awaitingNewStep,
-				})
 
-				setSearchParams({
+				if (!state || state.length === 1) {
+					const allez = allezPart + '->'
+					return setSearchParams({
+						allez,
+					})
+				}
+				const allez = state
+					.map((step, index) =>
+						index === stepIndexToEdit ? allezPart : step.key
+					)
+					.join('->')
+
+				return setSearchParams({
 					allez,
 				})
 			}
