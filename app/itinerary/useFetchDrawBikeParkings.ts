@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
 import useDrawQuickSearchFeatures from '../effects/useDrawQuickSearchFeatures'
 import { buildOverpassRequest } from '../effects/fetchOverpassRequest'
+import { overpassRequestSuffix } from '../osmRequest'
 
 const category = {
 	name: 'Arceaux vélo',
 	icon: 'parking',
+	category: 'Déplacements',
 	'open by default': true,
 }
 
@@ -25,11 +27,11 @@ export default function useFetchDrawBikeParkings(map, cycling) {
 
 		const doFetch = async () => {
 			const body = buildOverpassRequest(queryCore)
-			const url = `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(
-				body
-			)}`
+			const url = `${overpassRequestSuffix}${encodeURIComponent(body)}`
 			const request = await fetch(url)
 			const json = await request.json()
+
+			console.log('vélo', json)
 
 			setFeatures(json.elements)
 		}
