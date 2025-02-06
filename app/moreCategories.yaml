@@ -410,6 +410,15 @@
   icon: music
   category: Loisirs
 
+- name: Théâtre
+  dictionary:
+    - théâtre
+    - scène
+  query:
+    - '[amenity=theatre]' # Exemple : salle de concert à Brest https://www.openstreetmap.org/way/42531718#map=18/48.38500/-4.48092
+  icon: theatre
+  category: Loisirs
+
 - name: plage
   category: Tourisme
   query: '[natural=beach]'

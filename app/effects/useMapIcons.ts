@@ -1,5 +1,7 @@
 import { useEffect } from 'react'
 
+import imageRedirectsRaw from '@/app/imageRedirects.yaml'
+
 export default function useMapIcons(map, styleUrl) {
 	useEffect(() => {
 		if (!map) return
@@ -13,11 +15,20 @@ export default function useMapIcons(map, styleUrl) {
 		const doFetch = async () => {
 			const request = await fetch('/svgo/bulk')
 			const nameSrcMap = await request.json()
+			const imageRedirects = Object.entries(imageRedirectsRaw).map(
+				([from, to]) => {
+					const [name, src] = nameSrcMap.find(
+						([name, src]) => name.split('cartesapp-')[1] === to
+					)
+
+					return ['cartesapp--' + from, src]
+				}
+			)
 
 			const count = nameSrcMap.length
 			let iterator = 0
 
-			nameSrcMap.map(([imageFinalName, src]) => {
+			;[...imageRedirects, ...nameSrcMap].map(([imageFinalName, src]) => {
 				//build svg image and add to map
 				const img = new Image(18, 18) // bonne taille pour être cohérent avec les sprites d'origine
 
