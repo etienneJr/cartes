@@ -16,14 +16,12 @@ export async function GET(request) {
 	return new Response(imgSrc)
 }
 
-const fromSvgToImgSrc = (imageText, background) => {
-	console.log('SVGOSVGO', typeof background, background)
+export const fromSvgToImgSrc = (imageText, background) => {
 	const svg = fromHTML(imageText)
 
 	/*
 	;[...svg.querySelectorAll('*')].map((element) => {
 		const name = svg.querySelector(element.localName.replace(/:/g, '\\:'))
-		console.log('indigo svg', 'yoyo', name, name.id)
 		try {
 			if (element.localName.includes(':')) {
 				svg.removeChild(name)

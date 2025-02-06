@@ -6,8 +6,6 @@ export default function useMapContent(map, bbox, setMapContent) {
 		if (!setMapContent) return undefined
 		const features = map.queryRenderedFeatures()
 
-		console.log('yoyofull', features)
-
 		const results = features
 			.filter(
 				(feature) =>
@@ -22,7 +20,6 @@ export default function useMapContent(map, bbox, setMapContent) {
 				feature.layer.id
 			)
 		)
-		console.log('yoyoriver', rivers)
 		const riversText =
 			rivers?.length &&
 			`les cours d'eau ${unique(

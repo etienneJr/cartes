@@ -89,7 +89,6 @@ export default function Container(props) {
 	)
 
 	const [mapContent, setMapContent] = useState()
-	console.log('yoyo', mapContent)
 
 	const [bbox, setBbox] = useState(null)
 	const debouncedBbox = useDebounce(bbox, contentDebounceDelay)
