@@ -15,9 +15,11 @@ export default function useMapIcons(map) {
 				img.src = src
 
 				img.onload = () => {
-					const mapImage = map.getImage(imageFinalName)
-					if (!mapImage) map.addImage(imageFinalName, img)
-					console.log('🧮')
+					const hasMapImage = map.hasImage(imageFinalName)
+					if (!hasMapImage) {
+						map.addImage(imageFinalName, img)
+						//map.updateImage(imageFinalName, img) // this does not suffice. It's the style that must be reloaded...
+					}
 				}
 			})
 		}
