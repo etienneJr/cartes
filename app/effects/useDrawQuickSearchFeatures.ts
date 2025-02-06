@@ -1,12 +1,11 @@
+import useSetSearchParams from '@/components/useSetSearchParams'
+import { colors } from '@/components/utils/colors'
 import parseOpeningHours from 'opening_hours'
 import { useEffect, useState } from 'react'
-import buildSvgImage from './buildSvgImage'
-import useSetSearchParams from '@/components/useSetSearchParams'
-import { encodePlace } from '../utils'
 import { buildAllezPart } from '../SetDestination'
+import { encodePlace } from '../utils'
+import buildSvgImage from './buildSvgImage'
 import { safeRemove } from './utils'
-import { colors } from '@/components/utils/colors'
-import categoryIconUrl from '@/components/categoryIconUrl'
 
 export default function useDrawQuickSearchFeatures(
 	map,
@@ -30,6 +29,7 @@ export default function useDrawQuickSearchFeatures(
 
 		const imageFilename = category.icon
 		const imageFinalFilename = category['icon name']
+		const imageNameSuffix = imageFinalFilename || imageFilename
 		if (imageFilename.includes('http'))
 			throw new Error(
 				'Icons should be local in the public/icons foler. ' + category.icon
@@ -42,7 +42,7 @@ export default function useDrawQuickSearchFeatures(
 				// TODO this should be useless now that we've added all the icons in
 				// useAddMap, since they are also used to replace the sprites for tile
 				// icons
-				const imageName = 'cartesapp-' + (imageFinalFilename || imageFilename) // avoid collisions
+				const imageName = 'cartesapp-' + imageNameSuffix // avoid collisions
 				const mapImage = map.getImage(imageName)
 				if (!mapImage) map.addImage(imageName, img)
 
@@ -92,7 +92,7 @@ export default function useDrawQuickSearchFeatures(
 					type: 'symbol',
 					source: baseId + 'points',
 					layout: {
-						'icon-image': category.name + '-cartes',
+						'icon-image': 'cartesapp-' + imageNameSuffix,
 						'icon-size': 0.6,
 						'text-field': ['get', 'name'],
 						'text-offset': [0, 1.25],
