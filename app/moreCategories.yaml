@@ -744,6 +744,14 @@
     - '[compressed_air=yes]'
   icon: compressed_air
 
+- name: parking-voiture
+  title: Parking voiture
+  category: Déplacements
+  dictionary:
+    - stationnement
+  query: '[amenity=parking]'
+  icon: parking
+
 - name: Aire de covoiturage
   category: Déplacements
   dictionary:
