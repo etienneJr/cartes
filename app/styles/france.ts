@@ -60,7 +60,8 @@ export default function franceStyle(transportMode, noVariableTiles = false) {
 		//		Voir nos villes juste avec les arbres
 		//layers: layers.filter(({ id }) => id === 'Background' || id === 'Trees'),
 		glyphs: getFetchUrlBase() + '/fonts/glyphs/{fontstack}/{range}.pbf',
-		sprite: getFetchUrlBase() + '/sprite/sprite',
+		// replaced by addMapIcons
+		//sprite: getFetchUrlBase() + '/sprite/sprite',
 		bearing: 0,
 		pitch: 0,
 		center: [0, 0],

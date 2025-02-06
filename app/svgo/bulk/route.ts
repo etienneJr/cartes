@@ -39,6 +39,12 @@ const icons = Object.entries(groups).map(([group, groupCategories]) => {
 	})
 })
 
-export async function GET(request) {
-	return Response.json(icons.flat())
+const all = icons.flat()
+
+const map = Object.fromEntries(all)
+
+const result = Object.entries(map)
+
+export async function GET() {
+	return Response.json(result)
 }
