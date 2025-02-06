@@ -2771,9 +2771,11 @@ On n'est pas à l'abri d'effets secondaires ici.
 				['image', ['concat', 'cartesapp-', ['get', 'subclass']]],
 				['image', ['concat', 'cartesapp-', ['get', 'class']]],
 				// sinon on essaye les sprites standards du style d'origine
+				/*
 				['image', ['get', 'subclass']],
 				['image', ['get', 'class']],
 				['image', 'dot'],
+				*/
 			],
 			'text-field': ['coalesce', ...nameExpression],
 			visibility: 'visible',
