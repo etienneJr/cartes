@@ -681,7 +681,7 @@
     - parking
     - stationnement
   query: '[amenity=bicycle_parking]'
-  icon: bicycle-parking
+  icon: bicycle_parking
 
 - name: parking-velo-securise # pas d'accent pour que les url soient propres : toujours en 2024 les navigateurs (états-uniens) refusent une vision non états-unienne du Web sous prétexte de lutte contre le phishing
   title: Parking vélo sécurisé
