@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 
 import imageRedirectsRaw from '@/app/imageRedirects.yaml'
+import { getFetchUrlBase } from '../serverUrls'
 
 export default function useMapIcons(map, styleUrl) {
 	useEffect(() => {
@@ -42,8 +43,9 @@ export default function useMapIcons(map, styleUrl) {
 						console.log('iterator', iterator, count)
 						if (iterator === count) {
 							console.log('PLOP')
-							//map.triggerRepaint()
+							//map.triggerRepaint() //not working
 							return
+							// not working either
 							map.setLayoutProperty('Other POI', 'icon-image', [
 								'coalesce',
 								['image', ['concat', 'cartesapp-', ['get', 'subclass']]],
