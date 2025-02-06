@@ -1,4 +1,4 @@
-﻿import maplibregl, { ScaleControl } from 'maplibre-gl'
+import maplibregl, { ScaleControl } from 'maplibre-gl'
 import { useEffect, useMemo, useState } from 'react'
 import { useLocalStorage, useMediaQuery, useTimeout } from 'usehooks-ts'
 import { styles } from '../styles/styles'
@@ -206,25 +206,32 @@ export default function useAddMap(
 			}
 		}, {})
 		// on parcourt les groupes
-		{Object.entries(groups).map(([group, categories]) => {
-			const groupColor = categoryColors[group]
-			// on parcourt les catégories
-			{categories.map((category) => {
-				const imageFilename = category.icon
-				//build svg image and add to map
-				buildSvgImage(
-					imageFilename,
-					(img) => {
-						img.height = '18'; // bonne taille pour être cohérent avec les sprites d'origine
-						img.width  = '18';
-						const imageName = 'cartesapp-' + imageFilename // avoid collisions
-						const mapImage = newMap.getImage(imageName)
-						if (!mapImage) newMap.addImage(imageName, img)
-					},
-					groupColor
-				)
-			})}
-		})}
+		{
+			Object.entries(groups).map(([group, categories]) => {
+				const groupColor = categoryColors[group]
+				// on parcourt les catégories
+				{
+					categories.map((category) => {
+						const imageFilename = category.icon
+						const imageFinalFilename = category['icon name']
+						//build svg image and add to map
+						buildSvgImage(
+							imageFilename,
+							imageFinalFilename,
+							(img) => {
+								img.height = '18' // bonne taille pour être cohérent avec les sprites d'origine
+								img.width = '18'
+								const imageName =
+									'cartesapp-' + (imageFinalFilename || imageFilename) // avoid collisions
+								const mapImage = newMap.getImage(imageName)
+								if (!mapImage) newMap.addImage(imageName, img)
+							},
+							groupColor
+						)
+					})
+				}
+			})
+		}
 
 		return () => {
 			setMap(null)

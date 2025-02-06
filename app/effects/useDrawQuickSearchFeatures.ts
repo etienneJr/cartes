@@ -29,13 +29,20 @@ export default function useDrawQuickSearchFeatures(
 		if (!features?.length) return
 
 		const imageFilename = category.icon
-		if (imageFilename.includes('http')) return
+		const imageFinalFilename = category['icon name']
+		if (imageFilename.includes('http'))
+			throw new Error(
+				'Icons should be local in the public/icons foler. ' + category.icon
+			)
 
 		buildSvgImage(
 			imageFilename,
+			imageFinalFilename,
 			(img) => {
-				const imageName = category.name + '-cartes' // avoid collisions
-				console.log('cyan debug will add to map image ' + imageName)
+				// TODO this should be useless now that we've added all the icons in
+				// useAddMap, since they are also used to replace the sprites for tile
+				// icons
+				const imageName = 'cartesapp-' + (imageFinalFilename || imageFilename) // avoid collisions
 				const mapImage = map.getImage(imageName)
 				if (!mapImage) map.addImage(imageName, img)
 
