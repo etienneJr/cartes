@@ -17,6 +17,7 @@ export default function useMapIcons(map) {
 				img.onload = () => {
 					const mapImage = map.getImage(imageFinalName)
 					if (!mapImage) map.addImage(imageFinalName, img)
+					console.log('🧮')
 				}
 			})
 		}

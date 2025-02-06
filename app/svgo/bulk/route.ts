@@ -1,12 +1,12 @@
 import categoryColors from '@/app/categoryColors.yaml'
-import { filteredMoreCategories } from '@/components/categories'
+import { categories } from '@/components/categories'
 import fs from 'fs'
 import { optimize } from 'svgo'
 import { fromSvgToImgSrc } from '../route'
 //
 // AJOUT DES IMAGES SVG DANS LA CARTE POUR UTILISATION COMME SPRITE
 // on prépare la listes des groupes de catégories
-const groups = filteredMoreCategories.reduce((memo, next) => {
+const groups = categories.reduce((memo, next) => {
 	return {
 		...memo,
 		[next.category]: [...(memo[next.category] || []), next],
@@ -15,11 +15,11 @@ const groups = filteredMoreCategories.reduce((memo, next) => {
 
 // on parcourt les groupes
 
-const icons = Object.entries(groups).map(([group, categories]) => {
+const icons = Object.entries(groups).map(([group, groupCategories]) => {
 	const groupColor = categoryColors[group]
 	// on parcourt les catégories
 
-	return categories.map((category) => {
+	return groupCategories.map((category) => {
 		const imageFilename = category.icon
 		const imageFinalFilename = category['icon name']
 		const imageName =
