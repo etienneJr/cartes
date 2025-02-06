@@ -2756,7 +2756,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 		'source-layer': 'poi',
 		minzoom: 13,
 		layout: {
-			'icon-size': 1,
+			'icon-size': ['match', ['get', 'subclass'], ['bicycle_parking'], 0.85, 1],
 			'text-font': ['RobotoRegular-NotoSansRegular'],
 			'text-size': {
 				stops: [
@@ -2843,6 +2843,8 @@ On n'est pas à l'abri d'effets secondaires ici.
 					0,
 				],
 				17,
+				['match', ['get', 'subclass'], ['bicycle_parking'], 0, 1],
+				19,
 				1,
 				22,
 				1,
@@ -2905,10 +2907,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 			'text-halo-width': 1,
 		},
 		metadata: {},
-		filter: [
-			'all',
-			['!in', 'class', 'hospital', 'parking', 'railway', 'park'],
-		],
+		filter: ['all', ['!in', 'class', 'hospital', 'parking', 'railway', 'park']],
 	},
 	// TODO this should be done way better. Should be areas with boundaries.
 	// Should include large areas like Parc naturel régional d'armorique
