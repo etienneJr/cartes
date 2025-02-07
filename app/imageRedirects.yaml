@@ -2,6 +2,7 @@
 town_hall: classical-building
 bar: beer
 garden: tree
+park: tree
 books: book
 bicycle_rental: bicycle
 atm: bank
@@ -18,9 +19,11 @@ grave_yard: cemetery
 
 # TODO c'est important ça comme recherche
 # Manquants mais secondaires
-bbq:
-community_centre:
+#bbq:
+#community_centre:
 
 ## Not in categories but still to be added as icons in useMapIcons
-office: building
-railway: railway
+not in categories:
+  office: building
+  # for indoorequal ?
+  railway: tree

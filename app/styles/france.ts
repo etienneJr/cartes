@@ -1,5 +1,6 @@
 import { getFetchUrlBase, pmtilesServerUrl } from '../serverUrls'
 import { cycleHighwayLayers, cycleHighwayMaxZoom } from './cycleHighwayLayers'
+import categoryColors from '@/app/categoryColors.yaml'
 
 //Fonts used :
 //https://maplibre.org/font-maker
@@ -2791,7 +2792,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 				'match',
 				['get', 'class'],
 				['aerialway', 'bus', 'bicycle_rental', 'entrance'],
-				'hsl(215,83%,53%)',
+				categoryColors['Déplacements'],
 				['ferry_terminal', 'harbor'],
 				'#06066f',
 				['hospital'],
@@ -3120,7 +3121,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 			'text-line-height': 0.9,
 		},
 		paint: {
-			'text-color': 'hsl(215,83%,53%)',
+			'text-color': categoryColors['Déplacements'],
 			'icon-opacity': [
 				'step',
 				['zoom'],

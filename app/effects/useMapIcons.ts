@@ -16,6 +16,7 @@ export default function useMapIcons(map, styleUrl) {
 			const request = await fetch('/svgo/bulk')
 			const nameSrcMap = await request.json()
 			const imageRedirects = Object.entries(imageRedirectsRaw)
+				.filter(([k]) => k !== 'not in categories')
 				.map(([from, to]) => {
 					if (!to) {
 						console.log(
@@ -23,10 +24,14 @@ export default function useMapIcons(map, styleUrl) {
 						)
 						return
 					}
-					const [name, src] = nameSrcMap.find(
+					const found = nameSrcMap.find(
 						([name, src]) => name.split('cartesapp-')[1] === to
 					)
 
+					if (!found || !Array.isArray(found))
+						console.error('Problème avec ' + found)
+
+					const [name, src] = found
 					return ['cartesapp--' + from, src]
 				})
 				.filter(Boolean)
@@ -45,6 +50,7 @@ export default function useMapIcons(map, styleUrl) {
 				img.onload = () => {
 					const hasMapImage = map.hasImage(imageFinalName)
 					if (!hasMapImage) {
+						//						console.log('imagemissing not missing', imageFinalName)
 						map.addImage(imageFinalName, img)
 						iterator += 1
 						console.log('iterator', iterator, count)
