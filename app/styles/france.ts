@@ -2643,7 +2643,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 		'source-layer': 'poi',
 		minzoom: 17,
 		layout: {
-			'icon-size': 0.7,
+			'icon-size': 0.4,
 			'text-font': ['RobotoRegular-NotoSansRegular'],
 			'text-size': {
 				stops: [
@@ -2680,7 +2680,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 		'source-layer': 'poi',
 		minzoom: 13,
 		layout: {
-			'icon-size': 1,
+			'icon-size': 0.6,
 			'text-font': ['RobotoRegular-NotoSansRegular'],
 			'text-size': {
 				stops: [
@@ -2758,7 +2758,13 @@ On n'est pas à l'abri d'effets secondaires ici.
 		'source-layer': 'poi',
 		minzoom: 13,
 		layout: {
-			'icon-size': ['match', ['get', 'subclass'], ['bicycle_parking'], 0.85, 1],
+			'icon-size': [
+				'match',
+				['get', 'subclass'],
+				['bicycle_parking'],
+				0.2,
+				0.6,
+			],
 			'text-font': ['RobotoRegular-NotoSansRegular'],
 			'text-size': {
 				stops: [
@@ -2983,8 +2989,8 @@ On n'est pas à l'abri d'effets secondaires ici.
 		layout: {
 			'icon-size': {
 				stops: [
-					[6, 0.5],
-					[8.9, 0.8],
+					[6, 0.3],
+					[8.9, 0.6],
 					[9, 0],
 				],
 			},
@@ -3323,8 +3329,8 @@ On n'est pas à l'abri d'effets secondaires ici.
 		layout: {
 			'icon-size': {
 				stops: [
-					[6, 0.5],
-					[14, 0.8],
+					[6, 0.3],
+					[14, 0.6],
 				],
 			},
 			'text-font': ['RobotoRegular-NotoSansRegular'],

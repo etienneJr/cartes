@@ -93,17 +93,21 @@ export default function useDrawQuickSearchFeatures(
 					source: baseId + 'points',
 					layout: {
 						'icon-image': 'cartesapp-' + imageNameSuffix,
-						'icon-size': 0.6,
+						'icon-size': 1,
 						'text-field': ['get', 'name'],
 						'text-offset': [0, 1.25],
 						'text-anchor': 'top',
-						'text-font': ['RobotoRegular-NotoSansRegular'],
+						'text-font': ['RobotoBold-NotoSansBold'],
+						'text-size': 15,
 					},
 					paint: {
 						'text-color': '#503f38',
 						'text-halo-blur': 0.5,
 						'text-halo-color': 'white',
 						'text-halo-width': 1,
+						'icon-halo-color': '#503f38',
+						'icon-halo-width': 100,
+						'icon-halo-blur': 0.5,
 					},
 				})
 				map.addLayer({
