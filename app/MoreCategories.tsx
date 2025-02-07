@@ -1,12 +1,11 @@
+import categoryColors from '@/app/categoryColors.yaml'
 import { uncapitalise0 } from '@/components/utils/utils'
+import { css, styled } from 'next-yak'
+import Image from 'next/image'
 import Link from 'next/link'
 import { exactThreshold } from './QuickFeatureSearch'
 import { goldCladding } from './QuickFeatureSearchUI'
-import categoryColors from '@/app/categoryColors.yaml'
-import { styled, css } from 'next-yak'
-import buildSvgImage from './effects/buildSvgImage'
 import { useEffect, useState } from 'react'
-import Image from 'next/image'
 
 export default function MoreCategories({
 	getNewSearchParamsLink,
@@ -14,12 +13,25 @@ export default function MoreCategories({
 	filteredMoreCategories,
 	doFilter,
 }) {
+	const [bulkImages, setBulkImages] = useState({})
+
 	const groups = filteredMoreCategories.reduce((memo, next) => {
 		return {
 			...memo,
 			[next.category]: [...(memo[next.category] || []), next],
 		}
 	}, {})
+
+	useEffect(() => {
+		const doFetch = async () => {
+			const request = await fetch('/svgo/bulk')
+			const json = await request.json()
+
+			setBulkImages(Object.fromEntries(json))
+		}
+		doFetch()
+	}, [setBulkImages])
+
 	return (
 		<Wrapper>
 			<ol>
@@ -37,7 +49,11 @@ export default function MoreCategories({
 											$isExact={category.score < exactThreshold}
 										>
 											<Link href={getNewSearchParamsLink(category)}>
-												<MapIcon category={category} color={groupColor} />{' '}
+												<MapIcon
+													category={category}
+													color={groupColor}
+													bulkImages={bulkImages}
+												/>{' '}
 												{uncapitalise0(category.title || category.name)}
 											</Link>
 										</Category>
@@ -121,19 +137,10 @@ const Category = styled.li`
 			  `
 			: ''}
 `
-const MapIcon = ({ category, color }) => {
-	const [src, setSrc] = useState()
+const MapIcon = ({ category, color, bulkImages }) => {
+	const src = bulkImages['cartesapp-' + category['icon']]
 
 	const alt = 'Icône de la catégorie' + (category.title || category.name)
-	useEffect(() => {
-		console.log('color', color)
-		buildSvgImage(
-			category.icon,
-			category['icon name'],
-			(_, src) => setSrc(src),
-			color
-		)
-	}, [category.icon])
 
 	if (src) return <MapIconImage src={src} alt={alt} width="10" height="10" />
 }
