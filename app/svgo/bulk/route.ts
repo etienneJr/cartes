@@ -45,7 +45,10 @@ const fromCategories = icons.flat()
 const notInCategories = Object.entries(imageRedirects['not in categories']).map(
 	([k, v]) => {
 		try {
-			const data = fs.readFileSync('./public/icons/' + v + '.svg', 'utf8')
+			const data = fs.readFileSync(
+				'./public/icons/' + (v || k) + '.svg',
+				'utf8'
+			)
 			const result = optimize(data, {})
 			const optimizedSvgString = result.data
 			const imgSrc = fromSvgToImgSrc(optimizedSvgString, '#7ef30b')

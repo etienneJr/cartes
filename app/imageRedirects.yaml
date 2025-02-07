@@ -16,6 +16,7 @@ ferry_terminal: ferry
 fire_station: fire
 food_court: restaurant
 grave_yard: cemetery
+campsite: camp_site
 
 # TODO c'est important ça comme recherche
 # Manquants mais secondaires
@@ -27,3 +28,7 @@ not in categories:
   office: building
   # for indoorequal ?
   railway: tree
+
+  # to be added as small icons without circle
+  # bollard:
+  # entrance:

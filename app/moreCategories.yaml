@@ -1178,6 +1178,20 @@
   name: coiffeur
   query: '[shop=hairdresser]'
   icon: hairdresser
+- title: Laverie
+  category: Divers
+  name: laverie
+  dictionary:
+    - laverie
+    - lessive
+    - sèche-linge
+    - linge
+    - lavomatic
+    - pressing
+  query:
+    - '[shop=laundry]'
+    - '[shop=dry_cleaning]'
+  icon: laundry
 - title: Espace de cotravail (coworking)
   category: Divers
   name: cotravail
