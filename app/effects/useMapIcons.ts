@@ -15,8 +15,9 @@ export default function useMapIcons(map, styleUrl) {
 		const doFetch = async () => {
 			const request = await fetch('/svgo/bulk')
 			const nameSrcMap = await request.json()
+			console.log('nameSrcMap', nameSrcMap)
 			const imageRedirects = Object.entries(imageRedirectsRaw)
-				.filter(([k]) => k !== 'not in categories')
+				.filter(([k]) => !['not in categories', 'small'].includes(k))
 				.map(([from, to]) => {
 					if (!to) {
 						console.log(
@@ -29,10 +30,12 @@ export default function useMapIcons(map, styleUrl) {
 					)
 
 					if (!found || !Array.isArray(found))
-						console.error('Problème avec ' + found)
+						console.error(
+							`Problème avec la redirection d'icône ${found} ${from} ${to}`
+						)
 
 					const [name, src] = found
-					return ['cartesapp--' + from, src]
+					return ['cartesapp-' + from, src]
 				})
 				.filter(Boolean)
 
@@ -43,14 +46,18 @@ export default function useMapIcons(map, styleUrl) {
 
 			;[...imageRedirects, ...nameSrcMap].map(([imageFinalName, src]) => {
 				//build svg image and add to map
-				const img = new Image(18, 18) // bonne taille pour être cohérent avec les sprites d'origine
+				const isSmall = Object.keys(imageRedirectsRaw['small']).find(
+					(k) => k === imageFinalName.replace('cartesapp-', '')
+				)
+				const size = isSmall ? 14 : 18
+				const img = new Image(size, size) // bonne taille pour être cohérent avec les sprites d'origine
 
 				img.src = src
 
 				img.onload = () => {
 					const hasMapImage = map.hasImage(imageFinalName)
 					if (!hasMapImage) {
-						//						console.log('imagemissing not missing', imageFinalName)
+						console.log('addimage ', imageFinalName)
 						map.addImage(imageFinalName, img)
 						iterator += 1
 						console.log('iterator', iterator, count)

@@ -16,7 +16,11 @@ ferry_terminal: ferry
 fire_station: fire
 food_court: restaurant
 grave_yard: cemetery
-campsite: camp_site
+camp_site: camping
+wine: grapes
+swimming: swimming_outdoor
+swimming_pool: swimming_outdoor
+#place_of_worship:
 
 # TODO c'est important ça comme recherche
 # Manquants mais secondaires
@@ -26,9 +30,11 @@ campsite: camp_site
 ## Not in categories but still to be added as icons in useMapIcons
 not in categories:
   office: building
-  # for indoorequal ?
-  railway: tree
+  gallery: art_gallery
+  castle:
 
   # to be added as small icons without circle
-  # bollard:
-  # entrance:
+small:
+  bollard:
+  entrance: indoorequal-entrance
+  railway:

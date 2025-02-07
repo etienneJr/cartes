@@ -436,6 +436,19 @@
     - '[attraction=carousel]'
   icon: playground
 
+- name: lieu-culte
+  title: Lieu de culte
+  category: Loisirs
+  dictionary:
+    - église
+    - temple
+    - mosquée
+    - prière
+    - cathédrale
+  query:
+    - '[amenity=place_of_worship]'
+  icon: place_of_worship
+
 ################################
 
 - name: hôpital

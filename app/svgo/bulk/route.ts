@@ -2,7 +2,7 @@ import categoryColors from '@/app/categoryColors.yaml'
 import { categories } from '@/components/categories'
 import fs from 'fs'
 import { optimize } from 'svgo'
-import { fromSvgToImgSrc } from '../route'
+import { fromSvgToImgSrc, svgTextToDataImage } from '../route'
 import imageRedirects from '@/app/imageRedirects.yaml'
 //
 // AJOUT DES IMAGES SVG DANS LA CARTE POUR UTILISATION COMME SPRITE
@@ -26,24 +26,28 @@ const icons = Object.entries(groups).map(([group, groupCategories]) => {
 		const imageName =
 			'cartesapp-' + // avoid collisions
 			(imageFinalFilename || imageFilename)
-		//build svg image and add to map
-		const data = fs.readFileSync(
-			'./public/icons/' + imageFilename + '.svg',
-			'utf8'
-		)
+		try {
+			//build svg image and add to map
+			const data = fs.readFileSync(
+				'./public/icons/' + imageFilename + '.svg',
+				'utf8'
+			)
 
-		const result = optimize(data, {})
+			const result = optimize(data, {})
 
-		const optimizedSvgString = result.data
-		const imgSrc = fromSvgToImgSrc(optimizedSvgString, groupColor)
-		return [imageName, imgSrc]
+			const optimizedSvgString = result.data
+			const imgSrc = fromSvgToImgSrc(optimizedSvgString, groupColor)
+			return [imageName, imgSrc]
+		} catch (e) {
+			console.error(e)
+		}
 	})
 })
 
 const fromCategories = icons.flat()
 
-const notInCategories = Object.entries(imageRedirects['not in categories']).map(
-	([k, v]) => {
+const notInCategories = Object.entries(imageRedirects['not in categories'])
+	.map(([k, v]) => {
 		try {
 			const data = fs.readFileSync(
 				'./public/icons/' + (v || k) + '.svg',
@@ -51,15 +55,36 @@ const notInCategories = Object.entries(imageRedirects['not in categories']).map(
 			)
 			const result = optimize(data, {})
 			const optimizedSvgString = result.data
-			const imgSrc = fromSvgToImgSrc(optimizedSvgString, '#7ef30b')
+			const imgSrc = fromSvgToImgSrc(
+				optimizedSvgString,
+				categoryColors['Divers']
+			)
 			return ['cartesapp-' + k, imgSrc]
 		} catch (e) {
 			console.error(e)
 		}
-	}
-)
+	})
+	.filter(Boolean)
 
-const allEntries = [...fromCategories, ...notInCategories]
+const small = Object.entries(imageRedirects['small'])
+	.map(([k, v]) => {
+		try {
+			const data = fs.readFileSync(
+				'./public/icons/' + (v || k) + '.svg',
+				'utf8'
+			)
+			const result = optimize(data, {})
+			const optimizedSvgString = result.data
+			const src = svgTextToDataImage(optimizedSvgString)
+
+			return ['cartesapp-' + k, src]
+		} catch (e) {
+			console.error(e)
+		}
+	})
+	.filter(Boolean)
+
+const allEntries = [...fromCategories, ...notInCategories, ...small]
 
 const map = Object.fromEntries(allEntries)
 

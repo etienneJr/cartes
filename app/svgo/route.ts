@@ -59,6 +59,11 @@ export const fromSvgToImgSrc = (imageText, background) => {
 	const svgTextRaw = svg.outerHTML
 	const svgText = svgTextRaw.replace('stroke:#000', 'stroke:#fff')
 
+	const src = svgTextToDataImage(svgText)
+	return src
+}
+
+export const svgTextToDataImage = (svgText) => {
 	const formatted = svgText
 		.replaceAll(/#/g, '%23')
 		.replaceAll(/"/g, "'")
