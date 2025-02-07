@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 
 import imageRedirectsRaw from '@/app/imageRedirects.yaml'
-import { getFetchUrlBase } from '../serverUrls'
 
 export default function useMapIcons(map, styleUrl) {
 	useEffect(() => {
@@ -16,15 +15,23 @@ export default function useMapIcons(map, styleUrl) {
 		const doFetch = async () => {
 			const request = await fetch('/svgo/bulk')
 			const nameSrcMap = await request.json()
-			const imageRedirects = Object.entries(imageRedirectsRaw).map(
-				([from, to]) => {
+			const imageRedirects = Object.entries(imageRedirectsRaw)
+				.map(([from, to]) => {
+					if (!to) {
+						console.log(
+							'imagemissing listed but no cartesapp icon correspondance'
+						)
+						return
+					}
 					const [name, src] = nameSrcMap.find(
 						([name, src]) => name.split('cartesapp-')[1] === to
 					)
 
 					return ['cartesapp--' + from, src]
-				}
-			)
+				})
+				.filter(Boolean)
+
+			console.log('missingRedirects', imageRedirects)
 
 			const count = nameSrcMap.length
 			let iterator = 0

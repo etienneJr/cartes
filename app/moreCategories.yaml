@@ -42,7 +42,7 @@
     - quick
     - kebab
   query: '[amenity=fast_food]'
-  icon: fastfood
+  icon: fast_food
 
 - name: Cuisine française
   category: Restaurants
@@ -333,7 +333,7 @@
     - glace
     - sorbet
   query: '[shop=ice_cream]'
-  icon: ice-cream
+  icon: ice_cream
 
 - name: Miellerie
   category: Alimentation
@@ -719,6 +719,17 @@
     - '["service:bicycle:repair"=yes]'
   icon: bicycle_repair_station
 
+- name: gare-maritime
+  category: Déplacements
+  title: Gare maritime
+  dictionary:
+    - ferry
+    - traversée
+    - bateau
+  query: '[amenity=ferry_terminal]'
+  icon: ferry
+
+#### Déplacements / voiture
 - name: Essence
   category: Déplacements
   dictionary:
@@ -729,7 +740,7 @@
     - pétrole
     - pompe
   query: '[amenity=fuel]'
-  icon: essence
+  icon: fuel
 
 - name: borne-elec
   title: Borne électrique
@@ -739,7 +750,7 @@
     - électrique
     - borne
   query: '[amenity=charging_station]'
-  icon: charging-station
+  icon: charging_station
 
 - name: Station de gonflage
   category: Déplacements
@@ -1185,3 +1196,51 @@
     - lacets
   query: '[craft=shoemaker]'
   icon: shoes
+- title: Cimetière
+  category: Divers
+  name: cimetière
+  dictionary:
+    - tombes
+  query:
+    - '[amenity=grave_yard]'
+    - '[landuse=cemetery]'
+  icon: cemetery
+
+## Peut-être carrément une catégorie "services publics"
+## https://wiki.openstreetmap.org/wiki/France/Services_Publics
+- title: Justice
+  category: Divers
+  name: justice
+  dictionary:
+    - tribunal
+    - cour
+    - cour d'appel
+    - judiciaire
+  query:
+    - '[amenity=courthouse]'
+  icon: classical-building
+
+- title: Pompiers
+  category: Divers
+  name: pompiers
+  dictionary:
+    - incendie
+    - 18
+    - feu
+  query:
+    - '[amenity=fire_station]'
+  icon: fire
+- title: Établissement scolaire
+  category: Divers
+  name: education
+  dictionary:
+    - université
+    - collège
+    - école
+    - primaire
+    - groupe scolaire
+  query:
+    - '[amenity=college]'
+    - '[amenity=university]'
+    - '[amenity=school]'
+  icon: college

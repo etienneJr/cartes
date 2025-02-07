@@ -1,4 +1,21 @@
+# OMT MapLibre Tile Data image name -> cartesapp category icon names
 bar: beer
 garden: tree
 books: book
 bicycle_rental: bicycle
+atm: bank
+biergarten: beer
+bus_station: bus
+clinic: hospital
+courthouse: classical-building
+dentist: tooth
+drinking_water: water
+ferry_terminal: ferry
+fire_station: fire
+food_court: restaurant
+grave_yard: cemetery
+
+# TODO c'est important ça comme recherche
+# Manquants mais secondaires
+bbq:
+community_centre:
