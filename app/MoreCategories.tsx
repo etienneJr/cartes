@@ -80,7 +80,7 @@ const Wrapper = styled.div`
 		}
 		li {
 			margin: 0.2rem 0.2rem;
-			padding: 0rem 0.4rem;
+			padding: 0rem 0.3rem;
 			line-height: 1.5rem;
 			border-radius: 0.2rem;
 			background: white;
@@ -90,6 +90,9 @@ const Wrapper = styled.div`
 			a {
 				text-decoration: none;
 				color: inherit;
+				img {
+					margin-right: 0.05rem;
+				}
 			}
 		}
 	}

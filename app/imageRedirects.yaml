@@ -1,4 +1,5 @@
 # OMT MapLibre Tile Data image name -> cartesapp category icon names
+town_hall: classical-building
 bar: beer
 garden: tree
 books: book
@@ -19,3 +20,7 @@ grave_yard: cemetery
 # Manquants mais secondaires
 bbq:
 community_centre:
+
+## Not in categories but still to be added as icons in useMapIcons
+office: building
+railway: railway

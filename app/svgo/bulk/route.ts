@@ -3,6 +3,7 @@ import { categories } from '@/components/categories'
 import fs from 'fs'
 import { optimize } from 'svgo'
 import { fromSvgToImgSrc } from '../route'
+import imageRedirects from '@/app/imageRedirects.yaml'
 //
 // AJOUT DES IMAGES SVG DANS LA CARTE POUR UTILISATION COMME SPRITE
 // on prépare la listes des groupes de catégories
@@ -39,9 +40,19 @@ const icons = Object.entries(groups).map(([group, groupCategories]) => {
 	})
 })
 
-const all = icons.flat()
+const fromCategories = icons.flat()
 
-const map = Object.fromEntries(all)
+const notInCategories = Object.entries(imageRedirects).map(([k, v]) => {
+	const data = fs.readFileSync('./public/icons/' + v + '.svg', 'utf8')
+	const result = optimize(data, {})
+	const optimizedSvgString = result.data
+	const imgSrc = fromSvgToImgSrc(optimizedSvgString, groupColor)
+	return ['cartesapp-' + imgSrc]
+})
+
+const allEntries = [...fromCategories, ...notInCategories]
+
+const map = Object.fromEntries(allEntries)
 
 const result = Object.entries(map)
 
