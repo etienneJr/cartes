@@ -2847,7 +2847,6 @@ On n'est pas à l'abri d'effets secondaires ici.
 						'museum',
 						'school',
 						'parking',
-						'lodging',
 					],
 					1,
 					0,
@@ -2881,7 +2880,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 						'zoo',
 					],
 					1,
-					0,
+					['match', ['get', 'subclass'], ['townhall'], 1, 0], // I don't know why lots of class=town_hall that are in reality city offices
 				],
 				16,
 				[
