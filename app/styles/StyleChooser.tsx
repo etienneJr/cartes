@@ -112,6 +112,7 @@ const Styles = ({ style, styleList, setSearchParams, searchParams }) => {
 											onClick={(e) => {
 												alert(description)
 												e.preventDefault()
+												e.stopPropagation()
 											}}
 										>
 											<Image
