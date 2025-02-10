@@ -1,13 +1,23 @@
-const imagePrefix = '' // by default, 'indoorequal-'
+const imagePrefix = 'indoorequal-'
 
 const commonPoi = {
 	type: 'symbol',
 	'source-layer': 'poi',
 	layout: {
+		'icon-size': 0.6,
 		'icon-image': [
 			'coalesce',
+			// on essaye les icones de cartes.app chargées dans la carte
+			['image', ['concat', 'cartesapp-', ['get', 'subclass']]],
+			['image', ['concat', 'cartesapp-', ['get', 'class']]],
+			// sinon on essaye les sprites standards du style d'origine (pour être homogène avec le reste)
+			['image', ['get', 'subclass']],
+			['image', ['get', 'class']],
+			// sinon on essaye les sprites fournis par indoorequal
 			['image', ['concat', ['literal', imagePrefix], ['get', 'subclass']]],
 			['image', ['concat', ['literal', imagePrefix], ['get', 'class']]],
+			// sinon on affiche un point
+			['image', 'dot'],
 		],
 		'text-anchor': 'top',
 		'text-field': [
@@ -158,6 +168,7 @@ const rawLayers = [
 	{
 		id: 'indoor-poi-rank1',
 		...commonPoi,
+		minzoom: 17,
 		filter: ['all', ['==', '$type', 'Point'], ['!in', 'class', ...rank2Class]],
 	},
 	{

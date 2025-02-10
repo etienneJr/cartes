@@ -1,0 +1,41 @@
+# OMT MapLibre Tile Data image name -> cartesapp category icon names
+town_hall: classical-building
+bar: beer
+garden: tree
+park: tree
+books: book
+bicycle_rental: bicycle
+atm: bank
+biergarten: beer
+bus_station: bus
+clinic: hospital
+courthouse: classical-building
+dentist: tooth
+drinking_water: water
+ferry_terminal: ferry
+fire_station: fire
+food_court: restaurant
+grave_yard: cemetery
+camp_site: camping
+wine: grapes
+swimming: swimming_outdoor
+swimming_pool: swimming_outdoor
+#place_of_worship:
+
+# TODO c'est important ça comme recherche
+# Manquants mais secondaires
+#bbq:
+#community_centre:
+
+## Not in categories but still to be added as icons in useMapIcons
+not in categories:
+  office: building
+  gallery: art_gallery
+  castle:
+
+  # to be added as small icons without circle
+small:
+  bollard:
+  entrance: indoorequal-entrance
+  railway:
+  oneway: arrow-up

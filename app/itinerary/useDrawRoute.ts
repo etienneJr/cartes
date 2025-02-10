@@ -158,7 +158,7 @@ export default function useDrawRoute(isItineraryMode, map, geojson, id) {
 
 		if (
 			geojson.features.filter(
-				(f) => f.geometry.type === 'Point' && f.properties.key != null
+				(f) => f.geometry.type === 'Point' && f.properties?.key != null
 			).length > 1
 		) {
 			const large = height < width,

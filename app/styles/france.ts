@@ -1,5 +1,6 @@
 import { getFetchUrlBase, pmtilesServerUrl } from '../serverUrls'
 import { cycleHighwayLayers, cycleHighwayMaxZoom } from './cycleHighwayLayers'
+import categoryColors from '@/app/categoryColors.yaml'
 
 //Fonts used :
 //https://maplibre.org/font-maker
@@ -60,7 +61,8 @@ export default function franceStyle(transportMode, noVariableTiles = false) {
 		//		Voir nos villes juste avec les arbres
 		//layers: layers.filter(({ id }) => id === 'Background' || id === 'Trees'),
 		glyphs: getFetchUrlBase() + '/fonts/glyphs/{fontstack}/{range}.pbf',
-		sprite: getFetchUrlBase() + '/sprite/sprite',
+		// replaced by addMapIcons
+		//sprite: getFetchUrlBase() + '/sprite/sprite',
 		bearing: 0,
 		pitch: 0,
 		center: [0, 0],
@@ -2432,12 +2434,12 @@ On n'est pas à l'abri d'effets secondaires ici.
 		layout: {
 			'icon-size': {
 				stops: [
-					[16, 0.7],
-					[19, 1],
+					[16, 0.6],
+					[19, 0.9],
 				],
 			},
 			'text-font': ['RobotoRegular-NotoSansRegular'],
-			'icon-image': 'oneway',
+			'icon-image': 'cartesapp-oneway',
 			visibility: 'visible',
 			'icon-rotate': ['match', ['get', 'oneway'], 1, 90, -90],
 			'icon-padding': 2,
@@ -2449,7 +2451,6 @@ On n'est pas à l'abri d'effets secondaires ici.
 		},
 		paint: {
 			// it looks like we can't control the color here
-			'icon-color': 'hsl(0, 0%, 65%)',
 			'icon-opacity': 0.5,
 		},
 		filter: [
@@ -2645,7 +2646,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 		'source-layer': 'poi',
 		minzoom: 17,
 		layout: {
-			'icon-size': 0.7,
+			'icon-size': 0.4,
 			'text-font': ['RobotoRegular-NotoSansRegular'],
 			'text-size': {
 				stops: [
@@ -2682,7 +2683,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 		'source-layer': 'poi',
 		minzoom: 13,
 		layout: {
-			'icon-size': 1,
+			'icon-size': 0.6,
 			'text-font': ['RobotoRegular-NotoSansRegular'],
 			'text-size': {
 				stops: [
@@ -2760,7 +2761,13 @@ On n'est pas à l'abri d'effets secondaires ici.
 		'source-layer': 'poi',
 		minzoom: 13,
 		layout: {
-			'icon-size': 1,
+			'icon-size': [
+				'match',
+				['get', 'subclass'],
+				['bicycle_parking'],
+				0.2,
+				0.6,
+			],
 			'text-font': ['RobotoRegular-NotoSansRegular'],
 			'text-size': {
 				stops: [
@@ -2771,9 +2778,15 @@ On n'est pas à l'abri d'effets secondaires ici.
 			},
 			'icon-image': [
 				'coalesce',
+				// on essaye les icones de cartes.app chargées dans la carte
+				['image', ['concat', 'cartesapp-', ['get', 'subclass']]],
+				['image', ['concat', 'cartesapp-', ['get', 'class']]],
+				// sinon on essaye les sprites standards du style d'origine
+				/*
 				['image', ['get', 'subclass']],
 				['image', ['get', 'class']],
 				['image', 'dot'],
+				*/
 			],
 			'text-field': ['coalesce', ...nameExpression],
 			visibility: 'visible',
@@ -2788,7 +2801,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 				'match',
 				['get', 'class'],
 				['aerialway', 'bus', 'bicycle_rental', 'entrance'],
-				'hsl(215,83%,53%)',
+				categoryColors['Déplacements'],
 				['ferry_terminal', 'harbor'],
 				'#06066f',
 				['hospital'],
@@ -2837,12 +2850,13 @@ On n'est pas à l'abri d'effets secondaires ici.
 						'museum',
 						'school',
 						'parking',
-						'lodging',
 					],
 					1,
 					0,
 				],
 				17,
+				['match', ['get', 'subclass'], ['bicycle_parking'], 0, 1],
+				19,
 				1,
 				22,
 				1,
@@ -2869,7 +2883,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 						'zoo',
 					],
 					1,
-					0,
+					['match', ['get', 'subclass'], ['townhall'], 1, 0], // I don't know why lots of class=town_hall that are in reality city offices
 				],
 				16,
 				[
@@ -2977,8 +2991,8 @@ On n'est pas à l'abri d'effets secondaires ici.
 		layout: {
 			'icon-size': {
 				stops: [
-					[6, 0.5],
-					[8.9, 0.8],
+					[6, 0.3],
+					[8.9, 0.6],
 					[9, 0],
 				],
 			},
@@ -3115,7 +3129,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 			'text-line-height': 0.9,
 		},
 		paint: {
-			'text-color': 'hsl(215,83%,53%)',
+			'text-color': categoryColors['Déplacements'],
 			'icon-opacity': [
 				'step',
 				['zoom'],
@@ -3317,8 +3331,8 @@ On n'est pas à l'abri d'effets secondaires ici.
 		layout: {
 			'icon-size': {
 				stops: [
-					[6, 0.5],
-					[14, 0.8],
+					[6, 0.3],
+					[14, 0.6],
 				],
 			},
 			'text-font': ['RobotoRegular-NotoSansRegular'],

@@ -42,7 +42,7 @@
     - quick
     - kebab
   query: '[amenity=fast_food]'
-  icon: fastfood
+  icon: fast_food
 
 - name: Cuisine française
   category: Restaurants
@@ -317,6 +317,7 @@
     - delicatessen
   query: '[shop=deli]'
   icon: shop
+  icon name: shop-food
 
 - name: Fromagerie
   category: Alimentation
@@ -332,7 +333,7 @@
     - glace
     - sorbet
   query: '[shop=ice_cream]'
-  icon: ice-cream
+  icon: ice_cream
 
 - name: Miellerie
   category: Alimentation
@@ -409,6 +410,15 @@
   icon: music
   category: Loisirs
 
+- name: Théâtre
+  dictionary:
+    - théâtre
+    - scène
+  query:
+    - '[amenity=theatre]' # Exemple : salle de concert à Brest https://www.openstreetmap.org/way/42531718#map=18/48.38500/-4.48092
+  icon: theatre
+  category: Loisirs
+
 - name: plage
   category: Tourisme
   query: '[natural=beach]'
@@ -425,6 +435,19 @@
     - '[landuse=recreation_ground]'
     - '[attraction=carousel]'
   icon: playground
+
+- name: lieu-culte
+  title: Lieu de culte
+  category: Loisirs
+  dictionary:
+    - église
+    - temple
+    - mosquée
+    - prière
+    - cathédrale
+  query:
+    - '[amenity=place_of_worship]'
+  icon: place_of_worship
 
 ################################
 
@@ -680,7 +703,7 @@
     - parking
     - stationnement
   query: '[amenity=bicycle_parking]'
-  icon: bicycle-parking
+  icon: bicycle_parking
 
 - name: parking-velo-securise # pas d'accent pour que les url soient propres : toujours en 2024 les navigateurs (états-uniens) refusent une vision non états-unienne du Web sous prétexte de lutte contre le phishing
   title: Parking vélo sécurisé
@@ -709,6 +732,17 @@
     - '["service:bicycle:repair"=yes]'
   icon: bicycle_repair_station
 
+- name: gare-maritime
+  category: Déplacements
+  title: Gare maritime
+  dictionary:
+    - ferry
+    - traversée
+    - bateau
+  query: '[amenity=ferry_terminal]'
+  icon: ferry
+
+#### Déplacements / voiture
 - name: Essence
   category: Déplacements
   dictionary:
@@ -719,7 +753,7 @@
     - pétrole
     - pompe
   query: '[amenity=fuel]'
-  icon: essence
+  icon: fuel
 
 - name: borne-elec
   title: Borne électrique
@@ -729,7 +763,7 @@
     - électrique
     - borne
   query: '[amenity=charging_station]'
-  icon: charging-station
+  icon: charging_station
 
 - name: Station de gonflage
   category: Déplacements
@@ -742,6 +776,14 @@
     - '[amenity=compressed_air]'
     - '[compressed_air=yes]'
   icon: compressed_air
+
+- name: parking-voiture
+  title: Parking voiture
+  category: Déplacements
+  dictionary:
+    - stationnement
+  query: '[amenity=parking]'
+  icon: parking
 
 - name: Aire de covoiturage
   category: Déplacements
@@ -1149,6 +1191,20 @@
   name: coiffeur
   query: '[shop=hairdresser]'
   icon: hairdresser
+- title: Laverie
+  category: Divers
+  name: laverie
+  dictionary:
+    - laverie
+    - lessive
+    - sèche-linge
+    - linge
+    - lavomatic
+    - pressing
+  query:
+    - '[shop=laundry]'
+    - '[shop=dry_cleaning]'
+  icon: laundry
 - title: Espace de cotravail (coworking)
   category: Divers
   name: cotravail
@@ -1167,3 +1223,51 @@
     - lacets
   query: '[craft=shoemaker]'
   icon: shoes
+- title: Cimetière
+  category: Divers
+  name: cimetière
+  dictionary:
+    - tombes
+  query:
+    - '[amenity=grave_yard]'
+    - '[landuse=cemetery]'
+  icon: cemetery
+
+## Peut-être carrément une catégorie "services publics"
+## https://wiki.openstreetmap.org/wiki/France/Services_Publics
+- title: Justice
+  category: Divers
+  name: justice
+  dictionary:
+    - tribunal
+    - cour
+    - cour d'appel
+    - judiciaire
+  query:
+    - '[amenity=courthouse]'
+  icon: classical-building
+
+- title: Pompiers
+  category: Divers
+  name: pompiers
+  dictionary:
+    - incendie
+    - 18
+    - feu
+  query:
+    - '[amenity=fire_station]'
+  icon: fire
+- title: Établissement scolaire
+  category: Divers
+  name: education
+  dictionary:
+    - université
+    - collège
+    - école
+    - primaire
+    - groupe scolaire
+  query:
+    - '[amenity=college]'
+    - '[amenity=university]'
+    - '[amenity=school]'
+  icon: college

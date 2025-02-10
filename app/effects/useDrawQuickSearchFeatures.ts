@@ -1,12 +1,11 @@
+import useSetSearchParams from '@/components/useSetSearchParams'
+import { colors } from '@/components/utils/colors'
 import parseOpeningHours from 'opening_hours'
 import { useEffect, useState } from 'react'
-import buildSvgImage from './buildSvgImage'
-import useSetSearchParams from '@/components/useSetSearchParams'
-import { encodePlace } from '../utils'
 import { buildAllezPart } from '../SetDestination'
+import { encodePlace } from '../utils'
+import buildSvgImage from './buildSvgImage'
 import { safeRemove } from './utils'
-import { colors } from '@/components/utils/colors'
-import categoryIconUrl from '@/components/categoryIconUrl'
 
 export default function useDrawQuickSearchFeatures(
 	map,
@@ -29,13 +28,21 @@ export default function useDrawQuickSearchFeatures(
 		if (!features?.length) return
 
 		const imageFilename = category.icon
-		if (imageFilename.includes('http')) return
+		const imageFinalFilename = category['icon name']
+		const imageNameSuffix = imageFinalFilename || imageFilename
+		if (imageFilename.includes('http'))
+			throw new Error(
+				'Icons should be local in the public/icons foler. ' + category.icon
+			)
 
 		buildSvgImage(
 			imageFilename,
+			imageFinalFilename,
 			(img) => {
-				const imageName = category.name + '-cartes' // avoid collisions
-				console.log('cyan debug will add to map image ' + imageName)
+				// TODO this should be useless now that we've added all the icons in
+				// useAddMap, since they are also used to replace the sprites for tile
+				// icons
+				const imageName = 'cartesapp-' + imageNameSuffix // avoid collisions
 				const mapImage = map.getImage(imageName)
 				if (!mapImage) map.addImage(imageName, img)
 
@@ -85,18 +92,22 @@ export default function useDrawQuickSearchFeatures(
 					type: 'symbol',
 					source: baseId + 'points',
 					layout: {
-						'icon-image': category.name + '-cartes',
-						'icon-size': 0.6,
+						'icon-image': 'cartesapp-' + imageNameSuffix,
+						'icon-size': 1,
 						'text-field': ['get', 'name'],
 						'text-offset': [0, 1.25],
 						'text-anchor': 'top',
-						'text-font': ['RobotoRegular-NotoSansRegular'],
+						'text-font': ['RobotoBold-NotoSansBold'],
+						'text-size': 15,
 					},
 					paint: {
 						'text-color': '#503f38',
 						'text-halo-blur': 0.5,
 						'text-halo-color': 'white',
 						'text-halo-width': 1,
+						'icon-halo-color': '#503f38',
+						'icon-halo-width': 100,
+						'icon-halo-blur': 0.5,
 					},
 				})
 				map.addLayer({

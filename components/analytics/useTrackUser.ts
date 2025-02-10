@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import useUUID from './useUUID'
 import { analyticsUrl } from '@/app/serverUrls'
+import { time } from 'motion/dist/react'
 
 export default function useTrackUser() {
 	const uuid = useUUID()
@@ -20,5 +21,30 @@ export default function useTrackUser() {
 		}
 		//doFetch() analytics deactivated, we've successfully used Deno kv for this
 		//but don't want to pay yet, since Umami does the job on our server
+
+		const logMissingImages = async () => {
+			try {
+				const traceUrl = `${analyticsUrl}/mapImagesMissing`
+				const traceRequest = await fetch(traceUrl, {
+					method: 'POST',
+					body: typeof window !== undefined && window.missingImages,
+				})
+				const result = await traceRequest.json()
+
+				console.log('imagemissing added to DB')
+				console.log(result)
+			} catch (e) {
+				console.log('Erreur dans le sondage sur les icônes manquantes', e)
+			}
+		}
+
+		const timeoutFunction = () => logMissingImages()
+		setTimeout(timeoutFunction, 10000)
+		return timeoutFunction
 	}, [uuid])
 }
+
+/*
+ * Log missing icon events. Store event values a global variable that will be
+ * send to our analytics server once in a while per user.
+ * */

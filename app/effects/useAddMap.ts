@@ -1,16 +1,17 @@
-import maplibregl, { ScaleControl } from 'maplibre-gl'
-import { useEffect, useMemo, useState } from 'react'
-import { useLocalStorage, useMediaQuery, useTimeout } from 'usehooks-ts'
-import { styles } from '../styles/styles'
-import { Protocol as ProtomapsProtocol } from 'pmtiles'
-import useGeolocation from './useGeolocation'
-import frenchMaplibreLocale from '@/components/map/frenchMaplibreLocale.ts'
+import indoorequalLayers from '@/app/styles/indoorequal-layers'
 import { Protocol as CartesProtocol } from '@/components/map/CartesProtocol.ts'
+import frenchMaplibreLocale from '@/components/map/frenchMaplibreLocale.ts'
 import useEffectDebugger from '@/components/useEffectDebugger'
 import { isLocalStorageAvailable } from '@/components/utils/utils'
+import maplibregl, { ScaleControl } from 'maplibre-gl'
 import IndoorEqual from 'maplibre-gl-indoorequal'
-import indoorequalLayers from '@/app/styles/indoorequal-layers'
 import 'maplibre-gl-indoorequal/maplibre-gl-indoorequal.css'
+import { Protocol as ProtomapsProtocol } from 'pmtiles'
+import { useEffect, useMemo, useState } from 'react'
+import { useLocalStorage, useMediaQuery } from 'usehooks-ts'
+import { styles } from '../styles/styles'
+import useGeolocation from './useGeolocation'
+import useMapIcons from './useMapIcons'
 
 /*
  *
@@ -199,6 +200,8 @@ export default function useAddMap(
 			newMap?.remove()
 		}
 	}, [setMap, setMapLoaded, setZoom, setBbox, mapContainerRef, setGeolocate]) // styleUrl not listed on purpose
+
+	useMapIcons(map, styleUrl)
 
 	const triggerGeolocation = useMemo(
 		() => (geolocate ? () => geolocate.trigger() : () => 'Not ready'),
