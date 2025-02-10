@@ -38,3 +38,4 @@ small:
   bollard:
   entrance: indoorequal-entrance
   railway:
+  oneway: arrow-up

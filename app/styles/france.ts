@@ -2435,7 +2435,7 @@ On n'est pas à l'abri d'effets secondaires ici.
 				],
 			},
 			'text-font': ['RobotoRegular-NotoSansRegular'],
-			'icon-image': 'oneway',
+			'icon-image': 'cartesapp-oneway',
 			visibility: 'visible',
 			'icon-rotate': ['match', ['get', 'oneway'], 1, 90, -90],
 			'icon-padding': 2,

@@ -56,6 +56,7 @@ export default function useMapIcons(map, styleUrl) {
 
 				img.onload = () => {
 					const hasMapImage = map.hasImage(imageFinalName)
+					console.log('addimage ', imageFinalName)
 					if (!hasMapImage) {
 						console.log('addimage ', imageFinalName)
 						map.addImage(imageFinalName, img)
