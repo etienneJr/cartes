@@ -11,6 +11,12 @@ export default function useMapIcons(map, styleUrl) {
 		const onImageMissing = (e) => {
 			const id = e.id // id of the missing image
 			console.log('imagemissing', id)
+			try {
+				if (!window.missingImages) window.missingImages = []
+				window.missingImages.push(e.id)
+			} catch (e) {
+				console.log('Error setting window.missingImages')
+			}
 		}
 		map.on('styleimagemissing', onImageMissing)
 
