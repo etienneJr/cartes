@@ -24,11 +24,15 @@ export default function useTrackUser() {
 
 		const logMissingImages = async () => {
 			try {
-				const traceUrl = `${analyticsUrl}/mapImageMissing`
+				const traceUrl = `${analyticsUrl}/mapImagesMissing`
 				const traceRequest = await fetch(traceUrl, {
 					method: 'POST',
 					body: typeof window !== undefined && window.missingImages,
 				})
+				const result = await traceRequest.json()
+
+				console.log('imagemissing added to DB')
+				console.log(result)
 			} catch (e) {
 				console.log('Erreur dans le sondage sur les icônes manquantes', e)
 			}
