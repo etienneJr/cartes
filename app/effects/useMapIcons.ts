@@ -5,6 +5,9 @@ import imageRedirectsRaw from '@/app/imageRedirects.yaml'
 export default function useMapIcons(map, styleUrl) {
 	useEffect(() => {
 		if (!map) return
+		if (!styleUrl || typeof styleUrl !== 'object' || styleUrl.name !== 'France')
+			return
+		console.log('cyan will add map icons')
 		const onImageMissing = (e) => {
 			const id = e.id // id of the missing image
 			console.log('imagemissing', id)

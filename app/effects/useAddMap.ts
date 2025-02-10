@@ -201,7 +201,7 @@ export default function useAddMap(
 		}
 	}, [setMap, setMapLoaded, setZoom, setBbox, mapContainerRef, setGeolocate]) // styleUrl not listed on purpose
 
-	useMapIcons(map)
+	useMapIcons(map, styleUrl)
 
 	const triggerGeolocation = useMemo(
 		() => (geolocate ? () => geolocate.trigger() : () => 'Not ready'),
