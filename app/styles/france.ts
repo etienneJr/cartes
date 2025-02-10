@@ -2430,8 +2430,8 @@ On n'est pas à l'abri d'effets secondaires ici.
 		layout: {
 			'icon-size': {
 				stops: [
-					[16, 0.7],
-					[19, 1],
+					[16, 0.6],
+					[19, 0.9],
 				],
 			},
 			'text-font': ['RobotoRegular-NotoSansRegular'],
@@ -2447,7 +2447,6 @@ On n'est pas à l'abri d'effets secondaires ici.
 		},
 		paint: {
 			// it looks like we can't control the color here
-			'icon-color': 'hsl(0, 0%, 65%)',
 			'icon-opacity': 0.5,
 		},
 		filter: [
